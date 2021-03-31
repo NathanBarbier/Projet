@@ -1,0 +1,116 @@
+#containerPoste {
+    margin-left: 0% !important;
+    margin-right: 0% !important;
+    padding-left: 0% !important;
+    padding-right: 0% !important;
+}
+
+#tbodyPoste{
+    height: 200px;
+    overflow: auto;
+    width : 100%;
+    display: block;
+}
+
+#tbodyEquipe{
+    height: 350px;
+    overflow: auto;
+    width : 100%;
+    display: block;
+}
+
+
+#modifEquipe {
+    border-radius: 10px;
+    border: 3px solid rgb(216, 214, 214);
+    height: 800px;
+    max-height: 800px;
+    width : 25%;
+    float : right;
+    margin-left: 5%;
+    margin-right: 5%;
+    overflow: auto;
+}
+
+.infoEquipe
+{
+    margin-top : 5%;
+    width : 80%;
+    margin-right: auto;
+    margin-left: auto;
+    text-align: center;
+}
+
+#leftNavBar{
+    height: 95vh;
+    border: 1px solid rgba(0, 0, 0, 0.125);
+    background-color: white;
+    /* background: linear-gradient(to bottom, black, white); */
+}
+
+.titreTable{
+    background: linear-gradient(to right, rgba(0, 115, 255, 0.353),rgb(214, 230, 253));
+}
+
+.pageGererEntreprise{
+    background: linear-gradient(to right,rgb(231, 239, 251), white);
+}
+
+
+.vignette {
+    border-radius: 45px !important;
+    background: linear-gradient(145deg, #f0f0f0, #ffbf0f) !important;
+    box-shadow:  19px 19px 38px #727272,
+                -19px -19px 38px #ffffff !important;
+}
+
+.vignette:hover {
+    background: linear-gradient(40deg, #f0f0f0, #ffbf0f) !important;
+}
+.vignette:active {
+    background: linear-gradient(40deg, #ffbf0f,#f0f0f0 ) !important;
+}
+.vignette1 {
+    border-radius: 45px !important;
+    background: linear-gradient(145deg, #f0f0f0, #ff0202) !important;
+    box-shadow:  19px 19px 38px #727272,
+                -19px -19px 38px #ffffff !important;
+    background-color: white;
+    transition-property: background-color;
+    transition-duration: 3s;
+}
+
+.vignette1:hover {
+    background: linear-gradient(40deg, #f0f0f0, #ff0202) !important;
+}
+.vignette2 {
+    border-radius: 45px !important;
+    background: linear-gradient(145deg, #f0f0f0, #0099ff) !important;
+    box-shadow:  19px 19px 38px #727272,
+                -19px -19px 38px #ffffff !important;
+}
+.vignette2:hover {
+    background: linear-gradient(40deg, #f0f0f0, #0099ff) !important;
+}
+.vignette3 {
+    border-radius: 45px !important;
+    background: linear-gradient(145deg, #f0f0f0, #d400ff) !important;
+    box-shadow:  19px 19px 38px #727272,
+                -19px -19px 38px #ffffff !important;
+}
+
+.vignette3:hover {
+    background: linear-gradient(40deg, #f0f0f0, #d400ff) !important;
+}
+
+a {
+    text-decoration: none !important;
+}
+
+.aVignette {
+    color: black;
+}
+
+.aVignette:hover {
+    color: black;
+}

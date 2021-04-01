@@ -37,7 +37,8 @@ if(!empty($_SESSION["habilitation"]) && $_SESSION["habilitation"] == "admin")
         </nav>
         <div class="row" style="height: 8vh;">
         </div>
-    <div class="row">
+        
+        <div class="row">
             <div class="col-2">
             </div>
             <div class="text-center pt-2 bg-light col-2" style="height: 95vh; border: 1px solid rgba(0, 0, 0, 0.125);position: fixed">

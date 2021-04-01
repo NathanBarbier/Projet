@@ -49,7 +49,7 @@
                     <select class="form-control col text-center" name="idEquipe" id="idEquipe">
                         <?php
                             // récupérer équipes de l'organisation
-                            $nomEquipes = recupererEquipes($idOrganisation);
+                            $nomEquipes = recupererEquipes($_SESSION['idOrganisation']);
                             
                             foreach($nomEquipes as $nomEquipe)
                             {

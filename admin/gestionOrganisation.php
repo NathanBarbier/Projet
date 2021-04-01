@@ -1,14 +1,13 @@
 <?php require_once "entete.php";
 
 $InfosOrganisation = recupererInfoOrganisation($_SESSION["idOrganisation"]);
-print_r($InfosOrganisation);
 
 if(!empty($_GET["Suppression"]) && $_GET["Suppression"] === $_SESSION["idOrganisation"])
 {
     supprimerOrganisation();
 }
 ?>
-<div class="col-10">
+<div class="col-10 mt-4 w-75">
 
 <!-- HTML -->
     <div class="row">
@@ -50,7 +49,7 @@ if(!empty($_GET["Suppression"]) && $_GET["Suppression"] === $_SESSION["idOrganis
         </div>
     </div>
 
-    <div class="col-5" >
+    <div class="col-4" >
         <div class="card">
             <div class="card-header">
                 <h4>Informations sur l'organisation</h4>

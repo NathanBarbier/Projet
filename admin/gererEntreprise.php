@@ -260,7 +260,7 @@ if(!empty($_GET["supprPoste"]))
     </div>
 
     <div style="width : 60%">
-            <table class="table mb-0">
+            <table class="table mb-0 mt-5">
                 <thead class="titreTable">
                     <tr>
                         <th colspan="6">

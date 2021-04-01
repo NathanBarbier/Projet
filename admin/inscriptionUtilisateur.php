@@ -1,6 +1,8 @@
 <?php require_once "entete.php";
 ?>
-<div class="col-10 container mt-5">
+<div class="col-9 container mt-5">
+
+<h1>Inscription d'un utilisateur</h1>
 
 <form method="post" action="../traitements/inscriptionUtilisateur.php">
         
@@ -47,7 +49,7 @@
             <select class="form-control col text-center" name="idEquipe" id="idEquipe">
                 <?php
                     // récupérer équipes de l'organisation
-                    $nomEquipes = recupererEquipes($idOrganisation);
+                    $nomEquipes = recupererEquipes($_SESSION["idOrganisation"]);
                     
                     foreach($nomEquipes as $nomEquipe)
                     {

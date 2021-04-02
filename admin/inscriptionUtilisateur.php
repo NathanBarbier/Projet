@@ -1,15 +1,11 @@
 <?php require_once "entete.php";
 ?>
-<<<<<<< HEAD
 <div class="col-9 container mt-5">
 
-<h1>Inscription d'un utilisateur</h1>
-=======
->>>>>>> 8fdd04aa91654970e469b2aa8e2258f03bb110a9
+<h1>Inscription d'un collaborateur</h1>
 
 <div class="col-9 mt-4">
     <div class="container">
-        <h2>Inscription des membres</h2>
         <form method="post" action="../traitements/inscriptionUtilisateur.php">
                 
             <div class="form-floating mt-3 mb-3">
@@ -37,24 +33,6 @@
                     <label for="idPoste">Sélectionnez un poste</label>
                     <select class="form-control col text-center" name="idPoste" id="idPoste">
                         <?php
-<<<<<<< HEAD
-                    }
-                    
-                    ?>
-            </select>
-        </div>
-        <div class="col" style="width:40%">
-            <label for="idEquipe">Sélectionnez une équipe</label>
-            <select class="form-control col text-center" name="idEquipe" id="idEquipe">
-                <?php
-                    // récupérer équipes de l'organisation
-                    $nomEquipes = recupererEquipes($_SESSION["idOrganisation"]);
-                    
-                    foreach($nomEquipes as $nomEquipe)
-                    {
-                        ?>
-                        <option value="<?= $nomEquipe["idEquipe"] ?>"><?= $nomEquipe["nomEquipe"] ?></option>
-=======
                             // récupérer postes de l'organisation
                             $nomPostes = recupererPostes($_SESSION["idOrganisation"]);
                             
@@ -71,7 +49,6 @@
                 <div class="col" style="width:40%">
                     <label for="idEquipe">Sélectionnez une équipe</label>
                     <select class="form-control col text-center" name="idEquipe" id="idEquipe">
->>>>>>> 8fdd04aa91654970e469b2aa8e2258f03bb110a9
                         <?php
                             // récupérer équipes de l'organisation
                             $nomEquipes = recupererEquipes($_SESSION['idOrganisation']);

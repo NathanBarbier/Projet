@@ -1,5 +1,5 @@
 <?php
-require_once "entete.php"
+require_once "entete.php";
 
 if(!empty($_GET["error"]))
 {

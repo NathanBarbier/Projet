@@ -1,11 +1,12 @@
-<?php 
+<?php
+require_once "header.php";
 if(isset($_POST["envoi"]) && !empty($_POST["envoi"])) {
     extract($_POST);
     if(!empty($organisation) && !empty($mail) && !empty($mdp) && !empty($mdp2))
     {
         if(recupNomOrganisation($organisation)->rowcount() == 0 )
         {
-            if(filter_var($mail, FILTER_VALIDATE_EMAIL )
+            if(filter_var($mail, FILTER_VALIDATE_EMAIL ))
             {
                 if(recupEmailOrganisation($mail)->rowcount() == 0 )
                 {

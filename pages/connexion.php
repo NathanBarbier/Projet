@@ -54,7 +54,7 @@ if(!empty($_GET["error"]))
         <div>
             Vous n'avez pas compte ?
         </div>
-        <a href="inscription.php" class="btn btn-info mt-3">Inscrivez-vous</a>
+        <a href="inscriptionOrganisation.php" class="btn btn-info mt-3">Inscrivez-vous</a>
     </div>
 
 </form>

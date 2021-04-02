@@ -1,10 +1,7 @@
 <?php require_once "entete.php";
 
 $InfosOrganisation = recupererInfoOrganisation($_SESSION["idOrganisation"]);
-<<<<<<< HEAD
-=======
 // print_r($InfosOrganisation);
->>>>>>> 8fdd04aa91654970e469b2aa8e2258f03bb110a9
 
 if(!empty($_GET["Suppression"]) && $_GET["Suppression"] === $_SESSION["idOrganisation"])
 {

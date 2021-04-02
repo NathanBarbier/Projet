@@ -15,4 +15,5 @@ require_once '../modeles/organisations.php';
 require_once '../modeles/postes.php';
 require_once '../modeles/projets.php';
 require_once '../modeles/utilisateurs.php';
+require_once '../modeles/roles.php';
 ?>

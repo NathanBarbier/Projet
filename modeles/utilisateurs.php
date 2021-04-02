@@ -20,7 +20,7 @@ function recupererInfoUtilisateurs($idOrganisation)
     return $requete->fetchAll(PDO::FETCH_ASSOC);
 }
 
-function recupInfoUtilisateur($idUser)
+function recupInfosUtilisateur($idUser)
 {
     $requete = getBdd()->prepare ("SELECT * FROM utilisateurs WHERE idUtilisateur = ?");
     $requete->execute($idUser);

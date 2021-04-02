@@ -37,7 +37,7 @@ if(!empty($_SESSION["habilitation"]) && $_SESSION["habilitation"] == "admin")
         </nav>
         <div class="row" style="height: 8vh;">
         </div>
-        
+        <!-- SIDE BAR -->
         <div class="row">
             <div class="col-2">
             </div>
@@ -45,25 +45,40 @@ if(!empty($_SESSION["habilitation"]) && $_SESSION["habilitation"] == "admin")
                 <nav>
                     <ul class="list-unstyled">
                         <li><a href="index.php" class="btn btn-outline-secondary w-75">Accueil</a></li>
+                        <!-- COLLABORATEURS -->
                         <li>
                             <button class="btn btn-outline-primary w-75 mt-4" data-bs-toggle="collapse" data-bs-target="#equipesCollapse" aria-expanded="false">Utilisateurs</button>
 
                             <div id="equipesCollapse" class="collapse">
                                 <ul class="list-unstyled">
-                                    <li><a class="btn btn-outline-primary w-75 mt-2" href="equipesAdmin.php">Vue d'ensemble</a></li>
+                                    <li><a class="btn btn-outline-primary w-75 mt-2" href="collaborateurs.php">Vue d'ensemble</a></li>
                                     <li><a class="btn btn-outline-secondary w-75 mt-2" href="inscriptionUtilisateur.php">Inscriptions</a></li>
                                     <li><a class="btn btn-outline-secondary w-75 mt-2" href="listeMembres.php">Liste des membres</a></li>
                                     <li><a class="btn btn-outline-secondary w-75 mt-2" href="gererEntreprise.php">Postes et Équipes</a></li>
                                 </ul>
                             </div>
                         </li>
+                        <!-- ORGANISATION -->
                         <li class="mt-2">
                             <button class="btn btn-outline-primary w-75 mt-4" data-bs-toggle="collapse" data-bs-target="#organisationCollapse" aria-expanded="false">Organisation</button>
 
                             <div id="organisationCollapse" class="collapse">
                                 <ul class="list-unstyled">
-                                    <li><a class="btn btn-outline-primary w-75 mt-2" href="gestionOrganisation.php">Vue d'ensemble</a></li>
-                                    <li><a class="btn btn-outline-secondary w-75 mt-2" href="#">Option 1</a></li>
+                                    <li><a class="btn btn-outline-primary w-75 mt-2" href="organisation.php">Vue d'ensemble</a></li>
+                                    <li><a class="btn btn-outline-secondary w-75 mt-2" href="gestionOrganisation.php">Gestion organisation</a></li>
+                                </ul>
+                            </div>
+                        
+                        </li>
+                        <!-- PROJETS -->
+                        <li class="mt-2">
+                            <button class="btn btn-outline-primary w-75 mt-4" data-bs-toggle="collapse" data-bs-target="#projetsCollapse" aria-expanded="false">Projets</button>
+
+                            <div id="projetsCollapse" class="collapse">
+                                <ul class="list-unstyled">
+                                    <li><a class="btn btn-outline-primary w-75 mt-2" href="projets.php">Vue d'ensemble</a></li>
+                                    <li><a class="btn btn-outline-secondary w-75 mt-2" href="creationProjets.php">Création de projets</a></li>
+                                    <li><a class="btn btn-outline-secondary w-75 mt-2" href="listeProjets.php">Liste des projets</a></li>
                                 </ul>
                             </div>
                         

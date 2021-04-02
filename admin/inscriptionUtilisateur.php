@@ -1,6 +1,6 @@
 <?php require_once "entete.php";
 ?>
-
+<!-- TODO : CHOISIR L HABILITATION DE L UTILISATEUR -->
 <div class="col-9 mt-4">
     <div class="container">
         <h2>Inscription des membres</h2>

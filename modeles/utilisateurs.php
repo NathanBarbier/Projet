@@ -20,7 +20,7 @@ function recupererInfoUtilisateurs($idOrganisation)
     return $requete->fetchAll(PDO::FETCH_ASSOC);
 }
 
-function recupInfoUtilisateur($idUser)
+function recupInfosUtilisateur($idUser)
 {
     $requete = getBdd()->prepare ("SELECT * FROM utilisateurs WHERE idUtilisateur = ?");
     $requete->execute($idUser);
@@ -43,6 +43,12 @@ function modifierNom($nom,$idUser)
 {
     $requete = getBdd()->prepare("UPDATE utilisateurs SET nom = ? WHERE idUtilisateur = ?");
     $requete->execute([$nom,$idUser]);
+}
+
+function modifierPrenom($prenom,$idUser)
+{
+    $requete = getBdd()->prepare("UPDATE utilisateurs SET prenom = ? WHERE idUtilisateur = ?");
+    $requete->execute([$prenom,$idUser]);
 }
 
 function verifEmailUtilisateur($email)

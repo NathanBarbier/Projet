@@ -1,10 +1,6 @@
 <?php require_once "entete.php";
 ?>
 <div class="col-10">
-    <!-- <a href="inscriptionUtilisateur.php">Gérer inscriptions</a>
-    <a href="listeMembres.php">Liste des membres</a>
-    <a href="gererEntreprise.php">Gérer les postes et équipes</a>
-    <a href="">Gérer  à l'organisation</a> -->
 
     <div class="row mt-4">
         <div class="col pt-4" style="height:35vh">

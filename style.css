@@ -12,13 +12,19 @@
     display: block;
 }
 
-#tbodyEquipe{
+.tbodyEquipeProjet{
     height: 350px;
     overflow: auto;
     width : 100%;
     display: block;
 }
 
+#tbodyEquipeProjet{
+    height: 200px;
+    overflow: auto;
+    width : 100%;
+    display: block;
+}
 
 #modifEquipe {
     border-radius: 10px;

@@ -6,6 +6,7 @@ function recupererEquipes($idOrganisation)
     $requete->execute([$idOrganisation]);
     return $requete->fetchAll(PDO::FETCH_ASSOC);
 }
+
 function recupererMaxMinIdEquipes($idOrganisation)
 {
     $requete = getBdd()->prepare("SELECT max(idEquipe) as MaxId, min(idEquipe) as MinId FROM equipes WHERE idOrganisation = ?");

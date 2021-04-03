@@ -20,6 +20,13 @@ function recupererInfoUtilisateurs($idOrganisation)
     return $requete->fetchAll(PDO::FETCH_ASSOC);
 }
 
+function recupChefEquipe($idChefEquipe)
+{
+    $requete = getBdd()->prepare("SELECT nom, prenom FROM utilisateurs WHERE idUtilisateur = ?");
+    $requete->execute([$idChefEquipe]);
+    return $requete->fetchAll(PDO::FETCH_ASSOC);
+}
+
 function recupInfosUtilisateur($idUser)
 {
     $requete = getBdd()->prepare ("SELECT * FROM utilisateurs WHERE idUtilisateur = ?");

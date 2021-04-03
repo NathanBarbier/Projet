@@ -59,19 +59,21 @@ if(!empty($_GET['idProjet']))
                 <div class="col">
                     <div class="card" style="height: 20vh;">
                         <div class="card-header">
-                            <h3>Choisir le chef de projet</h3>
+                            <h3>Chef de projet</h3>
                         </div>
                         <div class="card-body">
-                            <div>
-                                <?php
-                                    foreach($equipesProjet as $equipeProjet)
-                                    {
-                                        ?>
-                                        <div class="bg-info rounded"><?= $equipeProjet["chefEquipe"] ?></div>
-                                        <?php
-                                    }
+                            <select class="form-control">
+                                <option selected>Choisir un chef de projet</option>
+                                <?php 
+                                foreach($equipes as $equipe)
+                                {
+                                    $chefEquipe = recupChefEquipe(intval($equipe['chefEquipe']));
+                                    ?>
+                                    <option class="collapse" id="selectChefEquipe<?= $equipe['idEquipe'] ?>"><?= $chefEquipe[0]['prenom'] . " " . $chefEquipe[0]['nom'] ?></option>
+                                    <?php
+                                }
                                 ?>
-                            </div>
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -95,10 +97,11 @@ if(!empty($_GET['idProjet']))
                                     <?php 
                                     foreach($equipes as $equipe)
                                     {
+                                        $chefEquipe = recupChefEquipe(intval($equipe['chefEquipe']));
                                         ?>
                                         <tr class="collapse" id="equipeProjet<?= $equipe['idEquipe'] ?>">
                                             <td><?= $equipe["nomEquipe"] ?></td>
-                                            <td><?= $equipe["chefEquipe"] ?></td>
+                                            <td><?= $chefEquipe[0]['prenom'] . " " . $chefEquipe[0]['nom'] ?></td>
                                             <td><button onclick="retirerEquipe(<?= $equipe['idEquipe'] ?>)" class="btn btn-outline-danger">Retirer</button></td>
                                         </tr>
                                         <?php
@@ -126,10 +129,11 @@ if(!empty($_GET['idProjet']))
                                     <?php 
                                     foreach($equipes as $equipe)
                                     {
+                                        $chefEquipe = recupChefEquipe(intval($equipe['chefEquipe']));
                                         ?>
                                         <tr class="collapse show" id="equipe<?= $equipe['idEquipe'] ?>">
-                                            <td><?= $equipe["nomEquipe"] ?></td>
-                                            <td><?= $equipe["chefEquipe"] ?></td>
+                                        <td><?= $equipe["nomEquipe"] ?></td>
+                                        <td><?= $chefEquipe[0]['prenom'] . " " . $chefEquipe[0]['nom'] ?></td>
                                             <td><button onclick="ajouterEquipe(<?= $equipe['idEquipe'] ?>)" class="btn btn-outline-success">Ajouter</button></td>
                                         </tr>
                                         <?php
@@ -146,20 +150,25 @@ if(!empty($_GET['idProjet']))
 </div>
 
 <script>
-    function ajouterEquipe($idEquipe)
+    function ajouterEquipe(idEquipe)
     {
-        var identifiantEquipe = "equipe" + $idEquipe;
-        var identifiantEquipeProjet = "equipeProjet" + $idEquipe;
+        var identifiantEquipe = "equipe" + idEquipe;
+        var identifiantEquipeProjet = "equipeProjet" + idEquipe;
+        var identifiantSelectChefEquipe = "selectChefEquipe" + idEquipe;
         document.getElementById(identifiantEquipe).classList.remove("show");
         document.getElementById(identifiantEquipeProjet).classList.add("show");
+        document.getElementById(identifiantSelectChefEquipe).classList.add("show");
     }
 
-    function retirerEquipe($idEquipe)
+    function retirerEquipe(idEquipe)
     {
-        var identifiantEquipe = "equipe" + $idEquipe;
-        var identifiantEquipeProjet = "equipeProjet" + $idEquipe;
+        var identifiantEquipe = "equipe" + idEquipe;
+        var identifiantEquipeProjet = "equipeProjet" + idEquipe;
+        var identifiantSelectChefEquipe = "selectChefEquipe" + idEquipe;
         document.getElementById(identifiantEquipe).classList.add("show");
         document.getElementById(identifiantEquipeProjet).classList.remove("show");
+        document.getElementById(identifiantSelectChefEquipe).classList.remove("show");
+
     }
 </script>
 

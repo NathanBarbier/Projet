@@ -16,6 +16,4 @@ if(!empty($_SESSION['habilitation']) && $_SESSION['habilitation'] == 1)
 } else {
     header("location:../index.php");
 }
-
-
 ?>

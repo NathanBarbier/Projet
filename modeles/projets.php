@@ -13,3 +13,9 @@ function recupMaxIdProjets()
     $requete->execute();
     return $requete->fetch(PDO::FETCH_ASSOC);
 }
+
+function creerProjet($titre, $type, $deadline, $idClient, $chefProjet)
+{
+    $requete = getBdd()->prepare("INSERT INTO projets (nom, type, DateDebut, DateRendu, idClient, Etat, chefProjet) VALUES (?, ?, NOW(), ?, 'En cours', ?)");
+    $requete->execute([$titre, $type, $deadline, $idClient, $chefProjet]);
+}

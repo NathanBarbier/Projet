@@ -118,3 +118,10 @@ function recupererPosteUtilisateur($idUtilisateur)
     $requete->execute([$idUtilisateur]);
     return $requete->fetch(PDO::FETCH_ASSOC);
 }
+
+function recupIdChefProjet($nomChef, $prenomChef)
+{
+    $requete = getBdd()->prepare("SELECT idUtilisateur FROM utilisateurs WHERE nom = ? AND prenom = ?");
+    $requete->execute([$nomChef, $prenomChef]);
+    return $requete->fetch(PDO::FETCH_ASSOC);
+}

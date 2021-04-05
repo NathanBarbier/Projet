@@ -1,5 +1,6 @@
 <?php require_once "entete.php"; 
 $equipes = recupererEquipes($_SESSION['idOrganisation']);
+$clients = recupererClientOrganisation($_SESSION['idOrganisation']);
 if(!empty($_GET['idProjet']))
 {
     extract($_GET);
@@ -13,44 +14,45 @@ if(!empty($_GET['idProjet']))
     <h2>Création de projet</h2>
     <div class="row">
         <div class="col-4">
-            <form method="POST" action="#">
+            <form method="POST" action="../traitements/creationProjets.php?idProjet=<?= $idProjet ?>">
                 <div class="form-floating mb-3">
-                    <input class="form-control" type="text" name="titre" id="titre" placeholder="Titre du projet" value="<?= $titre ?? '' ?>">
+                    <input required class="form-control" type="text" name="titre" id="titre" placeholder="Titre du projet" value="<?= $titre ?? '' ?>">
                     <label for="titre">Titre du projet</label>
                 </div>
 
                 <div class="form-floating mb-3">
-                    <input class="form-control" type="text" name="type" id="type" placeholder="Type du projet" value="<?= $type ?? '' ?>"  required>
+                    <input required class="form-control" type="text" name="type" id="type" placeholder="Type du projet" value="<?= $type ?? '' ?>">
                     <label for="type">Type du projet</label>
                 </div>
 
                 <div class="form-floating mb-3">
-                    <input class="form-control" type="date" name="deadline" id="deadline" placeholder="Deadline du projet" value="<?= $deadline?? '' ?>"  required>
+                    <input required class="form-control" type="date" name="deadline" id="deadline" placeholder="Deadline du projet" value="<?= $deadline ?? '' ?>">
                     <label for="deadline">DeadLine</label>
                 </div>
 
                 <div class="form-floating mb-3">
-                    <textarea class="form-control" name="description" id="description" placeholder="Description"><?= $descritpion ?? '' ?></textarea>
+                    <textarea required class="form-control" name="description" id="description" placeholder="Description"><?= $description ?? '' ?></textarea>
                     <label for="description">Description</label>
                 </div>
 
                 <div class="row">
                     <div class="col-10">
                         <div class="form-floating mb-3">
-                            <input class="form-control" type="text" name="client" id="client" placeholder="Client du projet" value="<?= $client ?? '' ?>"  required>
+                            <input required class="form-control" type="text" name="client" id="client" placeholder="Client du projet" value="<?= $client ?? '' ?>"  required>
                             <label for="client">Client</label>
+                            <div id="confirmClient">
+                            
+                            </div>
                         </div>
                     </div>
 
                     <div class="col-2">
-                        <a href="#" class="btn btn-outline-success" style="height: 75%;"><img src="../images/check.png" width="40px"></a>
+                        <a id="checkClient" onclick="verifClient(clientsJson, checkClient, imgCheckClient)" class="btn btn-outline-success" style="height: 8vh;"><img id="imgCheckClient" src="../images/check.png" width="40px"></a>
                     </div>
                 </div>
 
-                <button class="btn btn-outline-primary mt-3">Créer le projet</button>
-            </form>
+                <button type="submit" value="envoi" class="btn btn-outline-primary mt-3">Créer le projet</button>
 
-            </form>
         </div>
 
         <div class="col-6">
@@ -62,7 +64,7 @@ if(!empty($_GET['idProjet']))
                             <h3>Chef de projet</h3>
                         </div>
                         <div class="card-body">
-                            <select class="form-control">
+                            <select class="form-control" name="chefProjet" required>
                                 <option selected>Choisir un chef de projet</option>
                                 <?php 
                                 foreach($equipes as $equipe)
@@ -77,6 +79,7 @@ if(!empty($_GET['idProjet']))
                         </div>
                     </div>
                 </div>
+                </form>
             </div>
 
             <!-- DIV DE SELECTION DES EQUIPES AJOUTEES AU PROJET ET QUE L ON PEUT RETIRER -->
@@ -150,6 +153,10 @@ if(!empty($_GET['idProjet']))
 </div>
 
 <script>
+    var clientsJson = <?php echo json_encode($clients) ?>;
+    var imgCheckClient = document.getElementById('imgCheckClient');
+    var checkClient = document.getElementById('checkClient');
+
     function ajouterEquipe(idEquipe)
     {
         var identifiantEquipe = "equipe" + idEquipe;
@@ -169,6 +176,44 @@ if(!empty($_GET['idProjet']))
         document.getElementById(identifiantEquipeProjet).classList.remove("show");
         document.getElementById(identifiantSelectChefEquipe).classList.remove("show");
 
+    }
+
+    function verifClient(clients, checkClient, imgCheckClient)
+    {
+        var inputClient = document.getElementById('client');
+        for(i = 0; i < clients.length; i++)
+        {
+            if(clients[i]['nom'] == inputClient.value)
+            {
+                inputClient.style.borderColor = "green";
+            } else {
+                inputClient.style.borderColor = "red";
+                document.getElementById('confirmClient').innerHTML = "<div id='divConfClient' class='alert alert-danger text-center mt-2 collapse show' style='padding:0;padding-top:3vh; padding-bottom:3vh'><p>Le client n'est pas présent dans la bdd. <br> Souhaitez vous l'ajouter?</p></div'><div class='mx-auto row'><div class='col-3'></div><div class='col-3'><a onclick='acceptClient(checkClient, imgCheckClient)' class='btn btn-success'>oui</a></div><div class='col-3'><a onclick='refusCLient()' class='btn btn-warning'>non</a></div></div>";
+                imgCheckClient.src = '../images/cancel.png';
+                checkClient.classList.remove('btn-outline-success');
+                checkClient.classList.add('btn-outline-danger', 'disabled');
+            }
+        }
+    }
+
+    function refusCLient()
+    {
+        document.getElementById('divConfClient').classList.remove('show');
+    }
+    function acceptClient(checkClient,imgCheckClient)
+    {
+        document.getElementById('divConfClient').classList.remove('show');
+        imgCheckClient.src = '../images/check.png';
+        document.getElementById('client').style.borderColor = 'green';
+        checkClient.classList.remove('btn-outline-danger');
+        checkClient.classList.add('btn-outline-success');
+        document.getElementById('client').addEventListener('change', function(){
+            document.getElementById('checkClient').classList.remove('disabled');
+            document.getElementById('checkClient').removeEventListener('change', function(){
+                document.getElementById('checkClient').classList.remove('disabled');
+            });
+        document.getElementById('client').style.borderColor = '#ced4da';
+        })
     }
 </script>
 

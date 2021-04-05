@@ -6,36 +6,54 @@ if($_SESSION['habilitation'] == 'admin')
     {
         extract($_GET);
         extract($_POST);
-        if(!empty($titre) && !empty($type) && !empty($deadline) && !empty($description) && !empty($client) && !empty($chefProjet))
+        if(!empty($titre) && !empty($type) && !empty($description) && !empty($client) && !empty($chefProjet) && !empty($equipesAjoutees))
         {
             // si client n'existe pas insert into clients
-            explode(" " , $chefProjet);
-            $nomChef = $chefProjet[0];
-            $prenomChef = $chefProjet[1];
+            $nomPrenomChefProjet = explode(" " , $chefProjet);
+            $prenomChef = $nomPrenomChefProjet[0];
+            $nomChef = $nomPrenomChefProjet[1];
             $idChefProjet = recupIdChefProjet($nomChef, $prenomChef);
             $idClient = recupIdClient($client);
+            // print($idChefProjet);
+            // print($nomChef);
+            // print('<br>');
+            // print($prenomChef);
+            // exit;
             if(verifClient($client) == true)
             {
                 // le client existe dans la bdd
                 try {
-                    creerProjet($titre, $type, $deadline, $idClient, $idChefProjet);
-                    addEquipesProjet();
-                    header("location:../admin/creationProjet.php?success=1");
+                    creerProjet($titre, $type, $deadline, $idClient['idClient'], $idChefProjet['idUtilisateur']);
+                    for($i = 0; $i < strlen($equipesProjet); $i++ )
+                    {
+                        addEquipesProjet($idProjet, $equipesAjoutees[$i]);
+                    }
+                    header("location:../admin/creationProjets.php?success=1");
                 } catch (exception $e) {
-                    header("location:../admin/creationProjet.php?error=fatalError&idProjet=$idProjet");
+                    header("location:../admin/creationProjets.php?error=fatalError&idProjet=$idProjet");
                 }
             } else {
                 // le client n'existe pas dans la bdd
                 try {
                     insertClient($client);
-                    creerProjet($titre, $type, $deadline, $idClient, $idChefProjet);
+                    creerProjet($titre, $type, $deadline, $idClient['idClient'], $idChefProjet['idUtilisateur']);
+                    print_r($equipesAjoutees);
+                    exit;
+                    for($i = 0; $i < strlen($equipesProjet); $i++ )
+                    {
+                        addEquipesProjet($idProjet, $equipesAjoutees[$i]);
+                    }
                     header("location:../admin/creationProjets.php?success=1");
                 } catch (exception $e) {
-                    header("location:../admin/creationProjet.php?error=fatalError&idProjet=$idProjet");
+                    echo '<div class="alert alert-danger">';
+                    echo $e->getMessage();
+                    echo "</div>";
+                    exit;
+                    header("location:../admin/creationProjets.php?error=fatalError&idProjet=$idProjet");
                 }
             }
         } else {
-            header("location:../admin/creationProjet.php?error=champsVide&idProjet=$idProjet");
+            header("location:../admin/creationProjets.php?error=champsVide&idProjet=$idProjet");
         }
     } else {
         header('location:../index.php');

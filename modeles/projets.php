@@ -16,6 +16,12 @@ function recupMaxIdProjets()
 
 function creerProjet($titre, $type, $deadline, $idClient, $chefProjet)
 {
-    $requete = getBdd()->prepare("INSERT INTO projets (nom, type, DateDebut, DateRendu, idClient, Etat, chefProjet) VALUES (?, ?, NOW(), ?, 'En cours', ?)");
+    $requete = getBdd()->prepare("INSERT INTO projets (nom, type, DateDebut, DateRendu, idClient, Etat, chefProjet) VALUES (?, ?, NOW(), ?,?, 'En cours', ?)");
     $requete->execute([$titre, $type, $deadline, $idClient, $chefProjet]);
+}
+
+function addEquipesProjet($idProjet, $idEquipe)
+{
+    $requete = getBdd()->prepare("INSERT INTO travaille_sur (idProjet, idEquipe) VALUES (?,?)");
+    $requete->execute([$idProjet, $idEquipe]);
 }

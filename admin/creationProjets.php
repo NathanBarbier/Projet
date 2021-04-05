@@ -26,7 +26,7 @@ if(!empty($_GET['idProjet']))
                 </div>
 
                 <div class="form-floating mb-3">
-                    <input required class="form-control" type="date" name="deadline" id="deadline" placeholder="Deadline du projet" value="<?= $deadline ?? '' ?>">
+                    <input class="form-control" type="date" name="deadline" id="deadline" placeholder="Deadline du projet" value="<?= $deadline ?? '' ?>">
                     <label for="deadline">DeadLine</label>
                 </div>
 
@@ -49,6 +49,8 @@ if(!empty($_GET['idProjet']))
                     <div class="col-2">
                         <a id="checkClient" onclick="verifClient(clientsJson, checkClient, imgCheckClient)" class="btn btn-outline-success" style="height: 8vh;"><img id="imgCheckClient" src="../images/check.png" width="40px"></a>
                     </div>
+
+                    <input id="inputEquipesAjoutees" class="collapse" name="equipesAjoutees" value="" required>
                 </div>
 
                 <button type="submit" value="envoi" class="btn btn-outline-primary mt-3">Créer le projet</button>
@@ -157,8 +159,12 @@ if(!empty($_GET['idProjet']))
     var imgCheckClient = document.getElementById('imgCheckClient');
     var checkClient = document.getElementById('checkClient');
 
-    function ajouterEquipe(idEquipe)
+    var equipesAjoutees = [];
+
+    function ajouterEquipe(idEquipe, equipesAjoutees)
     {
+        equipesAjoutees += idEquipe;
+        document.getElementById('inputEquipesAjoutees').value = equipesAjoutees;
         var identifiantEquipe = "equipe" + idEquipe;
         var identifiantEquipeProjet = "equipeProjet" + idEquipe;
         var identifiantSelectChefEquipe = "selectChefEquipe" + idEquipe;
@@ -167,15 +173,16 @@ if(!empty($_GET['idProjet']))
         document.getElementById(identifiantSelectChefEquipe).classList.add("show");
     }
 
-    function retirerEquipe(idEquipe)
+    function retirerEquipe(idEquipe, equipesAjoutees)
     {
+        equipesAjoutees.splice(equipesAjoutees.indexOf(idEquipe), 1);
+        document.getElementById('inputEquipesAjoutees').value = equipesAjoutees;
         var identifiantEquipe = "equipe" + idEquipe;
         var identifiantEquipeProjet = "equipeProjet" + idEquipe;
         var identifiantSelectChefEquipe = "selectChefEquipe" + idEquipe;
         document.getElementById(identifiantEquipe).classList.add("show");
         document.getElementById(identifiantEquipeProjet).classList.remove("show");
         document.getElementById(identifiantSelectChefEquipe).classList.remove("show");
-
     }
 
     function verifClient(clients, checkClient, imgCheckClient)

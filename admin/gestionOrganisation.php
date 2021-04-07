@@ -8,11 +8,7 @@ if(!empty($_GET["Suppression"]) && $_GET["Suppression"] === $_SESSION["idOrganis
     supprimerOrganisation();
 }
 ?>
-<<<<<<< HEAD
 <div class="col-10 mt-4 w-75">
-=======
-<div class="col-10 mt-4">
->>>>>>> 8fdd04aa91654970e469b2aa8e2258f03bb110a9
 
         <div class="row">
             <div class="col">
@@ -53,7 +49,6 @@ if(!empty($_GET["Suppression"]) && $_GET["Suppression"] === $_SESSION["idOrganis
             </div>
         </div>
 
-<<<<<<< HEAD
     <div class="col-4" >
         <div class="card">
             <div class="card-header">
@@ -64,19 +59,6 @@ if(!empty($_GET["Suppression"]) && $_GET["Suppression"] === $_SESSION["idOrganis
                 <p>Email Admin : <?= $InfosOrganisation["email"] ?></p><br>
                 <p>Nombre d'employés : <?= $InfosOrganisation["nombreEmployes"] ?></p><br>
                 <p>Nombre d'équipes : <?= $InfosOrganisation["nombreEquipes"] ?></p>
-=======
-        <div class="col-4" >
-            <div class="card">
-                <div class="card-header">
-                    <h4>Informations sur l'organisation</h4>
-                </div>
-                <div class="card-body">
-                    <p><b><?= $InfosOrganisation["nom"] ?></b></p><br>
-                    <p>Email Admin : <?= $InfosOrganisation["email"] ?></p><br>
-                    <p>Nombre d'employés : <?= $InfosOrganisation["nombreEmployes"] ?></p><br>
-                    <p>Nombre d'équipes : <?= $InfosOrganisation["nombreEquipes"] ?></p>
-                </div>
->>>>>>> 8fdd04aa91654970e469b2aa8e2258f03bb110a9
             </div>
         </div>
     </div>

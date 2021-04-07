@@ -15,7 +15,7 @@ if(!empty($_SESSION["habilitation"]) && $_SESSION["habilitation"] == "admin")
 
     </head>
     <body style="overflow-x: hidden;">
-        <nav class="navbar navbar-dark navbar-expand-md bg-dark w-100" style="height: 8vh; position: fixed; z-index : 999">
+        <nav class="navbar navbar-dark navbar-expand-md bg-dark w-100" style="height: 60px; position: fixed; z-index : 999">
             <a class="navbar-brand" href="../index.php">
                 <img src="../images/logo.png" width="30vh" height="30vh" class="d-inline-block align-top" alt="">
                 Projet gestion projets
@@ -35,7 +35,7 @@ if(!empty($_SESSION["habilitation"]) && $_SESSION["habilitation"] == "admin")
             </div>
 
         </nav>
-        <div class="row" style="height: 8vh;">
+        <div class="row" style="height: 60px;">
         </div>
         
         <div class="row">

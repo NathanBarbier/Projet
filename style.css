@@ -114,3 +114,9 @@ a {
 .aVignette:hover {
     color: black;
 }
+
+.titreInfoEquipe {
+    text-align: center;
+    color: white;
+    text-shadow: 0 0 4px black,0 0 4px black,0 0 4px black,0 0 4px black,0 0 4px black,0 0 4px black,0 0 4px black,0 0 4px black,0 0 4px black,0 0 4px black,0 0 4px black,0 0 4px black,0 0 4px black,0 0 4px black,0 0 4px black,0 0 4px black,0 0 4px black,0 0 4px black,0 0 4px black,0 0 4px black;
+}

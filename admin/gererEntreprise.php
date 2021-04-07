@@ -9,7 +9,7 @@ $equipes = recupererEquipes($_SESSION["idOrganisation"]);
 $nbMembresEquipes = recupererNombreMembreParEquipe($_SESSION["idOrganisation"]);
 $nbMembresPostes = recupererNombreMembreParPoste($_SESSION["idOrganisation"]);
 $equipeMinMax = recupererMaxMinIdEquipes($_SESSION["idOrganisation"]);
-
+$chefEquipes = recupChefEquipesParOrganisation($_SESSION["idOrganisation"]);
 if(!empty($_GET["id"]))
 {
     $posteModif = recupIdPoste($_GET["id"]);
@@ -17,7 +17,7 @@ if(!empty($_GET["id"]))
 if(!empty($_GET["error"]))
 {
     ?>
-    <div class="alert alert-danger pb-0 mt-3" style="z-index : 0">
+    <div class="alert alert-danger pb-0 mt-3" style="z-index : 0; width : max-content">
     <?php
     switch($_GET["error"]) { case "fatalerror":?>
         <?php echo "Erreur : une erreur inconnu est survenue."?>
@@ -31,7 +31,7 @@ if(!empty($_GET["error"]))
 if(!empty($_GET["success"]))
 {
     ?>
-    <div class="alert alert-success mt-3" style="z-index : 0">
+    <div class="alert alert-success mt-3" style="z-index : 0; width : max-content">
     <?php
     switch($_GET["success"]) { case "ajouterPoste":?>
         <?php echo "Le poste a bien été ajouté."?>
@@ -55,7 +55,7 @@ if(!empty($_GET["supprPoste"]))
 {
     $lePoste = recupIdPoste($_GET["supprPoste"])
     ?>
-    <div class=" alert alert-info mt-3" style="z-index : 0">
+    <div class=" alert alert-info mt-3" style="z-index : 0; width : max-content">
     êtes vous sur de vouloir supprimer "<?=$lePoste["nomPoste"];?> ? Cette action est irréversible et supprimera le poste de tous les membres ayant ce poste ! 
     <a href="../traitements/supprimerPoste.php?suppr=<?=$_GET["supprPoste"];?>" class="btn btn-success">Confirmer</a>
     <a href="gererEntreprise.php" class="btn btn-danger">Annuler</a>
@@ -312,16 +312,16 @@ if(!empty($_GET["supprPoste"]))
                             {
                                 ?>
                                     <tr>
-                                        <th style="width: 33%"><?=$equipe["nomEquipe"];?></th>
-                                        <td style="width: 33%"><?=$nbMembreEquipe["UtilisateursParEquipe"];?></td>
+                                        <th style="width: 31%"><?=$equipe["nomEquipe"];?></th>
+                                        <td style="width: 25%"><?=$nbMembreEquipe["UtilisateursParEquipe"];?></td>
                                         <?php
                                         if($equipe["chefEquipe"] == NULL){
                                         ?>
-                                            <td style="width: 33%">//</td>
+                                            <td style="width: 40%"><div style="margin-left: 5vh" >//</div></td>
                                         <?php
                                         } else {
                                         ?>
-                                            <td style="width: 33%"><?=$equipe["chefEquipe"];?></td>
+                                            <td style="width: 40%"><?=$equipe["chefEquipe"];?></td>
                                         <?php
                                         }
                                         ?>
@@ -343,11 +343,19 @@ if(!empty($_GET["supprPoste"]))
                                         <?php
                                         if($equipe["chefEquipe"] == NULL){
                                         ?>
-                                            <td>//</td>
+                                            <td><div style="margin-left: 5vh">//</div></td>
                                         <?php
                                         } else {
+                                            foreach($chefEquipes as $chefEquipe)
+                                            {
+                                                if($equipe["chefEquipe"] == $chefEquipe["idUtilisateur"])
+                                                {
+                                                    ?>
+                                                    <td><?=$chefEquipe["nom"]. " ". $chefEquipe["prenom"];?> </td>
+                                                    <?php
+                                                }
+                                            }
                                         ?>
-                                            <td><?=$equipe["chefEquipe"];?></td>
                                         <?php
                                         }
                                         ?>

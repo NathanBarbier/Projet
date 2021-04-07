@@ -105,3 +105,4 @@ function recupererPosteUtilisateur($idUtilisateur)
     $requete->execute([$idUtilisateur]);
     return $requete->fetch(PDO::FETCH_ASSOC);
 }
+

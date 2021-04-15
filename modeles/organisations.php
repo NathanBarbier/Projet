@@ -40,12 +40,24 @@ function recupNomOrganisation($organisation)
 {
     $requete = getBdd()->prepare("SELECT Nom FROM organisations WHERE Nom = ?");
     $requete->execute([$organisation]);
+    if($requete->rowCount() > 0)
+    {
+        return true;
+    } else {
+        return false;
+    }
 }
 
 function recupEmailOrganisation($mail)
 {
     $requete = getBdd()->prepare("SELECT Email FROM organisations WHERE Email = ?");
     $requete->execute([$mail]);
+    if($requete->rowCount() > 0)
+    {
+        return true;
+    } else {
+        return false;
+    }
 }
 
 function creerOrganisation($mail, $mdp, $organisation)

@@ -4,11 +4,11 @@ if(isset($_POST["envoi"]) && !empty($_POST["envoi"])) {
     extract($_POST);
     if(!empty($organisation) && !empty($mail) && !empty($mdp) && !empty($mdp2))
     {
-        if(recupNomOrganisation($organisation)->rowcount() == 0 )
+        if(recupNomOrganisation($organisation) == false )
         {
             if(filter_var($mail, FILTER_VALIDATE_EMAIL ))
             {
-                if(recupEmailOrganisation($mail)->rowcount() == 0 )
+                if(recupEmailOrganisation($mail) == false )
                 {
                     if($mdp == $mdp2)
                     {

@@ -1,5 +1,54 @@
 <?php
 
+Class Poste extends Modele
+{
+    private $idPoste;
+    private $nom;
+    private $idOrganisation;
+    private $idRole;
+
+    public function __construct($idPoste = null)
+    {
+        if($idPoste !== null)
+        {
+            $requete = $this->getBdd()->prepare("SELECT * FROM postes WHERE idPoste = ?");
+            $requete->execute([$idPoste]);
+            $poste = $requete->fetch(PDO::FETCH_ASSOC);
+            $this->idPoste = $idPoste;
+            $this->nom = $poste["nom"];
+            $this->idOrganisation = $poste["idOrganisation"];
+            $this->idRole = $poste["idRole"];
+        }
+    }
+
+    public function getNomPoste()
+    {
+        return $this->nom;
+    }
+
+    public function getIdOrganisationPoste()
+    {
+        return $this->idOrganisation;
+    }
+
+    public function getIdRolePoste()
+    {
+        return $this->idRole;
+    }
+
+    public function setNomPoste($nom)
+    {
+        $this->nom = $nom;
+    }
+
+
+    public function setIdRolePoste($idRole)
+    {
+        $this->idRole = $idRole;
+    }
+
+}
+
 function recupererPostes($idOrganisation)
 {
     $requete = getBdd()->prepare("SELECT * FROM postes WHERE idOrganisation = ?");

@@ -1,4 +1,4 @@
-<?php 
+<?php
 function recupererRoles()
 {
     $requete = getBdd()->prepare("SELECT * FROM roles");

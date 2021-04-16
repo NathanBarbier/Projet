@@ -168,44 +168,45 @@ class Organisation extends Modele
         $requete->execute([$idO]);
         return $requete->fetchAll(PDO::FETCH_ASSOC);
     }
+
     public function getMinMaxIdEquipe()
     {
-        $tableau = [["minIdE"], ["maxIdE"]];
-        foreach($this->getEquipesOrg() as $Equipe)
+        $tableau = [];
+        foreach($this->getEquipesOrg() as $cle => $Equipe)
         {
-            foreach($Equipe->getIdEquipe() as $cle => $IdEquipe)
+            $IdEquipe = $Equipe->getIdEquipe();
+            if($cle == 0 )
             {
-                if($cle == 0 )
+                $tableau["minIdE"] = $IdEquipe;
+                $tableau["maxIdE"] = $IdEquipe;
+            } else {
+                if($IdEquipe > $tableau["maxIdE"])
                 {
-                    $tableau["minIdE"][] = $IdEquipe;
-                    $tableau["maxIdE"][] = $IdEquipe;
-                } else {
-                    if($IdEquipe > $tableau["maxIdE"])
-                    {
-                        $tableau["maxIdE"][] = $IdEquipe;
-                    }
-                    if($IdEquipe < $tableau["minIdE"])
-                    {
-                        $tableau["minIdE"][] = $IdEquipe;
-                    }
+                    $tableau["maxIdE"] = $IdEquipe;
+                }
+                if($IdEquipe < $tableau["minIdE"])
+                {
+                    $tableau["minIdE"] = $IdEquipe;
                 }
             }
         }
         return $tableau;
     }
-
-    public function recupMaxMinIdEquipes($idO)
-    {
-        $requete = $this->getBdd()->prepare("SELECT max(idEquipe) as MaxId, min(idEquipe) as MinId FROM equipes WHERE idOrganisation = ?");
-        $requete->execute([$idO]);
-        return $requete->fetch(PDO::FETCH_ASSOC);
-    }
     
-    public function recupererNombreMembreParEquipe($idOrganisation)
+    public function recupNbMembreParEquipe()
     {
-        $requete = $this->getBdd()->prepare("SELECT idEquipe, count(utilisateurs.idEquipe) as UtilisateursParEquipe FROM equipes left join utilisateurs using(idEquipe) where equipes.idOrganisation = ? group by equipes.idEquipe");
-        $requete->execute([$idOrganisation]);
-        return $requete->fetchAll(PDO::FETCH_ASSOC);
+        $nbMembresParEquipe = [];
+        foreach($this->getEquipesOrg() as $Equipe)
+        {
+            foreach($Equipe->getCountMembres() as $nbMembre)
+            {
+                $idE = $Equipe->getIdEquipe();
+                $nbMembresParEquipe[] = [
+                    $idE => $nbMembre
+                ];
+            }
+        }
+        return $nbMembresParEquipe;
     }
     
     public function ajouterEquipe($ajoutEquipe, $idOrganisation)
@@ -219,6 +220,22 @@ class Organisation extends Modele
         $requete = $this->getBdd()->prepare("SELECT utilisateurs.nom, utilisateurs.prenom, utilisateurs.email, chefEquipe, utilisateurs.idUtilisateur FROM equipes LEFT JOIN utilisateurs ON utilisateurs.idUtilisateur = equipes.chefEquipe WHERE equipes.idOrganisation = ?");
         $requete->execute([$idOrganisation]);
         return $requete->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function recupChefEquipesParOrg()
+    {
+        $chefsEquipes = [];
+        foreach($this->getEquipesOrg() as $Equipe)
+        {
+            foreach($Equipe->getChefEquipe() as $chefEquipe)
+            {
+                $idE = $Equipe->getIdEquipe();
+                $chefsEquipes[] = [
+                    $idE => $chefEquipe
+                ];
+            }
+        }
+        return $chefsEquipes;
     }
 
     public function delOrg()

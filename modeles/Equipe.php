@@ -5,6 +5,7 @@ class Equipe extends Modele
     private $nomEquipe;
     private $idOrganisation;
     private $chefEquipe;
+    private $membres = [];
 
     public function __construct($idE = null)
     {
@@ -17,6 +18,16 @@ class Equipe extends Modele
             $this->nomEquipe = $equipe["nomEquipe"];
             $this->idOrganisation = $equipe["idOrganisation"];
             $this->chefEquipe = $equipe["chefEquipe"];
+
+            $requete = $this->getBdd()->prepare("SELECT * FROM equipes WHERE idEquipe = ?");
+            $requete->execute([$this->idEquipe]);
+            $membres = $requete->fetch(PDO::FETCH_ASSOC);
+
+            foreach($membres as $membre)
+            {
+                $ObjetMembre = new Utilisateur($membre["idUtilisateur"]);
+                $this->membres[] = $ObjetMembre;
+            }
         }
     }
 
@@ -51,6 +62,11 @@ class Equipe extends Modele
     {
         return $this->idOrganisation;
     }
+
+    public function getMembresEquipe()
+    {
+        return $this->membres;
+    }
     
     // METHODES
 
@@ -67,6 +83,5 @@ class Equipe extends Modele
         $requete->execute([$idEquipe]);
         return $requete->fetch(PDO::FETCH_ASSOC);
     }
-    
 
 }

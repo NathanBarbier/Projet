@@ -4,17 +4,17 @@ if(isset($_POST["envoi"]) && !empty($_POST["envoi"])) {
     extract($_POST);
     if(!empty($organisation) && !empty($mail) && !empty($mdp) && !empty($mdp2))
     {
-        if(recupNomOrganisation($organisation) == false )
+        if(verifNomOrg($organisation) == false )
         {
             if(filter_var($mail, FILTER_VALIDATE_EMAIL ))
             {
-                if(recupEmailOrganisation($mail) == false )
+                if(verifEmailOrg($mail) == false )
                 {
                     if($mdp == $mdp2)
                     {
                         try {
                             $mdp = password_hash($mdp, PASSWORD_BCRYPT);
-                            creerOrganisation($mail, $mdp, $organisation);
+                            inscriptionOrg($mail, $mdp, $organisation);
                             header("location:../pages/inscriptionOrganisation.php?success=1");
                         } catch (exception $e) {
                             header("location:../pages/inscriptionOrganisation.php?error=fatalerror");

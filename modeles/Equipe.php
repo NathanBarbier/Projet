@@ -19,9 +19,9 @@ class Equipe extends Modele
             $this->idOrganisation = $equipe["idOrganisation"];
             $this->chefEquipe = $equipe["chefEquipe"];
 
-            $requete = $this->getBdd()->prepare("SELECT * FROM equipes WHERE idEquipe = ?");
+            $requete = $this->getBdd()->prepare("SELECT * FROM utilisateurs WHERE idEquipe = ?");
             $requete->execute([$this->idEquipe]);
-            $membres = $requete->fetch(PDO::FETCH_ASSOC);
+            $membres = $requete->fetchAll(PDO::FETCH_ASSOC);
 
             foreach($membres as $membre)
             {

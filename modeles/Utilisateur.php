@@ -1,15 +1,15 @@
 <?php
 class Utilisateur extends Modele
 {
-    private $idUtilisateur;
-    private $nom;
-    private $prenom;
-    private $dateNaiss;
-    private $mdp;
-    private $idPoste;
-    private $email;
-    private $idEquipe;
-    private $idOrganisation;
+    protected $idUtilisateur;
+    protected $nom;
+    protected $prenom;
+    protected $dateNaiss;
+    protected $mdp;
+    protected $idPoste;
+    protected $email;
+    protected $idEquipe;
+    protected $idOrganisation;
 
     public function __construct($idU = null)
     {
@@ -20,8 +20,8 @@ class Utilisateur extends Modele
 
             $Utilisateur = $requete->fetch(PDO::FETCH_ASSOC);
             $this->idUtilisateur = $idU;
-            $this->nom = $Utilisateur["idUtilisateur"];
-            $this->prenom = $Utilisateur["nom"];
+            $this->nom = $Utilisateur["nom"];
+            $this->prenom = $Utilisateur["prenom"];
             $this->dateNaiss = $Utilisateur["dateNaiss"];
             $this->mdp = $Utilisateur['mdp'];
             $this->idPoste = $Utilisateur["idPoste"];
@@ -35,41 +35,50 @@ class Utilisateur extends Modele
     public function setNomUser($nU)
     {
         $this->nom = $nU;
+        $requete = $this->getBdd()->prepare("UPDATE utilisateurs SET nom = ? WHERE idUtilisateur = ?");
+        $requete->execute([$this->nom,$this->idUtilisateur]);
     }
 
     public function setPrenomUser($pU)
     {
         $this->prenom = $pU;
+        $requete = $this->getBdd()->prepare("UPDATE utilisateurs SET prenom = ? WHERE idUtilisateur = ?");
+        $requete->execute([$this->prenom,$this->idUtilisateur]);
     }
 
     public function setDateNaissUser($dN)
     {
         $this->dateNaiss = $dN;
+        $requete = $this->getBdd()->prepare("UPDATE utilisateurs SET dateNaiss = ? WHERE idUtilisateur = ?");
+        $requete->execute([$this->dateNaiss, $this->idUtilisateur]);
     }
 
     public function setMdpUser($mU)
     {
         $this->mdp = hash($mU, PASSWORD_BCRYPT);
+        $requete = $this->getBdd()->prepare("UPDATE utilisateurs SET mdp = ? WHERE idUtilisateur = ?");
+        $requete->execute([$this->mdp,$this->idUtilisateur]);
     }
 
     public function setIdPosteUser($idP)
     {
         $this->idPoste = $idP;
+        $requete = $this->getBdd()->prepare("UPDATE utilisateurs SET idPoste = ? WHERE idUtilisateur = ?");
+        $requete->execute([$this->idPoste, $this->idUtilisateur]);
     }
 
     public function setEmailUser($eU)
     {
         $this->email = $eU;
+        $requete = $this->getBdd()->prepare("UPDATE utilisateurs SET email = ? WHERE idUtilisateur = ?");
+        $requete->execute([$this->email, $this->idUtilisateur]);
     }
 
-    public function setIdEquipe($idE)
+    public function setIdEquipeUser($idE)
     {
         $this->idEquipe = $idE;
-    }
-
-    public function setIdOrganisation($idO)
-    {
-        $this->idOrganisation = $idO;
+        $requete = $this->getBdd()->prepare("UPDATE utilisateurs SET idEquipe = ? WHERE idUtilisateur = ?");
+        $requete->execute([$this->idEquipe, $this->idUtilisateur]);
     }
 
     // GETTER
@@ -109,80 +118,22 @@ class Utilisateur extends Modele
         return $this->email;
     }
 
-    public function getIdEquipe()
+    public function getIdEquipeUser()
     {
         return $this->idEquipe;
     }
 
-    public function getIdOrganisation()
+    public function getIdOrganisationUser()
     {
         return $this->idOrganisation;
     }
 
     // METHODES
-    public function recupererHashMdpUser()
-    {
-        $requete = $this->getBdd()->prepare("SELECT mdp FROM utilisateurs WHERE idUtilisateur = ?");
-        $requete->execute([$_SESSION["idUtilisateur"]]);
-        return $requete->fetch(PDO::FETCH_ASSOC);
-    }
-
-    public function modifierMdpUtilisateur($newmdp)
-    {
-        $newmdp = password_hash($newmdp, PASSWORD_BCRYPT);
-        $requete = $this->getBdd()->prepare("UPDATE utilisateurs SET mdp = ? WHERE idUtilisateur = ?");
-        $requete->execute([$newmdp,$_SESSION["idUtilisateur"]]);
-    }
-
-    public function recupInfosUtilisateurs($idOrganisation)
-    {
-        $requete = $this->getBdd()->prepare("SELECT * FROM utilisateurs LEFT JOIN equipes USING(idEquipe) LEFT JOIN postes USING(idPoste) WHERE utilisateurs.idOrganisation = ?");
-        $requete->execute([$idOrganisation]);
-        return $requete->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-    public function recupChefEquipe($idChefEquipe)
-    {
-        $requete = $this->getBdd()->prepare("SELECT nom, prenom FROM utilisateurs WHERE idUtilisateur = ?");
-        $requete->execute([$idChefEquipe]);
-        return $requete->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-    public function recupInfosUtilisateur($idUser)
-    {
-        $requete = $this->getBdd()->prepare ("SELECT * FROM utilisateurs WHERE idUtilisateur = ?");
-        $requete->execute($idUser);
-        return $requete->fetch(PDO::FETCH_ASSOC);
-    }
-
-    public function modifierEquipeUtilisateur($idEquipe, $idUser)
-    {
-        $requete = $this->getBdd()->prepare("UPDATE utilisateurs SET idEquipe = ? WHERE idUtilisateur = ?");
-        $requete->execute([$idEquipe, $idUser]);
-    }
-
-    public function modifierPosteUtilisateur($idPoste, $idUser)
-    {
-        $requete = $this->getBdd()->prepare("UPDATE utilisateurs SET idPoste = ? WHERE idUtilisateur = ?");
-        $requete->execute([$idPoste, $idUser]);
-    }
-
-    public function modifierNom($nom,$idUser)
-    {
-        $requete = $this->getBdd()->prepare("UPDATE utilisateurs SET nom = ? WHERE idUtilisateur = ?");
-        $requete->execute([$nom,$idUser]);
-    }
-
-    public function modifierPrenom($prenom,$idUser)
-    {
-        $requete = $this->getBdd()->prepare("UPDATE utilisateurs SET prenom = ? WHERE idUtilisateur = ?");
-        $requete->execute([$prenom,$idUser]);
-    }
-
-    public function verifEmailUtilisateur($email)
+    // VERIF
+    public function verifEmailUser($eU)
     {
         $requete = $this->getBdd()->prepare("SELECT email FROM utilisateurs WHERE email = ?");
-        $requete->execute([$email]);
+        $requete->execute([$eU]);
 
         if($requete->rowcount() > 0)
         {
@@ -192,58 +143,16 @@ class Utilisateur extends Modele
         }
     }
 
-    public function creerUtilisateur($nom,$prenom,$dateNaiss,$idPoste,$email,$idEquipe,$idOrganisation)
+    // ADD
+    public function addUser($nom,$prenom,$dateNaiss,$idP,$em,$idE,$idO)
     {
-        try {
-
-            $mdp = $this->generateRandomString(6);
-            $mdptemp = $mdp;
-            $mdp = password_hash($mdp, PASSWORD_BCRYPT);
-
-                            
-            $requete = $this->getBdd()->prepare("INSERT INTO utilisateurs (nom, prenom, dateNaiss, mdp, idPoste, email, idEquipe, idOrganisation)
-            VALUES (?,?,?,?,?,?,?,?)");
-            $requete->execute([$nom,$prenom,$dateNaiss,$mdp,$idPoste,$email,$idEquipe,$idOrganisation]);
-            return $mdptemp;
-
-        } catch (exception $e) {
-            return false;
-        }
-    }
-
-    public function recupUtilisateurMail($mail)
-    {
-        $requete = $this->getBdd()->prepare("SELECT * FROM utilisateurs WHERE email = ?");
-        $requete->execute([$mail]);
-        return $requete->fetch(PDO::FETCH_ASSOC);
-    }
-
-
-    public function recupUtilisateursEquipe($idEquipe)
-    {
-        $requete = $this->getBdd()->prepare("SELECT * FROM utilisateurs WHERE idEquipe = ?");
-        $requete->execute([$idEquipe]);
-        return $requete->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-    public function recupUtilisateursPoste($idPoste)
-    {
-        $requete = $this->getBdd()->prepare("SELECT * FROM utilisateurs WHERE idPoste = ?");
-        $requete->execute([$idPoste]);
-        return $requete->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-    public function recupererPosteUtilisateur($idUtilisateur)
-    {
-        $requete = $this->getBdd()->prepare("SELECT postes.nomPoste as nomPoste FROM utilisateurs INNER JOIN postes USING(idPoste) WHERE idUtilisateur = ?");
-        $requete->execute([$idUtilisateur]);
-        return $requete->fetch(PDO::FETCH_ASSOC);
-    }
-
-    public function recupIdChefProjet($nomChef, $prenomChef)
-    {
-        $requete = $this->getBdd()->prepare("SELECT idUtilisateur FROM utilisateurs WHERE nom = ? AND prenom = ?");
-        $requete->execute([$nomChef, $prenomChef]);
-        return $requete->fetch(PDO::FETCH_ASSOC);
+        $mdp = $this->generateRandomString(6);
+        $mdptemp = $mdp;
+        $mdp = password_hash($mdp, PASSWORD_BCRYPT);
+                        
+        $requete = $this->getBdd()->prepare("INSERT INTO utilisateurs (nom, prenom, dateNaiss, mdp, idPoste, email, idEquipe, idOrganisation)
+        VALUES (?,?,?,?,?,?,?,?)");
+        $requete->execute([$nom,$prenom,$dateNaiss,$mdp,$idP,$em,$idE,$idO]);
+        return $mdptemp;
     }
 }

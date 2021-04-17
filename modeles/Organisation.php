@@ -23,35 +23,35 @@ class Organisation extends Modele
             $this->nom = $Organisation["nom"];
             $this->email = $Organisation["email"];
 
-            $equipes = $this->recupEquipesOrg($idO);
+            $equipes = $this->recupEquipesOrg();
             foreach($equipes as $equipe)
             {
                 $ObjetEquipe = new Equipe($equipe["idEquipe"]);
                 $this->equipes[] = $ObjetEquipe; 
             }
 
-            $utilisateurs = $this->recupUsersOrg($idO);
+            $utilisateurs = $this->recupUsersOrg();
             foreach($utilisateurs as $utilisateur)
             {
                 $ObjetUtilisateur = new Utilisateur($utilisateur['idUtilisateur']);
                 $this->utilisateurs[] = $ObjetUtilisateur;
             }
 
-            $postes = $this->recupPostesOrg($idO);
+            $postes = $this->recupPostesOrg();
             foreach($postes as $poste)
             {
                 $ObjetPoste = new Poste($poste['idPoste']);
                 $this->postes[] = $ObjetPoste;
             }
 
-            $clients = $this->recupClientsOrg($idO);
+            $clients = $this->recupClientsOrg();
             foreach($clients as $client)
             {
                 $ObjetClient = new Client($client['idClient']);
                 $this->clients[] = $ObjetClient;
             }
 
-            $projets = $this->recupProjetsOrg($idO);
+            $projets = $this->recupProjetsOrg();
             foreach($projets as $projet)
             {
                 $ObjetProjet = new Projet($projet['idProjet']);
@@ -64,16 +64,22 @@ class Organisation extends Modele
     public function setNomOrg($nO)
     {
         $this->nom = $nO;
+        $requete = $this->getBdd()->prepare("UPDATE organisations SET nom = ? WHERE idOrganisation = ?");
+        $requete->execute([$this->nom, $this->idOrganisation]);
     }
 
     public function setEmailOrg($eO)
     {
         $this->email = $eO;
+        $requete = $this->getBdd()->prepare("UPDATE organisations SET email = ? WHERE idOrganisation = ?");
+        $requete->execute([$this->email, $this->idOrganisation]);
     }
 
     public function setMdpOrg($mdp)
     {
         $this->mdp = password_hash($mdp, PASSWORD_BCRYPT);
+        $requete = $this->getBdd()->prepare("UPDATE organisations SET mdp = ? WHERE idOrganisation = ?");
+        $requete->execute([$this->mdp, $this->idOrganisation]);
     }
 
     // GETTER
@@ -132,46 +138,128 @@ class Organisation extends Modele
         return $this->projets;
     }
 
-    // METHODES
-
-    public function recupEquipesOrg($idO)
+    public function getNomPosteByIdUser($idUser)
     {
-        $requete = $this->getBdd()->prepare("SELECT * FROM equipes WHERE idOrganisation = ?");
-        $requete->execute([$idO]);
-        return $requete->fetchAll(PDO::FETCH_ASSOC);
+        foreach($this->getUsersOrg() as $utilisateur)
+        {
+            if($utilisateur->getIdUser() == $idUser)
+            {
+                $idPosteUser = $utilisateur->getIdPosteUser();
+            }
+        }
+
+        foreach($this->getPostesOrg() as $poste)
+        {
+            if($poste->getIdPoste() == $idPosteUser)
+            {
+                return $poste->getNomPoste();
+            }
+        }
     }
 
-    public function recupClientsOrg($idO)
+    public function getIdByNomPrenom($nom, $prenom)
     {
-        $requete = $this->getBdd()->prepare("SELECT clients.nom as nom, clients.idClient as idClient FROM clients INNER JOIN commande_client USING(idClient) INNER JOIN projets USING(idProjet) INNER JOIN travaille_sur USING(idProjet) INNER JOIN equipes USING(idEquipe) WHERE equipes.idOrganisation = ?");
-        $requete->execute([$idO]);
-        return $requete->fetchAll(PDO::FETCH_ASSOC);
+        foreach($this->getUsersOrg() as $utilisateur)
+        {
+            if($utilisateur->getNomUser() == $nom && $utilisateur->getPrenomUser() == $prenom)
+            {
+                return $utilisateur->getIdUser();
+            }
+        }
     }
 
-    public function recupUsersOrg($idO)
+    public function getInfosUsersOrg()
     {
-        $requete = $this->getBdd()->prepare("SELECT * FROM Utilisateurs WHERE idOrganisation = ?");
-        $requete->execute([$idO]);
-        return $requete->fetchAll(PDO::FETCH_ASSOC);
+        $infosUsers = [];
+        foreach($this->getUsersOrg() as $utilisateur)
+        {
+            $infosUsers[] = [
+                "idUtilisateur" => $utilisateur->getIdUser(),
+                "nom" => $utilisateur->getNomUser(),
+                "prenom" => $utilisateur->getPrenomUser(),
+                "dateNaiss" => $utilisateur->getDateNaissUser(),
+                "mdp" => $utilisateur->getMdpUser(),
+                "idPoste" => $utilisateur->getIdPosteUser(),
+                "email" => $utilisateur->getEmailUser(),
+                "idEquipe" => $utilisateur->getIdEquipeUser(),
+                "idOrganisation" => $utilisateur->getIdOrganisationUser(),
+                "equipe" => $this->getEquipesOrg()[$utilisateur->getIdEquipeUser()]->getNomEquipe(),
+                "poste" => $this->getPostesOrg()[$utilisateur->getIdPosteUser()]->getNomPoste(),
+            ];
+        }
+        return $infosUsers;
     }
 
-    public function recupPostesOrg($idO)
+    public function getUsersByEquipeOrg($idEquipe)
     {
-        $requete = $this->getBdd()->prepare("SELECT * FROM Postes WHERE idOrganisation = ?");
-        $requete->execute([$idO]);
-        return $requete->fetchAll(PDO::FETCH_ASSOC);
+        $usersEquipe = [];
+        foreach($this->getEquipesOrg() as $equipe)
+        {
+            if($equipe->getIdEquipe() == $idEquipe)
+            {
+                foreach($equipe->getMembresEquipe() as $utilisateur)
+                {
+                    $usersEquipe[] = [
+                        "idUtilisateur" => $utilisateur->getIdUser(),
+                        "nom" => $utilisateur->getNomUser(),
+                        "prenom" => $utilisateur->getPrenomUser(),
+                        "dateNaiss" => $utilisateur->getDateNaissUser(),
+                        "mdp" => $utilisateur->getMdpUser(),
+                        "idPoste" => $utilisateur->getIdPosteUser(),
+                        "email" => $utilisateur->getEmailUser(),
+                        "idEquipe" => $utilisateur->getIdEquipeUser(),
+                        "idOrganisation" => $utilisateur->getIdOrganisationUser(),
+                    ];
+                }
+                return $usersEquipe;
+            }
+        }
     }
 
-    public function recupProjetsOrg($idO)
+    public function getUsersByPoste($idPoste)
     {
-        $requete = $this->getBdd()->prepare("SELECT idProjet, nom, type, DateDebut, DateRendu, Etat, chefProjet FROM projets USING(idProjet) INNER JOIN travaille_sur USING(idProjet) INNER JOIN equipes USING(idEquipe) WHERE equipes.idOrganisation = ?");
-        $requete->execute([$idO]);
-        return $requete->fetchAll(PDO::FETCH_ASSOC);
+        $usersPoste = [];
+        foreach($this->getPostesOrg() as $poste)
+        {
+            if($poste->getIdEquipe() == $idPoste)
+            {
+                foreach($poste->getMembresPoste() as $utilisateur)
+                {
+                    $usersEquipe[] = [
+                        "idUtilisateur" => $utilisateur->getIdUser(),
+                        "nom" => $utilisateur->getNomUser(),
+                        "prenom" => $utilisateur->getPrenomUser(),
+                        "dateNaiss" => $utilisateur->getDateNaissUser(),
+                        "mdp" => $utilisateur->getMdpUser(),
+                        "idPoste" => $utilisateur->getIdPosteUser(),
+                        "email" => $utilisateur->getEmailUser(),
+                        "idEquipe" => $utilisateur->getIdEquipeUser(),
+                        "idOrganisation" => $utilisateur->getIdOrganisationUser(),
+                    ];
+                }
+                return $usersPoste;
+            }
+        }
+    }
+    
+    public function getInfosChefsEquipesOrg()
+    {
+        $chefsEquipes = [];
+        foreach($this->getEquipesOrg() as $equipe)
+        {
+            $chefsEquipes[] = [
+                "nom" => $this->getUsersOrg()[$equipe->getChefEquipe()]->getNomUser(),
+                "prenom" => $this->getUsersOrg()[$equipe->getChefEquipe()]->getPrenomUser(),
+                "email" => $this->getUsersOrg()[$equipe->getChefEquipe()]->getEmailUser(),
+                "idUser" => $this->getUsersOrg()[$equipe->getChefEquipe()]->getIdUser(),  
+            ];
+        }
+        return $chefsEquipes;
     }
 
     public function getMinMaxIdEquipe()
     {
-        $tableau = [];
+        $extrIdEquipe = [];
         foreach($this->getEquipesOrg() as $cle => $Equipe)
         {
             $IdEquipe = $Equipe->getIdEquipe();
@@ -180,20 +268,20 @@ class Organisation extends Modele
                 $tableau["minIdE"] = $IdEquipe;
                 $tableau["maxIdE"] = $IdEquipe;
             } else {
-                if($IdEquipe > $tableau["maxIdE"])
+                if($IdEquipe > $extrIdEquipe["maxIdE"])
                 {
                     $tableau["maxIdE"] = $IdEquipe;
                 }
-                if($IdEquipe < $tableau["minIdE"])
+                if($IdEquipe < $extrIdEquipe["minIdE"])
                 {
-                    $tableau["minIdE"] = $IdEquipe;
+                    $extrIdEquipe["minIdE"] = $IdEquipe;
                 }
             }
         }
         return $tableau;
     }
-    
-    public function recupNbMembreParEquipe()
+
+    public function getNbUsersEquipes()
     {
         $nbMembresParEquipe = [];
         foreach($this->getEquipesOrg() as $Equipe)
@@ -208,35 +296,53 @@ class Organisation extends Modele
         }
         return $nbMembresParEquipe;
     }
-    
-    public function ajouterEquipe($ajoutEquipe, $idOrganisation)
-    {
-        $requete = $this->getBdd()->prepare("INSERT INTO equipes (nomEquipe, idOrganisation) VALUES (?,?)");
-        $requete->execute([$ajoutEquipe, $idOrganisation]);
-    }
 
-    public function recupChefEquipesParOrganisation($idOrganisation)
+    // METHODES
+    // RECUP = METHODES CONSTRUCT
+    public function recupClientsOrg()
     {
-        $requete = $this->getBdd()->prepare("SELECT utilisateurs.nom, utilisateurs.prenom, utilisateurs.email, chefEquipe, utilisateurs.idUtilisateur FROM equipes LEFT JOIN utilisateurs ON utilisateurs.idUtilisateur = equipes.chefEquipe WHERE equipes.idOrganisation = ?");
-        $requete->execute([$idOrganisation]);
+        $requete = $this->getBdd()->prepare("SELECT clients.nom as nom, clients.idClient as idClient FROM clients INNER JOIN commande_client USING(idClient) INNER JOIN projets USING(idProjet) INNER JOIN travaille_sur USING(idProjet) INNER JOIN equipes USING(idEquipe) WHERE equipes.idOrganisation = ?");
+        $requete->execute([$this->idOrganisation]);
         return $requete->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function recupChefEquipesParOrg()
+    public function recupUsersOrg()
     {
-        $chefsEquipes = [];
-        foreach($this->getEquipesOrg() as $Equipe)
-        {
-            foreach($Equipe->getChefEquipe() as $chefEquipe)
-            {
-                $idE = $Equipe->getIdEquipe();
-                $chefsEquipes[] = [
-                    $idE => $chefEquipe
-                ];
-            }
-        }
-        return $chefsEquipes;
+        $requete = $this->getBdd()->prepare("SELECT * FROM utilisateurs WHERE idOrganisation = ?");
+        $requete->execute([$this->idOrganisation]);
+        return $requete->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function recupEquipesOrg()
+    {
+        $requete = $this->getBdd()->prepare("SELECT * FROM equipes WHERE idOrganisation = ?");
+        $requete->execute([$this->idOrganisation]);
+        return $requete->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function recupPostesOrg()
+    {
+        $requete = $this->getBdd()->prepare("SELECT * FROM Postes WHERE idOrganisation = ?");
+        $requete->execute([$this->idOrganisation]);
+        return $requete->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function recupProjetsOrg()
+    {
+        $requete = $this->getBdd()->prepare("SELECT idProjet, nom, type, DateDebut, DateRendu, Etat, chefProjet FROM projets USING(idProjet) INNER JOIN travaille_sur USING(idProjet) INNER JOIN equipes USING(idEquipe) WHERE equipes.idOrganisation = ?");
+        $requete->execute([$this->idOrganisation]);
+        return $requete->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    // ADD
+    
+    public function addEquipe($nE)
+    {
+        $requete = $this->getBdd()->prepare("INSERT INTO equipes (nomEquipe, idOrganisation) VALUES (?,?)");
+        $requete->execute([$nE, $this->idOrganisation]);
+    }
+
+    // DELETE ORG
 
     public function delOrg()
     {

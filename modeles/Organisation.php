@@ -170,26 +170,27 @@ class Organisation extends Modele
     }
     public function getMinMaxIdEquipe()
     {
-        $tableau = [["minIdE"], ["maxIdE"]];
-        foreach($this->getEquipesOrg() as $Equipe)
+        $tableau = [];
+        foreach($this->getEquipesOrg() as $cle => $Equipe)
         {
-            foreach($Equipe->getIdEquipe() as $cle => $IdEquipe)
+            
+            $IdEquipe = $Equipe->getIdEquipe();
+
+            if($cle == 0 )
             {
-                if($cle == 0 )
+                $tableau["minIdE"] = $IdEquipe;
+                $tableau["maxIdE"] = $IdEquipe;
+            } else {
+                if($IdEquipe > $tableau["maxIdE"])
                 {
-                    $tableau["minIdE"][] = $IdEquipe;
-                    $tableau["maxIdE"][] = $IdEquipe;
-                } else {
-                    if($IdEquipe > $tableau["maxIdE"])
-                    {
-                        $tableau["maxIdE"][] = $IdEquipe;
-                    }
-                    if($IdEquipe < $tableau["minIdE"])
-                    {
-                        $tableau["minIdE"][] = $IdEquipe;
-                    }
+                    $tableau["maxIdE"] = $IdEquipe;
+                }
+                if($IdEquipe < $tableau["minIdE"])
+                {
+                    $tableau["minIdE"] = $IdEquipe;
                 }
             }
+            
         }
         return $tableau;
     }
@@ -249,5 +250,18 @@ class Organisation extends Modele
         // supprimer aussi les informations en rapport avec l'organisation
         session_destroy();
     }
+
+    public function getIdByNomPrenom($nom, $prenom)
+    {
+        foreach($this->getUsersOrg() as $utilisateur)
+        {
+            if($utilisateur->getNomUser() == $nom && $utilisateur->getPrenomUser() == $prenom)
+            {
+                return $utilisateur->getIdUser();
+            }
+        }
+    }
 }
+
+
 ?>

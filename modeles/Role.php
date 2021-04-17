@@ -27,21 +27,4 @@ Class Role extends Modele
         return $this->nom;
     }
 
-    public function setIdRole($idRole)
-    {
-        $this->idRole = $idRole;
-    }
-
-    public function setNomRole($nom)
-    {
-        $this->nom = $nom;
-    }
-
-}
-
-function recupererRoles()
-{
-    $requete = getBdd()->prepare("SELECT * FROM roles");
-    $requete->execute();
-    return $requete->fetchAll(PDO::FETCH_ASSOC);
 }

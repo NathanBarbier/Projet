@@ -5,6 +5,7 @@ class Equipe extends Modele
     private $nomEquipe;
     private $idOrganisation;
     private $chefEquipe;
+    private $membres = [];
 
     public function __construct($idE = null)
     {
@@ -17,6 +18,15 @@ class Equipe extends Modele
             $this->nomEquipe = $equipe["nomEquipe"];
             $this->idOrganisation = $equipe["idOrganisation"];
             $this->chefEquipe = $equipe["chefEquipe"];
+
+            $requete = $this->getBdd()->prepare("SELECT * FROM utilisateurs WHERE idEquipe = ?");
+            $requete->execute([$this->idEquipe]);
+            $membres = $requete->fetchAll(PDO::FETCH_ASSOC);
+            foreach($membres as $membre)
+            {
+                $ObjetMembre = new Utilisateur($membre["idUtilisateur"]);
+                $this->membres[] = $ObjetMembre;
+            }
         }
     }
 
@@ -24,11 +34,15 @@ class Equipe extends Modele
     public function setNomEquipe($nE)
     {
         $this->nomEquipe = $nE;
+        $requete = $this->getBdd()->prepare("UPDATE equipes SET nomEquipe = ? WHERE idEquipe =  ?");
+        $requete->execute([$this->nomEquipe, $this->idEquipe]);
     }
 
     public function setChefEquipe($cE)
     {
         $this->chefEquipe = $cE;
+        $requete = $this->getBdd()->prepare("UPDATE equipes SET chefEquipe = ? WHERE idEquipe =  ?");
+        $requete->execute([$this->chefEquipe, $this->idEquipe]);
     }
 
     // GETTER
@@ -50,6 +64,11 @@ class Equipe extends Modele
     public function getIdOrganisation()
     {
         return $this->idOrganisation;
+    }
+
+    public function getMembresEquipe()
+    {
+        return $this->membres;
     }
     
     // METHODES

@@ -15,12 +15,17 @@ Class Poste extends Modele
             $requete->execute([$idPoste]);
             $poste = $requete->fetch(PDO::FETCH_ASSOC);
             $this->idPoste = $idPoste;
-            $this->nom = $poste["nom"];
+            $this->nom = $poste["nomPoste"];
             $this->idOrganisation = $poste["idOrganisation"];
             $this->idRole = $poste["idRole"];
         }
     }
 
+    public function getIdPoste()
+    {
+        return $this->idPoste;
+    }
+    
     public function getNomPoste()
     {
         return $this->nom;
@@ -39,12 +44,15 @@ Class Poste extends Modele
     public function setNomPoste($nom)
     {
         $this->nom = $nom;
+        $requete = $this->getBdd()->prepare("UPDATE postes SET nom = ? WHERE idPoste =  ?");
+        $requete->execute([$this->nom, $this->idPoste]);
     }
-
 
     public function setIdRolePoste($idRole)
     {
         $this->idRole = $idRole;
+        $requete = $this->getBdd()->prepare("UPDATE postes SET idPoste = ? WHERE idPoste =  ?");
+        $requete->execute([$this->idRole, $this->idPoste]);
     }
 
 }

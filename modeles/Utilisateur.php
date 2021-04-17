@@ -20,8 +20,8 @@ class Utilisateur extends Modele
 
             $Utilisateur = $requete->fetch(PDO::FETCH_ASSOC);
             $this->idUtilisateur = $idU;
-            $this->nom = $Utilisateur["idUtilisateur"];
-            $this->prenom = $Utilisateur["nom"];
+            $this->nom = $Utilisateur["nom"];
+            $this->prenom = $Utilisateur["prenom"];
             $this->dateNaiss = $Utilisateur["dateNaiss"];
             $this->mdp = $Utilisateur['mdp'];
             $this->idPoste = $Utilisateur["idPoste"];
@@ -109,12 +109,12 @@ class Utilisateur extends Modele
         return $this->email;
     }
 
-    public function getIdEquipe()
+    public function getIdEquipeUser()
     {
         return $this->idEquipe;
     }
 
-    public function getIdOrganisation()
+    public function getIdOrganisationUser()
     {
         return $this->idOrganisation;
     }

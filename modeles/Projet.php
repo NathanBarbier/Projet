@@ -73,41 +73,50 @@ Class Projet extends Modele
     public function setIdProjet($idProjet)
     {
         $this->idProjet = $idProjet ;
+        $requete = $this->getBdd()->prepare("UPDATE projets SET idProjet = ? WHERE idProjet =  ?");
+        $requete->execute([$this->idProjet, $this->idProjet]);
     }
 
     public function setNomProjet($nom)
     {
         $this->nom = $nom ;
+        $requete = $this->getBdd()->prepare("UPDATE projets SET nom = ? WHERE idProjet =  ?");
+        $requete->execute([$this->nom, $this->idProjet]);
     }
 
     public function setTypeProjet($type)
     {
         $this->type = $type ;
+        $requete = $this->getBdd()->prepare("UPDATE projets SET type = ? WHERE idProjet =  ?");
+        $requete->execute([$this->type, $this->idProjet]);
     }
 
     public function setDateRenduProjet($dateRendu)
     {
         $this->dateRendu = $dateRendu ;
-    }
-
-    public function setDateDebutProjet($dateDebut)
-    {
-        $this->dateDebut = $dateDebut ;
+        $requete = $this->getBdd()->prepare("UPDATE projets SET dateRendu = ? WHERE idProjet =  ?");
+        $requete->execute([$this->dateRendu, $this->idProjet]);
     }
 
     public function setIdClient($idClient)
     {
         $this->idClient = $idClient ;
+        $requete = $this->getBdd()->prepare("UPDATE projets SET idClient = ? WHERE idProjet =  ?");
+        $requete->execute([$this->idClient, $this->idProjet]);
     }
 
     public function setEtatProjet($etat)
     {
         $this->etat = $etat ;
+        $requete = $this->getBdd()->prepare("UPDATE projets SET etat = ? WHERE idProjet =  ?");
+        $requete->execute([$this->etat, $this->idProjet]);
     }
 
     public function setChefProjet($chefProjet)
     {
         $this->chefProjet = $chefProjet ;
+        $requete = $this->getBdd()->prepare("UPDATE projets SET chefProjet = ? WHERE idProjet =  ?");
+        $requete->execute([$this->chefProjet, $this->idProjet]);
     }
 
 }

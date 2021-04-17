@@ -29,6 +29,8 @@ Class Client extends Modele
     public function setNomCLient($nom)
     {
         $this->nom = $nom;
+        $requete = $this->getBdd()->prepare("UPDATE clients SET nom = ? WHERE idClient =  ?");
+        $requete->execute([$this->nom, $this->idClient]);
     }
 
     public function verifClient($nomClient)

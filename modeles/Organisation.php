@@ -277,6 +277,7 @@ class Organisation extends Modele
                     $extrIdEquipe["minIdE"] = $IdEquipe;
                 }
             }
+            
         }
         return $tableau;
     }
@@ -372,5 +373,8 @@ class Organisation extends Modele
         // supprimer aussi les informations en rapport avec l'organisation
         session_destroy();
     }
+
 }
+
+
 ?>

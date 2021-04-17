@@ -23,6 +23,10 @@ require_once "traitements/header.php";
 
 $Organisation = new Organisation(4);
 // echo "<pre>";
+// print_r($Organisation->getEquipesOrg());
+// echo "</pre>";
+echo $Organisation->getMinMaxIdEquipe()["maxIdE"];
+// echo "<pre>";
 // print_r($Organisation->getMinMaxIdEquipe());
 // echo "</pre>";
 // echo $Organisation->getMinMaxIdEquipe()["minIdE"];

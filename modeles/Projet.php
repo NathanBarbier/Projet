@@ -7,7 +7,6 @@ Class Projet extends Modele
     private $type;
     private $dateDebut;
     private $dateRendu;
-    private $idClient;
     private $etat;
     private $chefProjet;
 
@@ -22,10 +21,9 @@ Class Projet extends Modele
             $this->idProjet = $idProjet;
             $this->nom = $projet["nom"];
             $this->type = $projet["type"];
-            $this->dateRendu = $projet["dateRendu"];
-            $this->dateDebut = $projet["dateDebut"];
-            $this->idClient = $projet["idClient"];
-            $this->etat = $projet["etat"];
+            $this->dateRendu = $projet["DateRendu"];
+            $this->dateDebut = $projet["DateDebut"];
+            $this->etat = $projet["Etat"];
             $this->chefProjet = $projet["chefProjet"];
         }
     }

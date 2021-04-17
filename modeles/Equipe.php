@@ -70,21 +70,9 @@ class Equipe extends Modele
     {
         return $this->membres;
     }
-    
-    // METHODES
 
-    public function recupererNombreMembreEquipe($idOrganisation, $idEquipe)
+    public function getCountMembres()
     {
-        $requete = $this->getBdd()->prepare("SELECT idEquipe, count(utilisateurs.idEquipe) as UtilisateursEquipe FROM equipes left join utilisateurs using(idEquipe) where equipes.idOrganisation = ? and idEquipe = ?");
-        $requete->execute([$idOrganisation, $idEquipe]);
-        return $requete->fetchAll(PDO::FETCH_ASSOC);
+        return count($this->membres);
     }
-    
-    public function recupChefEquipe($idEquipe)
-    {
-        $requete = $this->getBdd()->prepare("SELECT utilisateurs.nom, utilisateurs.prenom, utilisateurs.email FROM equipes INNER JOIN utilisateurs ON utilisateurs.idUtilisateur = equipes.chefEquipe WHERE equipes.idEquipe = ?");
-        $requete->execute([$idEquipe]);
-        return $requete->fetch(PDO::FETCH_ASSOC);
-    }
-
 }

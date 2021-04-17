@@ -17,8 +17,8 @@ class Utilisateur extends Modele
         {
             $requete = $this->getBdd()->prepare("SELECT * FROM utilisateurs WHERE idUtilisateur = ?");
             $requete->execute([$idU]);
-
             $Utilisateur = $requete->fetch(PDO::FETCH_ASSOC);
+
             $this->idUtilisateur = $idU;
             $this->nom = $Utilisateur["nom"];
             $this->prenom = $Utilisateur["prenom"];
@@ -141,18 +141,5 @@ class Utilisateur extends Modele
         } else {
             return false;
         }
-    }
-
-    // ADD
-    public function addUser($nom,$prenom,$dateNaiss,$idP,$em,$idE,$idO)
-    {
-        $mdp = $this->generateRandomString(6);
-        $mdptemp = $mdp;
-        $mdp = password_hash($mdp, PASSWORD_BCRYPT);
-                        
-        $requete = $this->getBdd()->prepare("INSERT INTO utilisateurs (nom, prenom, dateNaiss, mdp, idPoste, email, idEquipe, idOrganisation)
-        VALUES (?,?,?,?,?,?,?,?)");
-        $requete->execute([$nom,$prenom,$dateNaiss,$mdp,$idP,$em,$idE,$idO]);
-        return $mdptemp;
     }
 }

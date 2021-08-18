@@ -3,61 +3,31 @@ require_once "entete.php";
 ?>
 <div class="col-10">
 <?php
-$roles = recupererRoles();
-$postes = recupererPostes($_SESSION["idOrganisation"]);
-$equipes = recupererEquipes($_SESSION["idOrganisation"]);
-$nbMembresEquipes = recupererNombreMembreParEquipe($_SESSION["idOrganisation"]);
-$nbMembresPostes = recupererNombreMembreParPoste($_SESSION["idOrganisation"]);
-$equipeMinMax = recupererMaxMinIdEquipes($_SESSION["idOrganisation"]);
-$chefEquipes = recupChefEquipesParOrganisation($_SESSION["idOrganisation"]);
-if(!empty($_GET["id"]))
-{
-    $posteModif = recupIdPoste($_GET["id"]);
-}
-if(!empty($_GET["error"]))
-{
-    ?>
+if($error)
+{   ?>
     <div class="alert alert-danger pb-0 mt-3" style="z-index : 0; width : max-content">
-    <?php
-    switch($_GET["error"]) { case "fatalerror":?>
-        <?php echo "Erreur : une erreur inconnu est survenue."?>
-        <?php break ?>
-    <?php
-    }
-    ?>
+    <?= $errorMessage ?>
     </div>
-<?php
+    <?php
 }
-if(!empty($_GET["success"]))
+
+if($success)
 {
     ?>
     <div class="alert alert-success mt-3" style="z-index : 0; width : max-content">
-    <?php
-    switch($_GET["success"]) { case "ajouterPoste":?>
-        <?php echo "Le poste a bien été ajouté."?>
-        <?php break;?>
-            <?php case "modifierPoste";?>
-        <?php echo "Le poste a bien été modifié"?> 
-        <?php break;?>
-            <?php case "supprimerPoste";?>
-        <?php echo "Le poste a bien été supprimé"?>
-        <?php break;?>
-            <?php case "ajouterEquipe";?>
-        <?php echo "L'équipe a bien été ajouté"?>
-        <?php break;?>
-    <?php
-    }
-    ?>
+    <?= $successMessage ?>
     </div>
 <?php
 }
-if(!empty($_GET["supprPoste"]))
+
+
+if($deletePoste)
 {
-    $lePoste = recupIdPoste($_GET["supprPoste"])
     ?>
     <div class=" alert alert-info mt-3" style="z-index : 0; width : max-content">
-    êtes vous sur de vouloir supprimer "<?=$lePoste["nomPoste"];?> ? Cette action est irréversible et supprimera le poste de tous les membres ayant ce poste ! 
-    <a href="../traitements/supprimerPoste.php?suppr=<?=$_GET["supprPoste"];?>" class="btn btn-success">Confirmer</a>
+    Êtes vous sur de vouloir supprimer "<?=$fetchPoste["nomPoste"];?> ? 
+    Cette action est irréversible et supprimera le poste de tous les membres ayant ce poste ! 
+    <a href="../controllers/EntrepriseController.php?action=deletePosteConf&idPoste=<?=$idPoste?>" class="btn btn-success">Confirmer</a>
     <a href="gererEntreprise.php" class="btn btn-danger">Annuler</a>
     </div>
 <?php
@@ -94,7 +64,7 @@ if(!empty($_GET["supprPoste"]))
                                     <tr>
                                         <th style="width : 50%"><?=$poste["nomPoste"];?></th>
                                         <td style="width : 50%"><?=$nbMembrePoste["UtilisateursParPoste"];?></td>
-                                        <td style="width : "></td>
+                                        <td></td>
                                         <td></td>
                                     </tr>
                                 <?php 
@@ -110,10 +80,10 @@ if(!empty($_GET["supprPoste"]))
                                         <th><?=$poste["nomPoste"];?></th>
                                         <td><?=$nbMembrePoste["UtilisateursParPoste"];?></td>
                                         <td>
-                                            <a href="gererEntreprise.php?supprPoste=<?=$poste["idPoste"];?>" class="btn btn-danger btn-sm mt-1">Supprimer</a>
+                                            <a href="gererEntreprise.php?action=deletePoste&idPoste=<?=$idPoste?>" class="btn btn-danger btn-sm mt-1">Supprimer</a>
                                         </td>
                                         <td>
-                                            <a href="gererEntreprise.php?id=<?=$poste["idPoste"];?>" class="btn btn-primary btn-sm mt-1">Modifier</a>
+                                            <a href="gererEntreprise.php?action=updatePoste&idPoste=<?=$idPoste?>" class="btn btn-primary btn-sm mt-1">Modifier</a>
                                         </td>
                                     </tr>
                                 <?php 
@@ -126,18 +96,18 @@ if(!empty($_GET["supprPoste"]))
             </table>
         </div>
         <div class="container mt-5 text-center" style="width : 30% ; float : left">
-            <form method="post" action="../traitements/ajouterPoste.php"> 
+            <form method="post" action="../controllers/EntrepriseController.php?action=addPoste"> 
                 <div class="row">
                     <div class="col-6">
                        <div class="form-group text-center">
-                            <label for="ajoutPoste" class="mb-2">Nom du poste</label>
-                            <input type="text" class="form-control" name="ajoutPoste" id="ajoutPoste" placeholder="Nouveau poste" required>
+                            <label for="nomPoste" class="mb-2">Nom du poste</label>
+                            <input type="text" class="form-control" name="nomPoste" id="nomPoste-id" placeholder="Nouveau poste" required>
                         </div> 
                     </div>
                     <div class="col-6">
                         <div class="form-group text-center">
-                            <label for="role" class="mb-2">Habilitation</label>
-                            <select name="role" id="role" class="form-control">
+                            <label for="idRole" class="mb-2">Habilitation</label>
+                            <select name="idRole" id="idRole-id" class="form-control">
                                 <?php
                                 foreach($roles as $cle => $role)
                                 {
@@ -149,23 +119,20 @@ if(!empty($_GET["supprPoste"]))
                             </select>
                         </div>
                     </div>
-                </div>
-                
-        
-                
+                </div>        
                 
                 <div class="form-group text-center m-auto mt-2">
                     <button type="submit" class="btn btn-success" name="envoi" value="1" >Ajouter le poste</button>
                 </div>
             </form>
             <?php
-            if(!empty($_GET["id"]))
+            if($idPoste)
             {
             ?>
-                <form method="post" action="../traitements/modifierPoste.php?id=<?=$_GET["id"];?>">
+                <form method="post" action="../controllers/EntrepriseController.php?action=updatePoste&idPoste=<?=$idPoste?>">
                     <div class="form-group ml-auto mr-auto mt-3">
-                        <label for="modifierPoste">Modifier le poste "<?=$posteModif["nomPoste"];?>"</label>
-                        <input type="text" class="form-control" name="modifierPoste" id="modifierPoste" placeholder="entrez le nouveau nom du poste" value="<?=$posteModif["nomPoste"];?>">
+                        <label for="modifierPoste">Modifier le poste "<?=$fetchPoste["nomPoste"];?>"</label>
+                        <input type="text" class="form-control" name="nomPoste" id="nomPoste-id" placeholder="entrez le nouveau nom du poste" value="<?=$fetchPoste["nomPoste"];?>">
                     </div>
 
                     <div class="form-group text-center mt-2">
@@ -181,12 +148,12 @@ if(!empty($_GET["supprPoste"]))
 
     <div id="modifEquipe">
         <div class="infoEquipe">
-            <form method="post" action="../traitements/ajoutEquipe.php"> 
+            <form method="post" action="../controllers/EntrepriseController.php?action=addEquipe"> 
                 <div class="form-group mt-3">
                     <label for="ajoutEquipe"><h4>Nom de la nouvelle équipe</h4></label>
                 </div>
                 <div class="form-group mt-3">
-                    <input type="text" class="form-control" name="ajoutEquipe" id="ajoutEquipe" placeholder="Saisissez le nom de l'équipe" required>
+                    <input type="text" class="form-control" name="nomEquipe" id="nomEquipe-id" placeholder="Saisissez le nom de l'équipe" required>
                 </div>
                 
                 <div class="form-group text-center m-auto mt-3">
@@ -198,20 +165,23 @@ if(!empty($_GET["supprPoste"]))
         <div class="infoEquipe">
             <h4><u>Info de l'équipe :</u></h4>
             <?php
-            foreach($equipes as $equipe)
+            foreach($equipes as $key => $equipe)
             {
-                $membresEquipe = recupUtilisateursEquipe($equipe["idEquipe"]);
-                $projets = recupProjetParEquipe($equipe["idEquipe"]);
+                $membresEquipe = $membresEquipes[$key];
+                $projetsEquipe = $projetsEquipes[$key];
                 ?>
                 <div class="mt-5" id="divInfoEquipe<?=$equipe["idEquipe"];?>" style="display : none">
                     <h3><strong><?=$equipe["nomEquipe"];?></strong></h3>
                     <h4>Chef d'équipe :</h4>
                     <?php
-                    if($equipe["chefEquipe"] == NULL){
+                    if($equipe["chefEquipe"] == NULL)
+                    {
                         ?>
                         <p>//</p>
                     <?php
-                    } else {
+                    } 
+                    else 
+                    {
                         ?>
                         <p><?=$equipe["chefEquipe"];?></p>
                     <?php
@@ -233,14 +203,14 @@ if(!empty($_GET["supprPoste"]))
                                 <th>poste</th>
                             </tr>
                             <?php
-                            foreach($membresEquipe as $membreEquipe)
+                            foreach($membresEquipe as $membre)
                             {
-                                $posteUtilisateur = recupererPosteUtilisateur($membreEquipe["idUtilisateur"]);
+                                $poste = $membre["poste"];
                                 ?>
                                 <tr>
-                                    <td><?=$membreEquipe["nom"];?></td>
-                                    <td><?=$membreEquipe["prenom"];?></td>
-                                    <td><?=$posteUtilisateur["nomPoste"];?></td>
+                                    <td><?=$membre["nom"];?></td>
+                                    <td><?=$membre["prenom"];?></td>
+                                    <td><?=$poste["nomPoste"];?></td>
                                 </tr>
                             <?php
                             }

@@ -1,7 +1,9 @@
 <?php
 require_once "../traitements/header.php";
 // vérification connecté + admin
-if(!empty($_SESSION["habilitation"]) && $_SESSION["habilitation"] == "admin")
+$rights = $_SESSION["habilitation"] ? $_SESSION["habilitation"] : false;
+
+if($rights == "admin")
 {
     ?>
     <!DOCTYPE html>
@@ -88,8 +90,9 @@ if(!empty($_SESSION["habilitation"]) && $_SESSION["habilitation"] == "admin")
 
             </div>
     <?php
-} else {
+} 
+else 
+{
     header("location:../index.php");
 }
-// print_r($_SESSION);
 ?>

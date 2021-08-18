@@ -94,7 +94,7 @@ if(!empty($_GET["success"]))
                 <div id="divModifNom<?= $membre['idUtilisateur'] ?>" class="collapse show">
                     <a onclick="afficherConfModifNom(<?= $membre['idUtilisateur'] ?>)" class="btn btn-outline-info">Modifier</a>
                 </div>
-                <form method="POST" action="../traitements/modifierNomUtilisateur.php?idUser=<?= $membre['idUtilisateur'] ?>">
+                <form method="POST" action="../controllers/UserController.php?action=updateLastname&idUser=<?= $membre['idUtilisateur'] ?>">
                     <div id="divInputModifNom<?= $membre['idUtilisateur'] ?>" class="collapse">
                         <input class="form-control mb-1 text-center" value="<?= $membre['nom'] ?>" type="text" name="nom" placeholder="Écrivez un nom" required>
                     </div>
@@ -115,7 +115,7 @@ if(!empty($_GET["success"]))
                 <div id="divModifPrenom<?= $membre['idUtilisateur'] ?>" class="collapse show">
                     <a onclick="afficherConfModifPrenom(<?= $membre['idUtilisateur'] ?>)" class="btn btn-outline-info">Modifier</a>
                 </div>
-                <form method="POST" action="../traitements/modifierPrenom.php?idUser=<?= $membre['idUtilisateur'] ?>">
+                <form method="POST" action="../controllers/UserController.php?action=updateFirstname&idUser=<?= $membre['idUtilisateur'] ?>">
                     <div id="divInputModifPrenom<?= $membre['idUtilisateur'] ?>" class="collapse">
                         <input class="form-control mb-1 text-center" value="<?= $membre['prenom'] ?>" type="text" name="prenom" placeholder="Écrivez un prénom" required>
                     </div>
@@ -134,7 +134,7 @@ if(!empty($_GET["success"]))
                     <?=$membre["nomEquipe"];?>
                 </div>
                 <!-- On affiche toutes les équipe de l'organisation -->
-                <form method="post" action="../traitements/modifierEquipe.php?idUser=<?= $membre["idUtilisateur"] ?>">
+                <form method="post" action="../controllers/UserController.php?action=updateEquipe&idUser=<?= $membre["idUtilisateur"] ?>">
                     <div id="divSelectEquipes<?= $membre['idUtilisateur'] ?>" class="collapse text-center">
                         <select name="idEquipe" class="text-center form-control w-75 mx-auto mb-1" required>
                             <?php foreach($equipes as $equipe)
@@ -162,7 +162,7 @@ if(!empty($_GET["success"]))
                     <?=$membre["nomPoste"];?>
                 </div>
                 <!-- On affiche tous les postes de l'organisation -->
-                <form method="POST" action="../traitements/modifierPoste.php?idUser=<?= $membre['idUtilisateur'] ?>">
+                <form method="POST" action="../controllers/UserController.php?action=updatePoste&idUser=<?= $membre['idUtilisateur'] ?>">
                     <div id="divSelectPostes<?= $membre['idUtilisateur'] ?>" class="collapse text-center">
                         <select name="idPoste" class="text-center form-control w-75 mx-auto mb-1">
                             <?php foreach($postes as $poste)
@@ -211,144 +211,7 @@ if(!empty($_GET["success"]))
 
 </table>
 
-<script>
-    // Modification du nom de l'utilisateur
-        function afficherConfModifNom($idUser)
-        {
-            var cacher = "nom" + $idUser;
-            var cacher2 = "divModifNom" + $idUser;
-            var afficher = "divConfModifNom" + $idUser;
-            var afficher2 = "divInputModifNom" + $idUser;
-
-            document.getElementById(cacher).classList.remove("show");
-            document.getElementById(cacher2).classList.remove("show");
-            document.getElementById(afficher).classList.add("show");
-            document.getElementById(afficher2).classList.add("show");
-        }
-
-        function annulerModifNom($idUser)
-        {
-            var cacher = "divConfModifNom" + $idUser;  
-            var cacher2 = "divInputModifNom" + $idUser;  
-            var afficher = "nom" + $idUser;
-            var afficher2 = "divModifNom" + $idUser;
-
-            document.getElementById(afficher).classList.add("show");
-            document.getElementById(afficher2).classList.add("show");
-            document.getElementById(cacher).classList.remove("show");
-            document.getElementById(cacher2).classList.remove("show");2
-        }
-    //Modification du prenom de l'utilisateur
-    function afficherConfModifPrenom($idUser)
-        {
-            var cacher = "prenom" + $idUser;
-            var cacher2 = "divModifPrenom" + $idUser;
-            var afficher = "divConfModifPrenom" + $idUser;
-            var afficher2 = "divInputModifPrenom" + $idUser;
-
-            document.getElementById(cacher).classList.remove("show");
-            document.getElementById(cacher2).classList.remove("show");
-            document.getElementById(afficher).classList.add("show");
-            document.getElementById(afficher2).classList.add("show");
-        }
-
-        function annulerModifPrenom($idUser)
-        {
-            var cacher = "divConfModifPrenom" + $idUser;  
-            var cacher2 = "divInputModifPrenom" + $idUser ;  
-            var afficher = "prenom" + $idUser;
-            var afficher2 = "divModifPrenom" + $idUser;
-
-            document.getElementById(afficher).classList.add("show");
-            document.getElementById(afficher2).classList.add("show");
-            document.getElementById(cacher).classList.remove("show");
-            document.getElementById(cacher2).classList.remove("show");2
-        }
-
-    // Suppression de l'utilisateur
-        function afficherConfDelUser($idUser)
-        {
-            var cacher = "divDelUser" + $idUser;
-            var afficher = "divConfDelUser" + $idUser;
-            document.getElementById(cacher).classList.remove("show");
-            document.getElementById(afficher).classList.add("show");
-        }
-
-        function annulerDelUser($idUser)
-        {
-            var cacher = "divConfDelUser" + $idUser  ;  
-            var afficher = "divDelUser" + $idUser;
-            document.getElementById(afficher).classList.add("show");
-            document.getElementById(cacher).classList.remove("show");
-        }
-
-    // Modification de l'équipe de l'utilisateur
-        function afficherConfModifEquipe($idUser)
-        {
-            var cacher = "divModifEquipe" + $idUser;
-            var cacher2 = "divNomEquipe" + $idUser;
-            var afficher = "divConfModifEquipe" + $idUser;
-            var afficher2 = "divSelectEquipes" + $idUser;
-
-            document.getElementById(cacher).classList.remove("show");
-            document.getElementById(cacher2).classList.remove("show");
-            document.getElementById(afficher).classList.add("show");
-            document.getElementById(afficher2).classList.add("show");
-        }
-
-        function annulerModifEquipe($idUser)
-        {
-            var cacher = "divConfModifEquipe" + $idUser;
-            var cacher2 = "divSelectEquipes" + $idUser;
-            var afficher = "divModifEquipe" + $idUser;
-            var afficher2 = "divNomEquipe" + $idUser;
-            
-            document.getElementById(afficher).classList.add("show");
-            document.getElementById(afficher2).classList.add("show");
-            document.getElementById(cacher).classList.remove("show");
-            document.getElementById(cacher2).classList.remove("show");
-        }
-
-    // Modification du poste de l'utilisateur
-        function afficherConfModifPoste($idUser)
-        {
-            var cacher = "divModifPoste" + $idUser;
-            var cacher2 = "divNomPoste" + $idUser;
-            var afficher = "divConfModifPoste" + $idUser;
-            var afficher2 = "divSelectPostes" + $idUser;
-
-            document.getElementById(cacher).classList.remove("show");
-            document.getElementById(cacher2).classList.remove("show");
-            document.getElementById(afficher).classList.add("show");
-            document.getElementById(afficher2).classList.add("show");
-        }
-
-        function annulerModifPoste($idUser)
-        {
-            var cacher = "divConfModifPoste" + $idUser;
-            var cacher2 = "divSelectPostes" + $idUser;
-            var afficher = "divModifPoste" + $idUser;
-            var afficher2 = "divNomPoste" + $idUser;
-
-            document.getElementById(cacher).classList.remove("show");
-            document.getElementById(cacher2).classList.remove("show");
-            document.getElementById(afficher).classList.add("show");
-            document.getElementById(afficher2).classList.add("show");
-        }
-
-
-    // function afficherDiv()
-    // {
-    //     this.parentElement.classList.remove("show");
-    //     this.parentElement.parentElement.children[1].classList.add("show");
-    // }
-
-    // function cacherDiv()
-    // {
-    //     this.parentElement.classList.remove("show");
-    //     this.parentElement.parentElement.children[0].classList.add("show");
-    // }
-</script>
+<script src="js/listeMembres.php"></script>
 
 
 <?php

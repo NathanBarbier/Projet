@@ -36,4 +36,4 @@ if(!empty($_SESSION["habilitation"]))
 </nav>
 <div class="container mt-4">
     <?php
-    print_r($_SESSION);
+    // print_r($_SESSION);

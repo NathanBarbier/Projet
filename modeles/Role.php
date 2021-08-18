@@ -2,29 +2,46 @@
 
 Class Role extends Modele 
 {
-    private $idRole;
+    private $id;
     private $nom;
 
-    public function __construct($idRole = null)
+    public function __construct($id = null)
     {
-        if($idRole !== null)
+        if($id !== null)
         {
-            $requete = $this->getBdd()->prepare("SELECT * FROM roles WHERE idRole = ?");
-            $requete->execute([$idRole]);
+            $sql = "SELECT * FROM roles WHERE idRole = ?";
+            $requete = $this->getBdd()->prepare($sql);
+            $requete->execute([$id]);
+
             $role = $requete->fetch(PDO::FETCH_ASSOC);
-            $this->idRole = $idRole;
+
+            $this->id = $id;
             $this->nom = $role["nom"];
         }
     }
 
-    public function getIdRole()
+
+    //! GETTER
+
+    public function getId()
     {
-        return $this->idRole;
+        return $this->id;
     }
 
-    public function getNomRole()
+    public function getNom()
     {
         return $this->nom;
     }
 
+
+    //! FETCH
+
+    public function fetchAll()
+    {
+        $sql = "SELECT * FROM roles";
+        $requete = $this->getBdd()->prepare($sql);
+        $requete->execute();
+
+        return $requete->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

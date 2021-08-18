@@ -69,81 +69,84 @@ class Organisation extends Modele
         }
     }
 
-    // SETTER
+
+    //! SETTER
+
     public function setNom($nom)
     {
         $this->nom = $nom;
     }
 
-    public function setEmailOrg($eO)
+    public function setEmail($email)
     {
-        $this->email = $eO;
+        $this->email = $email;
     }
 
-    public function setMdpOrg($mdp)
+    public function setMdp($mdp)
     {
         $this->mdp = password_hash($mdp, PASSWORD_BCRYPT);
     }
 
-    // GETTER
-    public function getIdOrg()
+
+    //! GETTER
+    public function getId()
     {
         return $this->idOrganisation;
     }
 
-    public function getNomOrg()
+    public function getNom()
     {
         return $this->nom;
     }
 
-    public function getEmailOrg()
+    public function getEmail()
     {
         return $this->email;
     }
 
-    public function getMdpOrg()
+    public function getMdp()
     {
         return $this->mdp;
     }
 
-    public function getEquipesOrg()
+    public function getEquipes()
     {
         return $this->equipes;
     }
 
-    public function getCountEquipesOrg()
+    public function countEquipes()
     {
         return count($this->equipes);
     }
 
-    public function getUsersOrg()
+    public function getUsers()
     {
         return $this->utilisateurs;
     }
 
-    public function getcountUsersOrg()
+    public function countUsers()
     {
         return count($this->utilisateurs);
     }
 
-    public function getPostesOrg()
+    public function getPostes()
     {
         return $this->postes;
     }
 
-    public function getClientsOrg()
+    public function getClients()
     {
         return $this->clients;
     }
 
-    public function getProjetsOrg()
+    public function getProjets()
     {
         return $this->projets;
     }
 
     public function getNomPosteByIdUser($idUser)
     {
-        foreach($this->getUsersOrg() as $utilisateur)
+        foreach($this->getUsers() as $utilisateur)
         {
             if($utilisateur->getIdUser() == $idUser)
             {
@@ -151,7 +154,7 @@ class Organisation extends Modele
             }
         }
 
-        foreach($this->getPostesOrg() as $poste)
+        foreach($this->getPostes() as $poste)
         {
             if($poste->getIdPoste() == $idPosteUser)
             {
@@ -163,7 +166,7 @@ class Organisation extends Modele
     public function getInfosPosteByIdPoste($idP)
     {
         $infosPoste = [];
-        foreach($this->getPostesOrg() as $Poste)
+        foreach($this->getPostes() as $Poste)
         {
             if($Poste['idPoste'] == $idP)
             {
@@ -180,7 +183,7 @@ class Organisation extends Modele
 
     public function getIdByNomPrenom($nom, $prenom)
     {
-        foreach($this->getUsersOrg() as $utilisateur)
+        foreach($this->getUsers() as $utilisateur)
         {
             if($utilisateur->getNomUser() == $nom && $utilisateur->getPrenomUser() == $prenom)
             {
@@ -192,7 +195,7 @@ class Organisation extends Modele
     public function getInfosUsersOrg()
     {
         $infosUsers = [];
-        foreach($this->getUsersOrg() as $utilisateur)
+        foreach($this->getUsers() as $utilisateur)
         {
             $infosUsers[] = [
                 "idUtilisateur" => $utilisateur->getIdUser(),
@@ -204,8 +207,8 @@ class Organisation extends Modele
                 "email" => $utilisateur->getEmailUser(),
                 "idEquipe" => $utilisateur->getIdEquipeUser(),
                 "idOrganisation" => $utilisateur->getIdOrganisationUser(),
-                "equipe" => $this->getEquipesOrg()[$utilisateur->getIdEquipeUser()]->getNomEquipe(),
-                "poste" => $this->getPostesOrg()[$utilisateur->getIdPosteUser()]->getNomPoste(),
+                "equipe" => $this->getEquipes()[$utilisateur->getIdEquipeUser()]->getNomEquipe(),
+                "poste" => $this->getPostes()[$utilisateur->getIdPosteUser()]->getNomPoste(),
             ];
         }
         return $infosUsers;
@@ -214,7 +217,7 @@ class Organisation extends Modele
     public function getUsersByEquipeOrg($idEquipe)
     {
         $usersEquipe = [];
-        foreach($this->getEquipesOrg() as $equipe)
+        foreach($this->getEquipes() as $equipe)
         {
             if($equipe->getIdEquipe() == $idEquipe)
             {
@@ -240,7 +243,7 @@ class Organisation extends Modele
     public function getUsersByPoste($idPoste)
     {
         $usersPoste = [];
-        foreach($this->getPostesOrg() as $poste)
+        foreach($this->getPostes() as $poste)
         {
             if($poste->getIdEquipe() == $idPoste)
             {
@@ -266,13 +269,13 @@ class Organisation extends Modele
     public function getInfosChefsEquipes()
     {
         $chefsEquipes = [];
-        foreach($this->getEquipesOrg() as $equipe)
+        foreach($this->getEquipes() as $equipe)
         {
             $chefsEquipes[] = [
-                "nom" => $this->getUsersOrg()[$equipe->getChefEquipe()]->getNomUser(),
-                "prenom" => $this->getUsersOrg()[$equipe->getChefEquipe()]->getPrenomUser(),
-                "email" => $this->getUsersOrg()[$equipe->getChefEquipe()]->getEmailUser(),
-                "idUser" => $this->getUsersOrg()[$equipe->getChefEquipe()]->getIdUser(),  
+                "nom" => $this->getUsers()[$equipe->getChefEquipe()]->getNomUser(),
+                "prenom" => $this->getUsers()[$equipe->getChefEquipe()]->getPrenomUser(),
+                "email" => $this->getUsers()[$equipe->getChefEquipe()]->getEmailUser(),
+                "idUser" => $this->getUsers()[$equipe->getChefEquipe()]->getIdUser(),  
             ];
         }
         return $chefsEquipes;
@@ -281,11 +284,11 @@ class Organisation extends Modele
     public function getInfosChefEquipeByIdEquipe($idE)
     {
         $infosChefEquipe = [];
-        foreach($this->getEquipesOrg() as $equipe)
+        foreach($this->getEquipes() as $equipe)
         {
             if($equipe->getIdEquipe() == $idE)
             {
-                foreach($this->getUsersOrg() as $utilisateur)
+                foreach($this->getUsers() as $utilisateur)
                 {
                     if($utilisateur->getIdUser == $equipe->getChefEquipe)
                     {
@@ -310,7 +313,7 @@ class Organisation extends Modele
     public function getMinMaxIdEquipe()
     {
         $extremes = [];
-        foreach($this->getEquipesOrg() as $cle => $Equipe)
+        foreach($this->getEquipes() as $cle => $Equipe)
         {
             $IdEquipe = $Equipe->getIdEquipe();
             if($cle == 0)
@@ -336,7 +339,7 @@ class Organisation extends Modele
 
     public function getMaxIdUser()
     {
-        foreach($this->getUsersOrg() as $cle => $utilisateur)
+        foreach($this->getUsers() as $cle => $utilisateur)
         {
             $idUser = $utilisateur->getIdUser();
             $maxIdUser = null;
@@ -357,7 +360,7 @@ class Organisation extends Modele
 
     public function getMaxIdPoste()
     {
-        foreach($this->getPostesOrg() as $cle => $poste)
+        foreach($this->getPostes() as $cle => $poste)
         {
             $idPoste = $poste->getIdPoste();
             $maxIdPoste = null;
@@ -378,7 +381,7 @@ class Organisation extends Modele
 
     public function getMaxIdClient()
     {
-        foreach($this->getClientsOrg() as $cle => $client)
+        foreach($this->getClients() as $cle => $client)
         {
             $idClient = $client->getIdClient();
             $maxIdClient = null;
@@ -399,7 +402,7 @@ class Organisation extends Modele
 
     public function getMaxIdProjet()
     {
-        foreach($this->getProjetsOrg() as $cle => $projet)
+        foreach($this->getProjets() as $cle => $projet)
         {
             $idProjet = $projet->getIdProjet();
             $maxIdProjet = null;
@@ -421,7 +424,7 @@ class Organisation extends Modele
     public function CountUsersByEquipes()
     {
         $nbUsersParEquipe = [];
-        foreach($this->getEquipesOrg() as $Equipe)
+        foreach($this->getEquipes() as $Equipe)
         {
             foreach($Equipe->getCountMembres() as $nbUsers)
             {
@@ -437,9 +440,9 @@ class Organisation extends Modele
     public function CountUsersByPoste()
     {
         $nbUsersParPoste = [];
-        foreach($this->getPostesOrg() as $Poste)
+        foreach($this->getPostes() as $Poste)
         {
-            foreach($this->getUsersOrg() as $utilisateur)
+            foreach($this->getUsers() as $utilisateur)
             {
                 $users = [];
                 if($utilisateur->getIdPosteUser() == $Poste->getIdPoste())

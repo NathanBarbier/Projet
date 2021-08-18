@@ -1,12 +1,4 @@
 <?php require_once "entete.php";
-
-$InfosOrganisation = recupererInfoOrganisation($_SESSION["idOrganisation"]);
-// print_r($InfosOrganisation);
-
-if(!empty($_GET["Suppression"]) && $_GET["Suppression"] === $_SESSION["idOrganisation"])
-{
-    supprimerOrganisation();
-}
 ?>
 
 <div class="col-10 mt-4 w-75">
@@ -32,7 +24,7 @@ if(!empty($_GET["Suppression"]) && $_GET["Suppression"] === $_SESSION["idOrganis
                 Êtes-vous sûr de vouloir supprimer l'organisation ?<br>
                 (Cette action est définitive et supprimer toute donnée étant en lien avec l'organisation)
 
-                <a class="btn btn-danger" href="gestionOrganisation.php?Suppression=<?=$_SESSION["idOrganisation"]?>">Oui</a>
+                <a class="btn btn-danger" href="gestionOrganisation.php?action=deleteOrganisation">Oui</a>
 
                 <button id="boutonRefusDel" class="btn btn-warning">Non</button>
             </div>

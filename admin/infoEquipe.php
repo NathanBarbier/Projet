@@ -6,10 +6,7 @@ require_once "entete.php";
     <div class="container mt-3">
     <?php
 
-    $equipe = recupererEquipe($_SESSION["idOrganisation"], $_GET["idEquipe"]);
-    $nbMembresEquipe = recupererNombreMembreEquipe($_SESSION["idOrganisation"], $_GET["idEquipe"]);
-    $membresEquipe = recupUtilisateursEquipe($_GET["idEquipe"]);
-    $chefEquipe = recupChefEquipe($_GET["idEquipe"]);
+
     print_r($equipe);
     echo "<br>";
     print_r($nbMembresEquipe);

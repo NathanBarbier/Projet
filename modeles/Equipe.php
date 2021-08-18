@@ -77,7 +77,7 @@ class Equipe extends Modele
         return $this->membres;
     }
 
-    public function getCountMembres()
+    public function countMembres()
     {
         return count($this->membres);
     }
@@ -91,6 +91,15 @@ class Equipe extends Modele
         $requete->execute([$idOrganisation]);
 
         return $requete->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function fetch($idEquipe)
+    {
+        $sql = "SELECT * FROM equipes WHERE idEquipe = ?";
+        $requete = $this->getBdd()->prepare($sql);
+        $requete->execute([$idEquipe]);
+
+        return $requete->fetch(PDO::FETCH_ASSOC);
     }
 
     public function fetchChef($idEquipe)

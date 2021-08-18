@@ -5,31 +5,31 @@
     <h2>Création de projet</h2>
     <div class="row">
         <div class="col-4">
-            <form method="POST" action="../traitements/creationProjets.php?idProjet=<?= $idProjet ?>">
+            <form method="POST" action="../Controllers/ProjetController.php?action=addProjet&idProjet=<?= $idProjet ?>">
                 <div class="form-floating mb-3">
-                    <input required class="form-control" type="text" name="titre" id="titre" placeholder="Titre du projet" value="<?= $titre ?? '' ?>">
+                    <input required class="form-control" type="text" name="titre" id="titre-id" placeholder="Titre du projet" value="<?= $titre ?? '' ?>">
                     <label for="titre">Titre du projet</label>
                 </div>
 
                 <div class="form-floating mb-3">
-                    <input required class="form-control" type="text" name="type" id="type" placeholder="Type du projet" value="<?= $type ?? '' ?>">
+                    <input required class="form-control" type="text" name="type" id="type-id" placeholder="Type du projet" value="<?= $type ?? '' ?>">
                     <label for="type">Type du projet</label>
                 </div>
 
                 <div class="form-floating mb-3">
-                    <input class="form-control" type="date" name="deadline" id="deadline" placeholder="Deadline du projet" value="<?= $deadline ?? '' ?>">
+                    <input class="form-control" type="date" name="deadline" id="deadline-id" placeholder="Deadline du projet" value="<?= $deadline ?? '' ?>">
                     <label for="deadline">DeadLine</label>
                 </div>
 
                 <div class="form-floating mb-3">
-                    <textarea required class="form-control" name="description" id="description" placeholder="Description"><?= $description ?? '' ?></textarea>
+                    <textarea required class="form-control" name="description" id="description-id" placeholder="Description"><?= $description ?? '' ?></textarea>
                     <label for="description">Description</label>
                 </div>
 
                 <div class="row">
                     <div class="col-10">
                         <div class="form-floating mb-3">
-                            <input required class="form-control" type="text" name="client" id="client" placeholder="Client du projet" value="<?= $client ?? '' ?>"  required>
+                            <input required class="form-control" type="text" name="client" id="client-id" placeholder="Client du projet" value="<?= $client ?? '' ?>"  required>
                             <label for="client">Client</label>
                             <div id="confirmClient">
                             
@@ -60,9 +60,9 @@
                             <select class="form-control" name="chefProjet" required>
                                 <option selected>Choisir un chef de projet</option>
                                 <?php 
-                                foreach($equipes as $equipe)
+                                foreach($equipes as $key => $equipe)
                                 {
-                                    $chefEquipe = recupChefEquipe(intval($equipe['chefEquipe']));
+                                    $chefEquipe = $chefsEquipes[$key];
                                     ?>
                                     <option class="collapse" id="selectChefEquipe<?= $equipe['idEquipe'] ?>"><?= $chefEquipe[0]['prenom'] . " " . $chefEquipe[0]['nom'] ?></option>
                                     <?php
@@ -72,7 +72,7 @@
                         </div>
                     </div>
                 </div>
-                </form>
+            </form>
             </div>
 
             <!-- DIV DE SELECTION DES EQUIPES AJOUTEES AU PROJET ET QUE L ON PEUT RETIRER -->
@@ -91,9 +91,9 @@
                                         <th>Options</th>
                                     </tr>
                                     <?php 
-                                    foreach($equipes as $equipe)
+                                    foreach($equipes as $key => $equipe)
                                     {
-                                        $chefEquipe = recupChefEquipe(intval($equipe['chefEquipe']));
+                                        $chefEquipe = $chefsEquipes[$key];
                                         ?>
                                         <tr class="collapse" id="equipeProjet<?= $equipe['idEquipe'] ?>">
                                             <td><?= $equipe["nomEquipe"] ?></td>
@@ -123,9 +123,9 @@
                                         <th>Options</th>
                                     </tr>
                                     <?php 
-                                    foreach($equipes as $equipe)
+                                    foreach($equipes as $key => $equipe)
                                     {
-                                        $chefEquipe = recupChefEquipe(intval($equipe['chefEquipe']));
+                                        $chefEquipe = $chefsEquipes[$key];
                                         ?>
                                         <tr class="collapse show" id="equipe<?= $equipe['idEquipe'] ?>">
                                         <td><?= $equipe["nomEquipe"] ?></td>

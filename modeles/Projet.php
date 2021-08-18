@@ -198,12 +198,12 @@ Class Projet extends Modele
 
 
     //! INSERT
-    public function create($titre, $type, $deadline, $idClient, $chefProjet)
+    public function create($titre, $type, $deadline, $idClient, $chefProjet, $description)
     {
-        $sql = "INSERT INTO projets (nom, type, DateDebut, DateRendu, idClient, Etat, chefProjet)";
-        $sql .= " VALUES (?,?,NOW(),?,?,?,?)";
+        $sql = "INSERT INTO projets (nom, type, DateDebut, DateRendu, idClient, Etat, chefProjet, description)";
+        $sql .= " VALUES (?,?,NOW(),?,?,?,?,?)";
         $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$titre, $type, $deadline, $idClient, 'En cours', $chefProjet]);
+        $requete->execute([$titre, $type, $deadline, $idClient, 'En cours', $chefProjet, $description]);
     }
 
 }

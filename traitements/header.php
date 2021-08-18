@@ -1,6 +1,7 @@
 <?php
 session_start();
 
+require_once "../constants.php";
 require_once "../modeles/Modele.php";
 require_once '../modeles/Client.php';
 require_once '../modeles/Equipe.php';

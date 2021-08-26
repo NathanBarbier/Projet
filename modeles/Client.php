@@ -70,7 +70,9 @@ Class Client extends Modele
 
 
     //! INSERT
-
+    /**
+     * Insère un client dans la table clients
+     */
     public function create($nom)
     {
         $sql = "INSERT INTO clients (nom) VALUES (?)";
@@ -92,11 +94,11 @@ Class Client extends Modele
     //! METHODS
 
     //TODO À CHECK
-    public function verifClient($nomClient)
+    public function checkByName($name)
     {
         $sql = "SELECT * FROM clients WHERE nom = ?";
         $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$nomClient]);
+        $requete->execute([$name]);
 
         if($requete->fetch(PDO::FETCH_ASSOC) > 0)
         {

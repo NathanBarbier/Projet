@@ -44,11 +44,11 @@ class Inscription extends Modele
         }
     }
 
-    public function inscriptionOrg($mail, $mdp, $organisation)
+    public function inscriptionOrg($mail, $mdp, $nom)
     {
-        $sql = "INSERT INTO organisations(Email, Mdp, Nom) VALUES(?, ?, ?)";
+        $sql = "INSERT INTO organisations (Email, Mdp, Nom) VALUES(?, ?, ?)";
         $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$mail, $mdp, $organisation]);
+        $requete->execute([$mail, $mdp, $nom]);
     
         $sql = "SELECT max(idOrganisation) AS maxId FROM organisations";
         $requete = $this->getBdd()->prepare($sql);

@@ -10,7 +10,10 @@ class WorkTo extends Modele
     // INSERT
     public function create($idEquipe, $idProjet)
     {
-        $requete = $this->getBdd()->prepare("INSERT INTO travaille_sur (idEquipe, idProjet) VALUES (?, ?)");
+        $sql = "INSERT INTO travaille_sur (idEquipe, idProjet)"; 
+        $sql.= " VALUES (?, ?)";
+
+        $requete = $this->getBdd()->prepare($sql);
         $requete->execute([$idEquipe, $idProjet]);
     }
 }

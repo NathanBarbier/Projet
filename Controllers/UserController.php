@@ -1,22 +1,22 @@
-<?php require_once "header.php";
+<?php
 
-$action = $_GET["action"] ? $_GET["action"] : false;
-$idUser = $_GET["idUser"] ? $_GET["idUser"] : false;
+$action = $_GET["action"] ?? false;
+$idUser = $_GET["idUser"] ?? false;
 
-$envoi = $_POST["envoi"] ? $_POST["envoi"] : false;
+$envoi = $_POST["envoi"] ?? false;
 
-$firstname = $_POST["prenom"] ? $_POST["prenom"] : false;
-$lastname = $_POST["nom"] ? $_POST["nom"] : false;
-$email = $_POST["email"] ? $_POST["email"] : false;
-$idPoste = $_POST["idPoste"] ? $_POST["idPoste"] : false;
-$idEquipe = $_POST["idEquipe"] ? $_POST["idEquipe"] : false;
-$birth = $_POST["dateNaiss"] ? $_POST["dateNaiss"] : false;
+$firstname = $_POST["prenom"] ?? false;
+$lastname = $_POST["nom"] ?? false;
+$email = $_POST["email"] ?? false;
+$idPoste = $_POST["idPoste"] ?? false;
+$idEquipe = $_POST["idEquipe"] ?? false;
+$birth = $_POST["birth"] ?? false;
 
-$oldmdp = $_POST["oldmdp"] ? $_POST["oldmdp"] : false;
-$newmdp = $_POST["newmdp"] ? $_POST["newmdp"] : false;
-$newmdp2 = $_POST["newmdp2"] ? $_POST["newmdp2"] : false;
+$oldmdp = $_POST["oldmdp"] ?? false;
+$newmdp = $_POST["newmdp"] ?? false;
+$newmdp2 = $_POST["newmdp2"] ?? false;
 
-$rights = $_SESSION["habilitation"] ? $_SESSION["habilitation"] : false;
+$rights = $_SESSION["habilitation"] ?? false;
 
 $User = new User($idUser);
 
@@ -36,23 +36,23 @@ if($action == "updateFirstname")
                 } 
                 catch (exception $e)
                 {
-                    header('location:../admin/listeMembres.php?error=modifPrenomFatalError');
+                    header('location:'.VIEWS_PATH.'admin/listeMembres.php?error=updatePrenomFatal');
                 }
-                header("location:../admin/listeMembres.php?success=modifierPrenom");
+                header("location:".VIEWS_PATH."admin/listeMembres.php?success=prenomUpdate");
             } 
             else 
             {
-                header("location:../admin/listeMembres.php?error=surnameNoChange");
+                header("location:".VIEWS_PATH."admin/listeMembres.php?error=surnameNoChange");
             }
         } 
         else 
         {
-            header("location:../index.php");
+            header("location:".ROOT_PATH."/index.php");
         }
     } 
     else 
     {
-        header("location:../index.php");
+        header("location:".ROOT_PATH."/index.php");
     }
 }
 
@@ -73,23 +73,23 @@ if($action == "updateLastname")
                 } 
                 catch (exception $e)
                 {
-                    header('location:../admin/listeMembres.php?error=modifNomFatalError');
+                    header('location:'.VIEWS_PATH.'/admin/listeMembres.php?error=lastnameUpdateFatal');
                 }
-                header("location:../admin/listeMembres.php?success=modifierNom");
+                header("location:".VIEWS_PATH."admin/listeMembres.php?success=lastnameUpdate");
             } 
             else 
             {
-                header("location:../admin/listeMembres.php?error=nameNoChange");
+                header("location:".VIEWS_PATH."admin/listeMembres.php?error=lastnameNoChange");
             }
         } 
         else
         {
-            header("location:../index.php");
+            header("location:".ROOT_PATH."index.php");
         }
     }
     else
     {
-        header("location:../index.php");
+        header("location:".ROOT_PATH."index.php");
     }
 }
 
@@ -104,13 +104,13 @@ if($action == "updatePoste")
         }
         catch (exception $e)
         {
-            header('location:../admin/listeMembres.php?error=ModifPosteFatalError');
+            header('location:'.VIEWS_PATH.'admin/listeMembres.php?error=posteUpdateFatal');
         }
-        header("../admin/listeMembres.php?success=modifierPoste");
+        header("location:".VIEWS_PATH."admin/listeMembres.php?success=posteUpdate");
     } 
     else
     {
-        header("location:../index.php");
+        header("location:".ROOT_PATH."index.php");
     }
 }
 
@@ -125,13 +125,13 @@ if($action == "updateEquipe")
         } 
         catch (exception $e)
         {
-            header('location:../admin/listeMembres.php?error=ModifEquipeFatalError');
+            header('location:'.VIEWS_PATH.'admin/listeMembres.php?error=equipeUpdateFatal');
         }
-        header("../admin/listeMembres.php?success=modifierEquipe");
+        header("location:".VIEWS_PATH."admin/listeMembres.php?success=equipeUpdate");
     } 
     else
     {
-        header("location:../index.php");
+        header("location:".ROOT_PATH."index.php");
     }
 }
 
@@ -146,20 +146,20 @@ if($action == "updatePassword")
             {
                 if (strlen($newmdp) < 8 || strlen($newmdp) > 100)
                 {
-                    header('location:../membres/modificationMdpUser.php?error=mdpRules');
+                    header('location:'.VIEWS_PATH.'membres/passwordUpdate.php?error=mdpRules');
                 } 
                 else
                 {
                     $oldmdp = $User->getPassword();
                     if(!password_verify($oldmdp, hash($newmdp, PASSWORD_BCRYPT)))
                     {
-                        header('location:../membres/modificationMdpUser.php?error=incorrectMdp');
+                        header('location:'.VIEWS_PATH.'membres/passwordUpdate.php?error=incorrectMdp');
                     } 
                     else 
                     {
                         if($oldmdp == hash($newmdp, PASSWORD_BCRYPT))
                         {
-                            header('location:../membres/modificationMdpUser.php?error=noChange');
+                            header('location:'.VIEWS_PATH.'membres/passwordUpdate.php?error=noChange');
                         } 
                         else 
                         {
@@ -169,28 +169,37 @@ if($action == "updatePassword")
                             } 
                             catch (Exception $e) 
                             {
+                                /*
+                                TODO: ADAPTER ARCHITECTURE CONTROLLER
+                                */
                                 ?>
                                 <div class="alert alert-danger">
                                     Erreur SQL : Le mot de passe n'a pas pu être changé.
                                 </div>
                                 <?php
                             }
-                            header("location;../membres/modificationMdpUser.php?success");
+                            header("location:".VIEWS_PATH."membres/passwordUpdate.php?success=1");
                         }
                     }
                 }  
             } 
             else 
             {
-                header('location:../membres/modificationMdpUser.php?error=nonIdentiques');
+                header('location:'.VIEWS_PATH.'membres/passwordUpdate.php?error=unmatch');
             }
         } 
         else
         {
-            header('location:../membres/modificationMdpUser.php?error=missingInput');
+            header('location:'.VIEWS_PATH.'membres/passwordUpdate.php?error=missingInput');
         }
+
         if(count($erreurs) != 0)
         {
+        /* 
+        TODO : ADAPTER ARCHITECTURE CONTROLLER
+        REDIRECTION PAGE UPDATE PASSWORD
+        AFFICHER ERREURS
+        */
         ?>
             <div class="alert alert-danger">
                 <?php
@@ -202,10 +211,13 @@ if($action == "updatePassword")
             </div>
         <?php
         }
-    } else {
-        header("location:../index.php");
+    } 
+    else 
+    {
+        header("location:".ROOT_PATH."index.php");
     }
 }
+
 
 if($action == "signup")
 {
@@ -227,44 +239,62 @@ if($action == "signup")
                         {
                             if(preg_match($nombres, $lastname) == 0 && preg_match($speciaux, $lastname) == 0)
                             {
-                                if($User->verifEmail($email) == true)
+                                if($User->verifEmail($email))
                                 {
-                                    if($User->create($prenom, $lastname, $birth, $idPoste, $idEquipe, $email, $idOrganisation) != false)
+                                    if($User->create($prenom, $lastname, $birth, $idPoste, $idEquipe, $email, $idOrganisation))
                                     {
-                                        header("location:../admin/inscriptionUtilisateur.php?success=1");
-                                    } else {
-                                        header("location:../admin/inscriptionUtilisateur.php?error=inscriptionfailed");
+                                        header("location:".VIEWS_PATH."admin/inscriptionUtilisateur.php?success=1");
+                                    } 
+                                    else 
+                                    {
+                                        header("location:".VIEWS_PATH."admin/inscriptionUtilisateur.php?error=inscriptionfailed");
                                     }
                                     
-                                } else {
-                                    header("location:../admin/inscriptionUtilisateur.php?error=emailindisponible");
+                                } 
+                                else 
+                                {
+                                    header("location:".VIEWS_PATH."admin/inscriptionUtilisateur.php?error=emailindisponible");
                                 }
 
-                            } else {
-                                header("location:../admin/inscriptionUtilisateur.php?error=nommatch");
+                            } 
+                            else 
+                            {
+                                header("location:".VIEWS_PATH."admin/inscriptionUtilisateur.php?error=nommatch");
                             }
                         
-                        } else {
-                            header("location:../admin/inscriptionUtilisateur.php?error=prenommatch");
+                        } 
+                        else 
+                        {
+                            header("location:".VIEWS_PATH."admin/inscriptionUtilisateur.php?error=prenommatch");
                         }
 
-                    } else {
-                        header("location:../admin/inscriptionUtilisateur.php?error=idequipeint");
+                    } 
+                    else 
+                    {
+                        header("location:".VIEWS_PATH."admin/inscriptionUtilisateur.php?error=idequipeint");
                     }
 
-                } else {
-                    header("location:../admin/inscriptionUtilisateur.php?error=idposteint");
+                } 
+                else 
+                {
+                    header("location:".VIEWS_PATH."admin/inscriptionUtilisateur.php?error=idposteint");
                 }
 
-            } else {
-                header("location:../admin/inscriptionUtilisateur.php?error=emailvalidate");
+            } 
+            else 
+            {
+                header("location:".VIEWS_PATH."admin/inscriptionUtilisateur.php?error=emailvalidate");
             }
 
-        } else {
-            header("location:../admin/inscriptionUtilisateur.php?error=champsvide");
+        } 
+        else 
+        {
+            header("location:".VIEWS_PATH."admin/inscriptionUtilisateur.php?error=champsvide");
         }
-    } else {
-        header("location:../admin/inscriptionUtilisateur.php");
+    } 
+    else 
+    {
+        header("location:".VIEWS_PATH."admin/inscriptionUtilisateur.php");
     }
 }
 ?>

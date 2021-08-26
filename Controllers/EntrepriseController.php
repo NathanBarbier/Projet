@@ -1,6 +1,6 @@
-<?php require_once "header.php";
+<?php
 
-$idOrganisation = $_SESSION["idOrganisation"] ? $_SESSION["idOrganisation"] : false;
+$idOrganisation = $_SESSION["idOrganisation"] ?? false;
 
 $Organisation = new Organisation($idOrganisation);
 
@@ -34,14 +34,14 @@ foreach($membresEquipes as $equipekey => $equipe)
     }
 }
 
-$action = $_GET["action"] ? $_GET["action"] : false;
-$error = $_GET["error"] ? $_GET["error"] : false;
-$success = $_GET["success"] ? $_GET["success"] : false;
-$idPoste = $_GET["idPoste"] ? $_GET["idPoste"] : false;
+$action = $_GET["action"] ?? false;
+$error = $_GET["error"] ?? false;
+$success = $_GET["success"] ?? false;
+$idPoste = $_GET["idPoste"] ?? false;
 
-$nomPoste = $_POST["nomPoste"] ? $_GET["nomPoste"] : false;
-$idRole = $_POST["idRole"] ? $_POST["idRole"] : false;
-$nomEquipe = $_POST["nomEquipe"] ? $_POST["nomEquipe"] : false;
+$nomPoste = $_POST["nomPoste"] ?? false;
+$idRole = $_POST["idRole"] ?? false;
+$nomEquipe = $_POST["nomEquipe"] ?? false;
 
 $errorMessage = false;
 $successMessage = false;

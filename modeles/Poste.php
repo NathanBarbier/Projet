@@ -83,8 +83,10 @@ Class Poste extends Modele
     /**
     *   Supprime le poste de l'organisation et réaffecte le poste "indéfini" aux utilisateurs ayant ce poste
     */
-    public function delete($idPoste = $this->idPoste)
+    public function delete($idPoste = null)
     {
+        $idPoste = $idPoste == null ? $this->getId() : $idPoste;
+
         // SELECTION DE L'ID DU POSTE "INDEFINI"
         $sql = "SELECT idPoste FROM postes WHERE idOrganisation = ? LIMIT 1";
         $requete = $this->getBdd()->prepare($sql);
@@ -119,8 +121,10 @@ Class Poste extends Modele
     /**
      * Retourne tous les postes de l'organisation
      */
-    public function fetchAll($idOrganisation = $this->idOrganisation)
+    public function fetchAll($idOrganisation = null)
     {
+        $idOrganisation = $idOrganisation == null ? $this->getIdOrganisation() : $idOrganisation;
+
         $sql = "SELECT * FROM Postes WHERE idOrganisation = ?";
         $requete = $this->getBdd()->prepare($sql);
         $requete->execute([$idOrganisation]);

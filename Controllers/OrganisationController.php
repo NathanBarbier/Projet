@@ -1,9 +1,8 @@
 <?php
-require_once "header.php";
 
-$action = $_GET["action"] ? $_GET["action"] : false;
+$action = $_GET["action"] ?? false;
 
-$idOrganisation = $_SESSION["idOrganisation"] ? $_SESSION["idOrganisation"] : false;
+$idOrganisation = $_SESSION["idOrganisation"] ?? false;
 
 $Organisation = new Organisation($idOrganisation);
 
@@ -17,7 +16,7 @@ $InfosOrganisation = [
 if($action == "deleteOrganisation")
 {
     $Organisation->delete();
-    header(ROOTPATH.DIRECTORY_SEPARATOR."index.php");
+    header(ROOT_PATH.DIRECTORY_SEPARATOR."index.php");
 }
 
 ?>

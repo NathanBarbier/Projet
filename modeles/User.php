@@ -140,8 +140,10 @@ class User extends Modele
 
     //! FETCH
 
-    public function fetchAll($idOrganisation = $this->idOrganisation)
+    public function fetchAll($idOrganisation = null)
     {
+        $idOrganisation = $idOrganisation == null ? $this->getIdOrganisation() : $idOrganisation;
+
         $sql = "SELECT * FROM utilisateurs WHERE idOrganisation = ?";
         $requete = $this->getBdd()->prepare($sql);
         $requete->execute([$idOrganisation]);
@@ -157,7 +159,26 @@ class User extends Modele
 
         return $requete->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function fetchByEmail($email)
+    {
+        $sql = "SELECT * FROM utilisateurs WHERE email = ?";
+        $requete = $this->getBdd()->prepare($sql);
+        $requete->execute([$email]);
+
+        return $requete->fetchAll(PDO::FETCH_ASSOC);
+    }
     
+    public function fetchByLastnameAndFirstname($lastname, $firstname, $idOrganisation)
+    {
+        $sql = "SELECT * FROM utilisateurs";
+        $sql.= "WHERE nom = ? && prenom = ? && idOrganisation = ?";
+
+        $requete = $this->getBdd()->prepare($sql);
+        $requete->execute([$$lastname, $firstname, $idOrganisation]);
+
+        return $requete->fetch(PDO::FETCH_ASSOC);
+    }
 
     //! INSERT
 

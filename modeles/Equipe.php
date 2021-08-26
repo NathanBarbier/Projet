@@ -84,8 +84,10 @@ class Equipe extends Modele
 
     //! FETCH
 
-    public function fetchAll($idOrganisation = $this->idOrganisation)
+    public function fetchAll($idOrganisation = null)
     {
+        $idOrganisation = $idOrganisation == null ? $this->getIdOrganisation() : $idOrganisation;
+
         $sql = "SELECT * FROM equipes WHERE idOrganisation = ?";
         $requete = $this->getBdd()->prepare($sql);
         $requete->execute([$idOrganisation]);
@@ -118,8 +120,10 @@ class Equipe extends Modele
 
     //! INSERT
 
-    public function create($nom, $idOrganisation = $this->idOrganisation)
+    public function create($nom, $idOrganisation = null)
     {
+        $idOrganisation = $idOrganisation == null ? $this->getIdOrganisation() : $idOrganisation; 
+
         $sql = "INSERT INTO equipes (nomEquipe, idOrganisation) VALUES (?,?)";
         $requete = $this->getBdd()->prepare($sql);
         $requete->execute([$nom, $idOrganisation]);

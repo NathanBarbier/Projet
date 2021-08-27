@@ -1,25 +1,15 @@
 <?php
 require_once "entete.php";
+require_once CONTROLLERS_PATH."ConnexionController.php";
 
-if(!empty($_GET["error"]))
+if($erreurs)
 {
     ?>
     <div class="alert alert-danger">
     <?php
-    switch($_GET["error"]) { case "champsvide":?>
-            <?php echo "Erreur : Tous les champs doivent être remplis."?>
-            <?php break ?>
-        <?php case "idincorrect":?>
-            <?php echo "Erreur : L'email n'existe pas."?>
-            <?php break ?>
-        <?php case "mdpincorrect":?>
-            <?php echo "Erreur : Le mot de passe est incorrect."?>
-            <?php break ?>
-        <?php case "invalidemail":?>
-            <?php echo "Erreur : l'email est invalide."?>
-            <?php break ?>
-        <?php
-
+    foreach($erreurs as $erreur)
+    {
+        echo $erreur . "<br>";
     }
     ?>
     </div>
@@ -32,8 +22,7 @@ if(!empty($_GET["error"]))
 
     <h1>Connexion</h1>
 
-
-<form method="post" action="../traitements/connexion.php">
+<form method="post" action="connexion.php">
 
     <div class="form-group">
         <label for="mail" class="ml-3">Addresse mail</label>
@@ -50,7 +39,7 @@ if(!empty($_GET["error"]))
     </div>
     <div class="form-group text-center mt-2">
         <div>
-            Vous n'avez pas compte ?
+            Vous n'avez pas de compte ?
         </div>
         <a href="inscriptionOrganisation.php" class="btn btn-info mt-3">Inscrivez-vous</a>
     </div>

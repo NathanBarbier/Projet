@@ -97,7 +97,7 @@ if($deletePoste)
             </table>
         </div>
         <div class="container mt-5 text-center" style="width : 30% ; float : left">
-            <form method="post" action="../controllers/EntrepriseController.php?action=addPoste"> 
+            <form method="post" action="gererEntreprise.php?action=addPoste"> 
                 <div class="row">
                     <div class="col-6">
                        <div class="form-group text-center">
@@ -130,7 +130,7 @@ if($deletePoste)
             if($idPoste)
             {
             ?>
-                <form method="post" action="../controllers/EntrepriseController.php?action=updatePoste&idPoste=<?=$idPoste?>">
+                <form method="post" action="gererEntreprise.php?action=updatePoste&idPoste=<?=$idPoste?>">
                     <div class="form-group ml-auto mr-auto mt-3">
                         <label for="modifierPoste">Modifier le poste "<?=$fetchPoste["nomPoste"];?>"</label>
                         <input type="text" class="form-control" name="nomPoste" id="nomPoste-id" placeholder="entrez le nouveau nom du poste" value="<?=$fetchPoste["nomPoste"];?>">
@@ -149,7 +149,7 @@ if($deletePoste)
 
     <div id="modifEquipe">
         <div class="infoEquipe">
-            <form method="post" action="../controllers/EntrepriseController.php?action=addEquipe"> 
+            <form method="post" action="gererEntreprise.php?action=addEquipe"> 
                 <div class="form-group mt-3">
                     <label for="ajoutEquipe"><h4>Nom de la nouvelle équipe</h4></label>
                 </div>
@@ -247,7 +247,6 @@ if($deletePoste)
                     
                 </div>
                 <?php
-
             }
             ?>
         </div>
@@ -255,95 +254,91 @@ if($deletePoste)
     </div>
 
     <div style="width : 60%">
-            <table class="table mb-0 mt-5">
-                <thead class="titreTable">
-                    <tr>
-                        <th colspan="6">
-                            <div style="float : left"><strong>Liste des equipes : </strong></div>
-                        </th>
-                    </tr>
-                    <tr>
-                        <th><strong>Nom de l'équipe</strong></th>
-                        <th><strong>Nb membre</strong></th>
-                        <th><strong>Nom du chef d'équipe</strong></th>
-                        <th><strong>info</strong></th>   
-                    </tr>
-                </thead>
-            </table>
-            <table class="table m-0">
-                <tbody id="tbodyEquipe">
-                <?php
-                foreach($equipes as $cle => $equipe)
+        <table class="table mb-0 mt-5">
+            <thead class="titreTable">
+                <tr>
+                    <th colspan="6">
+                        <div style="float : left"><strong>Liste des equipes : </strong></div>
+                    </th>
+                </tr>
+                <tr>
+                    <th><strong>Nom de l'équipe</strong></th>
+                    <th><strong>Nb membre</strong></th>
+                    <th><strong>Nom du chef d'équipe</strong></th>
+                    <th><strong>info</strong></th>   
+                </tr>
+            </thead>
+        </table>
+        <table class="table m-0">
+            <tbody id="tbodyEquipe">
+            <?php
+            foreach($equipes as $cle => $equipe)
+            {
+                if($cle == "indéfini")
                 {
-                    if($cle == "indéfini")
+                    foreach($nbMembresEquipes as $nbMembreEquipe)
                     {
-                        foreach($nbMembresEquipes as $nbMembreEquipe)
+                        if($equipe["idEquipe"] == $nbMembreEquipe["idEquipe"])
                         {
-                            if($equipe["idEquipe"] == $nbMembreEquipe["idEquipe"])
-                            {
-                                ?>
-                                    <tr>
-                                        <th style="width: 31%"><?=$equipe["nomEquipe"];?></th>
-                                        <td style="width: 25%"><?=$nbMembreEquipe["UtilisateursParEquipe"];?></td>
-                                        <?php
-                                        if($equipe["chefEquipe"] == NULL){
-                                        ?>
-                                            <td style="width: 40%"><div style="margin-left: 5vh" >//</div></td>
-                                        <?php
-                                        } else {
-                                        ?>
-                                            <td style="width: 40%"><?=$equipe["chefEquipe"];?></td>
-                                        <?php
-                                        }
-                                        ?>
-                                        <td></td>
-                                    </tr>
+                            ?>
+                                <tr>
+                                    <th style="width: 31%"><?=$equipe["nomEquipe"];?></th>
+                                    <td style="width: 25%"><?=$nbMembreEquipe["UtilisateursParEquipe"];?></td>
+                                    <?php
+                                    if($equipe["chefEquipe"] == NULL){
+                                    ?>
+                                        <td style="width: 40%"><div style="margin-left: 5vh" >//</div></td>
+                                    <?php
+                                    } else {
+                                    ?>
+                                        <td style="width: 40%"><?=$equipe["chefEquipe"];?></td>
+                                    <?php
+                                    }
+                                    ?>
+                                    <td></td>
+                                </tr>
 
-                                <?php
-                            }
+                            <?php
                         }
-                    } else {
-                        foreach($nbMembresEquipes as $nbMembreEquipe)
+                    }
+                } else {
+                    foreach($nbMembresEquipes as $nbMembreEquipe)
+                    {
+                        if($equipe["idEquipe"] == $nbMembreEquipe["idEquipe"])
                         {
-                            if($equipe["idEquipe"] == $nbMembreEquipe["idEquipe"])
-                            {
-                                ?>
-                                    <tr>
-                                        <th><?=$equipe["nomEquipe"];?></th>
-                                        <td><?=$nbMembreEquipe["UtilisateursParEquipe"];?></td>
-                                        <?php
-                                        if($equipe["chefEquipe"] == NULL){
-                                        ?>
-                                            <td><div style="margin-left: 5vh">//</div></td>
-                                        <?php
-                                        } else {
-                                            foreach($chefEquipes as $chefEquipe)
+                            ?>
+                                <tr>
+                                    <th><?=$equipe["nomEquipe"];?></th>
+                                    <td><?=$nbMembreEquipe["UtilisateursParEquipe"];?></td>
+                                    <?php
+                                    if($equipe["chefEquipe"] == NULL){
+                                    ?>
+                                        <td><div style="margin-left: 5vh">//</div></td>
+                                    <?php
+                                    } else {
+                                        foreach($chefEquipes as $chefEquipe)
+                                        {
+                                            if($equipe["chefEquipe"] == $chefEquipe["idUtilisateur"])
                                             {
-                                                if($equipe["chefEquipe"] == $chefEquipe["idUtilisateur"])
-                                                {
-                                                    ?>
-                                                    <td><?=$chefEquipe["nom"]. " ". $chefEquipe["prenom"];?> </td>
-                                                    <?php
-                                                }
+                                                ?>
+                                                <td><?=$chefEquipe["nom"]. " ". $chefEquipe["prenom"];?> </td>
+                                                <?php
                                             }
-                                        ?>
-                                        <?php
                                         }
-                                        ?>
-                                        <td><a onclick="afficherInfoEquipe(<?=$equipe['idEquipe'];?>, <?=$equipeMinMax['MinId'];?>, <?=$equipeMinMax['MaxId'];?>)" class="btn btn-info">Info</a></td>
-                                    </tr>
-
-                                <?php
-                            }
+                                    ?>
+                                    <?php
+                                    }
+                                    ?>
+                                    <td><a onclick="afficherInfoEquipe(<?=$equipe['idEquipe'];?>, <?=$equipeMinMax['MinId'];?>, <?=$equipeMinMax['MaxId'];?>)" class="btn btn-info">Info</a></td>
+                                </tr>
+                            <?php
                         }
                     }
                 }
-                ?>
-                </tbody>
-            </table>
-        <?php
-
-        ?>
+            }
+            ?>
+            </tbody>
+        </table>
     </div>
 <?php
 require_once "pied.php";

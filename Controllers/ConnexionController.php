@@ -1,4 +1,4 @@
-<?php require_once "header.php";
+<?php
 
 $rights = $_SESSION["habilitation"] ?? false;
 $idUser = $_SESSION["idUtilisateur"] ?? false;
@@ -10,6 +10,8 @@ $mdp = $_POST["mdp"] ?? false;
 
 $User = new User();
 $Organisation = new Organisation();
+
+$erreurs = [];
 
 if($envoi)
 {
@@ -28,7 +30,8 @@ if($envoi)
                 } 
                 else 
                 {
-                    header("location:".VIEWS_PATH."general/connexion.php?error=mdpincorrect");
+                    // header("location:".VIEWS_PATH."general/connexion.php?error=mdpincorrect");
+                    $erreurs[] = "Le mot de passe est incorrect."
                 }
             } 
             
@@ -45,24 +48,28 @@ if($envoi)
                 } 
                 else 
                 {
-                    header("location:".VIEWS_PATH."general/connexion.php?error=mdpincorrect");
+                    // header("location:".VIEWS_PATH."general/connexion.php?error=mdpincorrect");
+                    $erreurs[] = "Le mot de passe est incorrect.";
                 }
             }
 
-            if(($User->verifEmail($email) == false && $Organisation->verifEmail($email) == false))
+            if((!$User->verifEmail($email) && !$Organisation->verifEmail($email)))
             {
-                header("location:".VIEWS_PATH."general/connexion.php?error=idincorrect");
+                // header("location:".VIEWS_PATH."general/connexion.php?error=idincorrect");
+                $erreurs[] = "Cette adresse email n'est associée à aucun compte.";
             }
             
         } 
         else 
         {
-            header("location:".VIEWS_PATH."general/connexion.php?error=invalidemail");
+            // header("location:".VIEWS_PATH."general/connexion.php?error=invalidemail");
+            $erreurs[] = "Le format de l'adresse email est incorrect.";
         }
     } 
     else 
     {
-        header("location:".VIEWS_PATH."general/connexion.php?error=champsvide");
+        // header("location:".VIEWS_PATH."general/connexion.php?error=champsvide");
+        $erreurs[] = "Un champs n'a pas été rempli.";
     }
 
 } 

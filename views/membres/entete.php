@@ -1,13 +1,13 @@
 <?php
 require_once "../../traitements/header.php";
+$rights = $_SESSION["habilitation"] ?? false;
 
-
-if(!empty($_SESSION["habilitation"]) && $_SESSION["habilitation"] == 'admin')
+if($rights == 'admin')
 {
-    header("location:../index.php");
+    header("location:".ROOT_PATH."index.php");
 }
 
-if(!empty($_SESSION["habilitation"]) && $_SESSION["habilitation"] == "user")
+if($rights == "user")
 {
 ?>
 <!DOCTYPE html>

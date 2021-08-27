@@ -1,6 +1,8 @@
-<?php require_once "entete.php";
-// Si le mdp a bien été changé
-if(!empty($_GET["success"]))
+<?php 
+require_once VIEWS_PATH."/membres/entete.php";
+require_once CONTROLLERS_PATH."UserController.php";
+
+if($success)
 {
     ?>
     <div class="alert alert-success">
@@ -12,25 +14,18 @@ if(!empty($_GET["success"]))
 } 
 else 
 {
-    if(!empty($_GET["error"])) { ?>
+    if($erreurs)
+    {
+        ?>
         <div class="alert alert-danger">
+            <?php
+            foreach($erreurs as $erreur)
+            {
+                echo $erreur . "<br>";
+            }
+            ?>
+        </div>
         <?php
-        switch ($_GET["error"]) { case "missingInput":?>
-            <?php echo "Erreur : Un champs n'est pas rempli."?>
-            <?php break ?>
-        <?php case "nonIdentiques": ?>
-            <?php echo "Erreur : Les deux nouveaux mots de passes ne sont pas identiques."?>
-            <?php break ?>
-        <?php case 'mdpRules':?>
-            <?php echo "Erreur : Le mot de passe doit contenir entre 8 et 100 caractères, au moins un caractère spécial, une minuscule, une majuscule, un chiffre et ne doit pas contenir d'espace."?>
-            <?php break ?>
-        <?php case 'incorrectMdp':?>
-            <?php echo "Erreur : L'ancien mot de passe est incorrect."?>
-            <?php break ?>
-        <?php case 'noChange': ?>
-            <?php echo "Erreur : Le mot de passe ne peut pas être le même qu'avant."?>
-            <?php break;
-        }
     }
 }
 ?>
@@ -38,7 +33,7 @@ else
 
     <a class="btn btn-primary" href="index.php">Retourner à la vue globale</a>
 
-    <form method="post" action="../traitements/modificationMdpUser.php">
+    <form method="post" action="passwordUpdate.php">
         
         <div class="form-group">
             <label for="oldmdp">Ancien mot de passe</label>

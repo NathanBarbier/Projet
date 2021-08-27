@@ -44,7 +44,7 @@ if(!empty($_GET["success"]))
 } else {
 ?>
 
-<form method="post" action="inscriptionOrganisation?action=inscriptionOrg.php">
+<form method="post" action="inscriptionOrganisation.php?action=inscriptionOrg">
     <h1>Inscription</h1>
 
     <div class="form-group">

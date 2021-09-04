@@ -1,6 +1,6 @@
 <?php
-require_once "entete.php"; 
-require_once CONTROLLERS_PATH."ProjetController.php";
+require_once "layouts/entete.php"; 
+// require_once CONTROLLERS_PATH."Projet.php";
 ?>
 
 <div class="col-10 mt-4">
@@ -149,4 +149,4 @@ require_once CONTROLLERS_PATH."ProjetController.php";
 
 <script src="js/creationProjets.php"></script>
 
-<?php require_once "pied.php"; ?>
+<?php require_once "layouts/pied.php"; ?>

@@ -1,4 +1,6 @@
-<?php require_once "header.php";
+<?php
+//import all models
+require_once "../traitements/header.php";
 
 $action = $_GET["action"] ?? false;
 $idProjet = $_GET["idProjet"] ?? false;

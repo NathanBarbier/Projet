@@ -1,4 +1,6 @@
 <?php
+//import all models
+require_once "../traitements/header.php";
 
 $envoi = $_POST["envoi"] ?? false;
 $nomPoste = $_POST["nomPoste"] ?? false;

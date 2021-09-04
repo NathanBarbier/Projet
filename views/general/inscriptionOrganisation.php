@@ -1,51 +1,42 @@
 <?php
-require_once "entete.php";
+require_once "layouts/entete.php";
 
-if(!empty($_GET["error"]))
+$data = !empty($_GET["data"]) ? json_decode($_GET["data"]) : null;
+
+// var_dump($data);
+
+if(!empty($data->erreurs))
 {
     ?>
     <div class="alert alert-danger">
     <?php
-    switch($_GET["error"]) { case "champsvide":?>
-            <?php echo "Erreur : Tous les champs doivent être remplis."?>
-            <?php break ?>
-        <?php case "nonidentiques":?>
-            <?php echo "Erreur : Les mots de passe ne sont pas identiques."?>
-            <?php break ?>
-        <?php case "nomindisponible":?>
-            <?php echo "Erreur : Le nom est indisponible."?>
-            <?php break ?>
-        <?php case "emailincorrect":?>
-            <?php echo "Erreur : L'Email n'est pas correct."?>
-            <?php break ?>
-        <?php case "emailindisponible":?>
-            <?php echo "Erreur : L'Email est indisponible."?>
-            <?php break ?>
-        <?php case "fatalerror":?>
-            <?php echo "Erreur : l'inscription n'a pas pu aboutir."?>
-            <?php break ?>
-        <?php
+    foreach($data->erreurs as $erreur)
+    {
+        echo $erreur . "<br>";
     }
     ?>
     </div>
     <?php
 }
 
-if(!empty($_GET["success"]))
+if(!empty($data->success))
 {
     ?>
-    <div class="alert alert-success">
-    Votre incription a bien été enrigistrée<br>
-    Vous allez être redirigé vers la page de connexion<br>
-    Ou cliquez ici pour être redirigé directement <a href="connexion.php"></a>
-    </div>
-    <?php
-    header("refresh:4;connexion.php");
-} else {
+     <div class="alert alert-success">
+     Votre inscription a bien été enrigistrée<br>
+     Vous allez être redirigé vers la page de connexion<br>
+     Ou cliquez ici pour être redirigé directement <a href="connexion.php"></a>
+     </div>
+     <?php 
+    header("refresh:4;".VIEWS_URL."/general/connexion.php");
+} 
+else
+{
 ?>
 
-<form method="post" action="inscriptionOrganisation.php?action=inscriptionOrg">
-    <h1>Inscription</h1>
+<form method="POST" action="<?= CONTROLLERS_URL?>Inscription.php">
+    <input type="hidden" name="action" value="inscriptionOrg">
+    <h1>Inscription </h1>
 
     <div class="form-group">
         <label for="nom">Nom organisation</label>
@@ -68,12 +59,13 @@ if(!empty($_GET["success"]))
     </div>
 
     <div class="text-center mt-3">
-    <button type="submit" class="btn btn-primary" name="envoi" value="1">S'inscrire</button>
+        <button type="submit" class="btn btn-primary" name="envoi" value="1">S'inscrire</button>
     </div>
     
 </form>
 <?php
 }
 
-require_once 'pied.php'
+require_once 'layouts/pied.php';
+
 ?>

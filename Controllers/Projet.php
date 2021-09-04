@@ -1,4 +1,6 @@
 <?php
+//import all models
+require_once "../traitements/header.php";
 
 $idOrganisation = $_SESSION["idOrganisation"] ?? false;
 
@@ -74,8 +76,7 @@ if($action == "addProjet")
                     {
                         $Client->create($clientName);
                         $Projet->create($titre, $type, $deadline, $idClient, $idChefProjet, $description);
-                        // print_r($equipesAjoutees);
-                        // exit;
+
                         for($i = 0; $i < strlen($equipesProjet); $i++ )
                         {
                             $WorkTo->create($idProjet, $equipesAjoutees[$i]);

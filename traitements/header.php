@@ -10,3 +10,4 @@ require_once MODELS_PATH.'Poste.php';
 require_once MODELS_PATH.'Projet.php';
 require_once MODELS_PATH.'User.php';
 require_once MODELS_PATH.'Role.php';
+require_once MODELS_PATH.'Inscription.php';

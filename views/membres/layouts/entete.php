@@ -1,14 +1,15 @@
 <?php
 require_once "../../traitements/header.php";
-
 $rights = $_SESSION["habilitation"] ?? false;
 
-if($rights)
+if($rights == 'admin')
 {
-    header("location:".ROOT_PATH."index.php");
+    header("location:".ROOT_URL."index.php");
 }
-?>
 
+if($rights == "user")
+{
+?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -23,7 +24,7 @@ if($rights)
 <nav class="navbar navbar-dark navbar-expand-md bg-dark">
 
     <a class="navbar-brand" href="../index.php">
-        <img src="../images/logo.png" width="30" height="30" class="d-inline-block align-top" alt="">
+        <img src="<?= IMG_URL ?>logo.png" width="30" height="30" class="d-inline-block align-top" alt="">
         Projet gestion projets
     </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
@@ -32,11 +33,23 @@ if($rights)
 
     <div class="collapse navbar-collapse" id="navbarNavDropdown">
         <div class="navbar-nav w-100" style="padding-right: 5vh;">
-            <a class="nav-item nav-link" href="inscriptionOrganisation">Inscription</a>
+
+            <div style="margin-left:auto">
+                <a class="btn btn-danger" href="../traitements/deconnexion.php" >Déconnexion</a>
+            </div>
+
         </div>
     </div>
 
 </nav>
+
+<div class="container mt-4" style="width: 50%">
+
 <div class="container mt-4">
-    <?php
-    // print_r($_SESSION);
+<?php
+} 
+else 
+{
+    header("location:".ROOT_URL."index.php");
+}
+?>

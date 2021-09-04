@@ -1,6 +1,6 @@
 <?php 
-require_once "entete.php";
-require_once CONTROLLERS_PATH."InscriptionController.php";
+require_once "layouts/entete.php";
+// require_once CONTROLLERS_PATH."Inscription.php";
 ?>
 <div class="col-9 container mt-5">
 
@@ -8,7 +8,7 @@ require_once CONTROLLERS_PATH."InscriptionController.php";
 
 <div class="col-9 mt-4">
     <div class="container">
-        <form method="post" action="inscriptionUtilisateur.php?action=inscription">
+        <form method="post" action="inscriptionUtilisateur.php?action=signup">
                 
             <div class="form-floating mt-3 mb-3">
                 <input class="form-control" type="email" name="email" id="email" placeholder="adresse email" value="<?= isset($email) ? $email : ""?>"  required>
@@ -64,4 +64,4 @@ require_once CONTROLLERS_PATH."InscriptionController.php";
     </div>
 </div>
 <?php
-require_once 'pied.php' ?>
+require_once 'layouts/pied.php' ?>

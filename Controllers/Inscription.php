@@ -1,9 +1,11 @@
 <?php
+//import all models
+require_once "../traitements/header.php";
 
 $idOrganisation = $_SESSION["idOrganisation"] ?? false;
 
-$action = $_GET["action"] ?? false;
-$envoi = $_GET["envoi"] ?? false;
+$action = $_GET["action"] ?? $_POST["action"] ?? false;
+$envoi = $_GET["envoi"] ?? $_POST["envoi"] ?? false;
 
 $email = $_POST["email"] ?? false;
 $nom = $_POST["nom"] ?? false;
@@ -23,14 +25,24 @@ $postes = $Poste->fetchAll($idOrganisation);
 $Equipe = new Equipe();
 $equipes = $Equipe->fetchAll($idOrganisation);
 
+$erreurs = array();
+$success = false;
+
+$data = array();
 
 if($action == "inscriptionUser")
 {
+    $tpl = "inscriptionUtilisateur.php";
 
 }
 
+// var_dump($_POST);
+// exit;
+
 if($action == "inscriptionOrg")
 {
+    $tpl = "general/inscriptionOrganisation.php";
+    
     if($envoi) 
     {
         if($nom && $email && $mdp && $mdp2)
@@ -46,48 +58,53 @@ if($action == "inscriptionOrg")
                             try
                             {
                                 $mdp = password_hash($mdp, PASSWORD_BCRYPT);
-                                $Inscription->inscriptionOrg($email, $mdp, $organisation);
+                                $success = $Inscription->inscriptionOrg($email, $mdp, $nom);
                             } 
                             catch (exception $e) 
                             {
-                                header("location:".VIEWS_PATH."general/inscriptionOrganisation.php?error=fatalerror");
+                                $erreurs[] = "Erreur : l'inscription n'a pas pu aboutir.";
                             }
-                            header("location:".VIEWS_PATH."general/inscriptionOrganisation.php?success=1");
                         } 
                         else 
                         {
-                            header("location:".VIEWS_PATH."general/inscriptionOrganisation.php?error=nonidentique");
+                            $erreurs[] = "Erreur : Les mots de passe ne sont pas identiques.";
                         }
-
-                    } 
+                    }
                     else 
                     {
-                        header("location:".VIEWS_PATH."general/inscriptionOrganisation.php?error=emailindisponible");
+                        $erreurs[] = "Erreur : L'Email est indisponible.";
                     }
-
                 } 
                 else 
                 {
-                    header("location:".VIEWS_PATH."general/inscriptionOrganisation.php?error=emailincorrect");
+                    $erreurs[] = "Erreur : L'Email n'est pas correct.";
                 }
-
             } 
             else 
             {
-                header("location:".VIEWS_PATH."general/inscriptionOrganisation.php?error=nomindisponible");
+                $erreurs[] = "Erreur : Le nom est indisponible.";
             }
-
         } 
         else 
         {
-            header("location:".VIEWS_PATH."general/inscriptionOrganisation.php?error=champsvide");
+            $erreurs[] = "Erreur : Tous les champs doivent être remplis.";
         }
-
     } 
     else 
-    {
-        header("location:".ROOT_PATH."index.php");
+    {        
+        header("location:".ROOT_URL."index.php");
     }
 }
+
+$data = array(
+    "success" => $success,
+    "erreurs" => $erreurs,
+    "postes" => $postes,
+    "equipes" => $equipes
+);
+
+$data = json_encode($data);
+
+header("location:".VIEWS_URL.$tpl."?data=$data");
 
 ?>

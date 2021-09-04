@@ -1,6 +1,6 @@
 <?php
-require_once "entete.php";
-require_once CONTROLLERS_PATH."EquipeController.php";
+require_once "layouts/entete.php";
+// require_once CONTROLLERS_PATH."Equipe.php";
 ?>
 <div class="col-10">
 

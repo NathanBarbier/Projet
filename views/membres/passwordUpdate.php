@@ -1,6 +1,6 @@
 <?php 
 require_once VIEWS_PATH."/membres/entete.php";
-require_once CONTROLLERS_PATH."UserController.php";
+require_once CONTROLLERS_PATH."User.php";
 
 if($success)
 {

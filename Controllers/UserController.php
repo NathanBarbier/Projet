@@ -48,16 +48,13 @@ if($action == "updateFirstname")
                 } 
                 catch (exception $e)
                 {
-                    // header('location:'.VIEWS_PATH.'admin/listeMembres.php?error=updatePrenomFatal');
-                    $erreurs[] = "Le prénom n'a pas pu être modifié.";
+                    $erreur = "Le prénom n'a pas pu être modifié.";
                 }
-                // header("location:".VIEWS_PATH."admin/listeMembres.php?success=prenomUpdate");
                 $success = "Le prénom a bien été modifié.";
             } 
             else 
             {
-                // header("location:".VIEWS_PATH."admin/listeMembres.php?error=firstnameNoChange");
-                $erreurs[] = "Le nom est le même qu'avant.";
+                $erreur = "Le nom est le même qu'avant.";
             }
         } 
         else 
@@ -88,16 +85,13 @@ if($action == "updateLastname")
                 } 
                 catch (exception $e)
                 {
-                    // header('location:'.VIEWS_PATH.'/admin/listeMembres.php?error=lastnameUpdateFatal');
-                    $erreurs[] = "La modification de nom n'a pas pu aboutir.";
+                    $erreur = "La modification de nom n'a pas pu aboutir.";
                 }
-                // header("location:".VIEWS_PATH."admin/listeMembres.php?success=lastnameUpdate");
                 $success = "Le nom a bien été modifié.";
             } 
             else 
             {
-                // header("location:".VIEWS_PATH."admin/listeMembres.php?error=lastnameNoChange");
-                $erreurs[] = "Le nom n'a pas été changé.";
+                $erreur = "Le nom n'a pas été changé.";
             }
         } 
         else
@@ -122,10 +116,8 @@ if($action == "updatePoste")
         }
         catch (exception $e)
         {
-            // header('location:'.VIEWS_PATH.'admin/listeMembres.php?error=posteUpdateFatal');
-            $erreurs[] = "La modification de poste n'a pas pu aboutir.";
+            $erreur = "La modification de poste n'a pas pu aboutir.";
         }
-        // header("location:".VIEWS_PATH."admin/listeMembres.php?success=posteUpdate");
         $success = "La modification de poste a bien été prise en compte.";
     } 
     else
@@ -145,10 +137,8 @@ if($action == "updateEquipe")
         } 
         catch (exception $e)
         {
-            // header('location:'.VIEWS_PATH.'admin/listeMembres.php?error=equipeUpdateFatal');
-            $erreurs[] = "La modification d'équipe n'a pas pu aboutir.";
+            $erreur = "La modification d'équipe n'a pas pu aboutir.";
         }
-        // header("location:".VIEWS_PATH."admin/listeMembres.php?success=equipeUpdate");
         $success = "Le modification d'équipe a bien été prise en compte.";
     } 
     else
@@ -168,23 +158,20 @@ if($action == "updatePassword")
             {
                 if (strlen($newmdp) < 8 || strlen($newmdp) > 100)
                 {
-                    // header('location:'.VIEWS_PATH.'membres/passwordUpdate.php?error=mdpRules');
-                    $erreurs[] = "Erreur : Le mot de passe doit contenir entre 8 et 100 caractères, au moins un caractère spécial, une minuscule, une majuscule, un chiffre et ne doit pas contenir d'espace.";
+                    $erreur = "Erreur : Le mot de passe doit contenir entre 8 et 100 caractères, au moins un caractère spécial, une minuscule, une majuscule, un chiffre et ne doit pas contenir d'espace.";
                 } 
                 else
                 {
                     $oldmdp = $User->getPassword();
                     if(!password_verify($oldmdp, hash($newmdp, PASSWORD_BCRYPT)))
                     {
-                        $erreurs[] = "L'ancien mot de passe est incorrect.";
-                        // header('location:'.VIEWS_PATH.'membres/passwordUpdate.php?error=incorrectMdp');
+                        $erreur = "L'ancien mot de passe est incorrect.";
                     } 
                     else 
                     {
                         if($oldmdp == hash($newmdp, PASSWORD_BCRYPT))
                         {
-                            $erreurs[] = "Erreur : Le mot de passe ne peut pas être le même qu'avant.";
-                            // header('location:'.VIEWS_PATH.'membres/passwordUpdate.php?error=noChange');
+                            $erreur = "Erreur : Le mot de passe ne peut pas être le même qu'avant.";
                         } 
                         else 
                         {
@@ -194,9 +181,8 @@ if($action == "updatePassword")
                             } 
                             catch (Exception $e) 
                             {
-                                $erreurs[] = "Erreur SQL : Le mot de passe n'a pas pu être changé.";
+                                $erreur = "Erreur SQL : Le mot de passe n'a pas pu être changé.";
                             }
-                            // header("location:".VIEWS_PATH."membres/passwordUpdate.php?success=1");
                             $success = true;
                         }
                     }
@@ -204,14 +190,12 @@ if($action == "updatePassword")
             } 
             else 
             {
-                // header('location:'.VIEWS_PATH.'membres/passwordUpdate.php?error=unmatch');
-                $erreurs[] = "Erreur : Les deux nouveaux mots de passes ne sont pas identiques.";
+                $erreur = "Erreur : Les deux nouveaux mots de passes ne sont pas identiques.";
             }
         } 
         else
         {
-            // header('location:'.VIEWS_PATH.'membres/passwordUpdate.php?error=missingInput');
-            $erreurs[] = "Erreur : Un champs n'est pas rempli.";
+            $erreur = "Erreur : Un champs n'est pas rempli.";
         }
 
     } 
@@ -246,62 +230,46 @@ if($action == "signup")
                                 {
                                     if($User->create($prenom, $lastname, $birth, $idPoste, $idEquipe, $email, $idOrganisation))
                                     {
-                                        // header("location:".VIEWS_PATH."admin/inscriptionUtilisateur.php?success=1");
                                         $success = true;
                                     } 
                                     else 
                                     {
-                                        // header("location:".VIEWS_PATH."admin/inscriptionUtilisateur.php?error=inscriptionfailed");
-                                        $erreurs[] = "Erreur : L'inscription n'a pas pu aboutir.";
+                                        $erreur = "Erreur : L'inscription n'a pas pu aboutir.";
                                     }
-                                    
                                 } 
                                 else 
                                 {
-                                    // header("location:".VIEWS_PATH."admin/inscriptionUtilisateur.php?error=emailindisponible");
-                                    $erreurs[] = "Erreur : L'adresse email est déjà prise.";
+                                    $erreur = "Erreur : L'adresse email est déjà prise.";
                                 }
-
                             } 
                             else 
                             {
-                                // header("location:".VIEWS_PATH."admin/inscriptionUtilisateur.php?error=nommatch");
-                                $erreurs[] = "Erreurs : Le nom n'est pas correct.";
+                                $erreur = "Erreurs : Le nom n'est pas correct.";
                             }
-                        
                         } 
                         else 
                         {
-                            // header("location:".VIEWS_PATH."admin/inscriptionUtilisateur.php?error=prenommatch");
-                            $erreurs[] = "Erreur : Le prénom n'est pas correct.";
+                            $erreur = "Erreur : Le prénom n'est pas correct.";
                         }
-
                     } 
                     else 
                     {
-                        // header("location:".VIEWS_PATH."admin/inscriptionUtilisateur.php?error=idequipeint");
-                        $erreurs[] = "L'équipe n'est pas correct.";
+                        $erreur = "L'équipe n'est pas correct.";
                     }
-
                 } 
                 else 
                 {
-                    // header("location:".VIEWS_PATH."admin/inscriptionUtilisateur.php?error=idposteint");
-                    $erreurs[] = "Le poste n'est pas correct.";
+                    $erreur = "Le poste n'est pas correct.";
                 }
-
             } 
             else 
             {
-                // header("location:".VIEWS_PATH."admin/inscriptionUtilisateur.php?error=emailvalidate");
-                $erreurs[] = "Le format de l'adresse email n'est pas correct.";
+                $erreur = "Le format de l'adresse email n'est pas correct.";
             }
-
         } 
         else 
         {
-            // header("location:".VIEWS_PATH."admin/inscriptionUtilisateur.php?error=champsvide");
-            $erreurs[] = "Un champs n'est pas rempli.";
+            $erreur = "Un champs n'est pas rempli.";
         }
     } 
     else 

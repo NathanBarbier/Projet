@@ -15,11 +15,10 @@ $rootDir = str_replace(DIRECTORY_SEPARATOR.$explode[max(array_keys($explode))], 
 $rootUrl = $url;
 
 define('ROOT_PATH', $rootDir);
-define('CONTROLLERS_PATH', $rootDir.DIRECTORY_SEPARATOR.'controllers'.DIRECTORY_SEPARATOR);
+define('CONTROLLERS_PATH', $rootDir.DIRECTORY_SEPARATOR.'Controllers'.DIRECTORY_SEPARATOR);
 define('VIEWS_PATH', $rootUrl.'views'.DIRECTORY_SEPARATOR);
 define('MODELS_PATH', $rootDir.DIRECTORY_SEPARATOR.'modeles'.DIRECTORY_SEPARATOR);
 define('PROCESS_PATH', $rootDir.DIRECTORY_SEPARATOR.'traitements'.DIRECTORY_SEPARATOR);
 define('IMG_PATH', $rootDir.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR);
-
  
 ?>

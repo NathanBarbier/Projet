@@ -30,8 +30,7 @@ if($envoi)
                 } 
                 else 
                 {
-                    // header("location:".VIEWS_PATH."general/connexion.php?error=mdpincorrect");
-                    $erreurs[] = "Le mot de passe est incorrect."
+                    $erreurs[] = "Le mot de passe est incorrect.";
                 }
             } 
             
@@ -48,32 +47,28 @@ if($envoi)
                 } 
                 else 
                 {
-                    // header("location:".VIEWS_PATH."general/connexion.php?error=mdpincorrect");
                     $erreurs[] = "Le mot de passe est incorrect.";
                 }
             }
 
             if((!$User->verifEmail($email) && !$Organisation->verifEmail($email)))
             {
-                // header("location:".VIEWS_PATH."general/connexion.php?error=idincorrect");
                 $erreurs[] = "Cette adresse email n'est associée à aucun compte.";
             }
             
         } 
         else 
         {
-            // header("location:".VIEWS_PATH."general/connexion.php?error=invalidemail");
             $erreurs[] = "Le format de l'adresse email est incorrect.";
         }
     } 
     else 
     {
-        // header("location:".VIEWS_PATH."general/connexion.php?error=champsvide");
         $erreurs[] = "Un champs n'a pas été rempli.";
     }
 
 } 
-else 
-{
-    header("location:".ROOT_PATH."index.php");
-}
+// else 
+// {
+//     header("location:".ROOT_PATH."index.php");
+// }

@@ -34,7 +34,6 @@ if($rights == "admin")
     {
         header("location:".VIEWS_PATH."admin/gererEntreprise.php");
     }
-
 } 
 else 
 {

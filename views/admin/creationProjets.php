@@ -1,11 +1,13 @@
-<?php require_once "entete.php"; 
+<?php
+require_once "entete.php"; 
+require_once CONTROLLERS_PATH."ProjetController.php";
 ?>
 
 <div class="col-10 mt-4">
     <h2>Création de projet</h2>
     <div class="row">
         <div class="col-4">
-            <form method="POST" action="../Controllers/ProjetController.php?action=addProjet&idProjet=<?= $idProjet ?>">
+            <form method="POST" action="createProjets.php?action=addProjet&idProjet=<?= $idProjet ?>">
                 <div class="form-floating mb-3">
                     <input required class="form-control" type="text" name="titre" id="titre-id" placeholder="Titre du projet" value="<?= $titre ?? '' ?>">
                     <label for="titre">Titre du projet</label>
@@ -29,7 +31,7 @@
                 <div class="row">
                     <div class="col-10">
                         <div class="form-floating mb-3">
-                            <input required class="form-control" type="text" name="client" id="client-id" placeholder="Client du projet" value="<?= $client ?? '' ?>"  required>
+                            <input required class="form-control" type="text" name="clientName" id="clientName-id" placeholder="Client du projet" value="<?= $client ?? '' ?>"  required>
                             <label for="client">Client</label>
                             <div id="confirmClient">
                             

@@ -1,5 +1,6 @@
 <?php
 require_once "entete.php";
+require_once CONTROLLERS_PATH."EquipeController.php";
 ?>
 <div class="col-10">
 
@@ -7,13 +8,13 @@ require_once "entete.php";
     <?php
 
 
-    print_r($equipe);
-    echo "<br>";
-    print_r($nbMembresEquipe);
-    echo "<br>";
-    print_r($membresEquipe);
-    echo "<br>";
-    print_r($chefEquipe);
+    // print_r($equipe);
+    // echo "<br>";
+    // print_r($nbMembresEquipe);
+    // echo "<br>";
+    // print_r($membresEquipe);
+    // echo "<br>";
+    // print_r($chefEquipe);
     ?>
     <h1 class="titreInfoEquipe">Fiche d'information équipe</h1>
 

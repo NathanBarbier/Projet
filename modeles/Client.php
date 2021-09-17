@@ -1,61 +1,113 @@
 <?php
 Class Client extends Modele 
 {
-    private $idClient;
+    private $id;
     private $nom;
 
     public function __construct($idClient = null)
     {
         if($idClient !== null)
         {
-            $requete = $this->getBdd()->prepare("SELECT * FROM clients WHERE idClient = ?");
+            $sql = "SELECT * FROM clients WHERE idClient = ?";
+            $requete = $this->getBdd()->prepare($sql);
             $requete->execute([$idClient]);
+
             $client = $requete->fetch(PDO::FETCH_ASSOC);
+
             $this->idClient = $idClient;
             $this->nom = $client["nom"];
         }
     }
 
-    public function getIdCLient()
+
+    //! GETTER
+
+    public function getId()
     {
-        return $this->idClient;
+        return $this->id;
     }
 
-    public function getNomCLient()
+    public function getNom()
     {
         return $this->nom;
     }
 
-    public function setNomCLient($nom)
+    
+    //! SETTER
+    
+    public function setNom($nom)
     {
         $this->nom = $nom;
-        $requete = $this->getBdd()->prepare("UPDATE clients SET nom = ? WHERE idClient =  ?");
+    }
+
+
+    //! FETCH
+    public function fetchAll($idOrganisation)
+    {
+        $sql = "SELECT clients.nom as nom, clients.idClient as idClient";
+        $sql .= " FROM clients";
+        $sql .= " INNER JOIN commande_client USING(idClient)";
+        $sql .= " INNER JOIN projets USING(idProjet)";
+        $sql .= " INNER JOIN travaille_sur USING(idProjet)";
+        $sql .= " INNER JOIN equipes USING(idEquipe)";
+        $sql .= " WHERE equipes.idOrganisation = ?";
+
+        $requete = $this->getBdd()->prepare($sql);
+        $requete->execute([$idOrganisation]);
+
+        return $requete->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    //TODO À CHECK
+    public function fetchId($nom)
+    {
+        $sql = "SELECT idClient FROM clients WHERE nom = ?";
+        $requete = $this->getBdd()->prepare($sql);
+        $requete->execute([$nom]);
+
+        return $requete->fetch(PDO::FETCH_ASSOC);
+    }
+
+
+    //! INSERT
+    /**
+     * Insère un client dans la table clients
+     */
+    public function create($nom)
+    {
+        $sql = "INSERT INTO clients (nom) VALUES (?)";
+        $requete = $this->getBdd()->prepare($sql);
+        $requete->execute([$nom]);
+    }
+
+
+    //! UPDATE
+
+    public function updateNom($nom)
+    {
+        $sql = "UPDATE clients SET nom = ? WHERE idClient =  ?";
+        $requete = $this->getBdd()->prepare($sql);
         $requete->execute([$this->nom, $this->idClient]);
     }
 
-    public function verifClient($nomClient)
+
+    //! METHODS
+
+    //TODO À CHECK
+    public function checkByName($name)
     {
-        $requete = $this->getBdd()->prepare("SELECT * FROM clients WHERE nom = ?");
-        $requete->execute([$nomClient]);
+        $sql = "SELECT * FROM clients WHERE nom = ?";
+        $requete = $this->getBdd()->prepare($sql);
+        $requete->execute([$name]);
+
         if($requete->fetch(PDO::FETCH_ASSOC) > 0)
         {
             return true;
-        } else {
+        }
+        else
+        {
             return false;
         }
-    }
-
-    public function insertClient($client)
-    {
-        $requete = $this->getBdd()->prepare("INSERT INTO clients (nom) VALUES (?)");
-        $requete->execute([$client]);
-    }
-
-    public function recupIdClient($nomClient)
-    {
-        $requete = $this->getBdd()->prepare("SELECT idClient FROM clients WHERE nom = ?");
-        $requete->execute([$nomClient]);
-        return $requete->fetch(PDO::FETCH_ASSOC);
     }
 
 }

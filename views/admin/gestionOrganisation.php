@@ -1,4 +1,6 @@
-<?php require_once "entete.php";
+<?php 
+require_once "entete.php";
+require_once CONTROLLERS_PATH."OrganisationController.php";
 ?>
 
 <div class="col-10 mt-4 w-75">

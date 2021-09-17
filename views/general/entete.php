@@ -1,8 +1,11 @@
 <?php
-require_once "../traitements/header.php";
-if(!empty($_SESSION["habilitation"]))
+require_once "../../traitements/header.php";
+
+$rights = $_SESSION["habilitation"] ?? false;
+
+if($rights)
 {
-    header("location:../index.php");
+    header("location:".ROOT_PATH."index.php");
 }
 ?>
 

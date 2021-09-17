@@ -6,7 +6,8 @@ class Inscription extends Modele
 
     public function __construct()
     {
-        $requete = $this->getBdd()->prepare("SELECT * FROM organisations");
+        $sql = "SELECT * FROM organisations";
+        $requete = $this->getBdd()->prepare($sql);
         $requete->execute();
 
         $Organisations = $requete->fetchAll(PDO::FETCH_ASSOC);
@@ -19,34 +20,42 @@ class Inscription extends Modele
     }
 
     // METHODES
-    public function verifNomOrg($nO)
+    public function verifNomOrg($nomOrganisation)
     {
-        if(array_search($this->nomsOrg, $nO))
+        if(array_search($this->nomsOrg, $nomOrganisation))
         {
             return true;
-        } else {
+        }
+        else 
+        {
             return false;
         }
     }
 
-    public function verifEmailOrg($emO)
+    public function verifEmailOrg($emailOrg)
     {
-        if(array_search($this->emailsOrg, $emO))
+        if(array_search($this->emailsOrg, $emailOrg))
         {
             return true;
-        } else {
+        } 
+        else 
+        {
             return false;
         }
     }
 
-    public function inscriptionOrg($mail, $mdp, $organisation)
+    public function inscriptionOrg($mail, $mdp, $nom)
     {
-        $requete = $this->getBdd()->prepare("INSERT INTO organisations(Email, Mdp, Nom)
-        VALUES(?, ?, ?)");
-        $requete->execute([$mail, $mdp, $organisation]);
+        $status = array();
+
+        $sql = "INSERT INTO organisations (Email, Mdp, Nom) VALUES(?, ?, ?)";
+        $requete = $this->getBdd()->prepare($sql);
+        $status[] = $requete->execute([$mail, $mdp, $nom]);
     
-        $requete = $this->getBdd()->prepare("SELECT max(idOrganisation) AS maxId FROM organisations");
-        $requete->execute();
+        $sql = "SELECT max(idOrganisation) AS maxId FROM organisations";
+        $requete = $this->getBdd()->prepare($sql);
+        $status[] = $requete->execute();
+
         $idMax = $requete->fetch(PDO::FETCH_ASSOC);
     
         if(empty($idMax["maxId"]))
@@ -54,9 +63,22 @@ class Inscription extends Modele
             $idMax["maxId"] = 1;
         }
         
-        $requete = $this->getBdd()->prepare("INSERT INTO equipes (nomEquipe, idOrganisation) VALUES (?, ?);
-        INSERT INTO postes (nomPoste, idOrganisation) VALUES (?, ?)");
-        $requete->execute(["indéfini",$idMax["maxId"],"indéfini",$idMax["maxId"]]);
+        $sql = "INSERT INTO equipes (nomEquipe, idOrganisation)";
+        $sql = " VALUES (?, ?)";
+        $sql = " INSERT INTO postes (nomPoste, idOrganisation)";
+        $sql = " VALUES (?, ?)";
+        
+        $requete = $this->getBdd()->prepare($sql);
+        $status[] = $requete->execute(["indéfini",$idMax["maxId"],"indéfini",$idMax["maxId"]]);
+
+        if(in_array(false, $status))
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
     }
 }
 ?>

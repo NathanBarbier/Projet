@@ -1,62 +1,68 @@
 <?php
 class Equipe extends Modele
 {
-    private $idEquipe;
-    private $nomEquipe;
+    private $id;
+    private $nom;
     private $idOrganisation;
-    private $chefEquipe;
+    private $chef;
     private $membres = [];
 
     public function __construct($idE = null)
     {
         if($idE != null)
         {
-            $requete = $this->getBdd()->prepare("SELECT * FROM equipes WHERE idEquipe = ?");
+            $sql = "SELECT * FROM equipes WHERE idEquipe = ?";
+            $requete = $this->getBdd()->prepare($sql);
             $requete->execute([$idE]);
-            $equipe = $requete->fetch(PDO::FETCH_ASSOC);
-            $this->idEquipe = $idE;
-            $this->nomEquipe = $equipe["nomEquipe"];
-            $this->idOrganisation = $equipe["idOrganisation"];
-            $this->chefEquipe = $equipe["chefEquipe"];
 
-            $requete = $this->getBdd()->prepare("SELECT * FROM utilisateurs WHERE idEquipe = ?");
+            $equipe = $requete->fetch(PDO::FETCH_ASSOC);
+
+            $this->id = $idE;
+            $this->nom = $equipe["nomEquipe"];
+            $this->idOrganisation = $equipe["idOrganisation"];
+            $this->chef = $equipe["chefEquipe"];
+
+            $sql = "SELECT * FROM utilisateurs WHERE idEquipe = ?";
+            $requete = $this->getBdd()->prepare($sql);
             $requete->execute([$this->idEquipe]);
+
             $membres = $requete->fetchAll(PDO::FETCH_ASSOC);
+
             foreach($membres as $membre)
             {
-                $ObjetMembre = new Utilisateur($membre["idUtilisateur"]);
+                $ObjetMembre = new User($membre["idUtilisateur"]);
                 $this->membres[] = $ObjetMembre;
             }
         }
     }
 
-    // SETTER
-    public function setNomEquipe($nE)
+
+    //! SETTER
+    
+    public function setName($nom)
     {
-        $this->nomEquipe = $nE;
-        $requete = $this->getBdd()->prepare("UPDATE equipes SET nomEquipe = ? WHERE idEquipe =  ?");
-        $requete->execute([$this->nomEquipe, $this->idEquipe]);
+        $this->nom = $nom;
     }
 
-    public function setChefEquipe($cE)
+    public function setChef($chef)
     {
-        $this->chefEquipe = $cE;
-        $requete = $this->getBdd()->prepare("UPDATE equipes SET chefEquipe = ? WHERE idEquipe =  ?");
-        $requete->execute([$this->chefEquipe, $this->idEquipe]);
+        $this->chef = $chef;
     }
 
-    // GETTER
-    public function getNomEquipe()
+
+    //! GETTER
+
+    public function getNom()
     {
         return $this->nomEquipe;
     }
 
-    public function getIdEquipe()
+    public function getId()
     {
         return $this->idEquipe;
     }
 
-    public function getChefEquipe()
+    public function getChef()
     {
         return $this->chefEquipe;
     }
@@ -66,13 +72,77 @@ class Equipe extends Modele
         return $this->idOrganisation;
     }
 
-    public function getMembresEquipe()
+    public function getMembres()
     {
         return $this->membres;
     }
 
-    public function getCountMembres()
+    public function countMembres()
     {
         return count($this->membres);
+    }
+
+    //! FETCH
+
+    public function fetchAll($idOrganisation = null)
+    {
+        $idOrganisation = $idOrganisation == null ? $this->getIdOrganisation() : $idOrganisation;
+
+        $sql = "SELECT * FROM equipes WHERE idOrganisation = ?";
+        $requete = $this->getBdd()->prepare($sql);
+        $requete->execute([$idOrganisation]);
+
+        return $requete->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function fetch($idEquipe)
+    {
+        $sql = "SELECT * FROM equipes WHERE idEquipe = ?";
+        $requete = $this->getBdd()->prepare($sql);
+        $requete->execute([$idEquipe]);
+
+        return $requete->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function fetchChef($idEquipe)
+    {
+        $sql = "SELECT utilisateurs.nom, utilisateurs.prenom, utilisateurs.email"; 
+        $sql .= " FROM equipes";
+        $sql .= " INNER JOIN utilisateurs ON utilisateurs.idUtilisateur = equipes.chefEquipe";
+        $sql .= " WHERE equipes.idEquipe = ?";
+
+        $requete = $this->getBdd()->prepare($sql);
+        $requete->execute([$idEquipe]);
+        
+        return $requete->fetch(PDO::FETCH_ASSOC);
+    }
+
+
+    //! INSERT
+
+    public function create($nom, $idOrganisation = null)
+    {
+        $idOrganisation = $idOrganisation == null ? $this->getIdOrganisation() : $idOrganisation; 
+
+        $sql = "INSERT INTO equipes (nomEquipe, idOrganisation) VALUES (?,?)";
+        $requete = $this->getBdd()->prepare($sql);
+        $requete->execute([$nom, $idOrganisation]);
+    } 
+
+
+    //! UPDATE
+
+    public function updateName($name)
+    {
+        $sql = "UPDATE equipes SET nomEquipe = ? WHERE idEquipe =  ?";
+        $requete = $this->getBdd()->prepare($sql);
+        $requete->execute([$name, $this->idEquipe]);
+    }
+
+    public function updateChef($chef)
+    {
+        $sql = "UPDATE equipes SET chefEquipe = ? WHERE idEquipe =  ?";
+        $requete = $this->getBdd()->prepare($sql);
+        $requete->execute([$chef, $this->idEquipe]);
     }
 }

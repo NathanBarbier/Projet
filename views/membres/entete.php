@@ -1,11 +1,15 @@
 <?php
-require_once "../traitements/header.php";
-if(!empty($_SESSION["habilitation"]))
-{
-    header("location:../index.php");
-}
-?>
+require_once "../../traitements/header.php";
+$rights = $_SESSION["habilitation"] ?? false;
 
+if($rights == 'admin')
+{
+    header("location:".ROOT_PATH."index.php");
+}
+
+if($rights == "user")
+{
+?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -29,11 +33,23 @@ if(!empty($_SESSION["habilitation"]))
 
     <div class="collapse navbar-collapse" id="navbarNavDropdown">
         <div class="navbar-nav w-100" style="padding-right: 5vh;">
-            <a class="nav-item nav-link" href="inscriptionOrganisation">Inscription</a>
+
+            <div style="margin-left:auto">
+                <a class="btn btn-danger" href="../traitements/deconnexion.php" >Déconnexion</a>
+            </div>
+
         </div>
     </div>
 
 </nav>
+
+<div class="container mt-4" style="width: 50%">
+
 <div class="container mt-4">
-    <?php
-    // print_r($_SESSION);
+<?php
+} 
+else 
+{
+    header("location:../index.php");
+}
+?>

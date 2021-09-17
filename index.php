@@ -1,43 +1,30 @@
 <?php
 require_once "traitements/header.php";
-// session_start();
-// // Page de redirection
-// // Vérification autorisation accès à la page
-// // Si pas connecté
-// if(!isset($_SESSION["email"]) || empty($_SESSION["email"]))
-// {
-//     session_destroy();
-//     header("location:pages/connexion.php");
-// }
 
-// // Vérification admin
-// if(!empty($_SESSION["habilitation"]) && $_SESSION["habilitation"] === "admin"){
-//     header("location:admin/index.php");
-// }
+$rights = $_SESSION["habilitation"] ?? false;
+$email = $_SESSION["email"] ?? false;
 
+$connected = !isset($_SESSION) OR empty($_SESSION) ? false : true;
 
-// // Vérification utilisateur
-// if($_SESSION["habilitation"] === "user"){
-//     header("location:membres/index.php");
-// }
+if($email)
+{
+    session_destroy();
+    header("location:".VIEWS_PATH."general/connexion.php");
+}
 
-$Organisation = new Organisation(4);
-// echo "<pre>";
-// print_r($Organisation->getEquipesOrg());
-// echo "</pre>";
-echo $Organisation->getMinMaxIdEquipe()["maxIdE"];
-// echo "<pre>";
-// print_r($Organisation->getMinMaxIdEquipe());
-// echo "</pre>";
-// echo $Organisation->getMinMaxIdEquipe()["minIdE"];
-// echo "<br>";
-// echo $Organisation->getMinMaxIdEquipe()["maxIdE"];
-// echo "<br>";
+if($rights === "admin")
+{
+    header("location:".VIEWS_PATH."admin/index.php");
+}
 
-// echo $Organisation->getEquipesOrg()[3]->getIdEquipe();
-// echo "<pre>";
-// print_r($Organisation->getInfosUsers());
-// print_r($Organisation->getInfosUsers()[1]["idUtilisateur"][0]);
-// print_r($Organisation->getUsersOrg());
-// echo $Organisation->getIdByNomPrenom("BARBIER", "Nathan");
-// echo "</pre>";
+if($rights === "user")
+{
+    header("location:".VIEWS_PATH."membres/index.php");
+}
+
+if(!$connected)
+{
+    // echo VIEWS_PATH."general/connexion.php";
+    header("Location:".VIEWS_PATH."general/connexion.php");
+    // header("Location:views/general/connexion.php");
+}

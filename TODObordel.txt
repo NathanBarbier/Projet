@@ -1,0 +1,64 @@
+   "La société XXX a fait appel à deux développeurs pour répondre à son besoin de gérer
+toutes l’entreprise parce que c’est ce qu’une entreprise, ils engagent deux devs en étude pour gérer complètent leur entreprise (ils n’ont pas peur de l’échec)"
+
+ 
+
+Logiciel de gestion de tâches / emploi du temps / projets / groupes
+
+ 
+
+Formulaire de connexion pour accéder à son espace personnel relié à l’entreprise
+
+Page accueil présentation du site / à propos / fonctionnalités
+
+ 
+
+2 formes du site : Organisation / collaborateurs
+
+ 
+
+Collaborateurs :
+
+Groupes
+
+Emploi du temps
+
+Projet :
+
+Signaler une difficulté
+Liste des projets (habilité)
+Liste des projets terminés (de son équipe)
+Messagerie / chat entre collaborateur d’une équipe
+ 
+
+Organisation :
+
+Equipes
+
+Gestions des droits
+
+Gestion Utilisateurs
+
+Liste des projets en cours (tous)
+
+Liste des projets terminés (tous)
+
+ 
+
+TODO LIST :
+
+Blocage temporaire connexion si mdp raté trop de fois
+SUPPRIMER ORGANISATION ET TOUTE CORRESPONDANCE AVEC DANS LA BDD
+A LA PREMIERE CONNEXION IMPOSER LE CHANGEMENT DE MOT DE PASSE USER
+ 
+
+QUESTIONS :
+
+ 
+peut on mettre deux fonctions similaire dans deux classes différentes.
+ 
+
+PAGE GESTIONEQUIPEDUCHEFDEQUIPE :
+
+Pour chaque membres de l’equipe statut (demande aide du chef ou SIGNALER PROBLEME)
+Créer un code pour chaque projet pour pouvoir se les partager.

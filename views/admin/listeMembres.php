@@ -1,62 +1,28 @@
 <?php
 require_once "entete.php";
-// Récuperer toutes les infos de chaque utilisateurs d'une organisation
-$membres = recupererInfoUtilisateurs($_SESSION["idOrganisation"]);
-$postes = recupererPostes($_SESSION["idOrganisation"]);
-$equipes = recupererEquipes($_SESSION["idOrganisation"]);
 
-if(!empty($_GET["success"]))
+if($success)
 {
     ?>
     <div class="alert alert-success">
     <?php
-    switch ($_GET["success"]) {
-        case "modifierEquipe":
-            echo "L'équipe de l'utilisateur a bien été modifiée.";
-            break;
-        case "modifierPoste":
-            echo "Le poste de l'utilisateur a bien été modifié.";
-            break;
-        case "modifierNom":
-            echo "Le nom de l'utilisateur a bien été modifié.";
-            break;
-        case "modifierPrenom":
-            echo "Le prénom de l'utilisateur a bien été modifié.";
-            break;
-    }
+        echo $success;
     ?>
     </div>
     <?php
-} else if(!empty($_GET["error"]))
+}
+else if($error)
 {
     ?>
     <div class="alert alert-danger">
     <?php
-    switch ($_GET["error"]) { 
-        case "modifEquipeFatalError":
-            echo "Erreur : La modification d'équipe n'a pas pu aboutir.";
-            break;
-        case "modifPosteFatalError":
-            echo "Erreur : La modification de poste n'a pas pu aboutir.";
-            break;
-        case "modifNomFatalError":
-            echo "Erreur : La modification du nom n'a pas pu aboutir.";
-            break;
-        case "nameNoChange":
-            echo "Erreur : Vous n'avez pas modifié le nom";
-            break;
-        case "modifPrenomFatalError":
-            echo "Erreur : La modification du prenom n'a pas pu aboutir.";
-            break;
-        case "surnameNoChange":
-            echo "Erreur : Vous n'avez pas modifié le prenom";
-            break;
-    }
+        echo $error;
     ?>
     </div>
     <?php
 }
 ?>
+
 <div class="col-10">
 
 <table class="table">
@@ -94,7 +60,7 @@ if(!empty($_GET["success"]))
                 <div id="divModifNom<?= $membre['idUtilisateur'] ?>" class="collapse show">
                     <a onclick="afficherConfModifNom(<?= $membre['idUtilisateur'] ?>)" class="btn btn-outline-info">Modifier</a>
                 </div>
-                <form method="POST" action="../controllers/UserController.php?action=updateLastname&idUser=<?= $membre['idUtilisateur'] ?>">
+                <form method="POST" action="listeMembres.php?action=updateLastname&idUser=<?= $membre['idUtilisateur'] ?>">
                     <div id="divInputModifNom<?= $membre['idUtilisateur'] ?>" class="collapse">
                         <input class="form-control mb-1 text-center" value="<?= $membre['nom'] ?>" type="text" name="nom" placeholder="Écrivez un nom" required>
                     </div>
@@ -115,7 +81,7 @@ if(!empty($_GET["success"]))
                 <div id="divModifPrenom<?= $membre['idUtilisateur'] ?>" class="collapse show">
                     <a onclick="afficherConfModifPrenom(<?= $membre['idUtilisateur'] ?>)" class="btn btn-outline-info">Modifier</a>
                 </div>
-                <form method="POST" action="../controllers/UserController.php?action=updateFirstname&idUser=<?= $membre['idUtilisateur'] ?>">
+                <form method="POST" action="listeMembres.php?action=updateFirstname&idUser=<?= $membre['idUtilisateur'] ?>">
                     <div id="divInputModifPrenom<?= $membre['idUtilisateur'] ?>" class="collapse">
                         <input class="form-control mb-1 text-center" value="<?= $membre['prenom'] ?>" type="text" name="prenom" placeholder="Écrivez un prénom" required>
                     </div>
@@ -134,7 +100,7 @@ if(!empty($_GET["success"]))
                     <?=$membre["nomEquipe"];?>
                 </div>
                 <!-- On affiche toutes les équipe de l'organisation -->
-                <form method="post" action="../controllers/UserController.php?action=updateEquipe&idUser=<?= $membre["idUtilisateur"] ?>">
+                <form method="post" action="listeMembres.php?action=updateEquipe&idUser=<?= $membre["idUtilisateur"] ?>">
                     <div id="divSelectEquipes<?= $membre['idUtilisateur'] ?>" class="collapse text-center">
                         <select name="idEquipe" class="text-center form-control w-75 mx-auto mb-1" required>
                             <?php foreach($equipes as $equipe)
@@ -162,7 +128,7 @@ if(!empty($_GET["success"]))
                     <?=$membre["nomPoste"];?>
                 </div>
                 <!-- On affiche tous les postes de l'organisation -->
-                <form method="POST" action="../controllers/UserController.php?action=updatePoste&idUser=<?= $membre['idUtilisateur'] ?>">
+                <form method="POST" action="listeMembres.php?action=updatePoste&idUser=<?= $membre['idUtilisateur'] ?>">
                     <div id="divSelectPostes<?= $membre['idUtilisateur'] ?>" class="collapse text-center">
                         <select name="idPoste" class="text-center form-control w-75 mx-auto mb-1">
                             <?php foreach($postes as $poste)

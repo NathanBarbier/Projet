@@ -2,20 +2,22 @@
 
 Class Projet extends Modele
 {
-    private $idProjet;
+    private $id;
     private $nom;
     private $type;
     private $dateDebut;
     private $dateRendu;
     private $etat;
-    private $chefProjet;
+    private $chef;
 
     public function __construct($idProjet = null)
     {
         if($idProjet !== null)
         {
-            $requete = $this->getBdd()->prepare("SELECT * FROM projets WHERE idProjet = ?");
+            $sql = "SELECT * FROM projets WHERE idProjet = ?";
+            $requete = $this->getBdd()->prepare($sql);
             $requete->execute([$idProjet]);
+
             $projet = $requete->fetch(PDO::FETCH_ASSOC);
 
             $this->idProjet = $idProjet;
@@ -24,123 +26,184 @@ Class Projet extends Modele
             $this->dateRendu = $projet["DateRendu"];
             $this->dateDebut = $projet["DateDebut"];
             $this->etat = $projet["Etat"];
-            $this->chefProjet = $projet["chefProjet"];
+            $this->chef = $projet["chefProjet"];
         }
     }
 
+    //! GETTER
     public function getIdProjet()
     {
         return $this->idProjet;
     }
 
-    public function getNomProjet()
+    public function getNom()
     {
         return $this->nom;
     }
 
-    public function getTypeProjet()
+    public function getType()
     {
         return $this->type;
     }
 
-    public function getDateRenduProjet()
+    public function getDateRendu()
     {
         return $this->dateRendu;
     }
 
-    public function getDateDebutProjet()
+    public function getDateDebut()
     {
         return $this->dateDebut;
     }
 
     public function getIdClient()
     {
-        return $this->idClientt;
+        return $this->idClient;
     }
 
-    public function getEtatProjet()
+    public function getEtat()
     {
         return $this->etat;
     }
 
-    public function getChefProjet()
+    public function getChef()
     {
-        return $this->chefProjet;
+        return $this->chef;
+    }
+    
+
+    //! SETTER
+    public function setId($id)
+    {
+        $this->id = $id;
     }
 
-    public function setIdProjet($idProjet)
+    public function setNom($nom)
     {
-        $this->idProjet = $idProjet ;
-        $requete = $this->getBdd()->prepare("UPDATE projets SET idProjet = ? WHERE idProjet =  ?");
-        $requete->execute([$this->idProjet, $this->idProjet]);
+        $this->nom = $nom;
     }
 
-    public function setNomProjet($nom)
+    public function setType($type)
     {
-        $this->nom = $nom ;
-        $requete = $this->getBdd()->prepare("UPDATE projets SET nom = ? WHERE idProjet =  ?");
-        $requete->execute([$this->nom, $this->idProjet]);
+        $this->type = $type;
     }
 
-    public function setTypeProjet($type)
+    public function setDateRendu($dateRendu)
     {
-        $this->type = $type ;
-        $requete = $this->getBdd()->prepare("UPDATE projets SET type = ? WHERE idProjet =  ?");
-        $requete->execute([$this->type, $this->idProjet]);
-    }
-
-    public function setDateRenduProjet($dateRendu)
-    {
-        $this->dateRendu = $dateRendu ;
-        $requete = $this->getBdd()->prepare("UPDATE projets SET dateRendu = ? WHERE idProjet =  ?");
-        $requete->execute([$this->dateRendu, $this->idProjet]);
+        $this->dateRendu = $dateRendu;
     }
 
     public function setIdClient($idClient)
     {
-        $this->idClient = $idClient ;
-        $requete = $this->getBdd()->prepare("UPDATE projets SET idClient = ? WHERE idProjet =  ?");
-        $requete->execute([$this->idClient, $this->idProjet]);
+        $this->idClient = $idClient;
     }
 
-    public function setEtatProjet($etat)
+    public function setEtat($etat)
     {
-        $this->etat = $etat ;
-        $requete = $this->getBdd()->prepare("UPDATE projets SET etat = ? WHERE idProjet =  ?");
-        $requete->execute([$this->etat, $this->idProjet]);
+        $this->etat = $etat;
     }
 
-    public function setChefProjet($chefProjet)
+    public function setChef($chef)
     {
-        $this->chefProjet = $chefProjet ;
-        $requete = $this->getBdd()->prepare("UPDATE projets SET chefProjet = ? WHERE idProjet =  ?");
-        $requete->execute([$this->chefProjet, $this->idProjet]);
+        $this->chef = $chef;
     }
 
-}
+    //! UPDATE
 
-function recupProjetParEquipe($idEquipe)
-{
-    $requete = getBdd()->prepare("SELECT equipes.nomEquipe, projets.nom, projets.type from travaille_sur inner join equipes using(idEquipe) inner join projets using(idProjet) where idEquipe = ?");
-    $requete->execute([$idEquipe]);
-    return $requete->fetchAll(PDO::FETCH_ASSOC);
-} 
+    public function updateId($id)
+    {
+        $sql = "UPDATE projets SET idProjet = ? WHERE idProjet =  ?";
+        $requete = $this->getBdd()->prepare($sql);
+        $requete->execute([$id, $this->idProjet]);
+    }
 
-function recupMaxIdProjets()
-{
-    $requete = getBdd()->prepare("SELECT max(idProjet) AS maxId FROM projets");
-    $requete->execute();
-    return $requete->fetch(PDO::FETCH_ASSOC);
-}
+    public function updateNom($nom)
+    {
+        $sql = "UPDATE projets SET nom = ? WHERE idProjet =  ?";
+        $requete = $this->getBdd()->prepare($sql);
+        $requete->execute([$nom, $this->idProjet]);
+    }
 
-function creerProjet($titre, $type, $deadline, $idClient, $chefProjet)
-{
-    $requete = getBdd()->prepare("INSERT INTO projets (nom, type, DateDebut, DateRendu, idClient, Etat, chefProjet) VALUES (?, ?, NOW(), ?,?, 'En cours', ?)");
-    $requete->execute([$titre, $type, $deadline, $idClient, $chefProjet]);
-}
+    public function updateType($type)
+    {
+        $sql = "UPDATE projets SET type = ? WHERE idProjet =  ?";
+        $requete = $this->getBdd()->prepare($sql);
+        $requete->execute([$type, $this->idProjet]);
+    }
 
-function addEquipesProjet($idProjet, $idEquipe)
-{
-    $requete = getBdd()->prepare("INSERT INTO travaille_sur (idProjet, idEquipe) VALUES (?,?)");
-    $requete->execute([$idProjet, $idEquipe]);
+    public function updateDateRendu($dateRendu)
+    {
+        $sql = "UPDATE projets SET dateRendu = ? WHERE idProjet =  ?";
+        $requete = $this->getBdd()->prepare($sql);
+        $requete->execute([$dateRendu, $this->idProjet]);
+    }
+
+    public function updateIdClient($idClient)
+    {
+        $sql = "UPDATE projets SET idClient = ? WHERE idProjet =  ?";
+        $requete = $this->getBdd()->prepare($sql);
+        $requete->execute([$idClient, $this->idProjet]);
+    }
+
+    public function updateEtat($etat)
+    {
+        $sql = "UPDATE projets SET etat = ? WHERE idProjet = ?";
+        $requete = $this->getBdd()->prepare($sql);
+        $requete->execute([$etat, $this->idProjet]);
+    }
+
+    public function updateChef($chef)
+    {
+        $sql = "UPDATE projets SET chefProjet = ? WHERE idProjet =  ?";
+        $requete = $this->getBdd()->prepare($sql);
+        $requete->execute([$chef, $this->idProjet]);
+    }
+
+    //! FETCH
+
+    public function fetchAll($idOrganisation)
+    {
+        $sql = "SELECT idProjet, nom, type, DateDebut, DateRendu, Etat, chefProjet";
+        $sql .= " FROM projets";
+        $sql .= " INNER JOIN travaille_sur USING(idProjet)";
+        $sql .= " INNER JOIN equipes USING(idEquipe)";
+        $sql .= " WHERE equipes.idOrganisation = ?";
+        $requete = $this->getBdd()->prepare($sql);
+        $requete->execute([$idOrganisation]);
+
+        return $requete->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function fetchByEquipe($idEquipe)
+    {
+        $sql = "SELECT equipes.nomEquipe, projets.nom, projets.type";
+        $sql .= " FROM travaille_sur";
+        $sql .= " INNER JOIN equipes USING(idEquipe)"; 
+        $sql .= " INNER JOIN projets USING(idProjet)";
+        $sql .= " WHERE idEquipe = ?";
+        $requete = $this->getBdd()->prepare($sql);
+        $requete->execute([$idEquipe]);
+
+        return $requete->fetchAll(PDO::FETCH_ASSOC);
+    } 
+
+    public function fetchMaxId()
+    {
+        $sql = "SELECT max(idProjet) AS maxId FROM projets";
+        $requete = $this->getBdd()->prepare($sql);
+        $requete->execute();
+
+        return $requete->fetch(PDO::FETCH_ASSOC);
+    }
+
+
+    //! INSERT
+    public function create($titre, $type, $deadline, $idClient, $chefProjet, $description)
+    {
+        $sql = "INSERT INTO projets (nom, type, DateDebut, DateRendu, idClient, Etat, chefProjet, description)";
+        $sql .= " VALUES (?,?,NOW(),?,?,?,?,?)";
+        $requete = $this->getBdd()->prepare($sql);
+        $requete->execute([$titre, $type, $deadline, $idClient, 'En cours', $chefProjet, $description]);
+    }
+
 }

@@ -1,7 +1,7 @@
 <?php
-require_once "../traitements/header.php";
-// vérification connecté + admin
-$rights = $_SESSION["habilitation"] ? $_SESSION["habilitation"] : false;
+require_once "../../traitements/header.php";
+
+$rights = $_SESSION["habilitation"] ?? false;
 
 if($rights == "admin")
 {

@@ -121,11 +121,13 @@ class User extends Modele
     
     //! METHODES
 
-    public function verifEmail($eU)
+    public function verifEmail($userEmail)
     {
-        $sql = "SELECT email FROM utilisateurs WHERE email = ?";
+        $sql = "SELECT email";
+        $sql .= " FROM utilisateurs"; 
+        $sql .= " WHERE email = ?";
         $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$eU]);
+        $requete->execute([$userEmail]);
 
         if($requete->rowcount() > 0)
         {

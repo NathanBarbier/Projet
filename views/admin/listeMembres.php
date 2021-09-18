@@ -1,5 +1,5 @@
 <?php
-require_once "entete.php";
+require_once "layouts/entete.php";
 
 if($success)
 {
@@ -104,9 +104,12 @@ else if($error)
                     <div id="divSelectEquipes<?= $membre['idUtilisateur'] ?>" class="collapse text-center">
                         <select name="idEquipe" class="text-center form-control w-75 mx-auto mb-1" required>
                             <?php foreach($equipes as $equipe)
-                            { ?>
+                            { 
+                            ?>
                                 <option value="<?= $equipe['idEquipe'] ?>"><?= $equipe["nomEquipe"] ?></option>
-                            <?php } ?>
+                            <?php 
+                            } 
+                            ?>
                         </select>
                     </div>
 
@@ -177,9 +180,9 @@ else if($error)
 
 </table>
 
-<script src="js/listeMembres.php"></script>
+<script src="<?= JS_URL ?>admin/listeMembres.php"></script>
 
 
 <?php
-require_once "pied.php";
+require_once "layouts/pied.php";
 ?>

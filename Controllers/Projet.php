@@ -1,4 +1,6 @@
 <?php
+//import all models
+require_once "../traitements/header.php";
 
 $idOrganisation = $_SESSION["idOrganisation"] ?? false;
 

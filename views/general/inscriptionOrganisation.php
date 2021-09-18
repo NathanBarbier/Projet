@@ -1,13 +1,27 @@
 <?php
+<<<<<<< HEAD
 require_once "entete.php";
 require_once CONTROLLERS_PATH."InscriptionController.php";
 
 if($erreurs)
+=======
+require_once "layouts/entete.php";
+
+$data = !empty($_GET["data"]) ? json_decode($_GET["data"]) : null;
+
+// var_dump($data);
+
+if(!empty($data->erreurs))
+>>>>>>> 9ab519aee28bfe9e16c7eb9806db7a57cde88344
 {
     ?>
     <div class="alert alert-danger">
     <?php
+<<<<<<< HEAD
     foreach($erreurs as $erreur)
+=======
+    foreach($data->erreurs as $erreur)
+>>>>>>> 9ab519aee28bfe9e16c7eb9806db7a57cde88344
     {
         echo $erreur . "<br>";
     }
@@ -16,7 +30,11 @@ if($erreurs)
     <?php
 }
 
+<<<<<<< HEAD
 if($success)
+=======
+if(!empty($data->success))
+>>>>>>> 9ab519aee28bfe9e16c7eb9806db7a57cde88344
 {
     ?>
      <div class="alert alert-success">
@@ -25,15 +43,25 @@ if($success)
      Ou cliquez ici pour être redirigé directement <a href="connexion.php"></a>
      </div>
      <?php 
+<<<<<<< HEAD
     header("refresh:4;connexion.php");
+=======
+    header("refresh:4;".VIEWS_URL."/general/connexion.php");
+>>>>>>> 9ab519aee28bfe9e16c7eb9806db7a57cde88344
 } 
 else
 {
 ?>
 
+<<<<<<< HEAD
 <form method="POST" action="inscriptionOrganisation.php">
     <input type="hidden" name="action" value="inscriptionOrg">
     <h1>Inscription</h1>
+=======
+<form method="POST" action="<?= CONTROLLERS_URL?>Inscription.php">
+    <input type="hidden" name="action" value="inscriptionOrg">
+    <h1>Inscription </h1>
+>>>>>>> 9ab519aee28bfe9e16c7eb9806db7a57cde88344
 
     <div class="form-group">
         <label for="nom">Nom organisation</label>
@@ -65,5 +93,10 @@ else
 
 // var_dump($_POST);
 
+<<<<<<< HEAD
 require_once 'pied.php';
+=======
+require_once 'layouts/pied.php';
+
+>>>>>>> 9ab519aee28bfe9e16c7eb9806db7a57cde88344
 ?>

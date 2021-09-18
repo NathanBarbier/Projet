@@ -1,13 +1,14 @@
 <?php
-require_once "entete.php";
-require_once CONTROLLERS_PATH."ConnexionController.php";
+require_once "layouts/entete.php";
 
-if($erreurs)
+$data = !empty($_GET["data"]) ? json_decode($_GET["data"]) : null;
+
+if(!empty($data->erreurs))
 {
     ?>
     <div class="alert alert-danger">
     <?php
-    foreach($erreurs as $erreur)
+    foreach($data->erreurs as $erreur)
     {
         echo $erreur . "<br>";
     }
@@ -22,11 +23,11 @@ if($erreurs)
 
     <h1>Connexion</h1>
 
-<form method="post" action="connexion.php">
+<form method="post" action="<?= CONTROLLERS_URL ?>Connexion.php">
 
     <div class="form-group">
         <label for="mail" class="ml-3">Addresse mail</label>
-        <input type="text" class="form-control" name="mail" placeholder="Saisissez votre identifiant" maxlength="50" required>
+        <input type="text" class="form-control" name="email" placeholder="Saisissez votre identifiant" maxlength="50" required>
     </div>
 
     <div class="form-group mt-3">
@@ -48,4 +49,4 @@ if($erreurs)
 </div>
 
 <?php
-require_once "pied.php";
+require_once "layouts/pied.php";

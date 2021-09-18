@@ -1,9 +1,15 @@
 <?php
+//import all models
+require_once "../traitements/header.php";
 
 $idOrganisation = $_SESSION["idOrganisation"] ?? false;
 
 $action = $_GET["action"] ?? $_POST["action"] ?? false;
+<<<<<<< HEAD:Controllers/InscriptionController.php
 $envoi = $_GET["envoi"] ?? false;
+=======
+$envoi = $_GET["envoi"] ?? $_POST["envoi"] ?? false;
+>>>>>>> 9ab519aee28bfe9e16c7eb9806db7a57cde88344:Controllers/Inscription.php
 
 $email = $_POST["email"] ?? false;
 $nom = $_POST["nom"] ?? false;
@@ -26,16 +32,28 @@ $equipes = $Equipe->fetchAll($idOrganisation);
 $erreurs = array();
 $success = false;
 
+<<<<<<< HEAD:Controllers/InscriptionController.php
+=======
+$data = array();
+>>>>>>> 9ab519aee28bfe9e16c7eb9806db7a57cde88344:Controllers/Inscription.php
 
 if($action == "inscriptionUser")
 {
+    $tpl = "inscriptionUtilisateur.php";
 
 }
 
+<<<<<<< HEAD:Controllers/InscriptionController.php
 var_dump($_POST);
+=======
+// var_dump($_POST);
+// exit;
+>>>>>>> 9ab519aee28bfe9e16c7eb9806db7a57cde88344:Controllers/Inscription.php
 
 if($action == "inscriptionOrg")
 {
+    $tpl = "general/inscriptionOrganisation.php";
+    
     if($envoi) 
     {
         if($nom && $email && $mdp && $mdp2)
@@ -51,7 +69,11 @@ if($action == "inscriptionOrg")
                             try
                             {
                                 $mdp = password_hash($mdp, PASSWORD_BCRYPT);
+<<<<<<< HEAD:Controllers/InscriptionController.php
                                 $success = $Inscription->inscriptionOrg($email, $mdp, $organisation);
+=======
+                                $success = $Inscription->inscriptionOrg($email, $mdp, $nom);
+>>>>>>> 9ab519aee28bfe9e16c7eb9806db7a57cde88344:Controllers/Inscription.php
                             } 
                             catch (exception $e) 
                             {
@@ -84,9 +106,20 @@ if($action == "inscriptionOrg")
         }
     } 
     else 
-    {
-        header("location:".ROOT_PATH."index.php");
+    {        
+        header("location:".ROOT_URL."index.php");
     }
 }
+
+$data = array(
+    "success" => $success,
+    "erreurs" => $erreurs,
+    "postes" => $postes,
+    "equipes" => $equipes
+);
+
+$data = json_encode($data);
+
+header("location:".VIEWS_URL.$tpl."?data=$data");
 
 ?>

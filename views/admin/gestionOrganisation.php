@@ -1,6 +1,8 @@
 <?php 
-require_once "entete.php";
-require_once CONTROLLERS_PATH."OrganisationController.php";
+require_once "layouts/entete.php";
+// require_once CONTROLLERS_PATH."Organisation.php";
+
+$data = !empty($_GET["data"]) ? json_decode($_GET["data"]) : false;
 ?>
 
 <div class="col-10 mt-4 w-75">
@@ -26,7 +28,7 @@ require_once CONTROLLERS_PATH."OrganisationController.php";
                 Êtes-vous sûr de vouloir supprimer l'organisation ?<br>
                 (Cette action est définitive et supprimer toute donnée étant en lien avec l'organisation)
 
-                <a class="btn btn-danger" href="gestionOrganisation.php?action=deleteOrganisation">Oui</a>
+                <a class="btn btn-danger" href="<?= CONTROLLERS_URL ?>Organisation.php?action=deleteOrganisation">Oui</a>
 
                 <button id="boutonRefusDel" class="btn btn-warning">Non</button>
             </div>
@@ -50,15 +52,15 @@ require_once CONTROLLERS_PATH."OrganisationController.php";
                 <h4>Informations sur l'organisation</h4>
             </div>
             <div class="card-body">
-                <p><b><?= $InfosOrganisation["nom"] ?></b></p><br>
-                <p>Email Admin : <?= $InfosOrganisation["email"] ?></p><br>
-                <p>Nombre d'employés : <?= $InfosOrganisation["nombreEmployes"] ?></p><br>
-                <p>Nombre d'équipes : <?= $InfosOrganisation["nombreEquipes"] ?></p>
+                <p><b><?= $data->nomOrganisation ?></b></p><br>
+                <p>Email Admin : <?= $data->emailOrganisation ?></p><br>
+                <p>Nombre d'employés : <?= $data->nombreEmployes ?></p><br>
+                <p>Nombre d'équipes : <?= $data->nombreEquipes ?></p>
             </div>
         </div>
     </div>
 
-<script src="js/gestionOrganisation.php"></script>
+<script src="<?= JS_URL ?>admin/gestionOrganisation.php"></script>
 
 <?php
-require_once "pied.php";
+require_once "layouts/pied.php";

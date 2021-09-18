@@ -1,35 +1,38 @@
 <?php
-require_once "entete.php";
-require_once CONTROLLERS_PATH."EntrepriseController.php";
+require_once "layouts/entete.php";
+// require_once CONTROLLERS_PATH."Entreprise.php";
+
+$data = !empty($_GET["data"]) ? json_decode($_GET["data"]) : null;
+
 ?>
 <div class="col-10">
 <?php
-if($error)
+if($data->error)
 {   ?>
     <div class="alert alert-danger pb-0 mt-3" style="z-index : 0; width : max-content">
-    <?= $errorMessage ?>
+    <?= $data->errorMessage ?>
     </div>
     <?php
 }
 
-if($success)
+if($data->success)
 {
     ?>
     <div class="alert alert-success mt-3" style="z-index : 0; width : max-content">
-    <?= $successMessage ?>
+    <?= $data->successMessage ?>
     </div>
 <?php
 }
 
 
-if($deletePoste)
+if($data->deletePoste)
 {
     ?>
     <div class=" alert alert-info mt-3" style="z-index : 0; width : max-content">
-    Êtes vous sur de vouloir supprimer "<?=$fetchPoste["nomPoste"];?> ? 
+    Êtes vous sur de vouloir supprimer "<?= $data->fetchPoste["nomPoste"];?> ? 
     Cette action est irréversible et supprimera le poste de tous les membres ayant ce poste ! 
-    <a href="../controllers/EntrepriseController.php?action=deletePosteConf&idPoste=<?=$idPoste?>" class="btn btn-success">Confirmer</a>
-    <a href="gererEntreprise.php" class="btn btn-danger">Annuler</a>
+    <a href="<?= CONTROLLERS_URL ?>Entreprise.php?action=deletePosteConf&idPoste=<?=$idPoste?>" class="btn btn-success">Confirmer</a>
+    <a href="<?= VIEWS_URL ?>admin/gererEntreprise.php" class="btn btn-danger">Annuler</a>
     </div>
 <?php
 }
@@ -53,11 +56,11 @@ if($deletePoste)
             <table class="table">
                 <tbody id="tbodyPoste">
                     <?php
-                    foreach($postes as $cle => $poste)
+                    foreach($data->postes as $cle => $poste)
                     {
                         if($cle == "indéfini")
                         {
-                            foreach($nbMembresPostes as $nbMembrePoste)
+                            foreach($data->nbMembresPostes as $nbMembrePoste)
                             {
                                 if($poste["idPoste"] == $nbMembrePoste["idPoste"])
                                 {
@@ -72,7 +75,7 @@ if($deletePoste)
                                 }           
                             }
                         } else {
-                            foreach($nbMembresPostes as $nbMembrePoste)
+                            foreach($data->nbMembresPostes as $nbMembrePoste)
                             {
                                 if($poste["idPoste"] == $nbMembrePoste["idPoste"])
                                 {
@@ -81,10 +84,10 @@ if($deletePoste)
                                         <th><?=$poste["nomPoste"];?></th>
                                         <td><?=$nbMembrePoste["UtilisateursParPoste"];?></td>
                                         <td>
-                                            <a href="gererEntreprise.php?action=deletePoste&idPoste=<?=$idPoste?>" class="btn btn-danger btn-sm mt-1">Supprimer</a>
+                                            <a href="<?= CONTROLLERS_URL ?>Entreprise.php?action=deletePoste&idPoste=<?=$idPoste?>" class="btn btn-danger btn-sm mt-1">Supprimer</a>
                                         </td>
                                         <td>
-                                            <a href="gererEntreprise.php?action=updatePoste&idPoste=<?=$idPoste?>" class="btn btn-primary btn-sm mt-1">Modifier</a>
+                                            <a href="<?= CONTROLLERS_URL ?>Entreprise.php?action=updatePoste&idPoste=<?=$idPoste?>" class="btn btn-primary btn-sm mt-1">Modifier</a>
                                         </td>
                                     </tr>
                                 <?php 
@@ -110,7 +113,7 @@ if($deletePoste)
                             <label for="idRole" class="mb-2">Habilitation</label>
                             <select name="idRole" id="idRole-id" class="form-control">
                                 <?php
-                                foreach($roles as $cle => $role)
+                                foreach($data->roles as $cle => $role)
                                 {
                                     ?>
                                     <option value="<?=$role["idRole"];?>"  <?=$role["nom"] == "Collaborateur" ? "selected" : "" ;?>  ><?=$role["nom"];?></option>
@@ -127,7 +130,7 @@ if($deletePoste)
                 </div>
             </form>
             <?php
-            if($idPoste)
+            if($data->idPoste)
             {
             ?>
                 <form method="post" action="gererEntreprise.php?action=updatePoste&idPoste=<?=$idPoste?>">
@@ -149,7 +152,7 @@ if($deletePoste)
 
     <div id="modifEquipe">
         <div class="infoEquipe">
-            <form method="post" action="gererEntreprise.php?action=addEquipe"> 
+            <form method="post" action="<?= CONTROLLERS_URL ?>Entreprise.php?action=addEquipe"> 
                 <div class="form-group mt-3">
                     <label for="ajoutEquipe"><h4>Nom de la nouvelle équipe</h4></label>
                 </div>
@@ -166,10 +169,10 @@ if($deletePoste)
         <div class="infoEquipe">
             <h4><u>Info de l'équipe :</u></h4>
             <?php
-            foreach($equipes as $key => $equipe)
+            foreach($data->equipes as $key => $equipe)
             {
-                $membresEquipe = $membresEquipes[$key];
-                $projetsEquipe = $projetsEquipes[$key];
+                $membresEquipe = $data->membresEquipes[$key];
+                $projetsEquipe = $data->projetsEquipes[$key];
                 ?>
                 <div class="mt-5" id="divInfoEquipe<?=$equipe["idEquipe"];?>" style="display : none">
                     <h3><strong><?=$equipe["nomEquipe"];?></strong></h3>
@@ -226,7 +229,7 @@ if($deletePoste)
                         </thead>
                         <tbody>
                             <?php
-                            foreach($projets as $projet)
+                            foreach($projetsEquipe as $projet)
                             {
                                 ?>
                             <tr>
@@ -242,7 +245,7 @@ if($deletePoste)
                         </tbody>
                     </table>
                     <div class="text-center">
-                        <a href="infoEquipe.php?idEquipe=<?=$equipe["idEquipe"];?>" class="btn btn-secondary">allez a la page de modification de l'équipe</a>
+                        <a href="<?= VIEWS_URL ?>admin/infoEquipe.php?idEquipe=<?=$equipe["idEquipe"];?>" class="btn btn-secondary">allez a la page de modification de l'équipe</a>
                     </div>
                     
                 </div>
@@ -341,5 +344,5 @@ if($deletePoste)
         </table>
     </div>
 <?php
-require_once "pied.php";
+require_once "layouts/pied.php";
 ?>

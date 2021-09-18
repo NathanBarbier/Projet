@@ -58,15 +58,15 @@ class Inscription extends Modele
 
         $idMax = $requete->fetch(PDO::FETCH_ASSOC);
     
-        if(empty($idMax["maxId"]))
+        if($idMax["maxId"] == null)
         {
             $idMax["maxId"] = 1;
         }
         
         $sql = "INSERT INTO equipes (nomEquipe, idOrganisation)";
-        $sql = " VALUES (?, ?)";
-        $sql = " INSERT INTO postes (nomPoste, idOrganisation)";
-        $sql = " VALUES (?, ?)";
+        $sql .= " VALUES (?, ?);";
+        $sql .= "INSERT INTO postes (nomPoste, idOrganisation)";
+        $sql .= " VALUES (?, ?)";
         
         $requete = $this->getBdd()->prepare($sql);
         $status[] = $requete->execute(["indéfini",$idMax["maxId"],"indéfini",$idMax["maxId"]]);

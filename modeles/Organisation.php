@@ -550,7 +550,7 @@ class Organisation extends Modele
         $requete = $this->getBdd()->prepare($sql);
         $requete->execute([$nom]);
 
-        if($requete->rowCount() > 1)
+        if($requete->rowCount() > 0)
         {
             return true;
         }
@@ -563,11 +563,13 @@ class Organisation extends Modele
 
     public function verifEmail($email)
     {
-        $sql = "SELECT * FROM organisations WHERE email = ?";
+        $sql = "SELECT * ";
+        $sql .= " FROM organisations";
+        $sql .= " WHERE email = ?";
         $requete = $this->getBdd()->prepare($sql);
         $requete->execute([$email]);
 
-        if($requete->rowCount() > 1)
+        if($requete->rowCount() > 0)
         {
             return true;
         }

@@ -1,4 +1,6 @@
 <?php
+//import all models
+require_once "../../traitements/header.php";
 
 $idOrganisation = $_SESSION["idOrganisation"] ?? false;
 
@@ -20,7 +22,7 @@ $roles = $Role->fetchAll();
 $equipes = $Equipe->fetchAll($idOrganisation);
 $postes = $Poste->fetchAll($idOrganisation);
 
-foreach($fetchEquipes as $key => $equipe)
+foreach($equipes as $key => $equipe)
 {
     $membresEquipes[$key][] = $User->fetchByEquipe($equipe["idEquipe"]);
     $projetsEquipes[$key][] = $Projet->fetchByEquipe($equipe["idEquipe"]);
@@ -48,6 +50,8 @@ $successMessage = false;
 $deletePoste = false;
 
 $fetchPoste = $idPoste ? $Poste->fetch($idPoste) : false;
+
+$tpl = "postesEquipes";
 
 if($error)
 {
@@ -103,5 +107,28 @@ if($action == "addEquipe")
 {
     $Equipe->create($nomEquipe, $idOrganisation);
 }
+
+$data = array(
+    'nbMembresEquipes' => $nbMembresEquipes,
+    'nbMembresPostes' => $nbMembresPostes,
+    'equipeMinMax' => $equipeMinMax,
+    'chefEquipes' => $chefEquipes,
+    'roles' => $roles,
+    'equipes' => $equipes,
+    'postes' => $postes,
+    'membresEquipes' => $membresEquipes, 
+    'projetsEquipes' => $projetsEquipes,
+    'fetchPoste' => $fetchPoste,
+    'error' => $error,
+    'errorMessage' => $errorMessage,
+    'success' => $success,
+    'successMessage' => $successMessage,
+    'deletePoste' => $deletePoste,
+    'idPoste' => $idPoste
+);
+
+$data = json_encode($data);
+
+header("location:".VIEWS_URL."admin/".$tpl."?data=$data");
 
 ?>

@@ -62,14 +62,21 @@ class Inscription extends Modele
         {
             $idMax["maxId"] = 1;
         }
+
+        $idMax["maxId"] = intval($idMax["maxId"]);
         
         $sql = "INSERT INTO equipes (nomEquipe, idOrganisation)";
         $sql .= " VALUES (?, ?);";
-        $sql .= "INSERT INTO postes (nomPoste, idOrganisation)";
-        $sql .= " VALUES (?, ?)";
         
         $requete = $this->getBdd()->prepare($sql);
-        $status[] = $requete->execute(["indéfini",$idMax["maxId"],"indéfini",$idMax["maxId"]]);
+        $status[] = $requete->execute(["indéfini",$idMax["maxId"]]);
+
+        $sql = "INSERT INTO postes (nomPoste, idOrganisation, idRole)";
+        $sql .= " VALUES (?, ?, ?);";
+
+        $requete = $this->getBdd()->prepare($sql);
+        $status[] = $requete->execute(["indéfini",$idMax["maxId"], 4]);
+        
 
         if(in_array(false, $status))
         {

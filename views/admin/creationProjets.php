@@ -1,37 +1,38 @@
 <?php
 require_once "layouts/entete.php"; 
-// require_once CONTROLLERS_PATH."Projet.php";
+
+$data = json_decode(GETPOST('data'));
 ?>
 
 <div class="col-10 mt-4">
     <h2>Création de projet</h2>
     <div class="row">
         <div class="col-4">
-            <form method="POST" action="createProjets.php?action=addProjet&idProjet=<?= $idProjet ?>">
+            <form method="POST" action="<?= CONTROLLERS_URL ?>admin/creationProjets.php?action=addProjet&idProjet=<?= $data->idProjet ?? '' ?>">
                 <div class="form-floating mb-3">
-                    <input required class="form-control" type="text" name="titre" id="titre-id" placeholder="Titre du projet" value="<?= $titre ?? '' ?>">
+                    <input required class="form-control" type="text" name="titre" id="titre-id" placeholder="Titre du projet" value="<?= $data->titre ?? '' ?>">
                     <label for="titre">Titre du projet</label>
                 </div>
 
                 <div class="form-floating mb-3">
-                    <input required class="form-control" type="text" name="type" id="type-id" placeholder="Type du projet" value="<?= $type ?? '' ?>">
+                    <input required class="form-control" type="text" name="type" id="type-id" placeholder="Type du projet" value="<?= $data->type ?? '' ?>">
                     <label for="type">Type du projet</label>
                 </div>
 
                 <div class="form-floating mb-3">
-                    <input class="form-control" type="date" name="deadline" id="deadline-id" placeholder="Deadline du projet" value="<?= $deadline ?? '' ?>">
+                    <input class="form-control" type="date" name="deadline" id="deadline-id" placeholder="Deadline du projet" value="<?= $data->deadline ?? '' ?>">
                     <label for="deadline">DeadLine</label>
                 </div>
 
                 <div class="form-floating mb-3">
-                    <textarea required class="form-control" name="description" id="description-id" placeholder="Description"><?= $description ?? '' ?></textarea>
+                    <textarea required class="form-control" name="description" id="description-id" placeholder="Description"><?= $data->description ?? '' ?></textarea>
                     <label for="description">Description</label>
                 </div>
 
                 <div class="row">
                     <div class="col-10">
                         <div class="form-floating mb-3">
-                            <input required class="form-control" type="text" name="clientName" id="clientName-id" placeholder="Client du projet" value="<?= $client ?? '' ?>"  required>
+                            <input required class="form-control" type="text" name="clientName" id="clientName-id" placeholder="Client du projet" value="<?= $data->client ?? '' ?>"  required>
                             <label for="client">Client</label>
                             <div id="confirmClient">
                             
@@ -40,7 +41,7 @@ require_once "layouts/entete.php";
                     </div>
 
                     <div class="col-2">
-                        <a id="checkClient" onclick="verifClient(clientsJson, checkClient, imgCheckClient)" class="btn btn-outline-success" style="height: 8vh;"><img id="imgCheckClient" src="../images/check.png" width="40px"></a>
+                        <a id="checkClient" onclick="verifClient(clientsJson, checkClient, imgCheckClient)" class="btn btn-outline-success" style="height: 8vh;"><img id="imgCheckClient" src="<?= IMG_URL ?>check.png" width="40px"></a>
                     </div>
 
                     <input id="inputEquipesAjoutees" class="collapse" name="equipesAjoutees" value="" required>
@@ -48,6 +49,7 @@ require_once "layouts/entete.php";
 
                 <button type="submit" value="envoi" class="btn btn-outline-primary mt-3">Créer le projet</button>
 
+            </form>
         </div>
 
         <div class="col-6">
@@ -62,11 +64,11 @@ require_once "layouts/entete.php";
                             <select class="form-control" name="chefProjet" required>
                                 <option selected>Choisir un chef de projet</option>
                                 <?php 
-                                foreach($equipes as $key => $equipe)
+                                foreach($data->equipes as $key => $equipe)
                                 {
-                                    $chefEquipe = $chefsEquipes[$key];
+                                    $chefEquipe = $data->chefsEquipes[$key];
                                     ?>
-                                    <option class="collapse" id="selectChefEquipe<?= $equipe['idEquipe'] ?>"><?= $chefEquipe[0]['prenom'] . " " . $chefEquipe[0]['nom'] ?></option>
+                                    <option class="collapse" id="selectChefEquipe<?= $equipe->idEquipe ?>"><?= $chefEquipe[0]['prenom'] . " " . $chefEquipe[0]['nom'] ?></option>
                                     <?php
                                 }
                                 ?>
@@ -93,14 +95,14 @@ require_once "layouts/entete.php";
                                         <th>Options</th>
                                     </tr>
                                     <?php 
-                                    foreach($equipes as $key => $equipe)
+                                    foreach($data->equipes as $key => $equipe)
                                     {
-                                        $chefEquipe = $chefsEquipes[$key];
+                                        $chefEquipe = $data->chefsEquipes[$key];
                                         ?>
-                                        <tr class="collapse" id="equipeProjet<?= $equipe['idEquipe'] ?>">
-                                            <td><?= $equipe["nomEquipe"] ?></td>
+                                        <tr class="collapse" id="equipeProjet<?= $equipe->idEquipe ?>">
+                                            <td><?= $equipe->nomEquipe ?></td>
                                             <td><?= $chefEquipe[0]['prenom'] . " " . $chefEquipe[0]['nom'] ?></td>
-                                            <td><button onclick="retirerEquipe(<?= $equipe['idEquipe'] ?>)" class="btn btn-outline-danger">Retirer</button></td>
+                                            <td><button onclick="retirerEquipe(<?= $equipe->idEquipe ?>)" class="btn btn-outline-danger">Retirer</button></td>
                                         </tr>
                                         <?php
                                     }
@@ -125,14 +127,14 @@ require_once "layouts/entete.php";
                                         <th>Options</th>
                                     </tr>
                                     <?php 
-                                    foreach($equipes as $key => $equipe)
+                                    foreach($data->equipes as $key => $equipe)
                                     {
-                                        $chefEquipe = $chefsEquipes[$key];
+                                        $chefEquipe = $data->chefsEquipes[$key];
                                         ?>
-                                        <tr class="collapse show" id="equipe<?= $equipe['idEquipe'] ?>">
-                                        <td><?= $equipe["nomEquipe"] ?></td>
+                                        <tr class="collapse show" id="equipe<?= $equipe->idEquipe ?>">
+                                        <td><?= $equipe->nomEquipe ?></td>
                                         <td><?= $chefEquipe[0]['prenom'] . " " . $chefEquipe[0]['nom'] ?></td>
-                                            <td><button onclick="ajouterEquipe(<?= $equipe['idEquipe'] ?>)" class="btn btn-outline-success">Ajouter</button></td>
+                                            <td><button onclick="ajouterEquipe(<?= $equipe->idEquipe ?>)" class="btn btn-outline-success">Ajouter</button></td>
                                         </tr>
                                         <?php
                                     }
@@ -147,6 +149,10 @@ require_once "layouts/entete.php";
     </div>
 </div>
 
-<script src="js/creationProjets.php"></script>
+<script type="text/Javascript">
+var clientsJson = <?php echo json_encode($data->clients) ?>;
+</script>
+
+<script type="text/Javascript" src="<?= JS_URL ?>admin/creationProjets.js"></script>
 
 <?php require_once "layouts/pied.php"; ?>

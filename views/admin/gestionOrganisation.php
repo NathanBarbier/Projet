@@ -1,8 +1,7 @@
 <?php 
 require_once "layouts/entete.php";
-// require_once CONTROLLERS_PATH."Organisation.php";
 
-$data = !empty($_GET["data"]) ? json_decode($_GET["data"]) : false;
+$data = json_decode(GETPOST('data'));
 ?>
 
 <div class="col-10 mt-4 w-75">
@@ -60,7 +59,7 @@ $data = !empty($_GET["data"]) ? json_decode($_GET["data"]) : false;
         </div>
     </div>
 
-<script src="<?= JS_URL ?>admin/gestionOrganisation.php"></script>
+<script type="text/Javascript" src="<?= JS_URL ?>admin/gestionOrganisation.js"></script>
 
 <?php
 require_once "layouts/pied.php";

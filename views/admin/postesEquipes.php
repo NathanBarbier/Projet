@@ -1,29 +1,32 @@
 <?php
 require_once "layouts/entete.php";
-// require_once CONTROLLERS_PATH."Entreprise.php";
 
-$data = !empty($_GET["data"]) ? json_decode($_GET["data"]) : null;
+$data = json_decode(GETPOST('data'));
 
 ?>
 <div class="col-10">
 <?php
-if($data->error)
+if($data->erreurs)
 {   ?>
     <div class="alert alert-danger pb-0 mt-3" style="z-index : 0; width : max-content">
-    <?= $data->errorMessage ?>
+    <?php
+    foreach($data->erreurs as $erreur)
+    {
+        echo $erreur . "<br>";
+    }
+    ?>
     </div>
     <?php
 }
 
 if($data->success)
-{
-    ?>
+{   
+?>
     <div class="alert alert-success mt-3" style="z-index : 0; width : max-content">
-    <?= $data->successMessage ?>
+        <?= $data->success ?>
     </div>
 <?php
 }
-
 
 if($data->deletePoste)
 {
@@ -31,7 +34,7 @@ if($data->deletePoste)
     <div class=" alert alert-info mt-3" style="z-index : 0; width : max-content">
     Êtes vous sur de vouloir supprimer "<?= $data->fetchPoste["nomPoste"];?> ? 
     Cette action est irréversible et supprimera le poste de tous les membres ayant ce poste ! 
-    <a href="<?= CONTROLLERS_URL ?>Entreprise.php?action=deletePosteConf&idPoste=<?=$idPoste?>" class="btn btn-success">Confirmer</a>
+    <a href="<?= CONTROLLERS_URL ?>admin/postesEquipes.php?action=deletePosteConf&idPoste=<?=$idPoste?>" class="btn btn-success">Confirmer</a>
     <a href="<?= VIEWS_URL ?>admin/gererEntreprise.php" class="btn btn-danger">Annuler</a>
     </div>
 <?php
@@ -58,16 +61,16 @@ if($data->deletePoste)
                     <?php
                     foreach($data->postes as $cle => $poste)
                     {
-                        if($cle == "indéfini")
+                        if($poste->nomPoste == "indéfini")
                         {
                             foreach($data->nbMembresPostes as $nbMembrePoste)
                             {
-                                if($poste["idPoste"] == $nbMembrePoste["idPoste"])
+                                if($poste->idPoste == $nbMembrePoste->idPoste)
                                 {
                                     ?>
                                     <tr>
-                                        <th style="width : 50%"><?=$poste["nomPoste"];?></th>
-                                        <td style="width : 50%"><?=$nbMembrePoste["UtilisateursParPoste"];?></td>
+                                        <th style="width : 50%"><?=$poste->nomPoste;?></th>
+                                        <td style="width : 50%"><?=$nbMembrePoste->UtilisateursParPoste;?></td>
                                         <td></td>
                                         <td></td>
                                     </tr>
@@ -77,17 +80,17 @@ if($data->deletePoste)
                         } else {
                             foreach($data->nbMembresPostes as $nbMembrePoste)
                             {
-                                if($poste["idPoste"] == $nbMembrePoste["idPoste"])
+                                if($poste->idPoste == $nbMembrePoste->idPoste)
                                 {
                                     ?>
                                     <tr style="width : 150%">
-                                        <th><?=$poste["nomPoste"];?></th>
-                                        <td><?=$nbMembrePoste["UtilisateursParPoste"];?></td>
+                                        <th><?=$poste->nomPoste;?></th>
+                                        <td><?=$nbMembrePoste->UtilisateursParPoste;?></td>
                                         <td>
-                                            <a href="<?= CONTROLLERS_URL ?>Entreprise.php?action=deletePoste&idPoste=<?=$idPoste?>" class="btn btn-danger btn-sm mt-1">Supprimer</a>
+                                            <a href="<?= CONTROLLERS_URL ?>admin/postesEquipes.php?action=deletePoste&idPoste=<?=$poste->idPoste?>" class="btn btn-danger btn-sm mt-1">Supprimer</a>
                                         </td>
                                         <td>
-                                            <a href="<?= CONTROLLERS_URL ?>Entreprise.php?action=updatePoste&idPoste=<?=$idPoste?>" class="btn btn-primary btn-sm mt-1">Modifier</a>
+                                            <a href="<?= CONTROLLERS_URL ?>admin/postesEquipes.php?action=updatePoste&idPoste=<?=$poste->idPoste?>" class="btn btn-primary btn-sm mt-1">Modifier</a>
                                         </td>
                                     </tr>
                                 <?php 
@@ -100,7 +103,7 @@ if($data->deletePoste)
             </table>
         </div>
         <div class="container mt-5 text-center" style="width : 30% ; float : left">
-            <form method="post" action="gererEntreprise.php?action=addPoste"> 
+            <form method="post" action="<?= CONTROLLERS_URL ?>admin/postesEquipes.php?action=addPoste"> 
                 <div class="row">
                     <div class="col-6">
                        <div class="form-group text-center">
@@ -116,7 +119,7 @@ if($data->deletePoste)
                                 foreach($data->roles as $cle => $role)
                                 {
                                     ?>
-                                    <option value="<?=$role["idRole"];?>"  <?=$role["nom"] == "Collaborateur" ? "selected" : "" ;?>  ><?=$role["nom"];?></option>
+                                    <option value="<?=$role->idRole;?>"  <?=$role->nom == "Collaborateur" ? "selected" : "" ;?>  ><?=$role->nom;?></option>
                                     <?php
                                 }
                                 ?>
@@ -133,10 +136,10 @@ if($data->deletePoste)
             if($data->idPoste)
             {
             ?>
-                <form method="post" action="gererEntreprise.php?action=updatePoste&idPoste=<?=$idPoste?>">
+                <form method="post" action="<?= CONTROLLERS_URL ?>admin/postesEquipes.php?action=updatePoste&idPoste=<?=$data->idPoste?>">
                     <div class="form-group ml-auto mr-auto mt-3">
-                        <label for="modifierPoste">Modifier le poste "<?=$fetchPoste["nomPoste"];?>"</label>
-                        <input type="text" class="form-control" name="nomPoste" id="nomPoste-id" placeholder="entrez le nouveau nom du poste" value="<?=$fetchPoste["nomPoste"];?>">
+                        <label for="modifierPoste">Modifier le poste "<?=$fetchPoste->nomPoste;?>"</label>
+                        <input type="text" class="form-control" name="nomPoste" id="nomPoste-id" placeholder="entrez le nouveau nom du poste" value="<?=$fetchPoste->nomPoste;?>">
                     </div>
 
                     <div class="form-group text-center mt-2">
@@ -152,7 +155,7 @@ if($data->deletePoste)
 
     <div id="modifEquipe">
         <div class="infoEquipe">
-            <form method="post" action="<?= CONTROLLERS_URL ?>Entreprise.php?action=addEquipe"> 
+            <form method="post" action="<?= CONTROLLERS_URL ?>admin/postesEquipes.php?action=addEquipe"> 
                 <div class="form-group mt-3">
                     <label for="ajoutEquipe"><h4>Nom de la nouvelle équipe</h4></label>
                 </div>
@@ -174,11 +177,11 @@ if($data->deletePoste)
                 $membresEquipe = $data->membresEquipes[$key];
                 $projetsEquipe = $data->projetsEquipes[$key];
                 ?>
-                <div class="mt-5" id="divInfoEquipe<?=$equipe["idEquipe"];?>" style="display : none">
-                    <h3><strong><?=$equipe["nomEquipe"];?></strong></h3>
+                <div class="mt-5" id="divInfoEquipe<?=$equipe->idEquipe;?>" style="display : none">
+                    <h3><strong><?=$equipe->nomEquipe;?></strong></h3>
                     <h4>Chef d'équipe :</h4>
                     <?php
-                    if($equipe["chefEquipe"] == NULL)
+                    if($equipe->chefEquipe == NULL)
                     {
                         ?>
                         <p>//</p>
@@ -209,12 +212,12 @@ if($data->deletePoste)
                             <?php
                             foreach($membresEquipe as $membre)
                             {
-                                $poste = $membre["poste"];
+                                $poste = $membre->poste;
                                 ?>
                                 <tr>
-                                    <td><?=$membre["nom"];?></td>
-                                    <td><?=$membre["prenom"];?></td>
-                                    <td><?=$poste["nomPoste"];?></td>
+                                    <td><?=$membre->nom;?></td>
+                                    <td><?=$membre->prenom;?></td>
+                                    <td><?=$poste->nomPoste;?></td>
                                 </tr>
                             <?php
                             }
@@ -234,7 +237,7 @@ if($data->deletePoste)
                                 ?>
                             <tr>
                                 <td>
-                                    <div style="float : left"><?=$projet["nom"];?></div>
+                                    <div style="float : left"><?=$projet->nom;?></div>
                                     <div style="float : right">"Barre de complétion"</div>
     
                                 </td>
@@ -245,7 +248,7 @@ if($data->deletePoste)
                         </tbody>
                     </table>
                     <div class="text-center">
-                        <a href="<?= VIEWS_URL ?>admin/infoEquipe.php?idEquipe=<?=$equipe["idEquipe"];?>" class="btn btn-secondary">allez a la page de modification de l'équipe</a>
+                        <a href="<?= VIEWS_URL ?>admin/infoEquipe.php?idEquipe=<?=$equipe->idEquipe;?>" class="btn btn-secondary">allez a la page de modification de l'équipe</a>
                     </div>
                     
                 </div>
@@ -275,26 +278,26 @@ if($data->deletePoste)
         <table class="table m-0">
             <tbody id="tbodyEquipe">
             <?php
-            foreach($equipes as $cle => $equipe)
+            foreach($data->equipes as $cle => $equipe)
             {
                 if($cle == "indéfini")
                 {
-                    foreach($nbMembresEquipes as $nbMembreEquipe)
+                    foreach($data->nbMembresEquipes as $nbMembreEquipe)
                     {
-                        if($equipe["idEquipe"] == $nbMembreEquipe["idEquipe"])
+                        if($equipe->idEquipe == $nbMembreEquipe->idEquipe)
                         {
                             ?>
                                 <tr>
-                                    <th style="width: 31%"><?=$equipe["nomEquipe"];?></th>
-                                    <td style="width: 25%"><?=$nbMembreEquipe["UtilisateursParEquipe"];?></td>
+                                    <th style="width: 31%"><?=$equipe->nomEquipe;?></th>
+                                    <td style="width: 25%"><?=$nbMembreEquipe->UtilisateursParEquipe;?></td>
                                     <?php
-                                    if($equipe["chefEquipe"] == NULL){
+                                    if($equipe->chefEquipe == NULL){
                                     ?>
                                         <td style="width: 40%"><div style="margin-left: 5vh" >//</div></td>
                                     <?php
                                     } else {
                                     ?>
-                                        <td style="width: 40%"><?=$equipe["chefEquipe"];?></td>
+                                        <td style="width: 40%"><?=$equipe->chefEquipe;?></td>
                                     <?php
                                     }
                                     ?>
@@ -304,27 +307,29 @@ if($data->deletePoste)
                             <?php
                         }
                     }
-                } else {
-                    foreach($nbMembresEquipes as $nbMembreEquipe)
+                } 
+                else
+                {
+                    foreach($data->nbMembresEquipes as $nbMembreEquipe)
                     {
-                        if($equipe["idEquipe"] == $nbMembreEquipe["idEquipe"])
+                        if($equipe->idEquipe == $nbMembreEquipe->idEquipe)
                         {
                             ?>
                                 <tr>
-                                    <th><?=$equipe["nomEquipe"];?></th>
-                                    <td><?=$nbMembreEquipe["UtilisateursParEquipe"];?></td>
+                                    <th><?=$equipe->nomEquipe;?></th>
+                                    <td><?=$nbMembreEquipe->UtilisateursParEquipe;?></td>
                                     <?php
-                                    if($equipe["chefEquipe"] == NULL){
+                                    if($equipe->chefEquipe == NULL){
                                     ?>
                                         <td><div style="margin-left: 5vh">//</div></td>
                                     <?php
                                     } else {
                                         foreach($chefEquipes as $chefEquipe)
                                         {
-                                            if($equipe["chefEquipe"] == $chefEquipe["idUtilisateur"])
+                                            if($equipe->chefEquipe == $chefEquipe->idUtilisateur)
                                             {
                                                 ?>
-                                                <td><?=$chefEquipe["nom"]. " ". $chefEquipe["prenom"];?> </td>
+                                                <td><?=$chefEquipe->nom. " ". $chefEquipe->prenom;?> </td>
                                                 <?php
                                             }
                                         }
@@ -332,7 +337,7 @@ if($data->deletePoste)
                                     <?php
                                     }
                                     ?>
-                                    <td><a onclick="afficherInfoEquipe(<?=$equipe['idEquipe'];?>, <?=$equipeMinMax['MinId'];?>, <?=$equipeMinMax['MaxId'];?>)" class="btn btn-info">Info</a></td>
+                                    <td><a onclick="afficherInfoEquipe(<?=$equipe->idEquipe;?>, <?=$equipeMinMax->MinId;?>, <?=$equipeMinMax->MaxId;?>)" class="btn btn-info">Info</a></td>
                                 </tr>
                             <?php
                         }

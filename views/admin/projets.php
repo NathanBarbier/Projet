@@ -1,12 +1,12 @@
 <?php 
 require_once "layouts/entete.php";
-// require_once CONTROLLERS_PATH."Projet.php";
 ?>
+
 <div class="col-10">
 
     <div class="row mt-4">
         <div class="col pt-4" style="height:35vh">
-            <a href="<?= VIEWS_URL ?>admin/creationProjets.php" class="aVignette">
+            <a href="<?= CONTROLLERS_URL ?>admin/creationProjets.php" class="aVignette">
                 <div class="bg-info mx-auto rounded vignette" style="height: 85%;width: 85%; box-shadow:grey">
                     <div class="row">
                         <div class="col">
@@ -22,7 +22,7 @@ require_once "layouts/entete.php";
             </a>
         </div>
         <div class="col pt-4" style="height:35vh">
-            <a href="<?= VIEWS_URL ?>admin/listeProjets.php" class="aVignette">
+            <a href="<?= CONTROLLERS_URL ?>admin/listeProjets.php" class="aVignette">
                 <div class=" bg-info mx-auto rounded vignette1" style="height: 85%;width: 85%;">
                     <div class="row">
                         <div class="col">
@@ -61,3 +61,7 @@ require_once "layouts/entete.php";
             </div>
         </div>
     </div>
+
+<?php
+require_once "layouts/pied.php";
+?>

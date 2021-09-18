@@ -1,32 +1,61 @@
 <?php 
 require_once "layouts/entete.php";
-// require_once CONTROLLERS_PATH."Inscription.php";
+
+$data = json_decode(GETPOST('data'));
+
 ?>
+
 <div class="col-9 container mt-5">
+
+<?php
+if($data->success)
+{
+    ?>
+    <div class="alert alert-success">
+    <?php
+        echo $data->success;
+    ?>
+    </div>
+    <?php
+}
+else if($data->erreurs)
+{
+    ?>
+    <div class="alert alert-danger">
+    <?php
+    foreach($data->erreurs as $erreur)
+    {
+        echo $erreur . "<br>";
+    }
+    ?>
+    </div>
+    <?php
+}
+?>
 
 <h1>Inscription d'un collaborateur</h1>
 
 <div class="col-9 mt-4">
     <div class="container">
-        <form method="post" action="inscriptionUtilisateur.php?action=signup">
+        <form method="post" action="<?= CONTROLLERS_URL ?>admin/inscriptionUtilisateur.php?action=signup">
                 
             <div class="form-floating mt-3 mb-3">
-                <input class="form-control" type="email" name="email" id="email" placeholder="adresse email" value="<?= isset($email) ? $email : ""?>"  required>
+                <input class="form-control" type="email" name="email" id="email" placeholder="adresse email" value="<?= $data->email ?? ""?>"  required>
                 <label for="email">Adresse email</label>
             </div>
 
             <div class="form-floating mb-3">
-                <input class="form-control" type="text" name="nom" id="nom" placeholder="Nom" value="<?= isset($nom) ? $nom : ""?>"  required>
+                <input class="form-control" type="text" name="lastname" id="lastname" placeholder="Nom" value="<?= $data->lastname ?? ""?>"  required>
                 <label for="nom">Nom</label>
             </div>
 
             <div class="form-floating mb-3">
-                <input class="form-control" type="text" name="prenom" id="prenom" placeholder="Prénom" value="<?= isset($prenom) ? $prenom : ""?>"  required>
+                <input class="form-control" type="text" name="firstname" id="firstname" placeholder="Prénom" value="<?= $data->firstname ?? ""?>"  required>
                 <label for="prenom">Prénom</label>
             </div>
             
             <div class="form-floating mb-3">
-                <input class="form-control" type="date" name="birth" id="birth" placeholder="AAAA-MM-JJ" value="<?= isset($birth) ? $birth : ""?>"  required>
+                <input class="form-control" type="date" name="birth" id="birth" placeholder="AAAA-MM-JJ" value="<?= $data->birth ?? ""?>"  required>
                 <label for="dateNaiss">Date de naissance</label>
             </div>
 
@@ -35,22 +64,28 @@ require_once "layouts/entete.php";
                     <label for="idPoste">Sélectionnez un poste</label>
                     <select class="form-control col text-center" name="idPoste" id="idPoste">
                         <?php
-                            foreach($postes as $poste)
-                            {?>
-                                <option value="<?= $nomPoste["idPoste"] ?>"><?= $nomPoste["nomPoste"] ?></option>
-                            <?php
+                            if($data->postes)
+                            {
+                                foreach($data->postes as $poste)
+                                {?>
+                                    <option value="<?= $poste->idPoste ?>"><?= $poste->nomPoste ?></option>
+                                <?php
+                                }
                             } ?>
                     </select>
                 </div>
                 <div class="col" style="width:40%">
                     <label for="idEquipe">Sélectionnez une équipe</label>
                     <select class="form-control col text-center" name="idEquipe" id="idEquipe">
-                        <?php                      
-                            foreach($equipes as $equipe)
+                        <?php    
+                        if($data->equipes)
+                        {
+                            foreach($data->equipes as $equipe)
                             { ?>
-                                <option value="<?= $nomEquipe["idEquipe"] ?>"><?= $nomEquipe["nomEquipe"] ?></option>
+                                <option value="<?= $equipe->idEquipe ?>"><?= $equipe->nomEquipe ?></option>
                             <?php
-                            } ?>
+                            }
+                        } ?>        
                     </select>
                 </div>
             
@@ -64,4 +99,6 @@ require_once "layouts/entete.php";
     </div>
 </div>
 <?php
-require_once 'layouts/pied.php' ?>
+
+require_once 'layouts/pied.php';
+?>

@@ -40,7 +40,7 @@ require_once "layouts/entete.php";
     </div>
     <div class="row">
         <div class="col pt-4" style="height:35vh">
-            <a href="<?= CONTROLLERS_URL ?>admin/gererEntreprise.php" class="aVignette">
+            <a href="<?= CONTROLLERS_URL ?>admin/postesEquipes.php" class="aVignette">
                 <div class="bg-info mx-auto rounded vignette2" style="height: 85%;width: 85%">
                     <div class="row">
                         <div class="col">

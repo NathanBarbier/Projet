@@ -2,42 +2,39 @@
 //import all models
 require_once "../../traitements/header.php";
 
-$action = $_GET["action"] ?? false;
-$idUser = $_GET["idUser"] ?? false;
-
-$envoi = $_POST["envoi"] ?? false;
-
-$firstname = $_POST["prenom"] ?? false;
-$lastname = $_POST["nom"] ?? false;
-$email = $_POST["email"] ?? false;
-$idPoste = $_POST["idPoste"] ?? false;
-$idEquipe = $_POST["idEquipe"] ?? false;
-$birth = $_POST["birth"] ?? false;
-
-$oldmdp = $_POST["oldmdp"] ?? false;
-$newmdp = $_POST["newmdp"] ?? false;
-$newmdp2 = $_POST["newmdp2"] ?? false;
-
 $rights = $_SESSION["habilitation"] ?? false;
 $idOrganisation = $_SESSION["idOrganisation"] ?? false;
 
-$User = new User($idUser);
+if($rights === "admin")
+{
+    $action = GETPOST('action');
+    $idUser = GETPOST('idUser');
+    $envoi = GETPOST('envoi');
+    $firstname = GETPOST('firstname');
+    $lastname = GETPOST('lastname');
+    $email = GETPOST('email');
+    $idPoste = GETPOST('idPoste');
+    $idEquipe = GETPOST('idEquipe');
+    $birth = GETPOST('birth');
+    $oldmdp = GETPOST('oldmdp');
+    $newmdp = GETPOST('newmdp');
+    $newmdp2 = GETPOST('newmdp2');
 
-$Poste = new Poste();
-$postes = $Poste->fetchAll($idOrganisation);
+    $User = new User($idUser);
+    $Poste = new Poste();
+    $Equipe = new Equipe();
 
-$Equipe = new Equipe();
-$equipes = $Equipe->fetchAll($idOrganisation);
+    $postes = $Poste->fetchAll($idOrganisation);
+    $equipes = $Equipe->fetchAll($idOrganisation);
 
-$erreurs = array();
-$success = false;
+    $erreurs = array();
+    $success = false;
 
-$data = array();
+    $data = new stdClass;
 
-$tpl = "inscriptionUtilisateur.php";
+    $tpl = "inscriptionUtilisateur.php";
 
-if($right === "admin")
-{   
+
     if($action == "signup")
     {
         if($envoi)
@@ -58,11 +55,11 @@ if($right === "admin")
                             {
                                 if(!preg_match($nombres, $lastname) && !preg_match($speciaux, $lastname))
                                 {
-                                    if($User->verifEmail($email))
+                                    if(!$User->verifEmail($email))
                                     {
-                                        if($User->create($prenom, $lastname, $birth, $idPoste, $idEquipe, $email, $idOrganisation))
+                                        if($User->create($firstname, $lastname, $birth, $idPoste, $idEquipe, $email, $idOrganisation))
                                         {
-                                            $success = true;
+                                            $success = "Le collaborateur a bien été inscrit.";
                                         } 
                                         else 
                                         {
@@ -105,17 +102,23 @@ if($right === "admin")
             }
         } 
     }
+
+
+    $data = array(
+        "success" => $success,
+        "erreurs" => $erreurs,
+        "postes" => $postes,
+        "equipes" => $equipes
+    );
+    
+    $data = json_encode($data);
+    
+    header("location:".VIEWS_URL."admin/".$tpl."?data=$data");
+}
+else
+{
+    header("location:".ROOT_URL."index.php");
 }
 
-$data = array(
-    "success" => $success,
-    "erreurs" => $erreurs,
-    "postes" => $postes,
-    "equipes" => $equipes
-);
-
-$data = json_encode($data);
-
-header("location:".VIEWS_URL."admin/".$tpl."?data=$data");
 
 ?>

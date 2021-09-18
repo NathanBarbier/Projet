@@ -194,7 +194,7 @@ class User extends Modele
         $sql = "INSERT INTO utilisateurs (nom, prenom, dateNaiss, mdp, idPoste, email, idEquipe, idOrganisation) ";
         $sql .= "VALUES (?,?,?,?,?,?,?,?)";
         $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$firstname, $lastname, $birth, $idPoste, $email, $idEquipe, $idOrganisation]);
+        $requete->execute([$firstname, $lastname, $birth, $idPoste, 'motdepasse', $email, $idEquipe, $idOrganisation]);
 
         $sql = "SELECT MAX(idUtilisateur) FROM utilisateurs";
         $requete = $this->getBdd()->prepare($sql);

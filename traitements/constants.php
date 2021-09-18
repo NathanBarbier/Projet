@@ -14,13 +14,6 @@ $rootUrl .= "Projet/";
 
 //! DIR PATH
 define('ROOT_PATH', $rootDir);
-<<<<<<< HEAD
-define('CONTROLLERS_PATH', $rootDir.DIRECTORY_SEPARATOR.'Controllers'.DIRECTORY_SEPARATOR);
-define('VIEWS_PATH', $rootUrl.'views'.DIRECTORY_SEPARATOR);
-define('MODELS_PATH', $rootDir.DIRECTORY_SEPARATOR.'modeles'.DIRECTORY_SEPARATOR);
-define('PROCESS_PATH', $rootDir.DIRECTORY_SEPARATOR.'traitements'.DIRECTORY_SEPARATOR);
-define('IMG_PATH', $rootDir.DIRECTORY_SEPARATOR.'images'.DIRECTORY_SEPARATOR);
-=======
 define('MODELS_PATH', $rootDir.'modeles'.DIRECTORY_SEPARATOR);
 define('IMG_PATH', $rootDir.'images'.DIRECTORY_SEPARATOR);
 define('CONTROLLERS_PATH', $rootDir.'Controllers'.DIRECTORY_SEPARATOR);
@@ -36,6 +29,5 @@ define('VIEWS_URL', $rootUrl.'views/');
 define('PROCESS_URL', $rootUrl.'traitements/');
 define('JS_URL', $rootUrl.'js/');
 
->>>>>>> 9ab519aee28bfe9e16c7eb9806db7a57cde88344
  
 ?>

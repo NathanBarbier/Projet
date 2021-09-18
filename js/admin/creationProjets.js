@@ -1,12 +1,11 @@
-var clientsJson = <?php echo json_encode($clients) ?>;
     var imgCheckClient = document.getElementById('imgCheckClient');
     var checkClient = document.getElementById('checkClient');
 
     var equipesAjoutees = [];
 
-    function ajouterEquipe(idEquipe, equipesAjoutees)
+    function ajouterEquipe(idEquipe)
     {
-        equipesAjoutees += idEquipe;
+        equipesAjoutees.push(idEquipe);
         document.getElementById('inputEquipesAjoutees').value = equipesAjoutees;
         var identifiantEquipe = "equipe" + idEquipe;
         var identifiantEquipeProjet = "equipeProjet" + idEquipe;
@@ -16,7 +15,7 @@ var clientsJson = <?php echo json_encode($clients) ?>;
         document.getElementById(identifiantSelectChefEquipe).classList.add("show");
     }
 
-    function retirerEquipe(idEquipe, equipesAjoutees)
+    function retirerEquipe(idEquipe)
     {
         equipesAjoutees.splice(equipesAjoutees.indexOf(idEquipe), 1);
         document.getElementById('inputEquipesAjoutees').value = equipesAjoutees;

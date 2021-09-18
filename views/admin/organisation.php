@@ -1,12 +1,11 @@
 <?php 
 require_once "layouts/entete.php";
-// require_once CONTROLLERS_PATH."Organisation.php";
 ?>
 <div class="col-10">
 
     <div class="row mt-4">
         <div class="col pt-4" style="height:35vh">
-            <a href="<?= VIEWS_URL ?>admin/gestionOrganisation.php" class="aVignette">
+            <a href="<?= CONTROLLERS_URL ?>admin/gestionOrganisation.php" class="aVignette">
                 <div class="bg-info mx-auto rounded vignette" style="height: 85%;width: 85%; box-shadow:grey">
                     <div class="row">
                         <div class="col">

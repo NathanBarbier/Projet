@@ -8,12 +8,6 @@ $email = $_SESSION["email"] ?? false;
 
 $connected = !empty($_SESSION) ? true : false;
 
-// if($email)
-// {
-//     session_destroy();
-//     header("location:".VIEWS_URL."general/connexion.php");
-// }
-
 if($rights === "admin")
 {
     header("location:".VIEWS_URL."admin/index.php");

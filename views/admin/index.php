@@ -18,10 +18,12 @@ require_once "layouts/entete.php";
         </nav>
     </aside> -->
 
-    <a class="btn btn-primary" href="<?= VIEWS_URL ?>admin/infoEquipe.php">Gérer les équipes</a>
-    <a class="btn btn-primary" href="<?= VIEWS_URL ?>admin/gestionOrganisation.php">Gérer l'organisation</a>
+    <div class="mt-3">
+        <a class="btn btn-primary" href="<?= CONTROLLERS_URL ?>admin/postesEquipes.php">Postes et équipes</a>
+        <a class="btn btn-primary" href="<?= CONTROLLERS_URL ?>admin/gestionOrganisation.php">Gérer l'organisation</a>
+    </div>
 
-    <div class="bg-secondary" style="height:50vh; width: 100vh">
+    <div class="bg-secondary mt-2" style="height:50vh; width: 100vh">
     </div>
 
     <?php

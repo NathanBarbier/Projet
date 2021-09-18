@@ -1,22 +1,22 @@
 <?php
 //import all models
-require_once "../traitements/header.php";
+require_once "../../traitements/header.php";
 
-$action = $_GET["action"] ?? $_POST["action"] ?? false;
-$idUser = $_GET["idUser"] ?? false;
+$action = GETPOST('action');
+$idUser = GETPOST('idUser');
 
-$envoi = $_POST["envoi"] ?? false;
+$envoi = GETPOST('envoi');
 
-$firstname = $_POST["prenom"] ?? false;
-$lastname = $_POST["nom"] ?? false;
-$email = $_POST["email"] ?? false;
-$idPoste = $_POST["idPoste"] ?? false;
-$idEquipe = $_POST["idEquipe"] ?? false;
-$birth = $_POST["birth"] ?? false;
+$firstname = GETPOST('firstname');
+$lastname = GETPOST('lastname');
+$email = GETPOST('email');
+$idPoste = GETPOST('idPoste');
+$idEquipe = GETPOST('idEquipe');
+$birth = GETPOST('birth');
 
-$oldmdp = $_POST["oldmdp"] ?? false;
-$newmdp = $_POST["newmdp"] ?? false;
-$newmdp2 = $_POST["newmdp2"] ?? false;
+$oldmdp = GETPOST('oldmdp');
+$newmdp = GETPOST('newmdp');
+$newmdp2 = GETPOST('newmdp2');
 
 $rights = $_SESSION["habilitation"] ?? false;
 $idOrganisation = $_SESSION["idOrganisation"] ?? false;
@@ -30,7 +30,9 @@ $postes = $Poste->fetchAll($idOrganisation);
 $equipes = $Equipe->fetchAll($idOrganisation);
 
 $erreurs = array();
-$succes = true;
+$success = false;
+
+$data = new stdClass;
 
 $tpl = "listeMembres.php";
 
@@ -38,7 +40,7 @@ if($rights ===  "admin")
 {
     if($action == "updateFirstname")
     {
-        if($idUser && $firstname && $rights == "admin")
+        if($idUser && $firstname)
         {
             if($envoi)
             {
@@ -63,18 +65,18 @@ if($rights ===  "admin")
             } 
             else 
             {
-                header("location:".ROOT_PATH."/index.php");
+                header("location:".ROOT_URL."/index.php");
             }
         } 
         else 
         {
-            header("location:".ROOT_PATH."/index.php");
+            header("location:".ROOT_URL."/index.php");
         }
     }
     
     if($action == "updateLastname")
     {
-        if($idUser && $lastname && $rights == "admin")
+        if($idUser && $lastname)
         {
             if($envoi)
             {
@@ -90,7 +92,7 @@ if($rights ===  "admin")
                     {
                         $erreurs[] = "La modification de nom n'a pas pu aboutir.";
                     }
-                    $success[] = "Le nom a bien été modifié.";
+                    $success = "Le nom a bien été modifié.";
                 } 
                 else 
                 {
@@ -99,18 +101,18 @@ if($rights ===  "admin")
             } 
             else
             {
-                header("location:".ROOT_PATH."index.php");
+                header("location:".ROOT_URL."index.php");
             }
         }
         else
         {
-            header("location:".ROOT_PATH."index.php");
+            header("location:".ROOT_URL."index.php");
         }
     }
     
     if($action == "updateEquipe")
     {
-        if($idUser && $idEquipe && $rights == "admin")
+        if($idUser && $idEquipe)
         {
             try
             {
@@ -130,7 +132,7 @@ if($rights ===  "admin")
     
     if($action == "updatePoste")
     {
-        if($idUser && $idPoste && $rights == "admin")
+        if($idUser && $idPoste)
         {
             try 
             {
@@ -149,7 +151,13 @@ if($rights ===  "admin")
     }
 
     $data = array(
-
+        'erreurs' => $erreurs,
+        'success' => $success,
+        'idOrganisation' => $idOrganisation,
+        'User' => $User,
+        'membres' => $membres,
+        'postes' => $postes,
+        'equipes' => $equipes
     );
 
     $data = json_encode($data);

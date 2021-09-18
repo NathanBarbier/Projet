@@ -1,22 +1,27 @@
 <?php
 require_once "layouts/entete.php";
 
-if($success)
+$data = json_decode(GETPOST('data'));
+
+if($data->success)
 {
     ?>
     <div class="alert alert-success">
     <?php
-        echo $success;
+        echo $data->success;
     ?>
     </div>
     <?php
 }
-else if($error)
+else if($data->erreurs)
 {
     ?>
     <div class="alert alert-danger">
     <?php
-        echo $error;
+    foreach($data->erreurs as $erreur)
+    {
+        echo $error . "<br>";
+    }
     ?>
     </div>
     <?php
@@ -31,7 +36,7 @@ else if($error)
             <th colspan="7">
                 <div style="float : left"><strong>Liste des membres</strong></div>
                 <div style="float : right">
-                    <div>Nombres de membres : <?=count($membres);?></div> 
+                    <div>Nombres de membres : <?=count($data->membres);?></div> 
                 </div>
             </th>
         </tr>
@@ -48,7 +53,7 @@ else if($error)
         </tr>
 
         <?php
-        foreach($membres as $membre)
+        foreach($data->membres as $membre)
         {
         ?>
         <tr class="text-center">
@@ -62,7 +67,7 @@ else if($error)
                 </div>
                 <form method="POST" action="listeMembres.php?action=updateLastname&idUser=<?= $membre['idUtilisateur'] ?>">
                     <div id="divInputModifNom<?= $membre['idUtilisateur'] ?>" class="collapse">
-                        <input class="form-control mb-1 text-center" value="<?= $membre['nom'] ?>" type="text" name="nom" placeholder="Écrivez un nom" required>
+                        <input class="form-control mb-1 text-center" value="<?= $membre['nom'] ?>" type="text" name="lastname" placeholder="Écrivez un nom" required>
                     </div>
 
                     <!-- Confirmer la modification du nom de l'utilisateur -->
@@ -83,7 +88,7 @@ else if($error)
                 </div>
                 <form method="POST" action="listeMembres.php?action=updateFirstname&idUser=<?= $membre['idUtilisateur'] ?>">
                     <div id="divInputModifPrenom<?= $membre['idUtilisateur'] ?>" class="collapse">
-                        <input class="form-control mb-1 text-center" value="<?= $membre['prenom'] ?>" type="text" name="prenom" placeholder="Écrivez un prénom" required>
+                        <input class="form-control mb-1 text-center" value="<?= $membre['prenom'] ?>" type="text" name="firstname" placeholder="Écrivez un prénom" required>
                     </div>
 
                     <!-- Confirmer la modification du nom de l'utilisateur -->
@@ -103,7 +108,7 @@ else if($error)
                 <form method="post" action="listeMembres.php?action=updateEquipe&idUser=<?= $membre["idUtilisateur"] ?>">
                     <div id="divSelectEquipes<?= $membre['idUtilisateur'] ?>" class="collapse text-center">
                         <select name="idEquipe" class="text-center form-control w-75 mx-auto mb-1" required>
-                            <?php foreach($equipes as $equipe)
+                            <?php foreach($data->equipes as $equipe)
                             { 
                             ?>
                                 <option value="<?= $equipe['idEquipe'] ?>"><?= $equipe["nomEquipe"] ?></option>
@@ -134,7 +139,7 @@ else if($error)
                 <form method="POST" action="listeMembres.php?action=updatePoste&idUser=<?= $membre['idUtilisateur'] ?>">
                     <div id="divSelectPostes<?= $membre['idUtilisateur'] ?>" class="collapse text-center">
                         <select name="idPoste" class="text-center form-control w-75 mx-auto mb-1">
-                            <?php foreach($postes as $poste)
+                            <?php foreach($data->postes as $poste)
                             { ?>
                                 <option value="<?= $poste['idPoste'] ?>"><?= $poste["nomPoste"] ?></option>
                             <?php } ?>
@@ -180,7 +185,7 @@ else if($error)
 
 </table>
 
-<script src="<?= JS_URL ?>admin/listeMembres.php"></script>
+<script src="<?= JS_URL ?>admin/listeMembres.js"></script>
 
 
 <?php

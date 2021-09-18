@@ -30,7 +30,7 @@ $postes = $Poste->fetchAll($idOrganisation);
 $equipes = $Equipe->fetchAll($idOrganisation);
 
 $erreurs = array();
-$succes = true;
+$success = array();
 
 $tpl = "listeMembres.php";
 
@@ -54,7 +54,7 @@ if($rights ===  "admin")
                     {
                         $erreurs[] = "Le prénom n'a pas pu être modifié.";
                     }
-                    $success = "Le prénom a bien été modifié.";
+                    $success[] = "Le prénom a bien été modifié.";
                 } 
                 else 
                 {
@@ -63,12 +63,12 @@ if($rights ===  "admin")
             } 
             else 
             {
-                header("location:".ROOT_PATH."/index.php");
+                header("location:".ROOT_URL."/index.php");
             }
         } 
         else 
         {
-            header("location:".ROOT_PATH."/index.php");
+            header("location:".ROOT_URL."/index.php");
         }
     }
     
@@ -99,12 +99,12 @@ if($rights ===  "admin")
             } 
             else
             {
-                header("location:".ROOT_PATH."index.php");
+                header("location:".ROOT_URL."index.php");
             }
         }
         else
         {
-            header("location:".ROOT_PATH."index.php");
+            header("location:".ROOT_URL."index.php");
         }
     }
     
@@ -120,7 +120,7 @@ if($rights ===  "admin")
             {
                 $erreurs[] = "La modification d'équipe n'a pas pu aboutir.";
             }
-            $success = "Le modification d'équipe a bien été prise en compte.";
+            $success[] = "Le modification d'équipe a bien été prise en compte.";
         } 
         else
         {
@@ -140,7 +140,7 @@ if($rights ===  "admin")
             {
                 $erreurs[] = "La modification de poste n'a pas pu aboutir.";
             }
-            $success = "La modification de poste a bien été prise en compte.";
+            $success[] = "La modification de poste a bien été prise en compte.";
         } 
         else
         {
@@ -149,7 +149,8 @@ if($rights ===  "admin")
     }
 
     $data = array(
-
+        'erreurs' => $erreurs,
+        'success' => $success
     );
 
     $data = json_encode($data);

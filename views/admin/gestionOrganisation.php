@@ -27,7 +27,7 @@ $data = json_decode(GETPOST('data'));
                 Êtes-vous sûr de vouloir supprimer l'organisation ?<br>
                 (Cette action est définitive et supprimer toute donnée étant en lien avec l'organisation)
 
-                <a class="btn btn-danger" href="<?= CONTROLLERS_URL ?>Organisation.php?action=deleteOrganisation">Oui</a>
+                <a class="btn btn-danger" href="<?= CONTROLLERS_URL ?>admin/gestionOrganisation.php?action=deleteOrganisation">Oui</a>
 
                 <button id="boutonRefusDel" class="btn btn-warning">Non</button>
             </div>

@@ -5,6 +5,9 @@ require_once "../../traitements/header.php";
 $rights = $_SESSION["habilitation"] ?? false;
 $idOrganisation = $_SESSION["idOrganisation"] ?? false;
 
+// var_dump($rights);
+// exit;
+
 if($rights === "admin")
 {
     $action = GETPOST('action');

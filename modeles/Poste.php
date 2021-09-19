@@ -63,18 +63,25 @@ Class Poste extends Modele
 
     //! UPDATE
 
-    public function updateName($nom)
+    public function updateName($nom, $idPoste)
     {
-        $sql = "UPDATE FROM postes SET nomPoste = ? WHERE idPoste = ?";
+        $idPoste = $this->idPoste ?? $idPoste;
+
+        $sql = "UPDATE postes"; 
+        $sql .= " SET nomPoste = ?"; 
+        $sql .= " WHERE idPoste = ?";
+        
         $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$nom, $this->idPoste]);
+        return $requete->execute([$nom, $idPoste]);
     }
 
-    public function updateIdRole($idRole)
+    public function updateIdRole($idRole, $idPoste)
     {
+        $idPoste = $this->idPoste ?? $idPoste;
+
         $sql ="UPDATE postes SET idPoste = ? WHERE idPoste =  ?";
         $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$idRole, $this->idPoste]);
+        return $requete->execute([$idRole, $idPoste]);
     }
 
 
@@ -83,25 +90,46 @@ Class Poste extends Modele
     /**
     *   Supprime le poste de l'organisation et réaffecte le poste "indéfini" aux utilisateurs ayant ce poste
     */
-    public function delete($idPoste = null)
+    public function delete($idPoste, $idOrganisation)
     {
-        $idPoste = $idPoste == null ? $this->getId() : $idPoste;
+        $idPoste = $this->getId() ?? $idPoste;
+        $idOrganisation = $this->idOrganisation ?? $idOrganisation;
+
+        $status = array();
 
         // SELECTION DE L'ID DU POSTE "INDEFINI"
-        $sql = "SELECT idPoste FROM postes WHERE idOrganisation = ? LIMIT 1";
+        $sql = "SELECT idPoste"; 
+        $sql .= " FROM postes";
+        $sql .= " WHERE idOrganisation = ? AND nomPoste = 'indéfini'"; 
+        $sql .= " LIMIT 1";
+        
         $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$this->idOrganisation]);
+        $status[] = $requete->execute([$idOrganisation]);
         $indefini = $requete->fetch(PDO::FETCH_ASSOC);
         
         // REAFFECTATION AU POSTE "INDEFINI" POUR LES UTILISATEURS AYANT LE POSTE EN SUPPRESSION
-        $sql = "UPDATE utilisateurs SET idPoste = ? WHERE idPoste = ?";
+        $sql = "UPDATE utilisateurs"; 
+        $sql .= " SET idPoste = ?";
+        $sql .= " WHERE idPoste = ?";
+
         $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$indefini["idPoste"], $idPoste]);
+        $status[] = $requete->execute([$indefini["idPoste"], $idPoste]);
 
         // SUPPRESSION DU POSTE
-        $sql = "DELETE FROM postes WHERE idPoste = ?";
+        $sql = "DELETE FROM postes";
+        $sql .= " WHERE idPoste = ?";
+
         $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$idPoste]);
+        $status[] = $requete->execute([$idPoste]);
+
+        if(in_array(false, $status))
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
     }
 
     
@@ -112,8 +140,9 @@ Class Poste extends Modele
     public function create($nom, $idOrganisation, $idRole)
     {
         $sql = "INSERT INTO postes (nomPoste,idOrganisation,idRole) VALUES (?,?,?)";
+        
         $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$nom, $idOrganisation, $idRole]);
+        return $requete->execute([$nom, $idOrganisation, $idRole]);
     }
 
 
@@ -137,7 +166,9 @@ Class Poste extends Modele
      */
     public function fetch($id)
     {
-        $sql = "SELECT FROM Postes WHERE idPoste = ?";
+        $sql = "SELECT *"; 
+        $sql .= " FROM Postes"; 
+        $sql .= " WHERE idPoste = ?";
         $requete = $this->getBdd()->prepare($sql);
         $requete->execute([$id]);
 

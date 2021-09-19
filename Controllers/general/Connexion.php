@@ -32,7 +32,7 @@ if($envoi)
                 if(password_verify($mdp, $utilisateur["mdp"]))
                 {
                     $_SESSION["habilitation"] = "user";
-                    $_SESSION["idUtilisateur"] = $utilisateur["idUtilisateur"];
+                    $_SESSION["idUtilisateur"] = intval($utilisateur["idUtilisateur"]);
                     
                     $success = true;
                     // header("location:".ROOT_PATH."index.php");

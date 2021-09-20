@@ -19,6 +19,7 @@ if($rights === 'admin')
     $success = false;
 
     $deletePoste = false;
+    $updatePoste = false;
     
     $tpl = "postesEquipes.php";
     
@@ -28,6 +29,7 @@ if($rights === 'admin')
     $Projet = new Projet();
     $User = new User();
     $Poste = new Poste();
+
     
     $fetchPoste = $idPoste ? $Poste->fetch($idPoste) : false;
     $nbMembresEquipes = $Organisation->CountUsersByEquipes($idOrganisation);
@@ -39,10 +41,6 @@ if($rights === 'admin')
     $roles = $Role->fetchAll();
     $equipes = $Equipe->fetchAll($idOrganisation);
     $postes = $Poste->fetchAll($idOrganisation);
-
-    // var_dump($postes);
-    // exit;
-    
     
     foreach($equipes as $key => $equipe)
     {
@@ -54,7 +52,7 @@ if($rights === 'admin')
     {
         foreach($equipe as $membrekey => $membre)
         {
-            $membresEquipes[$equipekey][$membrekey]["poste"] = $Poste->fetch($membre["idPoste"]);
+            $membresEquipes[$equipekey][$membrekey]["poste"] = $Poste->fetch($membre[$membrekey]["idPoste"]);
         }
     }   
     
@@ -67,50 +65,69 @@ if($rights === 'admin')
     {
         try
         {
-            $Poste->delete($idPoste);
+            $status = $Poste->delete($idPoste, $idOrganisation);
         }
         catch(Exception $e)
         {
             $erreurs[] = "Une erreur inconnue est survenue.";
         }
 
-        if(empty($erreurs))
+        if($status)
         {
             $success = "Le poste a bien été supprimmé.";
         }
+        else
+        {
+            $erreurs[] = "Une erreur inconnue est survenue."; 
+        }
+    }
+
+    if($action == "updatePoste")
+    {
+        $updatePoste = true;
     }
     
-    if($action == "updatePoste")
+    if($action == "updatePosteConf")
     {
         try
         {
-            $Poste->updateName($nomPoste);
+            $status = $Poste->updateName($nomPoste, $idPoste);
         }
         catch(Exception $e)
         {
             $erreurs[] = "Une erreur inconnue est survenue.";
         }
 
-        if(empty($erreurs))
+        if($status)
         {
             $success = "Le poste a bien été modifié.";
+        }
+        else
+        {
+            $erreurs[] = "Une erreur inconnue est survenue.";
         }
     }
     
     if($action == "addPoste")
     {
+        // var_dump($nomPoste, $idOrganisation, $idRole);
+        // exit;
         try
         {
-            $Poste->create($nomPoste, $idOrganisation, $idRole);
+            $status = $Poste->create($nomPoste, $idOrganisation, $idRole);
         }
         catch(Exception $e)
         {
             $erreurs[] = "Une erreur inconnue est survenue.";
         }
 
-        if(empty($erreurs))
+        if($status)
         {
             $success = "Le poste a bien été ajouté.";
+        }
+        else
+        {
+            $erreurs[] = "Une erreur inconnue est survenue.";
         }
     }
     
@@ -118,17 +135,37 @@ if($rights === 'admin')
     {
         try
         {
-            $Equipe->create($nomEquipe, $idOrganisation);
+            $status = $Equipe->create($nomEquipe, $idOrganisation);
         }
         catch(Exception $e)
         {
             $erreurs[] = "Une erreur inconnue est survenue.";
         }
 
-        if(empty($erreurs))
+        if($status)
         {
             $success = "L'équipe a bien été ajoutée.";
         }
+        else
+        {
+            $erreurs[] = "Une erreur inconnue est survenue.";
+        }
+    }
+
+
+    if($success)
+    {
+        $Organisation = new Organisation($idOrganisation);
+
+        $fetchPoste = $idPoste ? $Poste->fetch($idPoste) : false;
+        $nbMembresEquipes = $Organisation->CountUsersByEquipes($idOrganisation);
+        $nbMembresPostes = $Organisation->CountUsersByPoste($idOrganisation);
+        $equipeMinMax = $Organisation->getMinMaxIdEquipe($idOrganisation);
+        $chefEquipes = $Organisation->getInfosChefsEquipes($idOrganisation);
+        
+        $roles = $Role->fetchAll();
+        $equipes = $Equipe->fetchAll($idOrganisation);
+        $postes = $Poste->fetchAll($idOrganisation);
     }
     
     $data = array(
@@ -145,9 +182,10 @@ if($rights === 'admin')
         'erreurs' => $erreurs,
         'success' => $success,
         'deletePoste' => $deletePoste,
+        'updatePoste' => $updatePoste,
         'idPoste' => $idPoste
     );
-    
+
     $data = json_encode($data);
     
     header("location:".VIEWS_URL."admin/".$tpl."?data=$data");

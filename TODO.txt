@@ -1,5 +1,0 @@
-- Vérifier lors de l'inscription si email n'exsite pas dans table utilisateur ni Organisation
-- Mettre au propre projet :
-    - Changer noms pages / modeles / traitements
-    - noms fonctions / objets / classe / ... en anglais
-    -

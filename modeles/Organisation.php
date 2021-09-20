@@ -15,13 +15,16 @@ class Organisation extends Modele
     {
         if($id != null)
         {
-            $sql = "SELECT * FROM organisations WHERE idOrganisation = ?";
+            $sql = "SELECT * ";
+            $sql .= " FROM organisations"; 
+            $sql .= " WHERE idOrganisation = ?";
+
             $requete = $this->getBdd()->prepare($sql);
             $requete->execute([$id]);
 
             $Organisation = $requete->fetch(PDO::FETCH_ASSOC);
             
-            $this->idOrganisation = $id;
+            $this->id = $id;
             $this->nom = $Organisation["nom"];
             $this->email = $Organisation["email"];
 
@@ -269,14 +272,26 @@ class Organisation extends Modele
     public function getInfosChefsEquipes()
     {
         $chefsEquipes = [];
-        foreach($this->getEquipes() as $equipe)
+        foreach($this->getEquipes() as $Equipe)
         {
-            $chefsEquipes[] = [
-                "nom" => $this->getUsers()[$equipe->getChefEquipe()]->getNomUser(),
-                "prenom" => $this->getUsers()[$equipe->getChefEquipe()]->getPrenomUser(),
-                "email" => $this->getUsers()[$equipe->getChefEquipe()]->getEmailUser(),
-                "idUser" => $this->getUsers()[$equipe->getChefEquipe()]->getIdUser(),  
-            ];
+            if($Equipe->getChef() != null)
+            {
+                $chefsEquipes[] = [
+                    "nom" => $this->getUsers()[$Equipe->getChef()]->getNom(),
+                    "prenom" => $this->getUsers()[$Equipe->getChef()]->getPrenom(),
+                    "email" => $this->getUsers()[$Equipe->getChef()]->getEmail(),
+                    "idUser" => $this->getUsers()[$Equipe->getChef()]->getId(),  
+                ];
+            }
+            else
+            {
+                $chefsEquipes[] = [
+                    "nom" => "",
+                    "prenom" => "",
+                    "email" => "",
+                    "idUser" => "",  
+                ];
+            }
         }
         return $chefsEquipes;
     }
@@ -290,18 +305,18 @@ class Organisation extends Modele
             {
                 foreach($this->getUsers() as $utilisateur)
                 {
-                    if($utilisateur->getIdUser == $equipe->getChefEquipe)
+                    if($utilisateur->getId() == $equipe->getChefEquipe)
                     {
                         $infosChefEquipe[] = [
-                            "idUtilisateur" => $utilisateur->getIdUser(),
-                            "nom" => $utilisateur->getNomUser(),
-                            "prenom" => $utilisateur->getPrenomUser(),
-                            "dateNaiss" => $utilisateur->getDateNaissUser(),
-                            "mdp" => $utilisateur->getMdpUser(),
-                            "idPoste" => $utilisateur->getIdPosteUser(),
-                            "email" => $utilisateur->getEmailUser(),
-                            "idEquipe" => $utilisateur->getIdEquipeUser(),
-                            "idOrganisation" => $utilisateur->getIdOrganisationUser(),
+                            "idUtilisateur" => $utilisateur->getId(),
+                            "nom" => $utilisateur->getNom(),
+                            "prenom" => $utilisateur->getPrenom(),
+                            "dateNaiss" => $utilisateur->getDateNaiss(),
+                            "mdp" => $utilisateur->getMdp(),
+                            "idPoste" => $utilisateur->getIdPoste(),
+                            "email" => $utilisateur->getEmail(),
+                            "idEquipe" => $utilisateur->getIdEquipe(),
+                            "idOrganisation" => $utilisateur->getIdOrganisation(),
                         ];
                         return $infosChefEquipe;
                     }
@@ -315,7 +330,7 @@ class Organisation extends Modele
         $extremes = [];
         foreach($this->getEquipes() as $cle => $Equipe)
         {
-            $IdEquipe = $Equipe->getIdEquipe();
+            $IdEquipe = $Equipe->getId();
             if($cle == 0)
             {
                 $extremes["minIdE"] = $IdEquipe;
@@ -427,13 +442,10 @@ class Organisation extends Modele
         $nbUsersParEquipe = [];
         foreach($this->getEquipes() as $Equipe)
         {
-            foreach($Equipe->getCountMembres() as $nbUsers)
-            {
-                $idE = $Equipe->getIdEquipe();
-                $nbUsersParEquipe[] = [
-                    $idE => $nbUsers,
-                ];
-            }
+            $nbUsers = $Equipe->countMembres();
+                
+            $idE = $Equipe->getId();
+            $nbUsersParEquipe[$idE] = $nbUsers;
         }
         return $nbUsersParEquipe;
     }
@@ -446,14 +458,12 @@ class Organisation extends Modele
             foreach($this->getUsers() as $utilisateur)
             {
                 $users = [];
-                if($utilisateur->getIdPosteUser() == $Poste->getIdPoste())
+                if($utilisateur->getIdPoste() == $Poste->getId())
                 {
-                    $users[] = $utilisateur->getIdUser();
+                    $users[] = $utilisateur->getId();
                 }
                 $nbUsers = count($users);
-                $nbUsersParPoste[] = [
-                    $Poste->getIdPoste => $nbUsers,
-                ];
+                $nbUsersParPoste[$Poste->getId()] = $nbUsers;
             }
         }
         return $nbUsersParPoste;

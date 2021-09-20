@@ -5,10 +5,10 @@ require_once "../../traitements/header.php";
 $rights = $_SESSION["habilitation"] ?? false;
 $idUser = $_SESSION["idUtilisateur"] ?? false;
 
-$envoi = $_POST["envoi"] ?? false;
+$envoi = GETPOST('envoi');
 
-$email = $_POST["email"] ?? false;
-$mdp = $_POST["mdp"] ?? false;
+$email = GETPOST('email');
+$mdp = GETPOST('mdp');
 
 $User = new User();
 $Organisation = new Organisation();
@@ -29,10 +29,13 @@ if($envoi)
             if($User->verifEmail($email) == true)
             {
                 $utilisateur = $User->fetchByEmail($email);
+
                 if(password_verify($mdp, $utilisateur["mdp"]))
                 {
+
+                    // exit;
                     $_SESSION["habilitation"] = "user";
-                    $_SESSION["idUtilisateur"] = $utilisateur["idUtilisateur"];
+                    $_SESSION["idUtilisateur"] = intval($utilisateur["idUtilisateur"]);
                     
                     $success = true;
                     // header("location:".ROOT_PATH."index.php");

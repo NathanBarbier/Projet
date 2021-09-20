@@ -36,7 +36,8 @@ $data = new stdClass;
 
 $tpl = "listeMembres.php";
 
-if($rights ===  "admin")
+
+if($rights === "admin")
 {
     if($action == "updateFirstname")
     {
@@ -50,13 +51,22 @@ if($rights ===  "admin")
                 {
                     try
                     {
-                        $User->updateFirstname($firstname);
+                        $status = $User->updateFirstname($firstname, $idUser);
                     } 
                     catch (exception $e)
                     {
                         $erreurs[] = "Le prénom n'a pas pu être modifié.";
                     }
-                    $success = "Le prénom a bien été modifié.";
+
+                    if($status)
+                    {
+                        $success = "Le prénom a bien été modifié.";
+                    }
+                    else
+                    {
+                        $erreurs[] = "Le prénom n'a pas pu être modifié.";
+                    }
+
                 } 
                 else 
                 {
@@ -86,7 +96,7 @@ if($rights ===  "admin")
                 {
                     try
                     {
-                        $User->updateLastname($lastname);
+                        $User->updateLastname($lastname, $idUser);
                     } 
                     catch (exception $e)
                     {
@@ -116,7 +126,7 @@ if($rights ===  "admin")
         {
             try
             {
-                $User->updateEquipe($idEquipe);
+                $User->updateEquipe($idEquipe, $idUser);
             } 
             catch (exception $e)
             {
@@ -136,7 +146,7 @@ if($rights ===  "admin")
         {
             try 
             {
-                $User->updatePoste($idPoste);
+                $User->updatePoste($idPoste, $idUser);
             }
             catch (exception $e)
             {
@@ -149,6 +159,44 @@ if($rights ===  "admin")
             header("location:".ROOT_PATH."index.php");
         }
     }
+
+    if($action == "deleteUser")
+    {
+        if($idUser)
+        {
+            try 
+            {
+                $status = $User->delete($idUser);
+            }
+            catch (exception $e)
+            {
+                $erreurs[] = "La modification de poste n'a pas pu aboutir.";
+            }
+
+            if($status)
+            {
+                $success = "La modification de poste a bien été prise en compte.";
+            }
+            else
+            {
+                $erreurs[] = "La modification de poste n'a pas pu aboutir.";
+            }
+        } 
+        else
+        {
+            header("location:".ROOT_PATH."index.php");
+        }
+    }
+
+
+    // Rafraichir les datas si modif bdd
+    if($success)
+    {
+        $membres = $User->fetchAll($idOrganisation);
+        $postes = $Poste->fetchAll($idOrganisation);
+        $equipes = $Equipe->fetchAll($idOrganisation);
+    }
+
 
     $data = array(
         'erreurs' => $erreurs,

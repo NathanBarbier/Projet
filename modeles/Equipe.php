@@ -24,7 +24,7 @@ class Equipe extends Modele
 
             $sql = "SELECT * FROM utilisateurs WHERE idEquipe = ?";
             $requete = $this->getBdd()->prepare($sql);
-            $requete->execute([$this->idEquipe]);
+            $requete->execute([$this->id]);
 
             $membres = $requete->fetchAll(PDO::FETCH_ASSOC);
 
@@ -54,17 +54,17 @@ class Equipe extends Modele
 
     public function getNom()
     {
-        return $this->nomEquipe;
+        return $this->nom;
     }
 
     public function getId()
     {
-        return $this->idEquipe;
+        return $this->id;
     }
 
     public function getChef()
     {
-        return $this->chefEquipe;
+        return $this->chef;
     }
 
     public function getIdOrganisation()
@@ -84,11 +84,14 @@ class Equipe extends Modele
 
     //! FETCH
 
-    public function fetchAll($idOrganisation = null)
+    public function fetchAll($idOrganisation)
     {
-        $idOrganisation = $idOrganisation == null ? $this->getIdOrganisation() : $idOrganisation;
+        $idOrganisation = $this->id ?? $idOrganisation;
 
-        $sql = "SELECT * FROM equipes WHERE idOrganisation = ?";
+        $sql = "SELECT *"; 
+        $sql .= " FROM equipes"; 
+        $sql .= " WHERE idOrganisation = ?";
+        
         $requete = $this->getBdd()->prepare($sql);
         $requete->execute([$idOrganisation]);
 
@@ -120,13 +123,15 @@ class Equipe extends Modele
 
     //! INSERT
 
-    public function create($nom, $idOrganisation = null)
+    public function create($nom, $idOrganisation)
     {
-        $idOrganisation = $idOrganisation == null ? $this->getIdOrganisation() : $idOrganisation; 
+        $idOrganisation = $this->id ?? $idOrganisation; 
 
-        $sql = "INSERT INTO equipes (nomEquipe, idOrganisation) VALUES (?,?)";
+        $sql = "INSERT INTO equipes (nomEquipe, idOrganisation)";
+        $sql .= " VALUES (?,?)";
+
         $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$nom, $idOrganisation]);
+        return $requete->execute([$nom, $idOrganisation]);
     } 
 
 
@@ -134,15 +139,21 @@ class Equipe extends Modele
 
     public function updateName($name)
     {
-        $sql = "UPDATE equipes SET nomEquipe = ? WHERE idEquipe =  ?";
+        $sql = "UPDATE equipes";
+        $sql .= " SET nomEquipe = ?";
+        $sql .= " WHERE idEquipe =  ?";
+
         $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$name, $this->idEquipe]);
+        return $requete->execute([$name, $this->idEquipe]);
     }
 
     public function updateChef($chef)
     {
-        $sql = "UPDATE equipes SET chefEquipe = ? WHERE idEquipe =  ?";
+        $sql = "UPDATE equipes"; 
+        $sql .= " SET chefEquipe = ?"; 
+        $sql .= " WHERE idEquipe =  ?";
+
         $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$chef, $this->idEquipe]);
+        return $requete->execute([$chef, $this->idEquipe]);
     }
 }

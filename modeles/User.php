@@ -75,7 +75,7 @@ class User extends Modele
 
     public function getId()
     {
-        return $this->idUser;
+        return $this->id;
     }
 
     public function getLastname()
@@ -146,7 +146,10 @@ class User extends Modele
     {
         $idOrganisation = $idOrganisation == null ? $this->getIdOrganisation() : $idOrganisation;
 
-        $sql = "SELECT * FROM utilisateurs WHERE idOrganisation = ?";
+        $sql = "SELECT *";
+        $sql .= " FROM utilisateurs";
+        $sql .= " WHERE idOrganisation = ?";
+
         $requete = $this->getBdd()->prepare($sql);
         $requete->execute([$idOrganisation]);
         
@@ -164,11 +167,14 @@ class User extends Modele
 
     public function fetchByEmail($email)
     {
-        $sql = "SELECT * FROM utilisateurs WHERE email = ?";
+        $sql = "SELECT *"; 
+        $sql .= " FROM utilisateurs"; 
+        $sql .= " WHERE email = ?";
+
         $requete = $this->getBdd()->prepare($sql);
         $requete->execute([$email]);
 
-        return $requete->fetchAll(PDO::FETCH_ASSOC);
+        return $requete->fetch(PDO::FETCH_ASSOC);
     }
     
     public function fetchByLastnameAndFirstname($lastname, $firstname, $idOrganisation)
@@ -184,81 +190,110 @@ class User extends Modele
 
     //! INSERT
 
-    public function create($firstname, $lastname, $birth, $idPoste, $email, $idEquipe, $idOrganisation)
+    public function create($firstname, $lastname, $birth, $idPoste, $idEquipe, $email, $idOrganisation)
     {
+        $status = array();
         // ON CREE UN MDP TEMPORAIRE A L'UTILISATEUR
-        $mdp = $this->generateRandomString(6);
-        $mdptemp = $mdp;
+        // $mdp = $this->generateRandomString(6);
+        // $mdptemp = $mdp;
+        $mdp = "motdepasse";
         $mdp = password_hash($mdp, PASSWORD_BCRYPT);
                         
-        $sql = "INSERT INTO utilisateurs (nom, prenom, dateNaiss, mdp, idPoste, email, idEquipe, idOrganisation) ";
+        $sql = "INSERT INTO utilisateurs (nom, prenom, dateNaiss, idPoste, email, idEquipe, idOrganisation, mdp) ";
         $sql .= "VALUES (?,?,?,?,?,?,?,?)";
         $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$firstname, $lastname, $birth, $idPoste, 'motdepasse', $email, $idEquipe, $idOrganisation]);
+
+
+        $status[] = $requete->execute([$lastname, $firstname, $birth, $idPoste, $email, $idEquipe, $idOrganisation, $mdp]);
 
         $sql = "SELECT MAX(idUtilisateur) FROM utilisateurs";
         $requete = $this->getBdd()->prepare($sql);
-        $requete->execute();
+        $status[] = $requete->execute();
 
         $idUser = $requete->fetch(PDO::FETCH_ASSOC);
         $idUser = $idUser["idUtilisateur"];
 
         $sql = "SELECT * FROM utilisateurs WHERE idUtilisateur = ?";
         $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$idUser]);
+        $status[] = $requete->execute([$idUser]);
 
-        return $mdptemp;
+
+        if(in_array(false, $status))
+        {
+            return false;
+        }
+        else
+        {
+            // return $mdptemp;
+            return $mdp;
+        }
     }
 
 
     //! UPDATE
 
-    public function updateFirstname($firstname)
+    public function updateFirstname($firstname, $idUser)
     {
-        $sql = "UPDATE FROM utilisateurs SET prenom = ? WHERE idUtilisateur = ?";
+        $sql = "UPDATE utilisateurs";
+        $sql .= " SET prenom = ?"; 
+        $sql .= " WHERE idUtilisateur = ?";
         $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$firstname, $this->idUser]);
+        return $requete->execute([$firstname, $idUser]);
     }
 
-    public function updateLastname($lastname)
+    public function updateLastname($lastname, $idUser)
     {
-        $sql = "UPDATE FROM utilisateurs SET nom = ? WHERE idUtilisateur = ?";
+        $sql = "UPDATE utilisateurs SET nom = ? WHERE idUtilisateur = ?";
         $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$lastname, $this->idUser]);
+        $requete->execute([$lastname, $idUser]);
     }
 
-    public function updatePoste($idPoste)
+    public function updatePoste($idPoste, $idUser)
     {
-        $sql = "UPDATE FROM utilisateurs SET idPoste = ? WHERE idUtilisateur = ?";
+        $sql = "UPDATE utilisateurs SET idPoste = ? WHERE idUtilisateur = ?";
         $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$idPoste, $this->idUser]);
+        $requete->execute([$idPoste, $idUser]);
     }
 
-    public function updateEquipe($idEquipe)
+    public function updateEquipe($idEquipe, $idUser)
     {
-        $sql = "UPDATE FROM utilisateurs SET idEquipe = ? WHERE idUtilisateur = ?";
+        $sql = "UPDATE utilisateurs SET idEquipe = ? WHERE idUtilisateur = ?";
         $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$idEquipe, $this->idUser]);
+        $requete->execute([$idEquipe, $idUser]);
     }
 
-    public function updatePassword($password)
+    public function updatePassword($password, $idUser)
     {
-        $sql = "UPDATE FROM utilisateurs SET mdp = ? WHERE idUtilisateur = ?";
+        $sql = "UPDATE utilisateurs SET mdp = ? WHERE idUtilisateur = ?";
         $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$password, $this->idUser]);
+        $requete->execute([$password, $idUser]);
     }
 
-    public function updateEmail($email)
+    public function updateEmail($email, $idUser)
     {
         $sql = "UPDATE utilisateurs SET email = ? WHERE idUtilisateur = ?";
         $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$email, $this->idUser]);
+        $requete->execute([$email, $idUser]);
     }
 
-    public function updateBirth($birth)
+    public function updateBirth($birth, $idUser)
     {
         $sql = "UPDATE utilisateurs SET dateNaiss = ? WHERE idUtilisateur = ?";
         $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$birth, $this->idUser]);
+        $requete->execute([$birth, $idUser]);
+    }
+
+
+    //! DELETE
+
+    public function delete($idUser)
+    {
+        $sql = "DELETE FROM utilisateurs";
+        $sql .= " WHERE idUtilisateur = ?";
+
+        $requete = $this->getBdd()->prepare($sql);
+        $status = $requete->execute([$idUser]);
+
+        return $status;
     }
 }

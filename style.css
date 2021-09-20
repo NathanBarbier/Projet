@@ -1,3 +1,16 @@
+/* GENERAL */
+
+html {
+    height: 100%;
+    width: 100%;
+}
+
+body {
+    height: 100%;
+    width: 100%;
+}
+
+
 #containerPoste {
     margin-left: 0% !important;
     margin-right: 0% !important;
@@ -125,4 +138,18 @@ a {
     text-align: center;
     color: white;
     text-shadow: 0 0 4px black,0 0 4px black,0 0 4px black,0 0 4px black,0 0 4px black,0 0 4px black,0 0 4px black,0 0 4px black,0 0 4px black,0 0 4px black,0 0 4px black,0 0 4px black,0 0 4px black,0 0 4px black,0 0 4px black,0 0 4px black,0 0 4px black,0 0 4px black,0 0 4px black,0 0 4px black;
+}
+
+/* PROFIL */
+.profile-section {
+    border: solid rgb(190, 190, 190) 1px;
+
+    border-radius: 15px;
+}
+
+.sticker {
+    border: 1px solid rgba(0, 0, 0, 0.125); 
+    border-radius:15px; 
+    background-color:#f8f9fa; 
+    height:50px;
 }

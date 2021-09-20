@@ -24,13 +24,13 @@ if(!empty($data->erreurs))
 
     <form method="post" action="<?= CONTROLLERS_URL ?>general/Connexion.php">
 
-        <div class="form-group">
-            <label for="mail" class="ml-3">Addresse mail</label>
+        <div class="form-group mt-3">
+            <label for="mail" class="mb-1">Addresse mail</label>
             <input type="text" class="form-control" name="email" placeholder="Saisissez votre identifiant" maxlength="50" required>
         </div>
 
         <div class="form-group mt-3">
-            <label for="mdp" class="ml-3">Mot de passe</label>
+            <label for="mdp" class="mb-1">Mot de passe</label>
             <input type="password" class="form-control" name="mdp" placeholder="Saisissez votre mot de passe" required>
         </div>
 

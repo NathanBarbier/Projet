@@ -19,6 +19,7 @@ define('IMG_PATH', $rootDir.'images'.DIRECTORY_SEPARATOR);
 define('CONTROLLERS_PATH', $rootDir.'Controllers'.DIRECTORY_SEPARATOR);
 define('VIEWS_PATH', $rootDir.'views'.DIRECTORY_SEPARATOR);
 define('PROCESS_PATH', $rootDir.'traitements'.DIRECTORY_SEPARATOR);
+define('PHP_MAILER_PATH', $rootDir.'vendor'.DIRECTORY_SEPARATOR.'phpmailer'.DIRECTORY_SEPARATOR.'phpmailer'.DIRECTORY_SEPARATOR.'src'.DIRECTORY_SEPARATOR);
 
 //! URL PATH
 define('ROOT_URL', $rootUrl);
@@ -28,6 +29,7 @@ define('CONTROLLERS_URL', $rootUrl.'Controllers/');
 define('VIEWS_URL', $rootUrl.'views/');
 define('PROCESS_URL', $rootUrl.'traitements/');
 define('JS_URL', $rootUrl.'js/');
+define('PHP_MAILER_URL', $rootUrl.'vendor/phpmailer/phpmailer/src/');
 
  
 ?>

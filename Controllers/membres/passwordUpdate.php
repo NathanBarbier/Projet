@@ -1,87 +1,125 @@
 <?php
 //import all models
-require_once "../traitements/header.php";
+require_once "../../traitements/header.php";
 
-$action = $_GET["action"] ?? false;
-$idUser = $_GET["idUser"] ?? false;
-
-$envoi = $_POST["envoi"] ?? false;
-
-$firstname = $_POST["prenom"] ?? false;
-$lastname = $_POST["nom"] ?? false;
-$email = $_POST["email"] ?? false;
-$idPoste = $_POST["idPoste"] ?? false;
-$idEquipe = $_POST["idEquipe"] ?? false;
-$birth = $_POST["birth"] ?? false;
-
-$oldmdp = $_POST["oldmdp"] ?? false;
-$newmdp = $_POST["newmdp"] ?? false;
-$newmdp2 = $_POST["newmdp2"] ?? false;
-
+$idUser = $_SESSION["idUtilisateur"] ?? null;
 $rights = $_SESSION["habilitation"] ?? false;
 $idOrganisation = $_SESSION["idOrganisation"] ?? false;
 
-$User = new User($idUser);
-$Poste = new Poste();
-$Equipe = new Equipe();
-
-
-if($action == "updatePassword")
+if($rights === 'user')
 {
-    if($envoi)
+    $action = GETPOST('action');
+    $envoi = GETPOST('envoi');
+    
+    $firstname = GETPOST('prenom');
+    $lastname = GETPOST('nom');
+    $email = GETPOST('email');
+    $idPoste = GETPOST('idPoste');
+    $idEquipe = GETPOST('idEquipe');
+    $birth = GETPOST('birth');
+    
+    $oldmdp = GETPOST('oldmdp');
+    $newmdp = GETPOST('newmdp');
+    $newmdp2 = GETPOST('newmdp');
+    
+    
+    $User = new User($idUser);
+    $Poste = new Poste();
+    $Equipe = new Equipe();
+    
+    $tpl = "passwordUpdate.php";
+    
+    $erreurs = array();
+    $success = false;
+    
+    $data = new stdClass;
+    
+    if($action == "passwordUpdate")
     {
-        if(!empty($oldmdp) && !empty($newmdp) && !empty($newmdp2))
+        if($envoi)
         {
-            if($newmdp === $newmdp2)
+    
+            // var_dump($oldmdp, $newmdp, $newmdp2);
+            // exit;
+    
+            if($oldmdp && $newmdp && $newmdp2)
             {
-                if (strlen($newmdp) < 8 || strlen($newmdp) > 100)
+                if($newmdp === $newmdp2)
                 {
-                    $erreur = "Erreur : Le mot de passe doit contenir entre 8 et 100 caractères, au moins un caractère spécial, une minuscule, une majuscule, un chiffre et ne doit pas contenir d'espace.";
-                } 
-                else
-                {
-                    $oldmdp = $User->getPassword();
-                    if(!password_verify($oldmdp, hash($newmdp, PASSWORD_BCRYPT)))
+                    if (strlen($newmdp) < 8 || strlen($newmdp) > 100)
                     {
-                        $erreur = "L'ancien mot de passe est incorrect.";
+                        $erreurs[] = "Erreur : Le mot de passe doit contenir entre 8 et 100 caractères, au moins un caractère spécial, une minuscule, une majuscule, un chiffre et ne doit pas contenir d'espace.";
                     } 
-                    else 
+                    else
                     {
-                        if($oldmdp == hash($newmdp, PASSWORD_BCRYPT))
+                        $newmdp = password_hash($newmdp, PASSWORD_BCRYPT);
+    
+                        $oldmdpbdd = $User->getPassword();
+    
+                        // var_dump($User);
+                        // var_dump($oldmdp, $oldmdpbdd);
+                        // exit;
+    
+                        if(!password_verify($oldmdp, $oldmdpbdd))
                         {
-                            $erreur = "Erreur : Le mot de passe ne peut pas être le même qu'avant.";
+                            $erreurs[] = "L'ancien mot de passe est incorrect.";
                         } 
                         else 
                         {
-                            try
+                            if($oldmdp == $newmdp)
                             {
-                                $User->updatePassword(hash($newmdp, PASSWORD_BCRYPT));
+                                $erreurs[] = "Erreur : Le mot de passe ne peut pas être le même qu'avant.";
                             } 
-                            catch (Exception $e) 
+                            else 
                             {
-                                $erreur = "Erreur SQL : Le mot de passe n'a pas pu être changé.";
+                                $status = $User->updatePassword($newmdp);
+    
+                                if($status)
+                                {
+                                    $success = true;
+                                }
+                                else
+                                {
+                                    $erreurs[] = "Erreur SQL : Le mot de passe n'a pas pu être changé.";
+                                }
+    
                             }
-                            $success = true;
                         }
-                    }
-                }  
+                    }  
+                } 
+                else 
+                {
+                    $erreurs[] = "Erreur : Les deux nouveaux mots de passes ne sont pas identiques.";
+                }
             } 
-            else 
+            else
             {
-                $erreur = "Erreur : Les deux nouveaux mots de passes ne sont pas identiques.";
+                $erreurs[] = "Erreur : Un champs n'est pas rempli.";
             }
+    
         } 
-        else
+        else 
         {
-            $erreur = "Erreur : Un champs n'est pas rempli.";
+            header("location:".ROOT_PATH."index.php");
         }
-
-    } 
-    else 
-    {
-        header("location:".ROOT_PATH."index.php");
     }
+    
+    
+    $data = array(
+        'erreurs' => $erreurs,
+        'success' => $success,
+    );
+    
+    $data = json_encode($data);
+    
+    header("location:".VIEWS_URL."membres/".$tpl."?data=$data");
 }
+else
+{
+    header("location:".ROOT_URL."index.php");
+}
+
+
 
 
 

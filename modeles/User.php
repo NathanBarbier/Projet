@@ -1,21 +1,24 @@
 <?php
 class User extends Modele
 {
-    protected $id;
-    protected $firstname;
-    protected $lastname;
-    protected $birth;
-    protected $password;
-    protected $email;
-    protected $idPoste;
-    protected $idEquipe;
-    protected $idOrganisation;
+    private $id;
+    private $firstname;
+    private $lastname;
+    private $birth;
+    private $password;
+    private $email;
+    private $idPoste;
+    private $idEquipe;
+    private $idOrganisation;
 
     public function __construct($id = null)
     {
         if($id != null)
         {
-            $sql = "SELECT * FROM utilisateurs WHERE idUtilisateur = ?";
+            $sql = "SELECT *"; 
+            $sql .= " FROM utilisateurs"; 
+            $sql .= " WHERE idUtilisateur = ?";
+
             $requete = $this->getBdd()->prepare($sql);
             $requete->execute([$id]);
 
@@ -190,14 +193,9 @@ class User extends Modele
 
     //! INSERT
 
-    public function create($firstname, $lastname, $birth, $idPoste, $idEquipe, $email, $idOrganisation)
+    public function create($firstname, $lastname, $birth, $idPoste, $idEquipe, $email, $idOrganisation, $mdp)
     {
         $status = array();
-        // ON CREE UN MDP TEMPORAIRE A L'UTILISATEUR
-        // $mdp = $this->generateRandomString(6);
-        // $mdptemp = $mdp;
-        $mdp = "motdepasse";
-        $mdp = password_hash($mdp, PASSWORD_BCRYPT);
                         
         $sql = "INSERT INTO utilisateurs (nom, prenom, dateNaiss, idPoste, email, idEquipe, idOrganisation, mdp) ";
         $sql .= "VALUES (?,?,?,?,?,?,?,?)";
@@ -206,16 +204,21 @@ class User extends Modele
 
         $status[] = $requete->execute([$lastname, $firstname, $birth, $idPoste, $email, $idEquipe, $idOrganisation, $mdp]);
 
-        $sql = "SELECT MAX(idUtilisateur) FROM utilisateurs";
+        $sql = "SELECT MAX(idUtilisateur) as idUser"; 
+        $sql .= " FROM utilisateurs";
+
         $requete = $this->getBdd()->prepare($sql);
         $status[] = $requete->execute();
 
-        $idUser = $requete->fetch(PDO::FETCH_ASSOC);
-        $idUser = $idUser["idUtilisateur"];
+        $User = $requete->fetch(PDO::FETCH_ASSOC);
+        $maxIdUser = $User["idUser"];
 
-        $sql = "SELECT * FROM utilisateurs WHERE idUtilisateur = ?";
+        $sql = "SELECT *"; 
+        $sql .= " FROM utilisateurs"; 
+        $sql .= " WHERE idUtilisateur = ?";
+
         $requete = $this->getBdd()->prepare($sql);
-        $status[] = $requete->execute([$idUser]);
+        $status[] = $requete->execute([$maxIdUser]);
 
 
         if(in_array(false, $status))
@@ -224,8 +227,7 @@ class User extends Modele
         }
         else
         {
-            // return $mdptemp;
-            return $mdp;
+            return true;
         }
     }
 
@@ -262,11 +264,16 @@ class User extends Modele
         $requete->execute([$idEquipe, $idUser]);
     }
 
-    public function updatePassword($password, $idUser)
+    public function updatePassword($password, $idUser = null)
     {
-        $sql = "UPDATE utilisateurs SET mdp = ? WHERE idUtilisateur = ?";
+        $idUser = $this->id ?? $idUser;
+
+        $sql = "UPDATE utilisateurs"; 
+        $sql .= " SET mdp = ?"; 
+        $sql .= " WHERE idUtilisateur = ?";
+
         $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$password, $idUser]);
+        return $requete->execute([$password, $idUser]);
     }
 
     public function updateEmail($email, $idUser)

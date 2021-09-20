@@ -167,11 +167,14 @@ class User extends Modele
 
     public function fetchByEmail($email)
     {
-        $sql = "SELECT * FROM utilisateurs WHERE email = ?";
+        $sql = "SELECT *"; 
+        $sql .= " FROM utilisateurs"; 
+        $sql .= " WHERE email = ?";
+
         $requete = $this->getBdd()->prepare($sql);
         $requete->execute([$email]);
 
-        return $requete->fetchAll(PDO::FETCH_ASSOC);
+        return $requete->fetch(PDO::FETCH_ASSOC);
     }
     
     public function fetchByLastnameAndFirstname($lastname, $firstname, $idOrganisation)
@@ -191,14 +194,17 @@ class User extends Modele
     {
         $status = array();
         // ON CREE UN MDP TEMPORAIRE A L'UTILISATEUR
-        $mdp = $this->generateRandomString(6);
-        $mdptemp = $mdp;
+        // $mdp = $this->generateRandomString(6);
+        // $mdptemp = $mdp;
+        $mdp = "motdepasse";
         $mdp = password_hash($mdp, PASSWORD_BCRYPT);
                         
         $sql = "INSERT INTO utilisateurs (nom, prenom, dateNaiss, idPoste, email, idEquipe, idOrganisation, mdp) ";
         $sql .= "VALUES (?,?,?,?,?,?,?,?)";
         $requete = $this->getBdd()->prepare($sql);
-        $status[] = $requete->execute([$firstname, $lastname, $birth, $idPoste, $email, $idEquipe, $idOrganisation, 'motdepasse']);
+
+
+        $status[] = $requete->execute([$lastname, $firstname, $birth, $idPoste, $email, $idEquipe, $idOrganisation, $mdp]);
 
         $sql = "SELECT MAX(idUtilisateur) FROM utilisateurs";
         $requete = $this->getBdd()->prepare($sql);
@@ -218,7 +224,8 @@ class User extends Modele
         }
         else
         {
-            return $mdptemp;
+            // return $mdptemp;
+            return $mdp;
         }
     }
 

@@ -277,10 +277,10 @@ class Organisation extends Modele
             if($Equipe->getChef() != null)
             {
                 $chefsEquipes[] = [
-                    "nom" => $this->getUsers()[$Equipe->getChef()]->getNomUser(),
-                    "prenom" => $this->getUsers()[$Equipe->getChef()]->getPrenomUser(),
-                    "email" => $this->getUsers()[$Equipe->getChef()]->getEmailUser(),
-                    "idUser" => $this->getUsers()[$Equipe->getChef()]->getIdUser(),  
+                    "nom" => $this->getUsers()[$Equipe->getChef()]->getNom(),
+                    "prenom" => $this->getUsers()[$Equipe->getChef()]->getPrenom(),
+                    "email" => $this->getUsers()[$Equipe->getChef()]->getEmail(),
+                    "idUser" => $this->getUsers()[$Equipe->getChef()]->getId(),  
                 ];
             }
             else
@@ -305,18 +305,18 @@ class Organisation extends Modele
             {
                 foreach($this->getUsers() as $utilisateur)
                 {
-                    if($utilisateur->getIdUser == $equipe->getChefEquipe)
+                    if($utilisateur->getId() == $equipe->getChefEquipe)
                     {
                         $infosChefEquipe[] = [
-                            "idUtilisateur" => $utilisateur->getIdUser(),
-                            "nom" => $utilisateur->getNomUser(),
-                            "prenom" => $utilisateur->getPrenomUser(),
-                            "dateNaiss" => $utilisateur->getDateNaissUser(),
-                            "mdp" => $utilisateur->getMdpUser(),
-                            "idPoste" => $utilisateur->getIdPosteUser(),
-                            "email" => $utilisateur->getEmailUser(),
-                            "idEquipe" => $utilisateur->getIdEquipeUser(),
-                            "idOrganisation" => $utilisateur->getIdOrganisationUser(),
+                            "idUtilisateur" => $utilisateur->getId(),
+                            "nom" => $utilisateur->getNom(),
+                            "prenom" => $utilisateur->getPrenom(),
+                            "dateNaiss" => $utilisateur->getDateNaiss(),
+                            "mdp" => $utilisateur->getMdp(),
+                            "idPoste" => $utilisateur->getIdPoste(),
+                            "email" => $utilisateur->getEmail(),
+                            "idEquipe" => $utilisateur->getIdEquipe(),
+                            "idOrganisation" => $utilisateur->getIdOrganisation(),
                         ];
                         return $infosChefEquipe;
                     }

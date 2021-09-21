@@ -26,7 +26,7 @@ if(!empty($data->erreurs))
 
         <div class="form-group mt-3">
             <label for="mail" class="mb-1">Addresse mail</label>
-            <input type="text" class="form-control" name="email" placeholder="Saisissez votre identifiant" maxlength="50" required>
+            <input type="text" class="form-control" name="email" placeholder="Saisissez votre identifiant" value="<?= $data->email ?? '' ?>" maxlength="50" required>
         </div>
 
         <div class="form-group mt-3">

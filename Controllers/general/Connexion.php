@@ -89,6 +89,7 @@ if($envoi)
 
 $data = array(
     'erreurs' => $erreurs,
+    'email' => $email,
 );
 
 $data = json_encode($data);

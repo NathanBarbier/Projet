@@ -115,14 +115,14 @@ if($rights === "admin")
                                             if(!$mail->send()) { 
                                                 $erreurs[] = 'Message could not be sent. Mailer Error: '.$mail->ErrorInfo; 
                                             } else { 
-                                                $success = "Le collaborateur a bien été inscrit."; 
-                                                $success .= " Un email contenant son mot de passe temporaire lui a été envoyé.";    
+                                                // $success = "Le collaborateur a bien été inscrit."; 
+                                                // $success .= " Un email contenant son mot de passe temporaire lui a été envoyé.";    
                                             } 
 
                                             // mail($email, $subject ,$mailText);
 
                                             $success = "Le collaborateur a bien été inscrit."; 
-                                            $success .= "Un email contenant son mot de passe temporaire lui a été envoyé.";
+                                            $success .= " Un email contenant son mot de passe temporaire lui a été envoyé.";
 
                                         }
                                         else 

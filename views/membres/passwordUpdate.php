@@ -3,6 +3,10 @@ require_once "layouts/entete.php";
 
 $data = json_decode(GETPOST('data'));
 
+?>
+<div class="col-9 mt-4">
+<?php
+
 if($data->success)
 {
     ?>
@@ -30,9 +34,10 @@ else
 
 // var_dump($data);
 ?>
+
     <h1>Modification du mot de passe</h1>
 
-    <a class="btn btn-primary mt-3" href="index.php">Retourner à la vue globale</a>
+    <a class="btn btn-primary mt-3" href="<?= VIEWS_URL ?>membres/index.php">Retourner à la vue globale</a>
 
     <form method="post" action="<?= CONTROLLERS_URL ?>membres/passwordUpdate.php?action=passwordUpdate">
         
@@ -56,6 +61,8 @@ else
         </div>
 
     </form>
+
+</div>
 
 <?php
 require_once "layouts/pied.php"; ?>

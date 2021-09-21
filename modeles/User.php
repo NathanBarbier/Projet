@@ -234,6 +234,19 @@ class User extends Modele
 
     //! UPDATE
 
+    public function updateInformations($firstname, $lastname, $email, $idUser = null)
+    {
+        $idUser = $this->id ?? $idUser;
+
+        $sql = "UPDATE utilisateurs";
+        $sql .= " SET prenom = ?, nom = ?, email = ?";
+        $sql .= " WHERE idUtilisateur = ?";
+
+        $requete = $this->getBdd()->prepare($sql);
+
+        return $requete->execute([$firstname, $lastname, $email, $idUser]);
+    }
+
     public function updateFirstname($firstname, $idUser)
     {
         $sql = "UPDATE utilisateurs";

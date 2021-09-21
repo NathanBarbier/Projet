@@ -79,7 +79,12 @@ if($data->deletePoste)
                                 <?php 
                                 }           
                             }
-                        } else {
+                        }
+                    }
+
+                    foreach($data->postes as $cle => $poste)
+                    {
+                        if($poste->nomPoste != "indéfini") {
                             foreach($data->nbMembresPostes as $key => $nbMembrePoste)
                             {
                                 if($poste->idPoste == $key)
@@ -181,21 +186,6 @@ if($data->deletePoste)
                 ?>
                 <div class="mt-5" id="divInfoEquipe<?=$equipe->idEquipe;?>" style="display : none">
                     <h3><strong><?=$equipe->nomEquipe;?></strong></h3>
-                    <h4>Chef d'équipe :</h4>
-                    <?php
-                    if($equipe->chefEquipe == NULL)
-                    {
-                        ?>
-                        <p>//</p>
-                    <?php
-                    } 
-                    else 
-                    {
-                        ?>
-                        <p><?=$equipe->chefEquipe;?></p>
-                    <?php
-                    }
-                    ?>
     
                     <table class="table">
                         <thead  class="titreTable">
@@ -283,10 +273,9 @@ if($data->deletePoste)
                     </th>
                 </tr>
                 <tr>
-                    <th><strong>Nom de l'équipe</strong></th>
-                    <th><strong>Nb membre</strong></th>
-                    <th><strong>Nom du chef d'équipe</strong></th>
-                    <th><strong>info</strong></th>   
+                    <th style="width: 35%;"><strong>Nom de l'équipe</strong></th>
+                    <th style="width: 30%;"><strong>Nb membre</strong></th>
+                    <th style="width: 35%;"><strong>Détails</strong></th>   
                 </tr>
             </thead>
         </table>
@@ -303,27 +292,20 @@ if($data->deletePoste)
                         {
                             ?>
                                 <tr>
-                                    <th style="width: 31%"><?=$equipe->nomEquipe;?></th>
-                                    <td style="width: 25%"><?=$nbMembreEquipe;?></td>
-                                    <?php
-                                    if($equipe->chefEquipe == NULL){
-                                    ?>
-                                        <td style="width: 40%"><div style="margin-left: 5vh" >//</div></td>
-                                    <?php
-                                    } else {
-                                    ?>
-                                        <td style="width: 40%"><?=$equipe->chefEquipe;?></td>
-                                    <?php
-                                    }
-                                    ?>
-                                    <td></td>
+                                    <td style="width: 35%"><b><?=$equipe->nomEquipe;?></b></td>
+                                    <td style="width: 30%;"><?=$nbMembreEquipe;?></td>
+                                    <td style="width: 35%;"></td>
                                 </tr>
 
                             <?php
                         }
                     }
                 } 
-                else
+            }
+
+            foreach($data->equipes as $cle => $equipe)
+            {
+                if($equipe->nomEquipe != "indéfini")
                 {
                     foreach($data->nbMembresEquipes as $key => $nbMembreEquipe)
                     {
@@ -331,28 +313,9 @@ if($data->deletePoste)
                         {
                             ?>
                                 <tr>
-                                    <th><?=$equipe->nomEquipe;?></th>
-                                    <td><?=$nbMembreEquipe;?></td>
-                                    <?php
-                                    if($equipe->chefEquipe == NULL){
-                                    ?>
-                                        <td><div style="margin-left: 5vh">//</div></td>
-                                    <?php
-                                    } else {
-                                        foreach($chefEquipes as $chefEquipe)
-                                        {
-                                            if($equipe->chefEquipe == $chefEquipe->idUtilisateur)
-                                            {
-                                                ?>
-                                                <td><?=$chefEquipe->nom. " ". $chefEquipe->prenom;?> </td>
-                                                <?php
-                                            }
-                                        }
-                                    ?>
-                                    <?php
-                                    }
-                                    ?>
-                                    <td><a onclick="afficherInfoEquipe(<?=$equipe->idEquipe;?>, <?= $data->equipeMinMax->minIdE ;?>, <?=$data->equipeMinMax->maxIdE;?>)" class="btn btn-info">Info</a></td>
+                                    <td style="width: 35%"><b><?=$equipe->nomEquipe;?></b></td>
+                                    <td style="width: 30%;"><?=$nbMembreEquipe;?></td>
+                                    <td style="width: 35%"><a onclick="afficherInfoEquipe(<?=$equipe->idEquipe;?>, <?= $data->equipeMinMax->minIdE ;?>, <?=$data->equipeMinMax->maxIdE;?>)" class="btn btn-info">Détails</a></td>
                                 </tr>
                             <?php
                         }

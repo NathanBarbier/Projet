@@ -63,7 +63,7 @@ else if($data->erreurs)
                     <?=$membre->nom;?>
                 </div>
 
-                <div id="divModifNom<?= $membre->idUtilisateur ?>" class="collapse show">
+                <div id="divModifNom<?= $membre->idUtilisateur ?>" class="collapse show mt-3">
                     <a onclick="afficherConfModifNom(<?= $membre->idUtilisateur ?>)" class="btn btn-outline-info">Modifier</a>
                 </div>
                 <form method="POST" action="<?= CONTROLLERS_URL ?>admin/listeMembres.php?action=updateLastname&idUser=<?= $membre->idUtilisateur ?>">
@@ -84,7 +84,7 @@ else if($data->erreurs)
                     <?=$membre->prenom;?>
                 </div>
 
-                <div id="divModifPrenom<?= $membre->idUtilisateur ?>" class="collapse show">
+                <div id="divModifPrenom<?= $membre->idUtilisateur ?>" class="collapse show mt-3">
                     <a onclick="afficherConfModifPrenom(<?= $membre->idUtilisateur ?>)" class="btn btn-outline-info">Modifier</a>
                 </div>
                 <form method="POST" action="<?= CONTROLLERS_URL ?>admin/listeMembres.php?action=updateFirstname&idUser=<?= $membre->idUtilisateur ?>">
@@ -128,7 +128,7 @@ else if($data->erreurs)
                     </div>
 
                     <!-- On affiche le bouton modifier l'équipe -->
-                    <div id="divModifEquipe<?= $membre->idUtilisateur ?>" class="collapse show ml-auto">
+                    <div id="divModifEquipe<?= $membre->idUtilisateur ?>" class="collapse show ml-auto mt-3">
                         <a onclick="afficherConfModifEquipe(<?= $membre->idUtilisateur ?>)" class="btn btn-outline-info">Modifier</a>
                     </div>
                     <!-- On affiche la div de confirmation de modification d'équipe -->
@@ -167,7 +167,7 @@ else if($data->erreurs)
                             <?php } ?>
                         </select>
                     </div>
-                    <div id="divModifPoste<?= $membre->idUtilisateur ?>" class="collapse show">
+                    <div id="divModifPoste<?= $membre->idUtilisateur ?>" class="collapse show mt-3">
                         <a onclick="afficherConfModifPoste(<?= $membre->idUtilisateur ?>)" class="btn btn-outline-info">Modifier</a>
                     </div>
                     <div id="divConfModifPoste<?= $membre->idUtilisateur ?>" class="collapse">
@@ -178,12 +178,12 @@ else if($data->erreurs)
                 </form>
             </td>
 
-            <td><?=$membre->email;?></td>
+            <td class="align-middle"><?= $membre->email;?></td>
 
-            <td>
+            <td class="align-middle">
                 <a href="<?= CONTROLLERS_URL ?>admin/infoMembre.php?id=<?=$membre->idUtilisateur;?>" class="btn btn-outline-primary">Fiches </a>
             </td>
-            <td>
+            <td class="align-middle">
                 <div id="divDelUser<?= $membre->idUtilisateur ?>" class="collapse show">
                     <button onclick="afficherConfDelUser(<?= $membre->idUtilisateur ?>)" class="btn btn-outline-danger">Supprimer</button>
                 </div>

@@ -30,12 +30,10 @@ if($rights === 'admin')
     $User = new User();
     $Poste = new Poste();
 
-    
     $fetchPoste = $idPoste ? $Poste->fetch($idPoste) : false;
     $nbMembresEquipes = $Organisation->CountUsersByEquipes($idOrganisation);
     $nbMembresPostes = $Organisation->CountUsersByPoste($idOrganisation);
     $equipeMinMax = $Organisation->getMinMaxIdEquipe($idOrganisation);
-    $chefEquipes = $Organisation->getInfosChefsEquipes($idOrganisation);
     
     //TODO OPTI ???
     $roles = $Role->fetchAll();
@@ -161,7 +159,6 @@ if($rights === 'admin')
         $nbMembresEquipes = $Organisation->CountUsersByEquipes($idOrganisation);
         $nbMembresPostes = $Organisation->CountUsersByPoste($idOrganisation);
         $equipeMinMax = $Organisation->getMinMaxIdEquipe($idOrganisation);
-        $chefEquipes = $Organisation->getInfosChefsEquipes($idOrganisation);
         
         $roles = $Role->fetchAll();
         $equipes = $Equipe->fetchAll($idOrganisation);
@@ -172,7 +169,6 @@ if($rights === 'admin')
         'nbMembresEquipes' => $nbMembresEquipes,
         'nbMembresPostes' => $nbMembresPostes,
         'equipeMinMax' => $equipeMinMax,
-        'chefEquipes' => $chefEquipes,
         'roles' => $roles,
         'equipes' => $equipes,
         'postes' => $postes,

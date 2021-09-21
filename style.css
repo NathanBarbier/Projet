@@ -26,10 +26,10 @@ body {
 }
 
 #tbodyEquipe{
-    height: 450px;
+    /* height: 450px; */
     overflow: auto;
-    width : 100%;
-    display: block;
+    /* width : 100%; */
+    /* display: block; */
 }
 
 #tbodyEquipeProjet{
@@ -151,5 +151,12 @@ a {
     border: 1px solid rgba(0, 0, 0, 0.125); 
     border-radius:15px; 
     background-color:#f8f9fa; 
-    height:50px;
+    height:60px;
+}
+
+.profile-sticker {
+    border: 1px solid rgba(0, 0, 0, 0.125); 
+    border-radius:15px; 
+    background-color:#f8f9fa; 
+    height:100px;
 }

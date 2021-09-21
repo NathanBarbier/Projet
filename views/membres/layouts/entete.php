@@ -66,8 +66,7 @@ if($rights == "user")
                         <div id="projetsCollapse" class="collapse">
                             <ul class="list-unstyled">
                                 <li><a class="btn btn-outline-primary w-75 mt-2" href="<?= VIEWS_URL ?>membres/projets.php">Vue d'ensemble</a></li>
-                                <li><a class="btn btn-outline-secondary w-75 mt-2" href="<?= CONTROLLERS_URL ?>membres/creationProjets.php">Création de projets</a></li>
-                                <li><a class="btn btn-outline-secondary w-75 mt-2" href="<?= CONTROLLERS_URL ?>membres/listeProjets.php">Liste des projets</a></li>
+                                <li><a class="btn btn-outline-secondary w-75 mt-2" href="<?= CONTROLLERS_URL ?>membres/map.php">Projet actuel</a></li>
                             </ul>
                         </div>
                     

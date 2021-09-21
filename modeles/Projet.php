@@ -8,7 +8,7 @@ Class Projet extends Modele
     private $dateDebut;
     private $dateRendu;
     private $etat;
-    private $chef;
+    private $tasks = array();
 
     public function __construct($idProjet = null)
     {
@@ -26,7 +26,6 @@ Class Projet extends Modele
             $this->dateRendu = $projet["DateRendu"];
             $this->dateDebut = $projet["DateDebut"];
             $this->etat = $projet["Etat"];
-            $this->chef = $projet["chefProjet"];
         }
     }
 
@@ -65,11 +64,6 @@ Class Projet extends Modele
     {
         return $this->etat;
     }
-
-    public function getChef()
-    {
-        return $this->chef;
-    }
     
 
     //! SETTER
@@ -103,71 +97,78 @@ Class Projet extends Modele
         $this->etat = $etat;
     }
 
-    public function setChef($chef)
-    {
-        $this->chef = $chef;
-    }
-
     //! UPDATE
 
     public function updateId($id)
     {
-        $sql = "UPDATE projets SET idProjet = ? WHERE idProjet =  ?";
+        $sql = "UPDATE projets";
+        $sql .= " SET idProjet = ?"; 
+        $sql .= " WHERE idProjet =  ?";
+
         $requete = $this->getBdd()->prepare($sql);
         $requete->execute([$id, $this->idProjet]);
     }
 
     public function updateNom($nom)
     {
-        $sql = "UPDATE projets SET nom = ? WHERE idProjet =  ?";
+        $sql = "UPDATE projets";
+        $sql .= " SET nom = ?"; 
+        $sql .= " WHERE idProjet =  ?";
+
         $requete = $this->getBdd()->prepare($sql);
         $requete->execute([$nom, $this->idProjet]);
     }
 
     public function updateType($type)
     {
-        $sql = "UPDATE projets SET type = ? WHERE idProjet =  ?";
+        $sql = "UPDATE projets";
+        $sql .= " SET type = ?";
+        $sql .= " WHERE idProjet =  ?";
+
         $requete = $this->getBdd()->prepare($sql);
         $requete->execute([$type, $this->idProjet]);
     }
 
     public function updateDateRendu($dateRendu)
     {
-        $sql = "UPDATE projets SET dateRendu = ? WHERE idProjet =  ?";
+        $sql = "UPDATE projets";
+        $sql .= " SET dateRendu = ?"; 
+        $sql .= " WHERE idProjet =  ?";
+
         $requete = $this->getBdd()->prepare($sql);
         $requete->execute([$dateRendu, $this->idProjet]);
     }
 
     public function updateIdClient($idClient)
     {
-        $sql = "UPDATE projets SET idClient = ? WHERE idProjet =  ?";
+        $sql = "UPDATE projets";
+        $sql .= " SET idClient = ?"; 
+        $sql .= " WHERE idProjet =  ?";
+
         $requete = $this->getBdd()->prepare($sql);
         $requete->execute([$idClient, $this->idProjet]);
     }
 
     public function updateEtat($etat)
     {
-        $sql = "UPDATE projets SET etat = ? WHERE idProjet = ?";
+        $sql = "UPDATE projets";
+        $sql .= " SET etat = ?";
+        $sql .= " WHERE idProjet = ?";
+
         $requete = $this->getBdd()->prepare($sql);
         $requete->execute([$etat, $this->idProjet]);
-    }
-
-    public function updateChef($chef)
-    {
-        $sql = "UPDATE projets SET chefProjet = ? WHERE idProjet =  ?";
-        $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$chef, $this->idProjet]);
     }
 
     //! FETCH
 
     public function fetchAll($idOrganisation)
     {
-        $sql = "SELECT idProjet, nom, type, DateDebut, DateRendu, Etat, chefProjet";
+        $sql = "SELECT idProjet, nom, type, DateDebut, DateRendu, Etat";
         $sql .= " FROM projets";
         $sql .= " INNER JOIN travaille_sur USING(idProjet)";
         $sql .= " INNER JOIN equipes USING(idEquipe)";
         $sql .= " WHERE equipes.idOrganisation = ?";
+
         $requete = $this->getBdd()->prepare($sql);
         $requete->execute([$idOrganisation]);
 
@@ -181,6 +182,7 @@ Class Projet extends Modele
         $sql .= " INNER JOIN equipes USING(idEquipe)"; 
         $sql .= " INNER JOIN projets USING(idProjet)";
         $sql .= " WHERE idEquipe = ?";
+
         $requete = $this->getBdd()->prepare($sql);
         $requete->execute([$idEquipe]);
 
@@ -189,21 +191,39 @@ Class Projet extends Modele
 
     public function fetchMaxId()
     {
-        $sql = "SELECT max(idProjet) AS maxId FROM projets";
+        $sql = "SELECT max(idProjet) AS maxId";
+        $sql .=" FROM projets";
+
         $requete = $this->getBdd()->prepare($sql);
         $requete->execute();
 
         return $requete->fetch(PDO::FETCH_ASSOC);
     }
 
+    public function fetch_members_count($projectId = null)
+    {
+        $projectId = $this->id ?? $projectId;
+
+        $sql = "SELECT COUNT(u.idUtilisateur) as membersCount";
+        $sql .= " FROM projets as p";
+        $sql .= " LEFT JOIN travaille_sur as t ON p.idProjet = t.idProjet";
+        $sql .= " LEFT JOIN appartient_a as a ON a.fk_equipe = t.idEquipe";
+        $sql .= " LEFT JOIN utilisateurs as u ON a.fk_user = u.idUtilisateur";
+
+        $requete = $this->getBdd()->prepare($sql);
+        $requete->execute([$projectId]);
+
+        return $requete->fetch(PDO::FETCH_OBJ);
+    }
 
     //! INSERT
-    public function create($titre, $type, $deadline, $idClient, $chefProjet, $description)
+    public function create($titre, $type, $deadline, $idClient, $description)
     {
-        $sql = "INSERT INTO projets (nom, type, DateDebut, DateRendu, idClient, Etat, chefProjet, description)";
+        $sql = "INSERT INTO projets (nom, type, DateDebut, DateRendu, idClient, Etat, description)";
         $sql .= " VALUES (?,?,NOW(),?,?,?,?,?)";
+
         $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$titre, $type, $deadline, $idClient, 'En cours', $chefProjet, $description]);
+        $requete->execute([$titre, $type, $deadline, $idClient, 'En cours', $description]);
     }
 
 }

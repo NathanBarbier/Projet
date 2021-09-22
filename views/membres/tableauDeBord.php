@@ -118,16 +118,19 @@ else if ($data->erreurs)
 
         <!-- user properties -->
         <div class="col-4 profile-section mt-3" style="height:87%">
+
+            <h3 class="mx-auto mt-3 text-center" style="border-bottom: black solid 1px; border-color: rgb(216, 214, 214); width: 80%">Profil</h3>
+
             <div class="text-center" style="width:150px; height:150px;margin-left:auto; margin-right:auto">
-                <img class="mt-5" src="<?= IMG_URL ?>user.png" alt="" width="100px" style="border: 2px black solid;">
+                <img class="mt-4" src="<?= IMG_URL ?>user.png" alt="" width="100px" style="border: 2px black solid;">
             </div>
 
             <div class="d-flex justify-content-center" style="height: 50%;">
 
 
 
-                <div class="mt-5 text-center w-75">
-                    <form action="<?= CONTROLLERS_URL ?>membres/profil.php?action=userUpdate" method="POST">
+                <div class="mt-4 text-center w-75">
+                    <form action="<?= CONTROLLERS_URL ?>membres/tableauDeBord.php?action=userUpdate" method="POST">
 
                         <input type="text" name="lastname" class="sticker form-control mt-4 pt-2 text-center" value="<?= $data->lastname ?>">
                         <input type="text" name="firstname" class="sticker form-control mt-4 pt-2 text-center" value="<?= $data->firstname ?>">
@@ -135,6 +138,8 @@ else if ($data->erreurs)
     
                         <button type="submit" class="w-50 mt-5 pt-2 btn btn-outline-primary text-center">Update</button>
                     </form>
+
+                    <a class="btn btn-outline-secondary mt-5" href="<?= CONTROLLERS_URL ?>membres/passwordUpdate.php">Modifier mot de passe</a>
                 <!-- <div class="mt-3 w-75"> -->
                     <?php 
                     // $data->avatar 

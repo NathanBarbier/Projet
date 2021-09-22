@@ -9,6 +9,8 @@ $explode = explode(DIRECTORY_SEPARATOR, $dir);
 $rootDir = str_replace(DIRECTORY_SEPARATOR.$explode[max(array_keys($explode))], '', $dir);
 $rootDir .= DIRECTORY_SEPARATOR;
 
+$pageName = explode("/", $url)[max(array_keys(explode("/", $url)))];
+
 $rootUrl = explode("Projet", $url)[0];
 $rootUrl .= "Projet/";
 

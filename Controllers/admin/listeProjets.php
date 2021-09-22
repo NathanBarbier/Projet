@@ -9,6 +9,9 @@ $rights = $_SESSION["habilitation"] ?? false;
 
 $Organisation = new Organisation($idOrganisation);
 
+$success = false;
+$erreurs = array();
+
 $tpl = "listeProjets.php";
 $data = new stdClass;
 
@@ -17,8 +20,11 @@ if($rights === "admin")
 
 
 
-    $data = array(
 
+    $data = array(
+        "success" => $success,
+        "erreurs" => $erreurs,
+        "currentProjects" => $currentProjects,
     );
 
     $data = json_encode($data);

@@ -18,9 +18,11 @@ $clientName = GETPOST('clientName');
 
 $rights = $_SESSION["habilitation"] ?? false;
 
+$success = false;
+$erreurs = array();
+
 if($rights == 'admin')
 {
-
     $Equipe = new Equipe();
     $Client = new Client();
     $Projet = new Projet();
@@ -28,11 +30,6 @@ if($rights == 'admin')
 
     $equipes = $Equipe->fetchAll($idOrganisation);
     $clients = $Client->fetchAll($idOrganisation);
-
-    foreach($equipes as $key => $equipe)
-    {
-        $chefsEquipes[$key][] = $Equipe->fetchChef($equipe["idEquipe"]);
-    }
 
     $maxIdProjet = $Projet->fetchMaxId()["maxId"];
 
@@ -47,61 +44,19 @@ if($rights == 'admin')
     {
         if($envoi || $idProjet)
         {
-            if($titre && $type && $description && $clientName && $chefProjet && $equipesAjoutees)
+            if($titre && $type && $description)
             {
-                $nomPrenomChefProjet = explode(" ", $chefProjet);
-                $prenomChef = $nomPrenomChefProjet[0];
-                $nomChef = $nomPrenomChefProjet[1];
+                $status = $Projet->create($titre, $type, $deadline, $description, $idOrganisation);
 
-                $idChefProjet = $User->fetchByLastnameAndFirstname($nomChef, $prenomChef, $idOrganisation)["idUtilisateur"];
-                $idClient = $Client->fetchId($clientName)["idClient"];
-
-                if($Client->checkByName($clientName))
+                if($status)
                 {
-                    // le client existe dans la bdd
-                    try 
-                    {
-                        $Projet->create($titre, $type, $deadline, $idClient, $chefProjet, $description);
-
-
-                        for($i = 0; $i < strlen($equipesProjet); $i++ )
-                        {
-                            $WorkTo->create($idProjet, $equipesAjoutees[$i]);
-                        }
-                    } 
-                    catch (exception $e) 
-                    {
-                        $erreurs[] = "Une erreur est survenue.";
-                    }
-
-                    if(empty($erreurs))
-                    {
-                        $success = true;
-                    }
-                } 
-                else 
-                {
-                    // le client n'existe pas dans la bdd
-                    try 
-                    {
-                        $Client->create($clientName);
-                        $Projet->create($titre, $type, $deadline, $idClient, $idChefProjet, $description);
-
-                        for($i = 0; $i < strlen($equipesProjet); $i++ )
-                        {
-                            $WorkTo->create($idProjet, $equipesAjoutees[$i]);
-                        }
-                    } 
-                    catch (exception $e) 
-                    {
-                        $erreurs[] = "Une erreur est survenue.";
-                    }
-
-                    if(empty($erreurs))
-                    {
-                        $success = true;
-                    }
+                    $success = "Le projet a été créé avec succès.";
                 }
+                else
+                {
+                    $erreurs[] = "Une erreur est survenue.";
+                }
+
             } 
             else 
             {
@@ -114,22 +69,16 @@ if($rights == 'admin')
         }
     }
 
-    $idProjet = $_GET["idProjet"] ?? false;
-
     $data = array(
         "success" => $success,
         "erreurs" => $erreurs,
         "equipes" => $equipes,
-        "clients" => $clients,
-        "chefsEquipes" => $chefsEquipes,
         "maxIdProjet" => $maxIdProjet,
         "idProjet" => $idProjet,
+        "titre" => $titre,
         "type" => $type,
         "deadline" => $deadline,
-        "idClient" => $idClient,
-        "chefProjet" => $chefProjet,
         "description" => $description,
-        "clientName" => $clientName
     );
 
     $data = json_encode($data);

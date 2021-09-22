@@ -8,6 +8,7 @@ Class Projet extends Modele
     private $dateDebut;
     private $dateRendu;
     private $etat;
+    private $idOrganisation;
     private $tasks = array();
 
     public function __construct($idProjet = null)
@@ -18,14 +19,15 @@ Class Projet extends Modele
             $requete = $this->getBdd()->prepare($sql);
             $requete->execute([$idProjet]);
 
-            $projet = $requete->fetch(PDO::FETCH_ASSOC);
+            $projet = $requete->fetch(PDO::FETCH_OBJ);
 
             $this->idProjet = $idProjet;
-            $this->nom = $projet["nom"];
-            $this->type = $projet["type"];
-            $this->dateRendu = $projet["DateRendu"];
-            $this->dateDebut = $projet["DateDebut"];
-            $this->etat = $projet["Etat"];
+            $this->nom = $projet->nom;
+            $this->type = $projet->type;
+            $this->dateRendu = $projet->DateRendu;
+            $this->dateDebut = $projet->DateDebut;
+            $this->etat = $projet->Etat;
+            $this->idOrganisation = $projet->fk_organisation;
         }
     }
 
@@ -63,6 +65,11 @@ Class Projet extends Modele
     public function getEtat()
     {
         return $this->etat;
+    }
+
+    public function getIdOrganisation()
+    {
+        return $this->idOrganisation;
     }
     
 
@@ -217,13 +224,21 @@ Class Projet extends Modele
     }
 
     //! INSERT
-    public function create($titre, $type, $deadline, $idClient, $description)
+    public function create($titre, $type, $deadline = NULL, $description, $idOrganisation = false)
     {
-        $sql = "INSERT INTO projets (nom, type, DateDebut, DateRendu, idClient, Etat, description)";
-        $sql .= " VALUES (?,?,NOW(),?,?,?,?,?)";
+        $idOrganisation = $idOrganisation ?? $this->getIdOrganisation();
+
+        $sql = "INSERT INTO projets (nom, type, DateDebut, DateRendu, description, fk_organisation)";
+        $sql .= " VALUES (?,?,NOW(),?,?,?)";
 
         $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$titre, $type, $deadline, $idClient, 'En cours', $description]);
-    }
 
+        try {
+            return $requete->execute([$titre, $type, $deadline, $description, $idOrganisation]);
+        }
+        catch (PDOException $e)
+        {
+            return $e->getMessage();
+        }
+    }
 }

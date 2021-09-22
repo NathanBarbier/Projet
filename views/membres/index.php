@@ -2,12 +2,6 @@
 ?>
 <div class="col-10">
 
-    <div class="mt-3">
-        <a class="btn btn-primary mx-2" href="<?= CONTROLLERS_URL ?>membres/projets.php">Projets</a>
-        <a class="btn btn-primary" href="<?= CONTROLLERS_URL ?>membres/passwordUpdate.php">Modifier mot de passe</a>
-    </div>
-
-
     <?php 
     require_once "layouts/entete.php";
     ?>
@@ -31,7 +25,7 @@
                 </a>
             </div>
             <div class="col pt-4" style="height:35vh">
-                <a href="<?= CONTROLLERS_URL ?>membres/profil.php" class="aVignette">
+                <a href="<?= CONTROLLERS_URL ?>membres/tableauDeBord.php" class="aVignette">
                     <div class=" bg-info mx-auto rounded vignette1" style="height: 85%;width: 85%;">
                         <div class="row">
                             <div class="col">
@@ -40,7 +34,7 @@
                                 </div>
                             </div>
                             <div class="col">
-                                <h4 class="mt-4">Profil</h4>
+                                <h4 class="mt-4">Tableau de bord</h4>
                             </div>
                         </div>
                     </div>

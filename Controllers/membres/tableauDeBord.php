@@ -46,7 +46,7 @@ if($rights === "user")
 
     }
     
-    $tpl = "profil.php";
+    $tpl = "tableauDeBord.php";
     
     $erreurs = array();
     $success = false;

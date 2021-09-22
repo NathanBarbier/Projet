@@ -74,7 +74,7 @@ if($rights == "user")
 
                     <!-- PROFIL -->
                     <li class="mt-2">
-                        <a href="<?= CONTROLLERS_URL ?>membres/profil.php" class="btn btn-outline-primary w-75 mt-4" >Profil</a>
+                        <a href="<?= CONTROLLERS_URL ?>membres/tableauDeBord.php" class="btn btn-outline-primary w-75 mt-4" >Tableau de bord</a>
                     </li>
                 </ul>
             </nav>

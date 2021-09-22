@@ -35,29 +35,27 @@ else
 // var_dump($data);
 ?>
 
-    <h1>Modification du mot de passe</h1>
+    <h1 class="text-center mt-4 w-50 mx-auto" style="border-bottom: rgb(216, 214, 214) solid 1px;">Modification du mot de passe</h1>
 
-    <a class="btn btn-primary mt-3" href="<?= VIEWS_URL ?>membres/index.php">Retourner à la vue globale</a>
-
-    <form method="post" action="<?= CONTROLLERS_URL ?>membres/passwordUpdate.php?action=passwordUpdate">
+    <form class="w-75 mx-auto mt-5" method="post" action="<?= CONTROLLERS_URL ?>membres/passwordUpdate.php?action=passwordUpdate">
         
-        <div class="form-group mt-3">
+        <div class="form-floating mt-3">
+            <input class="form-control" type="password" required id="oldmdp" name="oldmdp" placeholder="">
             <label for="oldmdp">Ancien mot de passe</label>
-            <input class="form-control" type="password" required id="oldmdp" name="oldmdp">
         </div>
 
-        <div class="form-group mt-3">
+        <div class="form-floating mt-3">
+            <input class="form-control" type="password" required id="newmdp" name="newmdp" placeholder="">
             <label for="newmdp">Nouveau mot de passe</label>
-            <input class="form-control" type="password" required id="newmdp" name="newmdp">
         </div>
 
-        <div class="form-group mt-3">
+        <div class="form-floating mt-3">
+            <input class="form-control" type="password" required id="newmdp2" name="newmdp2" placeholder="">
             <label for="newdmp2">Confirmer nouveau mot de passe</label>
-            <input class="form-control" type="password" required id="newmdp2" name="newmdp2">
         </div>
 
-        <div class="form-group mt-3">
-            <button type="submit" class="btn btn-primary" name="envoi" value="1">Confirmer</button>
+        <div class="mt-5 text-center">
+            <button type="submit" class="w-25 btn btn-outline-primary" name="envoi" value="1" placeholder="">Confirmer</button>
         </div>
 
     </form>

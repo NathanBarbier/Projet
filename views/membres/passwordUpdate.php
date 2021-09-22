@@ -31,8 +31,6 @@ else
         <?php
     }
 }
-
-// var_dump($data);
 ?>
 
     <h1 class="text-center mt-4 w-50 mx-auto" style="border-bottom: rgb(216, 214, 214) solid 1px;">Modification du mot de passe</h1>

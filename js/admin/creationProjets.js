@@ -9,10 +9,8 @@
         document.getElementById('inputEquipesAjoutees').value = equipesAjoutees;
         var identifiantEquipe = "equipe" + idEquipe;
         var identifiantEquipeProjet = "equipeProjet" + idEquipe;
-        var identifiantSelectChefEquipe = "selectChefEquipe" + idEquipe;
         document.getElementById(identifiantEquipe).classList.remove("show");
         document.getElementById(identifiantEquipeProjet).classList.add("show");
-        document.getElementById(identifiantSelectChefEquipe).classList.add("show");
     }
 
     function retirerEquipe(idEquipe)
@@ -21,10 +19,8 @@
         document.getElementById('inputEquipesAjoutees').value = equipesAjoutees;
         var identifiantEquipe = "equipe" + idEquipe;
         var identifiantEquipeProjet = "equipeProjet" + idEquipe;
-        var identifiantSelectChefEquipe = "selectChefEquipe" + idEquipe;
         document.getElementById(identifiantEquipe).classList.add("show");
         document.getElementById(identifiantEquipeProjet).classList.remove("show");
-        document.getElementById(identifiantSelectChefEquipe).classList.remove("show");
     }
 
     function verifClient(clients, checkClient, imgCheckClient)

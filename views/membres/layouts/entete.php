@@ -16,7 +16,7 @@ if($rights == "user")
     <head>
         <meta charset="UTF-8">
 
-        <title>Zi Project</title>
+        <title>Stories Helper</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
         <link rel="stylesheet" href="<?= ROOT_URL ?>style.css">
 
@@ -24,9 +24,9 @@ if($rights == "user")
     <body style="overflow:hidden">
     <nav class="navbar navbar-dark navbar-expand-md bg-dark">
 
-        <a class="navbar-brand" href="<?= ROOT_URL ?>index.php">
-            <img src="<?= IMG_URL ?>logo.png" width="30" height="30" class="d-inline-block align-top" alt="">
-            Projet gestion projets
+        <a class="navbar-brand mb-1" href="<?= ROOT_URL ?>index.php">
+            <img src="<?= IMG_URL ?>logo.png" width="35" height="35" class="d-inline-block align-top ms-3 me-2" alt="">
+            Stories Helper
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>

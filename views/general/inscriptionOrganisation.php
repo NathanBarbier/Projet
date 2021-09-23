@@ -1,14 +1,12 @@
 <?php
 require_once "layouts/entete.php";
 
-$data = json_decode(GETPOST('data'));
-
-if(!empty($data->erreurs))
+if(!empty($erreurs))
 {
     ?>
     <div class="alert alert-danger">
     <?php
-    foreach($data->erreurs as $erreur)
+    foreach($erreurs as $erreur)
     {
         echo $erreur . "<br>";
     }
@@ -17,7 +15,7 @@ if(!empty($data->erreurs))
     <?php
 }
 
-if(!empty($data->success))
+if(!empty($success))
 {
     ?>
      <div class="alert alert-success">

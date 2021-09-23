@@ -1,8 +1,6 @@
 <?php
 require_once "traitements/header.php";
 
-$data = !empty($_GET["data"]) ? json_decode($data) : null;
-
 $rights = $_SESSION["habilitation"] ?? false;
 $email = $_SESSION["email"] ?? false;
 
@@ -21,6 +19,6 @@ if($rights === "user")
 if(!$connected)
 {
     // echo VIEWS_PATH."general/connexion.php";
-    header("Location:".VIEWS_URL."general/connexion.php");
+    header("Location:".CONTROLLERS_URL."general/connexion.php");
     // header("Location:views/general/connexion.php");
 }

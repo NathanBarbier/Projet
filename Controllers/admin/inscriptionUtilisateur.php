@@ -55,7 +55,7 @@ if($rights === "admin")
     $erreurs = array();
     $success = false;
 
-    $data = new stdClass;
+    // $data = new stdClass;
 
     $tpl = "inscriptionUtilisateur.php";
 
@@ -167,17 +167,7 @@ if($rights === "admin")
         } 
     }
 
-
-    $data = array(
-        "success" => $success,
-        "erreurs" => $erreurs,
-        "postes" => $postes,
-        "equipes" => $equipes
-    );
-    
-    $data = json_encode($data);
-    
-    header("location:".VIEWS_URL."admin/".$tpl."?data=$data");
+    require_once VIEWS_PATH."admin/".$tpl;
 }
 else
 {

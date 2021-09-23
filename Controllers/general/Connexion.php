@@ -87,21 +87,13 @@ if($envoi)
 
 } 
 
-$data = array(
-    'erreurs' => $erreurs,
-    'email' => $email,
-);
 
-$data = json_encode($data);
 
-// var_dump($success);
-// exit;
-
-if(!$success)
+if($success)
 {
-    header("location:".VIEWS_URL."general/".$tpl."?data=$data");
+    header("location:".ROOT_URL."index.php");
 }
 else
 {
-    header("location:".ROOT_URL."index.php?data=$data");
+    require_once VIEWS_PATH."general/".$tpl;
 }

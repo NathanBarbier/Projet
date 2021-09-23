@@ -69,21 +69,7 @@ if($rights == 'admin')
         }
     }
 
-    $data = array(
-        "success" => $success,
-        "erreurs" => $erreurs,
-        "equipes" => $equipes,
-        "maxIdProjet" => $maxIdProjet,
-        "idProjet" => $idProjet,
-        "titre" => $titre,
-        "type" => $type,
-        "deadline" => $deadline,
-        "description" => $description,
-    );
-
-    $data = json_encode($data);
-
-    header("location:".VIEWS_URL."admin/".$tpl."?data=$data");
+    require_once VIEWS_PATH."admin/".$tpl;
 
 } 
 else 

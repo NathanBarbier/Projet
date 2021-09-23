@@ -42,17 +42,8 @@ if($rights === 'admin')
     
     foreach($equipes as $key => $equipe)
     {
-        $membresEquipes[$key][] = $User->fetchByEquipe($equipe["idEquipe"]);
-        $projetsEquipes[$key][] = $Projet->fetchByEquipe($equipe["idEquipe"]);
+        $projetsEquipes[$key][] = $Projet->fetchByEquipe($equipe->idEquipe);
     }
-    
-    foreach($membresEquipes as $equipekey => $equipe)
-    {
-        foreach($equipe as $membrekey => $membre)
-        {
-            $membresEquipes[$equipekey][$membrekey]["poste"] = $Poste->fetch($membre[$membrekey]["idPoste"]);
-        }
-    }   
     
     if($action == "deletePoste")
     {
@@ -164,27 +155,8 @@ if($rights === 'admin')
         $equipes = $Equipe->fetchAll($idOrganisation);
         $postes = $Poste->fetchAll($idOrganisation);
     }
-    
-    $data = array(
-        'nbMembresEquipes' => $nbMembresEquipes,
-        'nbMembresPostes' => $nbMembresPostes,
-        'equipeMinMax' => $equipeMinMax,
-        'roles' => $roles,
-        'equipes' => $equipes,
-        'postes' => $postes,
-        'membresEquipes' => $membresEquipes, 
-        'projetsEquipes' => $projetsEquipes,
-        'fetchPoste' => $fetchPoste,
-        'erreurs' => $erreurs,
-        'success' => $success,
-        'deletePoste' => $deletePoste,
-        'updatePoste' => $updatePoste,
-        'idPoste' => $idPoste
-    );
 
-    $data = json_encode($data);
-    
-    header("location:".VIEWS_URL."admin/".$tpl."?data=$data");
+    require_once VIEWS_PATH."admin/".$tpl;
 }
 else
 {

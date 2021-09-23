@@ -22,18 +22,18 @@ class Organisation extends Modele
             $requete = $this->getBdd()->prepare($sql);
             $requete->execute([$id]);
 
-            $Organisation = $requete->fetch(PDO::FETCH_ASSOC);
+            $Organisation = $requete->fetch(PDO::FETCH_OBJ);
             
             $this->id = $id;
-            $this->nom = $Organisation["nom"];
-            $this->email = $Organisation["email"];
+            $this->nom = $Organisation->nom;
+            $this->email = $Organisation->email;
 
             $Equipe = new Equipe();
             $equipes = $Equipe->fetchAll($this->id);
 
             foreach($equipes as $equipe)
             {
-                $ObjetEquipe = new Equipe($equipe["idEquipe"]);
+                $ObjetEquipe = new Equipe($equipe->idEquipe);
                 $this->equipes[] = $ObjetEquipe; 
             }
 
@@ -42,7 +42,7 @@ class Organisation extends Modele
 
             foreach($utilisateurs as $utilisateur)
             {
-                $ObjetUtilisateur = new User($utilisateur['idUtilisateur']);
+                $ObjetUtilisateur = new User($utilisateur->idUtilisateur);
                 $this->utilisateurs[] = $ObjetUtilisateur;
             }
 
@@ -50,23 +50,15 @@ class Organisation extends Modele
             $postes = $Poste->fetchAll($this->id);
             foreach($postes as $poste)
             {
-                $ObjetPoste = new Poste($poste['idPoste']);
+                $ObjetPoste = new Poste($poste->idPoste);
                 $this->postes[] = $ObjetPoste;
-            }
-
-            $Client = new Client();
-            $clients = $Client->fetchAll($this->id);
-            foreach($clients as $client)
-            {
-                $ObjetClient = new Client($client['idClient']);
-                $this->clients[] = $ObjetClient;
             }
 
             $Projet = new Projet();
             $projets = $Projet->fetchAll($this->id);
             foreach($projets as $projet)
             {
-                $ObjetProjet = new Projet($projet['idProjet']);
+                $ObjetProjet = new Projet($projet->idProjet);
                 $this->projets[] = $ObjetProjet; 
             }
         }
@@ -327,24 +319,24 @@ class Organisation extends Modele
 
     public function getMinMaxIdEquipe()
     {
-        $extremes = [];
+        $extremes = new stdClass;
         foreach($this->getEquipes() as $cle => $Equipe)
         {
             $IdEquipe = $Equipe->getId();
             if($cle == 0)
             {
-                $extremes["minIdE"] = $IdEquipe;
-                $extremes["maxIdE"] = $IdEquipe;
+                $extremes->minIdE = $IdEquipe;
+                $extremes->maxIdE = $IdEquipe;
             }
             else
             {
-                if($IdEquipe > $extremes["maxIdE"])
+                if($IdEquipe > $extremes->maxIdE)
                 {
-                    $extremes["maxIdE"] = $IdEquipe;
+                    $extremes->maxIdE = $IdEquipe;
                 }
-                if($IdEquipe < $extremes["minIdE"])
+                if($IdEquipe < $extremes->minIdE)
                 {
-                    $extremes["minIdE"] = $IdEquipe;
+                    $extremes->minIdE = $IdEquipe;
                 }
             }
             

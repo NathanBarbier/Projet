@@ -103,16 +103,9 @@ if($rights === 'user')
             header("location:".ROOT_PATH."index.php");
         }
     }
+
     
-    
-    $data = array(
-        'erreurs' => $erreurs,
-        'success' => $success,
-    );
-    
-    $data = json_encode($data);
-    
-    header("location:".VIEWS_URL."membres/".$tpl."?data=$data");
+    require_once VIEWS_PATH."membres/".$tpl;
 }
 else
 {

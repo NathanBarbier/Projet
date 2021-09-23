@@ -1,5 +1,5 @@
 <?php
-require_once "../../traitements/header.php";
+// require_once "../../traitements/header.php";
 
 $rights = $_SESSION["habilitation"] ?? false;
 
@@ -55,7 +55,7 @@ if($rights !== "admin")
 
                         <div id="equipesCollapse" class="collapse">
                             <ul class="list-unstyled">
-                                <li><a class="btn btn-outline-primary w-75 mt-2" href="<?= VIEWS_URL ?>admin/collaborateurs.php">Vue d'ensemble</a></li>
+                                <li><a class="btn btn-outline-primary w-75 mt-2" href="<?=CONTROLLERS_URL ?>admin/collaborateurs.php">Vue d'ensemble</a></li>
                                 <li><a class="btn btn-outline-secondary w-75 mt-2" href="<?= CONTROLLERS_URL ?>admin/inscriptionUtilisateur.php">Inscriptions</a></li>
                                 <li><a class="btn btn-outline-secondary w-75 mt-2" href="<?= CONTROLLERS_URL ?>admin/listeMembres.php">Liste des membres</a></li>
                                 <li><a class="btn btn-outline-secondary w-75 mt-2" href="<?= CONTROLLERS_URL ?>admin/postesEquipes.php">Postes et Équipes</a></li>
@@ -68,7 +68,7 @@ if($rights !== "admin")
 
                         <div id="organisationCollapse" class="collapse">
                             <ul class="list-unstyled">
-                                <li><a class="btn btn-outline-primary w-75 mt-2" href="<?= VIEWS_URL ?>admin/organisation.php">Vue d'ensemble</a></li>
+                                <li><a class="btn btn-outline-primary w-75 mt-2" href="<?= CONTROLLERS_URL ?>admin/organisation.php">Vue d'ensemble</a></li>
                                 <li><a class="btn btn-outline-secondary w-75 mt-2" href="<?= CONTROLLERS_URL ?>admin/gestionOrganisation.php">Gestion organisation</a></li>
                             </ul>
                         </div>
@@ -80,7 +80,7 @@ if($rights !== "admin")
 
                         <div id="projetsCollapse" class="collapse">
                             <ul class="list-unstyled">
-                                <li><a class="btn btn-outline-primary w-75 mt-2" href="<?= VIEWS_URL ?>admin/projets.php">Vue d'ensemble</a></li>
+                                <li><a class="btn btn-outline-primary w-75 mt-2" href="<?= CONTROLLERS_URL ?>admin/projets.php">Vue d'ensemble</a></li>
                                 <li><a class="btn btn-outline-secondary w-75 mt-2" href="<?= CONTROLLERS_URL ?>admin/creationProjets.php">Création de projets</a></li>
                                 <li><a class="btn btn-outline-secondary w-75 mt-2" href="<?= CONTROLLERS_URL ?>admin/listeProjets.php">Liste des projets</a></li>
                             </ul>

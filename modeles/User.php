@@ -156,7 +156,7 @@ class User extends Modele
         $requete = $this->getBdd()->prepare($sql);
         $requete->execute([$idOrganisation]);
         
-        return $requete->fetchAll(PDO::FETCH_ASSOC);
+        return $requete->fetchAll(PDO::FETCH_OBJ);
     }
 
     public function fetchByEquipe($idEquipe)

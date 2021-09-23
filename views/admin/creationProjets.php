@@ -1,23 +1,21 @@
 <?php
 require_once "layouts/entete.php"; 
-
-$data = json_decode(GETPOST('data'));
 ?>
 <div class="col-10 mt-4">
 <?php
-if($data->success)
+if($success)
 {
     ?>
     <div class="alert alert-success">
-        <?= $data->success ?>
+        <?= $success ?>
     </div>
     <?php
 }
-else if ($data->erreurs)
+else if ($erreurs)
 { ?>
     <div class="alert alert-danger">
     <?php
-    foreach($data->erreurs as $erreur)
+    foreach($erreurs as $erreur)
     {
         echo $erreur . "<br>";
     }
@@ -29,24 +27,24 @@ else if ($data->erreurs)
     <h2>Création de projet</h2>
     <div class="row mt-4">
         <div class="col-4">
-            <form method="POST" action="<?= CONTROLLERS_URL ?>admin/creationProjets.php?action=addProjet&idProjet=<?= $data->idProjet ?? '' ?>">
+            <form method="POST" action="<?= CONTROLLERS_URL ?>admin/creationProjets.php?action=addProjet&idProjet=<?= $idProjet ?? '' ?>">
                 <div class="form-floating mb-3">
-                    <input required class="form-control" type="text" name="titre" id="titre-id" placeholder="Titre du projet" value="<?= $data->titre ?? '' ?>">
+                    <input required class="form-control" type="text" name="titre" id="titre-id" placeholder="Titre du projet" value="<?= $titre ?? '' ?>">
                     <label for="titre">Titre du projet</label>
                 </div>
 
                 <div class="form-floating mb-3">
-                    <input required class="form-control" type="text" name="type" id="type-id" placeholder="Type du projet" value="<?= $data->type ?? '' ?>">
+                    <input required class="form-control" type="text" name="type" id="type-id" placeholder="Type du projet" value="<?= $type ?? '' ?>">
                     <label for="type">Type du projet</label>
                 </div>
 
                 <div class="form-floating mb-3">
-                    <input class="form-control" type="date" name="deadline" id="deadline-id" placeholder="Deadline du projet" value="<?= $data->deadline ?? '' ?>">
+                    <input class="form-control" type="date" name="deadline" id="deadline-id" placeholder="Deadline du projet" value="<?= $deadline ?? '' ?>">
                     <label for="deadline">DeadLine</label>
                 </div>
 
                 <div class="form-floating mb-3">
-                    <textarea required class="form-control" name="description" id="description-id" placeholder="Description" maxlength="255"><?= $data->description ?? '' ?></textarea>
+                    <textarea required class="form-control" name="description" id="description-id" placeholder="Description" maxlength="255"><?= $description ?? '' ?></textarea>
                     <label for="description">Description</label>
                 </div>
 
@@ -77,7 +75,7 @@ else if ($data->erreurs)
                             <select class="form-control" name="" required>
                                 <option selected>undefined</option>
                                 <?php 
-                                foreach($data->equipes as $key => $equipe)
+                                foreach($equipes as $key => $equipe)
                                 {
                                     ?>
                                     <option class="collapse" id="">undefined</option>
@@ -106,7 +104,7 @@ else if ($data->erreurs)
                                         <th>Options</th>
                                     </tr>
                                     <?php 
-                                    foreach($data->equipes as $key => $equipe)
+                                    foreach($equipes as $key => $equipe)
                                     {
                                         ?>
                                         <tr class="collapse" id="equipeProjet<?= $equipe->idEquipe ?>">
@@ -135,7 +133,7 @@ else if ($data->erreurs)
                                         <th>Options</th>
                                     </tr>
                                     <?php 
-                                    foreach($data->equipes as $key => $equipe)
+                                    foreach($equipes as $key => $equipe)
                                     {
                                         ?>
                                         <tr class="collapse show" id="equipe<?= $equipe->idEquipe ?>">

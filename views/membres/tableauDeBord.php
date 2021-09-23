@@ -1,25 +1,23 @@
-<?php require_once "layouts/entete.php";
-
-$data = json_decode(GETPOST('data'));
-
+<?php 
+require_once "layouts/entete.php";
 ?>
 
 
 <div class="col-10 mt-3" style="height: 100%;">
 <?php
 
-if($data->success)
+if($success)
 { ?>
     <div class="alert alert-success mx-3">
-        <?= $data->success ?>
+        <?= $success ?>
     </div>
     <?php 
 }
-else if ($data->erreurs)
+else if ($erreurs)
 { ?>
     <div class="alert alert-danger mx-3">
         <?php 
-        foreach($data->erreurs as $erreur)
+        foreach($erreurs as $erreur)
         {
             echo $erreur . "<br>";
         }
@@ -41,9 +39,9 @@ else if ($data->erreurs)
 
                 <div style="height: 80%; overflow: auto">
                     <?php 
-                    if($data->userProjects)
+                    if($userProjects)
                     {
-                        foreach($data->userProjects as $project)
+                        foreach($userProjects as $project)
                         {
                         ?>
                         <div>
@@ -97,15 +95,15 @@ else if ($data->erreurs)
                 
                 <div class="col-3 sticker text-center pt-2 mt-3">
                     <b>Poste : </b>
-                    <?= $data->nomPoste; ?>
+                    <?= $nomPoste; ?>
                 </div>
                 <!-- <div class="col-3 sticker text-center pt-2 mt-3">
                     <b>Equipe : </b>
-                    <?= $data->nomEquipe; ?>
+                    <?= $nomEquipe; ?>
                 </div> -->
                 <div class="col-3 sticker text-center pt-2 mt-3">
                     <b>Role : </b>
-                    <?= $data->role; ?>
+                    <?= $role; ?>
                 </div>
                 <?php
 
@@ -132,9 +130,9 @@ else if ($data->erreurs)
                 <div class="mt-4 text-center w-75">
                     <form action="<?= CONTROLLERS_URL ?>membres/tableauDeBord.php?action=userUpdate" method="POST">
 
-                        <input type="text" name="lastname" class="sticker form-control mt-4 pt-2 text-center" value="<?= $data->lastname ?>">
-                        <input type="text" name="firstname" class="sticker form-control mt-4 pt-2 text-center" value="<?= $data->firstname ?>">
-                        <input type="email" name="email" class="sticker form-control mt-4 pt-2 text-center" value="<?= $data->email ?>">
+                        <input type="text" name="lastname" class="sticker form-control mt-4 pt-2 text-center" value="<?= $lastname ?>">
+                        <input type="text" name="firstname" class="sticker form-control mt-4 pt-2 text-center" value="<?= $firstname ?>">
+                        <input type="email" name="email" class="sticker form-control mt-4 pt-2 text-center" value="<?= $email ?>">
     
                         <button type="submit" class="w-50 mt-5 pt-2 btn btn-outline-primary text-center">Update</button>
                     </form>
@@ -142,7 +140,7 @@ else if ($data->erreurs)
                     <a class="btn btn-outline-secondary mt-5" href="<?= CONTROLLERS_URL ?>membres/passwordUpdate.php">Modifier mot de passe</a>
                 <!-- <div class="mt-3 w-75"> -->
                     <?php 
-                    // $data->avatar 
+                    // $avatar 
                     ?>
                 <!-- </div> -->
                 </div>

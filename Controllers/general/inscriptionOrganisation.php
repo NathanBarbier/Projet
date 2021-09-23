@@ -18,9 +18,11 @@ $success = false;
 
 $data = array();
 
+$tpl = "inscriptionOrganisation.php";
+
+
 if($action == "inscriptionOrg")
 {
-    $tpl = "general/inscriptionOrganisation.php";
     
     if($envoi) 
     {
@@ -80,13 +82,7 @@ if($action == "inscriptionOrg")
     }
 }
 
-$data = array(
-    "success" => $success,
-    "erreurs" => $erreurs,
-);
 
-$data = json_encode($data);
-
-header("location:".VIEWS_URL.$tpl."?data=$data");
+require_once VIEWS_PATH."general/".$tpl;
 
 ?>

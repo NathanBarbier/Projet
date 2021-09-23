@@ -1,29 +1,26 @@
 <?php 
 require_once "layouts/entete.php";
-
-$data = json_decode(GETPOST('data'));
-
 ?>
 
 <div class="col-9 container mt-5">
 
 <?php
-if($data->success)
+if($success)
 {
     ?>
     <div class="alert alert-success">
     <?php
-        echo $data->success;
+        echo $success;
     ?>
     </div>
     <?php
 }
-else if($data->erreurs)
+else if($erreurs)
 {
     ?>
     <div class="alert alert-danger">
     <?php
-    foreach($data->erreurs as $erreur)
+    foreach($erreurs as $erreur)
     {
         echo $erreur . "<br>";
     }
@@ -40,22 +37,22 @@ else if($data->erreurs)
         <form method="post" action="<?= CONTROLLERS_URL ?>admin/inscriptionUtilisateur.php?action=signup">
                 
             <div class="form-floating mt-3 mb-3">
-                <input class="form-control" type="email" name="email" id="email" placeholder="adresse email" value="<?= $data->email ?? ""?>"  required>
+                <input class="form-control" type="email" name="email" id="email" placeholder="adresse email" value="<?= $email ?? ""?>"  required>
                 <label for="email">Adresse email</label>
             </div>
 
             <div class="form-floating mb-3">
-                <input class="form-control" type="text" name="lastname" id="lastname" placeholder="Nom" value="<?= $data->lastname ?? ""?>"  required>
+                <input class="form-control" type="text" name="lastname" id="lastname" placeholder="Nom" value="<?= $lastname ?? ""?>"  required>
                 <label for="nom">Nom</label>
             </div>
 
             <div class="form-floating mb-3">
-                <input class="form-control" type="text" name="firstname" id="firstname" placeholder="Prénom" value="<?= $data->firstname ?? ""?>"  required>
+                <input class="form-control" type="text" name="firstname" id="firstname" placeholder="Prénom" value="<?= $firstname ?? ""?>"  required>
                 <label for="prenom">Prénom</label>
             </div>
             
             <div class="form-floating mb-3">
-                <input class="form-control" type="date" name="birth" id="birth" placeholder="AAAA-MM-JJ" value="<?= $data->birth ?? ""?>"  required>
+                <input class="form-control" type="date" name="birth" id="birth" placeholder="AAAA-MM-JJ" value="<?= $birth ?? ""?>"  required>
                 <label for="dateNaiss">Date de naissance</label>
             </div>
 
@@ -64,10 +61,11 @@ else if($data->erreurs)
                     <label for="idPoste">Sélectionnez un poste</label>
                     <select class="form-control col text-center" name="idPoste" id="idPoste">
                         <?php
-                            if($data->postes)
+                            if($postes)
                             {
-                                foreach($data->postes as $poste)
-                                {?>
+                                foreach($postes as $poste)
+                                {
+                                    ?>
                                     <option value="<?= $poste->idPoste ?>"><?= $poste->nomPoste ?></option>
                                 <?php
                                 }
@@ -78,9 +76,9 @@ else if($data->erreurs)
                     <label for="idEquipe">Sélectionnez une équipe</label>
                     <select class="form-control col text-center" name="idEquipe" id="idEquipe">
                         <?php    
-                        if($data->equipes)
+                        if($equipes)
                         {
-                            foreach($data->equipes as $equipe)
+                            foreach($equipes as $equipe)
                             { ?>
                                 <option value="<?= $equipe->idEquipe ?>"><?= $equipe->nomEquipe ?></option>
                             <?php

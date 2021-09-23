@@ -13,23 +13,37 @@ $success = false;
 $erreurs = array();
 
 $tpl = "listeProjets.php";
-$data = new stdClass;
+// $data = new stdClass;
 
 if($rights === "admin")
 {
 
+    //TODO récuperer les projets actuels en rapport avec l'organisation
 
+    $Project = new Projet();
 
+    var_dump($idOrganisation);
 
-    $data = array(
-        "success" => $success,
-        "erreurs" => $erreurs,
-        "currentProjects" => $currentProjects,
-    );
+    $Project->setIdOrganisation($idOrganisation);
 
-    $data = json_encode($data);
+    $currentProjects = $Project->fetchAll();
 
-    header("location:".VIEWS_URL."admin/".$tpl."?data=$data");
+    foreach($currentProjects as $key => $project)
+    {
+        $projectId = $project->idProjet;
+
+        // Tâches à faire
+        $Task = new Task();
+        $todoCounter = $Task->fetchCountTodo($projectId);
+        $currentProjects[$key]->todoCounter = $todoCounter;
+
+        // Tâches en cours
+        $progressCounter = $Task->fetchCountInProgress($projectId);
+        $currentProjects[$key]->progressCounter = $progressCounter;
+
+    }
+
+    require_once VIEWS_PATH."admin/".$tpl;
 }
 else
 {

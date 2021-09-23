@@ -154,9 +154,22 @@ a {
     height:60px;
 }
 
+.sticker-dark {
+    border: 1px solid rgba(0, 0, 0, 0.125); 
+    border-radius:15px; 
+    background-color: rgba(42, 165, 214, 0.125);
+    height:60px;
+}
+
 .profile-sticker {
     border: 1px solid rgba(0, 0, 0, 0.125); 
     border-radius:15px; 
     background-color:#f8f9fa; 
     height:100px;
+}
+
+.overflow-x {
+    overflow-x: auto; 
+    overflow-y: hidden;
+    white-space:nowrap;
 }

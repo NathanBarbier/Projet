@@ -3,7 +3,7 @@
 require_once "../../traitements/header.php";
 
 session_destroy();
-header("location:".VIEWS_URL."general/connexion.php");
+header("location:".CONTROLLERS_URL."general/connexion.php");
 
 
 ?>

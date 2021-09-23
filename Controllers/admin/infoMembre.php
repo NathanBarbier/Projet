@@ -10,20 +10,9 @@ if($rights === "admin")
     
     $User = new User($idUser);
 
-    
-    $data = new stdClass;
-    
     $tpl = "infoMembre.php";
-    
 
-    
-    $data = array(
-        
-    );
-    
-    $data = json_encode($data);
-    
-    header("location:".VIEWS_URL."admin/".$tpl."?data=$data");
+    require_once VIEWS_PATH."admin/".$tpl;
 }
 else
 {

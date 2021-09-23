@@ -7,7 +7,7 @@ Class Projet extends Modele
     private $type;
     private $dateDebut;
     private $dateRendu;
-    private $etat;
+    private $description;
     private $idOrganisation;
     private $tasks = array();
 
@@ -15,19 +15,29 @@ Class Projet extends Modele
     {
         if($idProjet !== null)
         {
-            $sql = "SELECT * FROM projets WHERE idProjet = ?";
+            $sql = "SELECT p.idProjet, p.nom, p.type, p.DateDebut, p.DateRendu, p.fk_organisation, p.description";
+            $sql .= " FROM projets AS p";
+            $sql .= " WHERE p.idProjet = ?";
+
             $requete = $this->getBdd()->prepare($sql);
             $requete->execute([$idProjet]);
 
-            $projet = $requete->fetch(PDO::FETCH_OBJ);
+            $Projet = $requete->fetch(PDO::FETCH_OBJ);
 
-            $this->idProjet = $idProjet;
-            $this->nom = $projet->nom;
-            $this->type = $projet->type;
-            $this->dateRendu = $projet->DateRendu;
-            $this->dateDebut = $projet->DateDebut;
-            $this->etat = $projet->Etat;
-            $this->idOrganisation = $projet->fk_organisation;
+            // var_dump($Projet);
+            // exit;
+
+            if($Projet != false)
+            {
+                $this->id = $idProjet;
+                $this->nom = $Projet->nom;
+                $this->type = $Projet->type;
+                $this->dateRendu = $Projet->DateRendu;
+                $this->dateDebut = $Projet->DateDebut;
+                $this->description = $Projet->description;
+                $this->idOrganisation = $Projet->fk_organisation;
+            }
+                
         }
     }
 
@@ -57,23 +67,18 @@ Class Projet extends Modele
         return $this->dateDebut;
     }
 
-    public function getIdClient()
-    {
-        return $this->idClient;
-    }
-
-    public function getEtat()
-    {
-        return $this->etat;
-    }
-
     public function getIdOrganisation()
     {
         return $this->idOrganisation;
     }
-    
+
+    public function getDescritpion()
+    {
+        return $this->description;
+    }
 
     //! SETTER
+
     public function setId($id)
     {
         $this->id = $id;
@@ -94,15 +99,11 @@ Class Projet extends Modele
         $this->dateRendu = $dateRendu;
     }
 
-    public function setIdClient($idClient)
+    public function setIdOrganisation($idOrganisation)
     {
-        $this->idClient = $idClient;
+        $this->idOrganisation = $idOrganisation;
     }
 
-    public function setEtat($etat)
-    {
-        $this->etat = $etat;
-    }
 
     //! UPDATE
 
@@ -168,26 +169,39 @@ Class Projet extends Modele
 
     //! FETCH
 
-    public function fetchAll($idOrganisation)
+    public function fetchAll($idOrganisation = null)
     {
-        $sql = "SELECT idProjet, nom, type, DateDebut, DateRendu, Etat";
-        $sql .= " FROM projets";
-        $sql .= " INNER JOIN travaille_sur USING(idProjet)";
-        $sql .= " INNER JOIN equipes USING(idEquipe)";
-        $sql .= " WHERE equipes.idOrganisation = ?";
+        if($idOrganisation == null)
+        {
+            $idOrganisation = $this->idOrganisation;
+        }
+
+        // $idOrganisation = $idOrganisation ?? $this->idOrganisation;
+
+        $sql = "SELECT p.idProjet, p.nom, p.type, p.DateDebut, p.DateRendu, p.description, p.fk_organisation";
+        $sql .= " FROM projets AS p";
+        $sql .= " WHERE p.fk_organisation = ?";
+
+        // var_dump($idOrganisation);
+        // exit;
 
         $requete = $this->getBdd()->prepare($sql);
         $requete->execute([$idOrganisation]);
 
-        return $requete->fetchAll(PDO::FETCH_ASSOC);
+        $lines = $requete->fetchAll(PDO::FETCH_OBJ);
+
+        // var_dump($lines);
+        // exit;
+
+        return $lines;
     }
 
     public function fetchByEquipe($idEquipe)
     {
-        $sql = "SELECT equipes.nomEquipe, projets.nom, projets.type";
+        $sql = "SELECT e.nomEquipe, p.nom, p.type";
         $sql .= " FROM travaille_sur";
-        $sql .= " INNER JOIN equipes USING(idEquipe)"; 
-        $sql .= " INNER JOIN projets USING(idProjet)";
+        $sql .= " INNER JOIN equipes AS e USING(idEquipe)"; 
+        $sql .= " INNER JOIN projets AS p USING(idProjet)";
         $sql .= " WHERE idEquipe = ?";
 
         $requete = $this->getBdd()->prepare($sql);
@@ -227,18 +241,28 @@ Class Projet extends Modele
     public function create($titre, $type, $deadline = NULL, $description, $idOrganisation = false)
     {
         $idOrganisation = $idOrganisation ?? $this->getIdOrganisation();
+        $status = array();
+
+        $sql = "INSERT INTO map_columns (name, fk_project)";
+        $sql .= " VALUES ('Open', ?),('Ready', ?),('In progress', ?),('Closed', ?)";
+
+        $requete = $this->getBdd()->prepare($sql);
+        $status[] = $requete->execute([$idOrganisation, $idOrganisation, $idOrganisation, $idOrganisation]);
 
         $sql = "INSERT INTO projets (nom, type, DateDebut, DateRendu, description, fk_organisation)";
         $sql .= " VALUES (?,?,NOW(),?,?,?)";
 
         $requete = $this->getBdd()->prepare($sql);
 
-        try {
-            return $requete->execute([$titre, $type, $deadline, $description, $idOrganisation]);
-        }
-        catch (PDOException $e)
+        $status[] = $requete->execute([$titre, $type, $deadline, $description, $idOrganisation]);
+
+        if(in_array(false, $status))
         {
-            return $e->getMessage();
+            return false;
+        }
+        else
+        {
+            return true;
         }
     }
 }

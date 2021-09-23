@@ -38,10 +38,12 @@ Class Role extends Modele
 
     public function fetchAll()
     {
-        $sql = "SELECT * FROM roles";
+        $sql = "SELECT * ";
+        $sql .= " FROM roles";
+        
         $requete = $this->getBdd()->prepare($sql);
         $requete->execute();
 
-        return $requete->fetchAll(PDO::FETCH_ASSOC);
+        return $requete->fetchAll(PDO::FETCH_OBJ);
     }
 }

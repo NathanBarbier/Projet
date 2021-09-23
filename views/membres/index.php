@@ -1,10 +1,7 @@
-<?php require_once "layouts/entete.php";
+<?php 
+require_once "../../traitements/header.php";
+require_once "layouts/entete.php";
 ?>
-<div class="col-10">
-
-    <?php 
-    require_once "layouts/entete.php";
-    ?>
     <div class="col-10">
 
         <div class="row mt-4">

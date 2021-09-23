@@ -1,5 +1,5 @@
 <?php
-require_once "../../traitements/header.php";
+// require_once "../../traitements/header.php";
 
 $rights = $_SESSION["habilitation"] ?? false;
 
@@ -35,7 +35,7 @@ if($rights)
     { ?>
     <div class="collapse navbar-collapse" id="navbarNavDropdown">
         <div class="navbar-nav w-100" style="padding-right: 5vh;">
-            <a class="nav-item nav-link ms-auto" href="<?php VIEWS_URL ?>inscriptionOrganisation.php">Inscription</a>
+            <a class="nav-item nav-link ms-auto" href="<?php CONTROLLERS_URL ?>inscriptionOrganisation.php">Inscription</a>
         </div>
     </div>
     <?php
@@ -44,7 +44,7 @@ if($rights)
     { ?>
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <div class="navbar-nav w-100" style="padding-right: 5vh;">
-                <a class="nav-item nav-link ms-auto" href="<?= VIEWS_URL ?>general/connexion.php">Connexion</a>
+                <a class="nav-item nav-link ms-auto" href="<?= CONTROLLERS_URL ?>general/connexion.php">Connexion</a>
             </div>
         </div>
     <?php

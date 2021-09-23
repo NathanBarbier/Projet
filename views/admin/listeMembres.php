@@ -1,27 +1,25 @@
 <?php
 require_once "layouts/entete.php";
-
-$data = json_decode(GETPOST('data'));
-
 ?>
+
 <div class="col-10">
 <?php
-if($data->success)
+if($success)
 {
     ?>
-    <div class="alert alert-success mt-2">
+    <div class="alert alert-success mt-2 me-3">
     <?php
-        echo $data->success;
+        echo $success;
     ?>
     </div>
     <?php
 }
-else if($data->erreurs)
+else if($erreurs)
 {
     ?>
-    <div class="alert alert-danger mt-2">
+    <div class="alert alert-danger mt-2 me-3">
     <?php
-    foreach($data->erreurs as $erreur)
+    foreach($erreurs as $erreur)
     {
         echo $erreur . "<br>";
     }
@@ -37,7 +35,7 @@ else if($data->erreurs)
             <th colspan="7">
                 <div style="float : left"><strong>Liste des membres</strong></div>
                 <div style="float : right">
-                    <div>Nombres de membres : <?=count($data->membres);?></div> 
+                    <div>Nombres de membres : <?=count($membres);?></div> 
                 </div>
             </th>
         </tr>
@@ -54,13 +52,13 @@ else if($data->erreurs)
         </tr>
 
         <?php
-        foreach($data->membres as $membre)
+        foreach($membres as $membre)
         {
         ?>
         <tr class="text-center">
             <td>
                 <div id="nom<?= $membre->idUtilisateur ?>" class="collapse show">
-                    <?=$membre->nom;?>
+                    <?= $membre->nom; ?>
                 </div>
 
                 <div id="divModifNom<?= $membre->idUtilisateur ?>" class="collapse show mt-3">
@@ -104,7 +102,7 @@ else if($data->erreurs)
                 <!-- On affiche l'équipe de l'utilisateur -->
                 <div id="divNomEquipe<?= $membre->idUtilisateur ?>" class="collapse show">
                     <?php
-                    foreach($data->equipes as $equipe)
+                    foreach($equipes as $equipe)
                     {
                         if($equipe->idEquipe == $membre->idEquipe)
                         {
@@ -117,7 +115,7 @@ else if($data->erreurs)
                 <form method="post" action="<?= CONTROLLERS_URL ?>admin/listeMembres.php?action=updateEquipe&idUser=<?= $membre->idUtilisateur ?>">
                     <div id="divSelectEquipes<?= $membre->idUtilisateur ?>" class="collapse text-center">
                         <select name="idEquipe" class="text-center form-control w-75 mx-auto mb-1" required>
-                            <?php foreach($data->equipes as $equipe)
+                            <?php foreach($equipes as $equipe)
                             { 
                             ?>
                                 <option value="<?= $equipe->idEquipe ?>"><?= $equipe->nomEquipe ?></option>
@@ -143,7 +141,7 @@ else if($data->erreurs)
             <td>
                 <div id="divNomPoste<?= $membre->idUtilisateur ?>" class="collapse show">
                     <?php 
-                    foreach($data->postes as $poste)
+                    foreach($postes as $poste)
                     {
                         // var_dump($poste->idPoste);
                         // var_dump($membre);
@@ -160,7 +158,7 @@ else if($data->erreurs)
                 <form method="POST" action="<?= CONTROLLERS_URL ?>admin/listeMembres.php?action=updatePoste&idUser=<?= $membre->idUtilisateur ?>">
                     <div id="divSelectPostes<?= $membre->idUtilisateur ?>" class="collapse text-center">
                         <select name="idPoste" class="text-center form-control w-75 mx-auto mb-1">
-                            <?php foreach($data->postes as $poste)
+                            <?php foreach($postes as $poste)
                             { 
                                 ?>
                                 <option value="<?= $poste->idPoste ?>"><?= $poste->nomPoste ?></option>
@@ -208,7 +206,6 @@ else if($data->erreurs)
 </table>
 
 <script src="<?= JS_URL ?>admin/listeMembres.js"></script>
-
 
 <?php
 require_once "layouts/pied.php";

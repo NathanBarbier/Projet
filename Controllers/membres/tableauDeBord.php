@@ -51,11 +51,6 @@ if($rights === "user")
     $erreurs = array();
     $success = false;
     
-    $data = new stdClass;
-
-    // var_dump($action);
-    // exit;
-
     if($action == 'userUpdate')
     {
         if($firstname && $lastname && $email)
@@ -91,23 +86,14 @@ if($rights === "user")
         $Projet = new Projet($Equipe->getidProjet());
     }
 
+    $CurrentUser = new stdClass;
+    $CurrentUser->firstname = $User->getFirstname();
+    $CurrentUser->lastname = $User->getLastname();
+    $CurrentUser->email = $User->getEmail();
+    $CurrentUser->poste = $Poste->getNom();
+    $CurrentUser->role = $Role->getNom();
     
-    
-    $data = array(
-        // 'avatar' => $User->getAvatar(),
-        'firstname' => $User->getFirstname(),
-        'lastname' => $User->getLastname(),
-        'email' => $User->getEmail(),
-        'nomPoste' => $Poste->getNom(),
-        'role' => $Role->getNom(),
-        'erreurs' => $erreurs,
-        'success' => $success,
-        'userProjects' => $userProjects,
-    );
-    
-    $data = json_encode($data);
-    
-    header("location:".VIEWS_URL."membres/".$tpl."?data=$data");
+    require_once VIEWS_PATH."admin/".$tpl;
 }
 else
 {

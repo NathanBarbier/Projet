@@ -1,7 +1,5 @@
 <?php 
 require_once "layouts/entete.php";
-
-$data = json_decode(GETPOST('data'));
 ?>
 
 <div class="col-10 mt-4 w-75">
@@ -51,10 +49,10 @@ $data = json_decode(GETPOST('data'));
                 <h4>Informations sur l'organisation</h4>
             </div>
             <div class="card-body">
-                <p><b><?= $data->nomOrganisation ?></b></p><br>
-                <p>Email Admin : <?= $data->emailOrganisation ?></p><br>
-                <p>Nombre d'employés : <?= $data->nombreEmployes ?></p><br>
-                <p>Nombre d'équipes : <?= $data->nombreEquipes ?></p>
+                <p><b><?= $CurrentOrganisation->nom ?></b></p><br>
+                <p>Email Admin : <?= $CurrentOrganisation->email ?></p><br>
+                <p>Nombre d'employés : <?= $CurrentOrganisation->membersCount ?></p><br>
+                <p>Nombre d'équipes : <?= $CurrentOrganisation->equipesCount ?></p>
             </div>
         </div>
     </div>

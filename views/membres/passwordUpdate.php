@@ -1,13 +1,10 @@
 <?php 
 require_once "layouts/entete.php";
-
-$data = json_decode(GETPOST('data'));
-
 ?>
 <div class="col-9 mt-4">
 <?php
 
-if($data->success)
+if($success)
 {
     ?>
     <div class="alert alert-success">
@@ -17,12 +14,12 @@ if($data->success)
 } 
 else 
 {
-    if($data->erreurs)
+    if($erreurs)
     {
         ?>
         <div class="alert alert-danger">
             <?php
-            foreach($data->erreurs as $erreur)
+            foreach($erreurs as $erreur)
             {
                 echo $erreur . "<br>";
             }

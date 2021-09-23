@@ -1,14 +1,12 @@
 <?php
 require_once "layouts/entete.php";
 
-$data = !empty($_GET["data"]) ? json_decode($_GET["data"]) : null;
-
-if(!empty($data->erreurs))
+if(!empty($erreurs))
 {
     ?>
     <div class="alert alert-danger">
     <?php
-    foreach($data->erreurs as $erreur)
+    foreach($erreurs as $erreur)
     {
         echo $erreur . "<br>";
     }
@@ -25,7 +23,7 @@ if(!empty($data->erreurs))
     <form class="w-50 mx-auto" method="post" action="<?= CONTROLLERS_URL ?>general/Connexion.php">
 
         <div class="form-floating mt-5">
-            <input type="text" class="form-control" name="email" placeholder="Saisissez votre identifiant" value="<?= $data->email ?? '' ?>" maxlength="50" required>
+            <input type="text" class="form-control" name="email" placeholder="Saisissez votre identifiant" value="<?= $email ?? '' ?>" maxlength="50" required>
             <label for="mail" class="mb-1">Addresse mail</label>
         </div>
 

@@ -6,11 +6,11 @@ $data = json_decode(GETPOST('data'));
 ?>
 <div class="col-10">
 <?php
-if($data->erreurs)
+if($erreurs)
 {   ?>
     <div class="alert alert-danger mt-3" style="z-index : 0; width : max-content">
     <?php
-    foreach($data->erreurs as $erreur)
+    foreach($erreurs as $erreur)
     {
         echo $erreur . "<br>";
     }
@@ -19,23 +19,23 @@ if($data->erreurs)
     <?php
 }
 
-if($data->success)
+if($success)
 {   
 ?>
     <div class="alert alert-success mt-3" style="z-index : 0; width : max-content">
-        <?= $data->success ?>
+        <?= $success ?>
     </div>
 <?php
 }
 
-if($data->deletePoste)
+if($deletePoste)
 {
     ?>
     <div class=" alert alert-info mt-3 text-center" style="z-index : 0; width : max-content">
-        Êtes vous sur de vouloir supprimer <?= $data->fetchPoste->nomPoste;?> ? <br>
+        Êtes vous sur de vouloir supprimer <?= $fetchPoste->nomPoste;?> ? <br>
         Cette action est irréversible et supprimera le poste de tous les membres ayant ce poste ! 
         <div class="text-center mt-3">
-            <a href="<?= CONTROLLERS_URL ?>admin/postesEquipes.php?action=deletePosteConf&idPoste=<?=$data->idPoste?>" class="btn btn-success">Confirmer</a>
+            <a href="<?= CONTROLLERS_URL ?>admin/postesEquipes.php?action=deletePosteConf&idPoste=<?=$idPoste?>" class="btn btn-success">Confirmer</a>
             <a href="<?= CONTROLLERS_URL ?>admin/postesEquipes.php" class="btn btn-danger">Annuler</a>
         </div>
     </div>
@@ -61,11 +61,11 @@ if($data->deletePoste)
             <table class="table">
                 <tbody id="tbodyPoste">
                     <?php
-                    foreach($data->postes as $cle => $poste)
+                    foreach($postes as $cle => $poste)
                     {
                         if($poste->nomPoste == "indéfini")
                         {
-                            foreach($data->nbMembresPostes as $key => $nbMembrePoste)
+                            foreach($nbMembresPostes as $key => $nbMembrePoste)
                             {
                                 if($poste->idPoste == $key)
                                 {
@@ -82,10 +82,10 @@ if($data->deletePoste)
                         }
                     }
 
-                    foreach($data->postes as $cle => $poste)
+                    foreach($postes as $cle => $poste)
                     {
                         if($poste->nomPoste != "indéfini") {
-                            foreach($data->nbMembresPostes as $key => $nbMembrePoste)
+                            foreach($nbMembresPostes as $key => $nbMembrePoste)
                             {
                                 if($poste->idPoste == $key)
                                 {
@@ -123,10 +123,10 @@ if($data->deletePoste)
                             <label for="idRole" class="mb-2">Habilitation</label>
                             <select name="idRole" id="idRole-id" class="form-control">
                                 <?php
-                                foreach($data->roles as $cle => $role)
+                                foreach($roles as $cle => $role)
                                 {
                                     ?>
-                                    <option value="<?=$role->idRole;?>"  <?=$role->nom == "Collaborateur" ? "selected" : "" ;?>  ><?=$role->nom;?></option>
+                                    <option value="<?= $role->idRole; ?>"  <?= $role->nom == "Collaborateur" ? "selected" : "" ;?>  ><?= $role->nom; ?></option>
                                     <?php
                                 }
                                 ?>
@@ -140,13 +140,13 @@ if($data->deletePoste)
                 </div>
             </form>
             <?php
-            if($data->idPoste && $data->updatePoste)
+            if($idPoste && $updatePoste)
             {
             ?>
-                <form method="post" action="<?= CONTROLLERS_URL ?>admin/postesEquipes.php?action=updatePosteConf&idPoste=<?=$data->idPoste?>">
+                <form method="post" action="<?= CONTROLLERS_URL ?>admin/postesEquipes.php?action=updatePosteConf&idPoste=<?=$idPoste?>">
                     <div class="form-group ml-auto mr-auto mt-3">
-                        <label for="modifierPoste">Modifier le poste "<?=$data->fetchPoste->nomPoste;?>"</label>
-                        <input type="text" class="form-control" name="nomPoste" id="nomPoste-id" placeholder="entrez le nouveau nom du poste" value="<?=$data->fetchPoste->nomPoste;?>">
+                        <label for="modifierPoste">Modifier le poste "<?=$fetchPoste->nomPoste;?>"</label>
+                        <input type="text" class="form-control" name="nomPoste" id="nomPoste-id" placeholder="entrez le nouveau nom du poste" value="<?=$fetchPoste->nomPoste;?>">
                     </div>
 
                     <div class="form-group text-center mt-2">
@@ -179,10 +179,10 @@ if($data->deletePoste)
         <div class="infoEquipe">
             <h4><u>Info de l'équipe :</u></h4>
             <?php
-            foreach($data->equipes as $key => $equipe)
+            foreach($equipes as $key => $equipe)
             {
-                $membresEquipe = $data->membresEquipes[$key][0] ?? "";
-                $projetsEquipe = $data->projetsEquipes[$key] ?? "";
+                $membresEquipe = $membresEquipes[$key][0] ?? "";
+                $projetsEquipe = $projetsEquipes[$key] ?? "";
                 ?>
                 <div class="mt-5" id="divInfoEquipe<?=$equipe->idEquipe;?>" style="display : none">
                     <h3><strong><?=$equipe->nomEquipe;?></strong></h3>
@@ -210,7 +210,7 @@ if($data->deletePoste)
                                     <td><?= $membre->nom ?? '' ;?></td>
                                     <td><?= $membre->prenom ?? '' ;?></td>
                                     <?php
-                                    foreach($data->postes as $poste)
+                                    foreach($postes as $poste)
                                     {
                                         if(is_object($poste->idPoste) && is_object($membre->idPoste))
                                         {
@@ -282,11 +282,11 @@ if($data->deletePoste)
         <table class="table m-0">
             <tbody id="tbodyEquipe">
             <?php
-            foreach($data->equipes as $cle => $equipe)
+            foreach($equipes as $cle => $equipe)
             {
                 if($equipe->nomEquipe == "indéfini")
                 {
-                    foreach($data->nbMembresEquipes as $key => $nbMembreEquipe)
+                    foreach($nbMembresEquipes as $key => $nbMembreEquipe)
                     {
                         if($equipe->idEquipe == $key)
                         {
@@ -303,11 +303,11 @@ if($data->deletePoste)
                 } 
             }
 
-            foreach($data->equipes as $cle => $equipe)
+            foreach($equipes as $cle => $equipe)
             {
                 if($equipe->nomEquipe != "indéfini")
                 {
-                    foreach($data->nbMembresEquipes as $key => $nbMembreEquipe)
+                    foreach($nbMembresEquipes as $key => $nbMembreEquipe)
                     {
                         if($equipe->idEquipe == $key)
                         {
@@ -315,7 +315,7 @@ if($data->deletePoste)
                                 <tr>
                                     <td style="width: 35%"><b><?=$equipe->nomEquipe;?></b></td>
                                     <td style="width: 30%;"><?=$nbMembreEquipe;?></td>
-                                    <td style="width: 35%"><a onclick="afficherInfoEquipe(<?=$equipe->idEquipe;?>, <?= $data->equipeMinMax->minIdE ;?>, <?=$data->equipeMinMax->maxIdE;?>)" class="btn btn-info">Détails</a></td>
+                                    <td style="width: 35%"><a onclick="afficherInfoEquipe(<?=$equipe->idEquipe;?>, <?= $equipeMinMax->minIdE ;?>, <?=$equipeMinMax->maxIdE;?>)" class="btn btn-info">Détails</a></td>
                                 </tr>
                             <?php
                         }

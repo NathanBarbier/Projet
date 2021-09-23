@@ -32,7 +32,7 @@ $equipes = $Equipe->fetchAll($idOrganisation);
 $erreurs = array();
 $success = false;
 
-$data = new stdClass;
+// $data = new stdClass;
 
 $tpl = "listeMembres.php";
 
@@ -197,20 +197,7 @@ if($rights === "admin")
         $equipes = $Equipe->fetchAll($idOrganisation);
     }
 
-
-    $data = array(
-        'erreurs' => $erreurs,
-        'success' => $success,
-        'idOrganisation' => $idOrganisation,
-        'User' => $User,
-        'membres' => $membres,
-        'postes' => $postes,
-        'equipes' => $equipes
-    );
-
-    $data = json_encode($data);
-
-    header("location:".VIEWS_URL."admin/".$tpl."?data=$data");
+    require_once VIEWS_PATH."admin/".$tpl;
 
 }
 else

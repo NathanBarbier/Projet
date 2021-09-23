@@ -173,3 +173,7 @@ a {
     overflow-y: hidden;
     white-space:nowrap;
 }
+
+.border-bottom {
+    border-bottom: 1px rgb(216, 214, 214) solid;
+}

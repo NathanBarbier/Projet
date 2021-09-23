@@ -2,18 +2,18 @@
 //import all models
 require_once "../../traitements/header.php";
 
-$rights = $_SESSION["habilitation"] ?? false;
-$idUser = $_SESSION["idUtilisateur"] ?? false;
+$rights = $_SESSION["rights"] ?? false;
+$idUser = $_SESSION["idUser"] ?? false;
 
 $envoi = GETPOST('envoi');
 
 $email = GETPOST('email');
-$mdp = GETPOST('mdp');
+$password = GETPOST('password');
 
 $User = new User();
-$Organisation = new Organisation();
+$Organization = new Organization();
 
-$erreurs = array();
+$errors = array();
 $success = false;
 
 $data = array();
@@ -22,67 +22,66 @@ $tpl = "connexion.php";
 
 if($envoi)
 {
-    if($email && $mdp)
+    if($email && $password)
     {
         if(filter_var($email, FILTER_VALIDATE_EMAIL))
         {
-            if($User->verifEmail($email) == true)
+            if($User->checkByEmail($email) == true)
             {
-                $utilisateur = $User->fetchByEmail($email);
+                $user = $User->fetchByEmail($email);
 
-                if(password_verify($mdp, $utilisateur["mdp"]))
+                if(password_verify($password, $user->password))
                 {
 
                     // exit;
-                    $_SESSION["habilitation"] = "user";
-                    $_SESSION["idUtilisateur"] = intval($utilisateur["idUtilisateur"]);
+                    $_SESSION["rights"] = "user";
+                    $_SESSION["idUser"] = intval($user->rowid);
                     
                     $success = true;
                     // header("location:".ROOT_PATH."index.php");
                 } 
                 else 
                 {
-                    $erreurs[] = "Le mot de passe est incorrect.";
+                    $errors[] = "Le mot de passe est incorrect.";
                 }
             } 
             
             if(!$success)
             {
-                if($Organisation->verifEmail($email) == true) 
+                if($Organization->checkByEmail($email) == true) 
                 {
-                    $utilisateur = $Organisation->fetchByEmail($email);
-                    if(password_verify($mdp, $utilisateur["mdp"]))
+                    $user = $Organization->fetchByEmail($email);
+                    if(password_verify($password, $user->password))
                     {
-                        $_SESSION["habilitation"] = "admin";
-                        $_SESSION["idOrganisation"] = $utilisateur["idOrganisation"];
-                        $_SESSION["email"] = $utilisateur["email"];
+                        $_SESSION["rights"] = "admin";
+                        $_SESSION["idOrganization"] = $user->rowid;
+                        $_SESSION["email"] = $user->email;
                         
                         $success = true;
-                        // header("location:".ROOT_URL."index.php");
                     } 
                     else 
                     {
-                        $erreurs[] = "Le mot de passe est incorrect.";
+                        $errors[] = "Le mot de passe est incorrect.";
                     }
                 }
             }
 
             if(!$success)
             {
-                if((!$User->verifEmail($email) && !$Organisation->verifEmail($email)))
+                if( (!$User->checkByEmail($email)) && !$Organization->checkByEmail($email) )
                 {
-                    $erreurs[] = "Cette adresse email n'est associée à aucun compte.";
+                    $errors[] = "Cette adresse email n'est associée à aucun compte.";
                 }
             }
         } 
         else 
         {
-            $erreurs[] = "Le format de l'adresse email est incorrect.";
+            $errors[] = "Le format de l'adresse email est incorrect.";
         }
     } 
     else 
     {
-        $erreurs[] = "Un champs n'a pas été rempli.";
+        $errors[] = "Un champs n'a pas été rempli.";
     }
 
 } 

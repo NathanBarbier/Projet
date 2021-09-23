@@ -2,18 +2,18 @@
 //import all models
 require_once "../../traitements/header.php";
 
-// $idOrganisation = $_SESSION["idOrganisation"] ?? false;
+// $idOrganization = $_SESSION["idOrganization"] ?? false;
 $action = GETPOST('action');
 $envoi = GETPOST('envoi');
 $email = GETPOST('email');
-$nom = GETPOST('nom');
-$mdp = GETPOST('mdp');
-$mdp2 = GETPOST('mdp2');
+$name = GETPOST('name');
+$pwd = GETPOST('pwd');
+$pwd2 = GETPOST('pwd2');
 
-$Organisation = new Organisation();
+$Organization = new Organization();
 $Inscription = new Inscription();
 
-$erreurs = array();
+$errors = array();
 $success = false;
 
 $data = array();
@@ -26,54 +26,54 @@ if($action == "inscriptionOrg")
     
     if($envoi) 
     {
-        if($nom && $email && $mdp && $mdp2)
+        if($name && $email && $pwd && $pwd2)
         {
-            if($Organisation->verifNom($nom) == false)
+            if($Organization->checkByName($name) == false)
             {
                 if(filter_var($email, FILTER_VALIDATE_EMAIL))
                 {
-                    if($Organisation->verifEmail($email) == false)
+                    if($Organization->checkByEmail($email) == false)
                     {
-                        if($mdp === $mdp2)
+                        if($pwd === $pwd2)
                         {
                             try
                             {
-                                $mdp = password_hash($mdp, PASSWORD_BCRYPT);
-                                $success = $Inscription->inscriptionOrg($email, $mdp, $nom);
+                                $pwd = password_hash($pwd, PASSWORD_BCRYPT);
+                                $success = $Inscription->inscriptionOrg($email, $pwd, $name);
                             } 
                             catch (exception $e) 
                             {
-                                $erreurs[] = "Erreur : l'inscription n'a pas pu aboutir.";
+                                $errors[] = "Erreur : l'inscription n'a pas pu aboutir.";
                             }
 
                             if(!$success)
                             {
-                                $erreurs[] = "Une erreur inconnue est survenue.";
+                                $errors[] = "Une erreur inconnue est survenue.";
                             }
                         } 
                         else 
                         {
-                            $erreurs[] = "Erreur : Les mots de passe ne sont pas identiques.";
+                            $errors[] = "Erreur : Les mots de passe ne sont pas identiques.";
                         }
                     }
                     else 
                     {
-                        $erreurs[] = "Erreur : L'Email est indisponible.";
+                        $errors[] = "Erreur : L'Email est indisponible.";
                     }
                 } 
                 else 
                 {
-                    $erreurs[] = "Erreur : L'Email n'est pas correct.";
+                    $errors[] = "Erreur : L'Email n'est pas correct.";
                 }
             } 
             else 
             {
-                $erreurs[] = "Erreur : Le nom est indisponible.";
+                $errors[] = "Erreur : Le nom est indisponible.";
             }
         } 
         else 
         {
-            $erreurs[] = "Erreur : Tous les champs doivent être remplis.";
+            $errors[] = "Erreur : Tous les champs doivent être remplis.";
         }
     } 
     else 

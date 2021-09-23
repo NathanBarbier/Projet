@@ -25,7 +25,7 @@ require_once "layouts/entete.php";
                 Êtes-vous sûr de vouloir supprimer l'organisation ?<br>
                 (Cette action est définitive et supprimer toute donnée étant en lien avec l'organisation)
 
-                <a class="btn btn-danger" href="<?= CONTROLLERS_URL ?>admin/gestionOrganisation.php?action=deleteOrganisation">Oui</a>
+                <a class="btn btn-danger" href="<?= CONTROLLERS_URL ?>admin/gestionOrganisation.php?action=deleteOrganization">Oui</a>
 
                 <button id="boutonRefusDel" class="btn btn-warning">Non</button>
             </div>
@@ -49,10 +49,10 @@ require_once "layouts/entete.php";
                 <h4>Informations sur l'organisation</h4>
             </div>
             <div class="card-body">
-                <p><b><?= $CurrentOrganisation->nom ?></b></p><br>
-                <p>Email Admin : <?= $CurrentOrganisation->email ?></p><br>
-                <p>Nombre d'employés : <?= $CurrentOrganisation->membersCount ?></p><br>
-                <p>Nombre d'équipes : <?= $CurrentOrganisation->equipesCount ?></p>
+                <p><b><?= $CurrentOrganization->name ?></b></p><br>
+                <p>Email Admin : <?= $CurrentOrganization->email ?></p><br>
+                <p>Nombre d'employés : <?= $CurrentOrganization->membersCount ?></p><br>
+                <p>Nombre d'équipes : <?= $CurrentOrganization->teamsCount ?></p>
             </div>
         </div>
     </div>

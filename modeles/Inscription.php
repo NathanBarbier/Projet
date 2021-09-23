@@ -1,28 +1,30 @@
 <?php 
 class Inscription extends Modele
 {
-    private $nomsOrg = [];
-    private $emailsOrg = [];
+    private $OrgNames = [];
+    private $OrgEmails = [];
 
     public function __construct()
     {
-        $sql = "SELECT * FROM organisations";
+        $sql = "SELECT *";
+        $sql .= " FROM organizations";
+        
         $requete = $this->getBdd()->prepare($sql);
         $requete->execute();
 
-        $Organisations = $requete->fetchAll(PDO::FETCH_ASSOC);
+        $Organizations = $requete->fetchAll(PDO::FETCH_OBJ);
 
-        foreach($Organisations as $Organisation)
+        foreach($Organizations as $Organization)
         {
-            $nomsOrg[] = $Organisation["nom"];
-            $emailsOrg[] = $Organisation["email"];
+            $OrgNames[] = $Organization->name;
+            $OrgEmails[] = $Organization->email;
         }
     }
 
     // METHODES
-    public function verifNomOrg($nomOrganisation)
+    public function CheckOrgByName($OrgName)
     {
-        if(array_search($this->nomsOrg, $nomOrganisation))
+        if(array_search($this->OrgNames, $OrgName))
         {
             return true;
         }
@@ -32,7 +34,7 @@ class Inscription extends Modele
         }
     }
 
-    public function verifEmailOrg($emailOrg)
+    public function CheckOrgByEmail($emailOrg)
     {
         if(array_search($this->emailsOrg, $emailOrg))
         {
@@ -44,38 +46,42 @@ class Inscription extends Modele
         }
     }
 
-    public function inscriptionOrg($mail, $mdp, $nom)
+    public function inscriptionOrg($email, $password, $name)
     {
         $status = array();
 
-        $sql = "INSERT INTO organisations (Email, Mdp, Nom) VALUES(?, ?, ?)";
+        $sql = "INSERT INTO organizations (email, password, name)";
+        $sql .= " VALUES(?, ?, ?)";
+
         $requete = $this->getBdd()->prepare($sql);
-        $status[] = $requete->execute([$mail, $mdp, $nom]);
+        $status[] = $requete->execute([$email, $password, $name]);
     
-        $sql = "SELECT max(idOrganisation) AS maxId FROM organisations";
+        $sql = "SELECT max(rowid) AS maxId"; 
+        $sql .= " FROM organizations";
+
         $requete = $this->getBdd()->prepare($sql);
         $status[] = $requete->execute();
 
-        $idMax = $requete->fetch(PDO::FETCH_ASSOC);
+        $idMax = $requete->fetch(PDO::FETCH_OBJ);
     
-        if($idMax["maxId"] == null)
+        if($idMax->maxId == null)
         {
-            $idMax["maxId"] = 1;
+            $idMax->maxId = 1;
         }
 
-        $idMax["maxId"] = intval($idMax["maxId"]);
+        $idMax->maxId = intval($idMax->maxId);
         
-        $sql = "INSERT INTO equipes (nomEquipe, idOrganisation)";
+        $sql = "INSERT INTO teams (name, fk_organization)";
         $sql .= " VALUES (?, ?);";
         
         $requete = $this->getBdd()->prepare($sql);
-        $status[] = $requete->execute(["indéfini",$idMax["maxId"]]);
+        $status[] = $requete->execute(["indéfini",$idMax->maxId]);
 
-        $sql = "INSERT INTO postes (nomPoste, idOrganisation, idRole)";
+        $sql = "INSERT INTO positions (name, fk_organization, fk_role)";
         $sql .= " VALUES (?, ?, ?);";
 
         $requete = $this->getBdd()->prepare($sql);
-        $status[] = $requete->execute(["indéfini",$idMax["maxId"], 4]);
+        $status[] = $requete->execute(["indéfini",$idMax->maxId, 4]);
         
 
         if(in_array(false, $status))

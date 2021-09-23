@@ -4,10 +4,10 @@ require_once "../../traitements/header.php";
 
 $action = GETPOST('action');
 
-$idOrganisation = $_SESSION["idOrganisation"] ?? false;
-$rights = $_SESSION["habilitation"] ?? false;
+$idOrganization = $_SESSION["idOrganization"] ?? false;
+$rights = $_SESSION["rights"] ?? false;
 
-$Organisation = new Organisation($idOrganisation);
+$organization = new Organization($idOrganization);
 
 $success = false;
 $erreurs = array();
@@ -18,19 +18,19 @@ $tpl = "listeProjets.php";
 if($rights === "admin")
 {
 
-    //TODO récuperer les projets actuels en rapport avec l'organisation
+    //TODO récuperer les projets actuels en rapport avec l'organization
 
-    $Project = new Projet();
+    $Project = new Project();
 
-    var_dump($idOrganisation);
+    var_dump($idOrganization);
 
-    $Project->setIdOrganisation($idOrganisation);
+    $Project->setidOrganization($idOrganization);
 
     $currentProjects = $Project->fetchAll();
 
     foreach($currentProjects as $key => $project)
     {
-        $projectId = $project->idProjet;
+        $projectId = $project->rowid;
 
         // Tâches à faire
         $Task = new Task();

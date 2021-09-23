@@ -8,9 +8,9 @@ class WorkTo extends Modele
     {
         if($teamId != null)
         {
-            $sql = "SELECT idEquipe, idProjet";
-            $sql .= " FROM travaille_sur";
-            $sql .= " WHERE idEquipe = ?";
+            $sql = "SELECT fk_team, fk_project";
+            $sql .= " FROM work_to";
+            $sql .= " WHERE fk_team = ?";
 
             $requete = $this->getBdd()->prepare($sql);
             $requete->execute([$teamId]);
@@ -18,18 +18,20 @@ class WorkTo extends Modele
             $line = $requete->fetch(PDO::FETCH_OBJ);
 
             $this->teamId = $teamId;
-            $this->projectId = $line->idProjet;
+            $this->projectId = $line->fk_project;
         }
     }
 
+
     // INSERT
-    public function create($idEquipe, $idProjet)
+
+    public function create($idTeam, $idProject)
     {
-        $sql = "INSERT INTO travaille_sur (idEquipe, idProjet)"; 
+        $sql = "INSERT INTO work_to (idTeam, idProject)"; 
         $sql.= " VALUES (?, ?)";
 
         $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$idEquipe, $idProjet]);
+        $requete->execute([$idTeam, $idProject]);
     }
 
     
@@ -43,6 +45,21 @@ class WorkTo extends Modele
     public function getProjectId()
     {
         return $this->projectId;
+    }
+
+
+    // FETCH
+
+    public function fetchByProjectId($projectId)
+    {
+        $sql = " SELECT w.fk_team, w.fk_project";
+        $sql .= " FROM work_to AS w";
+        $sql .= " WHERE fk_project = ?";
+
+        $requete = $this->getBdd()->prepare($sql);
+        $requete->execute([$projectId]);
+        
+        return $requete->fetchAll(PDO::FETCH_OBJ);
     }
 }
 

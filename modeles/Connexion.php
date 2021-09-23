@@ -1,12 +1,16 @@
 <?php
 class Connexion extends Modele
 {
-    public function recupUtilisateurMail($mail)
+    public function fetchUserByEmail($email)
     {
-        $sql = "SELECT * FROM utilisateurs WHERE email = ?";
+        $sql = "SELECT *"; 
+        $sql .= " FROM users";
+        $sql .= " WHERE email = ?";
+        
         $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$mail]);
-        return $requete->fetch(PDO::FETCH_ASSOC);
+        $requete->execute([$email]);
+        
+        return $requete->fetch(PDO::FETCH_OBJ);
     }
 }
 

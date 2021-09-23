@@ -7,32 +7,30 @@ class User extends Modele
     private $birth;
     private $password;
     private $email;
-    private $idPoste;
-    private $idEquipe;
-    private $idOrganisation;
+    private $idPosition;
+    private $idOrganization;
 
     public function __construct($id = null)
     {
         if($id != null)
         {
             $sql = "SELECT *"; 
-            $sql .= " FROM utilisateurs"; 
-            $sql .= " WHERE idUtilisateur = ?";
+            $sql .= " FROM users"; 
+            $sql .= " WHERE rowid = ?";
 
             $requete = $this->getBdd()->prepare($sql);
             $requete->execute([$id]);
 
-            $User = $requete->fetch(PDO::FETCH_ASSOC);
+            $User = $requete->fetch(PDO::FETCH_OBJ);
 
             $this->id = $id;
-            $this->lastname = $User["nom"];
-            $this->firstname = $User["prenom"];
-            $this->birth = $User["dateNaiss"];
-            $this->password = $User['mdp'];
-            $this->idPoste = $User["idPoste"];
-            $this->email = $User["email"];
-            $this->idEquipe = $User["idEquipe"];
-            $this->idOrganisation = $User["idOrganisation"];
+            $this->lastname = $User->lastname;
+            $this->firstname = $User->firstname;
+            $this->birth = $User->birth;
+            $this->password = $User->password;
+            $this->idPosition = $User->fk_position;
+            $this->email = $User->email;
+            $this->idOrganization = $User->fk_organization;
         }
     }
 
@@ -58,19 +56,14 @@ class User extends Modele
         $this->password = hash($password, PASSWORD_BCRYPT);
     }
 
-    public function setIdPoste($idPoste)
+    public function setIdPosition($idPosition)
     {
-        $this->idPoste = $idPoste;
+        $this->idPosition = $idPosition;
     }
 
     public function setEmail($email)
     {
         $this->email = $email;
-    }
-
-    public function setIdEquipe($idEquipe)
-    {
-        $this->idEquipe = $idEquipe;
     }
 
 
@@ -101,9 +94,9 @@ class User extends Modele
         return $this->password;
     }
 
-    public function getIdPoste()
+    public function getIdPosition()
     {
-        return $this->idPoste;
+        return $this->idPosition;
     }
 
     public function getEmail()
@@ -111,26 +104,22 @@ class User extends Modele
         return $this->email;
     }
 
-    public function getIdEquipe()
+    public function getIdorganization()
     {
-        return $this->idEquipe;
-    }
-
-    public function getIdOrganisation()
-    {
-        return $this->idOrganisation;
+        return $this->idorganization;
     }
 
     
     //! METHODES
 
-    public function verifEmail($userEmail)
+    public function checkByEmail(string $email)
     {
-        $sql = "SELECT email";
-        $sql .= " FROM utilisateurs"; 
-        $sql .= " WHERE email = ?";
+        $sql = "SELECT u.email";
+        $sql .= " FROM users AS u"; 
+        $sql .= " WHERE u.email = ?";
+
         $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$userEmail]);
+        $requete->execute([$email]);
 
         if($requete->rowcount() > 0)
         {
@@ -145,77 +134,115 @@ class User extends Modele
 
     //! FETCH
 
-    public function fetchAll($idOrganisation = null)
+    public function fetchAll($idorganization = null)
     {
-        $idOrganisation = $idOrganisation == null ? $this->getIdOrganisation() : $idOrganisation;
+        $idorganization = $idorganization == null ? $this->getIdorganization() : $idorganization;
 
         $sql = "SELECT *";
-        $sql .= " FROM utilisateurs";
-        $sql .= " WHERE idOrganisation = ?";
+        $sql .= " FROM users";
+        $sql .= " WHERE fk_organization = ?";
 
         $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$idOrganisation]);
+        $requete->execute([$idorganization]);
         
         return $requete->fetchAll(PDO::FETCH_OBJ);
     }
 
-    public function fetchByEquipe($idEquipe)
+    public function fetchFreeUsersByProjectId($projectId)
     {
-        $sql = "SELECT * FROM utilisateurs WHERE idEquipe = ?";
-        $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$idEquipe]);
+        // récuperer les idUtilisateurs étant dans une team bossant sur le projet
+        $sql = "SELECT u.rowid";
+        $sql .= " FROM users AS u";
+        $sql .= " LEFT JOIN user_team AS ut ON u.rowid = ut.fk_user";
+        $sql .= " LEFT JOIN work_to AS w ON ut.fk_team = w.fk_team";
+        $sql .= " WHERE w.fk_project = ?";
 
-        return $requete->fetchAll(PDO::FETCH_ASSOC);
+        $requete = $this->getBdd()->prepare($sql);
+        $requete->execute([$projectId]);
+
+        $lines = $requete->fetchAll(PDO::FETCH_OBJ);
+
+        $notFreeUsers = array();
+        foreach($lines as $line)
+        {
+            $notFreeUsers[] = $line->rowid;
+        }
+
+        $notFreeUsers = implode("', '", $notFreeUsers);
+        // exit;
+
+        $sql = "SELECT u.rowid, u.lastname, u.firstname, u.birth, u.password, u.idPosition, u.email, u.fk_organization";
+        $sql .= " FROM users AS u";
+        $sql .= " WHERE u.rowid NOT IN('?')";
+
+        $requete = $this->getBdd()->prepare($sql);
+        $requete->execute();
+
+        return $requete->fetchAll(PDO::FETCH_OBJ);
+    }
+
+    public function fetchByTeam($idTeam)
+    {
+        $sql = "SELECT u.rowid, u.lastname, u.firstname, u.birth, u.password, u.idPosition, u.email, u.fk_organization"; 
+        $sql .= " FROM users AS u";
+        $sql .= " LEFT JOIN user_team AS ut" ;
+        $sql .= " WHERE ut.fk_team = ?";
+        
+        $requete = $this->getBdd()->prepare($sql);
+        $requete->execute([$idTeam]);
+
+        return $requete->fetchAll(PDO::FETCH_OBJ);
     }
 
     public function fetchByEmail($email)
     {
         $sql = "SELECT *"; 
-        $sql .= " FROM utilisateurs"; 
+        $sql .= " FROM users"; 
         $sql .= " WHERE email = ?";
 
         $requete = $this->getBdd()->prepare($sql);
         $requete->execute([$email]);
 
-        return $requete->fetch(PDO::FETCH_ASSOC);
+        return $requete->fetch(PDO::FETCH_OBJ);
     }
     
-    public function fetchByLastnameAndFirstname($lastname, $firstname, $idOrganisation)
+    public function fetchByLastnameAndFirstname($lastname, $firstname, $idorganization)
     {
-        $sql = "SELECT * FROM utilisateurs";
-        $sql.= "WHERE nom = ? && prenom = ? && idOrganisation = ?";
+        $sql = "SELECT *"; 
+        $sql .= " FROM users";
+        $sql.= "WHERE lastname = ? && firstname = ? && fk_organization = ?";
 
         $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$$lastname, $firstname, $idOrganisation]);
+        $requete->execute([$lastname, $firstname, $idorganization]);
 
-        return $requete->fetch(PDO::FETCH_ASSOC);
+        return $requete->fetch(PDO::FETCH_OBJ);
     }
 
     //! INSERT
 
-    public function create($firstname, $lastname, $birth, $idPoste, $idEquipe, $email, $idOrganisation, $mdp)
+    public function create($firstname, $lastname, $birth, $idPosition, $email, $idorganization, $password)
     {
         $status = array();
                         
-        $sql = "INSERT INTO utilisateurs (nom, prenom, dateNaiss, idPoste, email, idEquipe, idOrganisation, mdp) ";
-        $sql .= "VALUES (?,?,?,?,?,?,?,?)";
+        $sql = "INSERT INTO users (lastname, firstname, birth, fk_position, email, fk_organization, password) ";
+        $sql .= "VALUES (?,?,?,?,?,?,?)";
         $requete = $this->getBdd()->prepare($sql);
 
 
-        $status[] = $requete->execute([$lastname, $firstname, $birth, $idPoste, $email, $idEquipe, $idOrganisation, $mdp]);
+        $status[] = $requete->execute([$lastname, $firstname, $birth, $idPosition, $email, $idorganization, $password]);
 
-        $sql = "SELECT MAX(idUtilisateur) as idUser"; 
-        $sql .= " FROM utilisateurs";
+        $sql = "SELECT MAX(rowid) as rowid"; 
+        $sql .= " FROM users";
 
         $requete = $this->getBdd()->prepare($sql);
         $status[] = $requete->execute();
 
-        $User = $requete->fetch(PDO::FETCH_ASSOC);
-        $maxIdUser = $User["idUser"];
+        $User = $requete->fetch(PDO::FETCH_OBJ);
+        $maxIdUser = $User->rowid;
 
         $sql = "SELECT *"; 
-        $sql .= " FROM utilisateurs"; 
-        $sql .= " WHERE idUtilisateur = ?";
+        $sql .= " FROM users"; 
+        $sql .= " WHERE rowid = ?";
 
         $requete = $this->getBdd()->prepare($sql);
         $status[] = $requete->execute([$maxIdUser]);
@@ -238,9 +265,9 @@ class User extends Modele
     {
         $idUser = $this->id ?? $idUser;
 
-        $sql = "UPDATE utilisateurs";
-        $sql .= " SET prenom = ?, nom = ?, email = ?";
-        $sql .= " WHERE idUtilisateur = ?";
+        $sql = "UPDATE users";
+        $sql .= " SET firstname = ?, lastname = ?, email = ?";
+        $sql .= " WHERE rowid = ?";
 
         $requete = $this->getBdd()->prepare($sql);
 
@@ -249,41 +276,41 @@ class User extends Modele
 
     public function updateFirstname($firstname, $idUser)
     {
-        $sql = "UPDATE utilisateurs";
-        $sql .= " SET prenom = ?"; 
-        $sql .= " WHERE idUtilisateur = ?";
+        $sql = "UPDATE users";
+        $sql .= " SET firstname = ?"; 
+        $sql .= " WHERE rowid = ?";
+
         $requete = $this->getBdd()->prepare($sql);
         return $requete->execute([$firstname, $idUser]);
     }
 
     public function updateLastname($lastname, $idUser)
     {
-        $sql = "UPDATE utilisateurs SET nom = ? WHERE idUtilisateur = ?";
+        $sql = "UPDATE users";
+        $sql .= " SET lastname = ?";
+        $sql .= " WHERE rowid = ?";
+        
         $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$lastname, $idUser]);
+        return $requete->execute([$lastname, $idUser]);
     }
 
-    public function updatePoste($idPoste, $idUser)
+    public function updatePosition($idPosition, $idUser)
     {
-        $sql = "UPDATE utilisateurs SET idPoste = ? WHERE idUtilisateur = ?";
+        $sql = "UPDATE users"; 
+        $sql .= " SET fk_Position = ?";
+        $sql .= " WHERE rowid = ?";
+        
         $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$idPoste, $idUser]);
-    }
-
-    public function updateEquipe($idEquipe, $idUser)
-    {
-        $sql = "UPDATE utilisateurs SET idEquipe = ? WHERE idUtilisateur = ?";
-        $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$idEquipe, $idUser]);
+        return $requete->execute([$idPosition, $idUser]);
     }
 
     public function updatePassword($password, $idUser = null)
     {
         $idUser = $this->id ?? $idUser;
 
-        $sql = "UPDATE utilisateurs"; 
-        $sql .= " SET mdp = ?"; 
-        $sql .= " WHERE idUtilisateur = ?";
+        $sql = "UPDATE users"; 
+        $sql .= " SET password = ?"; 
+        $sql .= " WHERE rowid = ?";
 
         $requete = $this->getBdd()->prepare($sql);
         return $requete->execute([$password, $idUser]);
@@ -291,16 +318,22 @@ class User extends Modele
 
     public function updateEmail($email, $idUser)
     {
-        $sql = "UPDATE utilisateurs SET email = ? WHERE idUtilisateur = ?";
+        $sql = "UPDATE users"; 
+        $sql .= " SET email = ?";
+        $sql .= " WHERE rowid = ?";
+        
         $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$email, $idUser]);
+        return $requete->execute([$email, $idUser]);
     }
 
     public function updateBirth($birth, $idUser)
     {
-        $sql = "UPDATE utilisateurs SET dateNaiss = ? WHERE idUtilisateur = ?";
+        $sql = "UPDATE users"; 
+        $sql .= " SET birth = ?";
+        $sql .= " WHERE rowid = ?";
+        
         $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$birth, $idUser]);
+        return $requete->execute([$birth, $idUser]);
     }
 
 
@@ -308,12 +341,10 @@ class User extends Modele
 
     public function delete($idUser)
     {
-        $sql = "DELETE FROM utilisateurs";
-        $sql .= " WHERE idUtilisateur = ?";
+        $sql = "DELETE FROM users";
+        $sql .= " WHERE rowid = ?";
 
         $requete = $this->getBdd()->prepare($sql);
-        $status = $requete->execute([$idUser]);
-
-        return $status;
+        return $requete->execute([$idUser]);
     }
 }

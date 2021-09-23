@@ -1,8 +1,8 @@
 <?php
 require_once "../../traitements/header.php";
 
-$idOrganisation = $_SESSION["idOrganisation"] ?? false;
-$rights = $_SESSION["habilitation"] ?? false;
+$idOrganization = $_SESSION["idOrganization"] ?? false;
+$rights = $_SESSION["rights"] ?? false;
 
 if($rights === "admin")
 {

@@ -38,19 +38,19 @@ if($currentProjects)
         <div class="col-3 sticker-dark text-center"><h5 class="mt-3">Nom du projet</h5></div>
         <div class="col-2 sticker-dark text-center"><h5 class="mt-3">Type</h5></div>
         <div class="col-2 sticker-dark text-center"><h5 class="mt-3">Tâches à faire</h5></div>
-        <div class="col-2 sticker-dark text-center"><h5 class="mt-2">Tâches en cours</h5></div>
+        <div class="col-2 sticker-dark text-center"><h5 class="mt-3">Tâches en cours</h5></div>
         <div class="col-2 sticker-dark text-center"><h5 class="mt-3">Détails</h5></div>
     </div>
     <?php
     foreach($currentProjects as $project)
     { ?>
     <div class="row sticker w-75 mx-auto mt-4" style="height: 80px;">
-        <div class="col-3 text-center pt-4 mx-auto"><b><?= $project->nom ?></b></div>
+        <div class="col-3 text-center pt-4 mx-auto"><b><?= $project->name ?></b></div>
         <div class="col-2 text-center pt-4 mx-auto"><b><?= $project->type ?></b></div>
         <div class="col-2 text-center pt-4 mx-auto"><b><?= $project->todoCounter ?></b></div>
         <div class="col-2 text-center pt-4 mx-auto"><b><?= $project->progressCounter ?></b></div>
         <div class="col-2 text-center pt-3 mx-auto">
-            <a href="<?= CONTROLLERS_URL ?>admin/detailsProjet.php?idProjet=<?= $project->idProjet ?>" class="btn btn-info mt-1">Détails</a>
+            <a href="<?= CONTROLLERS_URL ?>admin/detailsProjet.php?idProjet=<?= $project->rowid ?>" class="btn btn-info mt-1">Détails</a>
         </div>
     </div>
     <?php

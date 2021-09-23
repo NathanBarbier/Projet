@@ -1,7 +1,7 @@
 <?php
 // require_once "../../traitements/header.php";
 
-$rights = $_SESSION["habilitation"] ?? false;
+$rights = $_SESSION["rights"] ?? false;
 
 if($rights !== "admin")
 {

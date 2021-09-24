@@ -136,25 +136,50 @@ class Team extends Modele
 
     public function fetchByTeamIds(Array $teamIds)
     {
+        $teamIds = implode("', '", $teamIds);
+
         $sql = "SELECT t.rowid, t.name, t.fk_organization, t.fk_project";
         $sql .= " FROM teams AS t";
         $sql .= " WHERE rowid IN ($teamIds)";
 
         $requete = $this->getBdd()->prepare($sql);
+        $requete->execute();
+
         return $requete->fetchAll(PDO::FETCH_OBJ);
+    }
+
+    public function fetchByProjectId($fk_project)
+    {
+        $sql = "SELECT t.rowid, t.name, t.fk_organization, t.fk_project";
+        $sql .= " FROM teams AS t";
+        $sql .= " WHERE t.fk_project = ?";
+
+        $requete = $this->getBdd()->prepare($sql);
+        $requete->execute([$fk_project]);
+
+        return $requete->fetchAll(PDO::FETCH_OBJ);
+    }
+
+    public function fetchMaxId()
+    {
+        $sql = "SELECT MAX(rowid) AS rowid";
+        $sql .= " FROM teams";
+
+        $requete = $this->getBdd()->prepare($sql);
+        $requete->execute();
+
+        return $requete->fetch(PDO::FETCH_OBJ);
     }
 
     //! INSERT
 
-    public function create($name, $idorganization)
+    public function create(string $name, $fk_organization, $fk_project)
     {
-        $idorganization = $this->id ?? $idorganization; 
-
-        $sql = "INSERT INTO teams (name, fk_organization)";
-        $sql .= " VALUES (?,?)";
+        $sql = "INSERT INTO teams (name, fk_organization, fk_project)";
+        $sql .= " VALUES (?,?, ?)";
 
         $requete = $this->getBdd()->prepare($sql);
-        return $requete->execute([$name, $idorganization]);
+        return $requete->execute([$name, $fk_organization, $fk_project]);
     } 
 
 

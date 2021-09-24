@@ -33,6 +33,7 @@ class BelongsTo extends Modele
 
         $requete = $this->getBdd()->prepare($sql);
         return $requete->execute([$fk_user, $fk_team]);
+
     }
 
     // GETTER

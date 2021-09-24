@@ -153,9 +153,9 @@ class User extends Modele
         // récuperer les idUtilisateurs étant dans une team bossant sur le projet
         $sql = "SELECT u.rowid";
         $sql .= " FROM users AS u";
-        $sql .= " LEFT JOIN user_team AS ut ON u.rowid = ut.fk_user";
-        $sql .= " LEFT JOIN work_to AS w ON ut.fk_team = w.fk_team";
-        $sql .= " WHERE w.fk_project = ?";
+        $sql .= " LEFT JOIN belong_to AS b ON u.rowid = b.fk_user";
+        $sql .= " LEFT JOIN teams AS t ON b.fk_team = t.rowid";
+        $sql .= " WHERE t.fk_project = ?";
 
         $requete = $this->getBdd()->prepare($sql);
         $requete->execute([$projectId]);
@@ -169,15 +169,17 @@ class User extends Modele
         }
 
         $notFreeUsers = implode("', '", $notFreeUsers);
-        // exit;
-
-        $sql = "SELECT u.rowid, u.lastname, u.firstname, u.birth, u.password, u.idPosition, u.email, u.fk_organization";
+        
+        $sql = "SELECT u.rowid, u.lastname, u.firstname, u.birth, u.password, u.fk_position, u.email, u.fk_organization";
         $sql .= " FROM users AS u";
-        $sql .= " WHERE u.rowid NOT IN('?')";
+        $sql .= " WHERE u.rowid NOT IN(";
+        $sql .= " SELECT rowid";
+        $sql .= " FROM users";
+        $sql .= " WHERE rowid IN ('".$notFreeUsers."') )";
 
         $requete = $this->getBdd()->prepare($sql);
-        $requete->execute();
-
+        $requete->execute();        
+        
         return $requete->fetchAll(PDO::FETCH_OBJ);
     }
 

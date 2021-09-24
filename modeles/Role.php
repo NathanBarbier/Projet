@@ -3,20 +3,23 @@
 Class Role extends Modele 
 {
     private $id;
-    private $nom;
+    private $name;
 
     public function __construct($id = null)
     {
         if($id !== null)
         {
-            $sql = "SELECT * FROM roles WHERE idRole = ?";
+            $sql = "SELECT *";
+            $sql .= " FROM roles"; 
+            $sql .= " WHERE rowid = ?";
+
             $requete = $this->getBdd()->prepare($sql);
             $requete->execute([$id]);
 
-            $role = $requete->fetch(PDO::FETCH_ASSOC);
+            $role = $requete->fetch(PDO::FETCH_OBJ);
 
             $this->id = $id;
-            $this->nom = $role["nom"];
+            $this->name = $role->name;
         }
     }
 
@@ -28,9 +31,9 @@ Class Role extends Modele
         return $this->id;
     }
 
-    public function getNom()
+    public function getName()
     {
-        return $this->nom;
+        return $this->name;
     }
 
 
@@ -38,8 +41,8 @@ Class Role extends Modele
 
     public function fetchAll()
     {
-        $sql = "SELECT * ";
-        $sql .= " FROM roles";
+        $sql = "SELECT r.rowid, r.name ";
+        $sql .= " FROM roles AS r";
         
         $requete = $this->getBdd()->prepare($sql);
         $requete->execute();

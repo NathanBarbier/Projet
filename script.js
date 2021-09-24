@@ -1,6 +1,6 @@
 $(document).ready(function() {
-    $(".alert-success").animate({ opacity: '0'}, 5000);
+    $(".alert").animate({ opacity: '0'}, 5000);
     setTimeout(() => { 
-        $(".alert-success").addClass("collapse");
+        $(".alert").addClass("collapse");
     }, 5000);
 });

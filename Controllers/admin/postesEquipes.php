@@ -2,64 +2,58 @@
 //import all models
 require_once "../../traitements/header.php";
 
-$idOrganisation = $_SESSION["idOrganisation"] ?? false;
-$rights = $_SESSION["habilitation"] ?? false;
+$idOrganization = $_SESSION["idOrganization"] ?? false;
+$rights = $_SESSION["rights"] ?? false;
 
 if($rights === 'admin')
 {
     $action = GETPOST('action');
     $error = GETPOST('error');
     $success = GETPOST('success');
-    $idPoste = GETPOST('idPoste');
-    $nomPoste = GETPOST('nomPoste');
+    $idPosition = GETPOST('idPosition');
+    $positionName = GETPOST('positionName');
     $idRole = GETPOST('idRole');
-    $nomEquipe = GETPOST('nomEquipe');
+    $teamName = GETPOST('teamName');
     
-    $erreurs = array();
+    $errors = array();
     $success = false;
 
-    $deletePoste = false;
-    $updatePoste = false;
+    $deletePosition = false;
+    $updatePosition = false;
     
     $tpl = "postesEquipes.php";
     
-    $Organisation = new Organisation($idOrganisation);
+    $organization = new organization($idOrganization);
     $Role = new Role();
-    $Equipe = new Equipe();
-    $Projet = new Projet();
+    $Team = new Team();
+    $Project = new Project();
     $User = new User();
-    $Poste = new Poste();
+    $Position = new Position();
 
-    $fetchPoste = $idPoste ? $Poste->fetch($idPoste) : false;
-    $nbMembresEquipes = $Organisation->CountUsersByEquipes($idOrganisation);
-    $nbMembresPostes = $Organisation->CountUsersByPoste($idOrganisation);
-    $equipeMinMax = $Organisation->getMinMaxIdEquipe($idOrganisation);
+    $fetchPosition = $idPosition ? $Position->fetch($idPosition) : false;
+    $usersByTeamCounter = $organization->CountUsersByTeams($idOrganization);
+    $usersByPositionCounter = $organization->CountUsersByPosition($idOrganization);
+
+    $teamMinMax = $organization->getMinMaxIdTeam($idOrganization);
     
     //TODO OPTI ???
     $roles = $Role->fetchAll();
-    $equipes = $Equipe->fetchAll($idOrganisation);
-    $postes = $Poste->fetchAll($idOrganisation);
+    $teams = $Team->fetchAll($idOrganization);
+    $positions = $Position->fetchAll($idOrganization);
     
-    foreach($equipes as $key => $equipe)
+    foreach($teams as $key => $team)
     {
-        $projetsEquipes[$key][] = $Projet->fetchByEquipe($equipe->idEquipe);
+        $projectsTeams[$key][] = $Project->fetchByTeam($team->rowid);
     }
     
-    if($action == "deletePoste")
+    if($action == "deletePosition")
     {
-        $deletePoste = true;
+        $deletePosition = true;
     }
     
-    if($action == "deletePosteConf")
+    if($action == "deletePositionConf")
     {
-        try
-        {
-            $status = $Poste->delete($idPoste, $idOrganisation);
-        }
-        catch(Exception $e)
-        {
-            $erreurs[] = "Une erreur inconnue est survenue.";
-        }
+        $status = $Position->delete($idPosition, $idOrganization);
 
         if($status)
         {
@@ -67,25 +61,18 @@ if($rights === 'admin')
         }
         else
         {
-            $erreurs[] = "Une erreur inconnue est survenue."; 
+            $errors[] = "Une erreur inconnue est survenue."; 
         }
     }
 
-    if($action == "updatePoste")
+    if($action == "updatePosition")
     {
-        $updatePoste = true;
+        $updatePosition = true;
     }
     
-    if($action == "updatePosteConf")
+    if($action == "updatePositionConf")
     {
-        try
-        {
-            $status = $Poste->updateName($nomPoste, $idPoste);
-        }
-        catch(Exception $e)
-        {
-            $erreurs[] = "Une erreur inconnue est survenue.";
-        }
+        $status = $Position->updateName($positionName, $idPosition);
 
         if($status)
         {
@@ -93,22 +80,13 @@ if($rights === 'admin')
         }
         else
         {
-            $erreurs[] = "Une erreur inconnue est survenue.";
+            $errors[] = "Une erreur inconnue est survenue.";
         }
     }
     
-    if($action == "addPoste")
+    if($action == "addPosition")
     {
-        // var_dump($nomPoste, $idOrganisation, $idRole);
-        // exit;
-        try
-        {
-            $status = $Poste->create($nomPoste, $idOrganisation, $idRole);
-        }
-        catch(Exception $e)
-        {
-            $erreurs[] = "Une erreur inconnue est survenue.";
-        }
+        $status = $Position->create($positionName, $idOrganization, $idRole);
 
         if($status)
         {
@@ -116,44 +94,20 @@ if($rights === 'admin')
         }
         else
         {
-            $erreurs[] = "Une erreur inconnue est survenue.";
+            $errors[] = "Une erreur inconnue est survenue.";
         }
     }
-    
-    if($action == "addEquipe")
-    {
-        try
-        {
-            $status = $Equipe->create($nomEquipe, $idOrganisation);
-        }
-        catch(Exception $e)
-        {
-            $erreurs[] = "Une erreur inconnue est survenue.";
-        }
-
-        if($status)
-        {
-            $success = "L'équipe a bien été ajoutée.";
-        }
-        else
-        {
-            $erreurs[] = "Une erreur inconnue est survenue.";
-        }
-    }
-
 
     if($success)
     {
-        $Organisation = new Organisation($idOrganisation);
+        $organization = new organization($idOrganization);
 
-        $fetchPoste = $idPoste ? $Poste->fetch($idPoste) : false;
-        $nbMembresEquipes = $Organisation->CountUsersByEquipes($idOrganisation);
-        $nbMembresPostes = $Organisation->CountUsersByPoste($idOrganisation);
-        $equipeMinMax = $Organisation->getMinMaxIdEquipe($idOrganisation);
+        $fetchPosition = $idPosition ? $Position->fetch($idPosition) : false;
+        $usersByPositionCounter = $organization->CountUsersByPosition($idOrganization);
         
         $roles = $Role->fetchAll();
-        $equipes = $Equipe->fetchAll($idOrganisation);
-        $postes = $Poste->fetchAll($idOrganisation);
+        $teams = $Team->fetchAll($idOrganization);
+        $positions = $Position->fetchAll($idOrganization);
     }
 
     require_once VIEWS_PATH."admin/".$tpl;

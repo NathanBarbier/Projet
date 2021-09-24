@@ -25,8 +25,8 @@ $mail->setFrom('storiesHelperSignUp@gmail.com', 'storiesHelper');
 $mail->addReplyTo('storiesHelperSignUp@gmail.com', 'storiesHelper'); 
 
 
-$rights = $_SESSION["habilitation"] ?? false;
-$idOrganisation = $_SESSION["idOrganisation"] ?? false;
+$rights = $_SESSION["rights"] ?? false;
+$idOrganization = $_SESSION["idOrganization"] ?? false;
 
 // var_dump($rights);
 
@@ -38,21 +38,20 @@ if($rights === "admin")
     $firstname = GETPOST('firstname');
     $lastname = GETPOST('lastname');
     $email = GETPOST('email');
-    $idPoste = GETPOST('idPoste');
-    $idEquipe = GETPOST('idEquipe');
+    $idPosition = GETPOST('idPosition');
     $birth = GETPOST('birth');
-    $oldmdp = GETPOST('oldmdp');
-    $newmdp = GETPOST('newmdp');
-    $newmdp2 = GETPOST('newmdp2');
+    $oldpwd = GETPOST('oldpassword');
+    $newpwd = GETPOST('newpassword');
+    $newpwd = GETPOST('newpassword2');
 
     $User = new User($idUser);
-    $Poste = new Poste();
-    $Equipe = new Equipe();
+    $Position = new Position();
+    $Team = new Team();
 
-    $postes = $Poste->fetchAll($idOrganisation);
-    $equipes = $Equipe->fetchAll($idOrganisation);
+    $positions = $Position->fetchAll($idOrganization);
+    $teams = $Team->fetchAll($idOrganization);
 
-    $erreurs = array();
+    $errors = array();
     $success = false;
 
     // $data = new stdClass;
@@ -66,103 +65,95 @@ if($rights === "admin")
     {
         if($envoi)
         {
-            if($email && $firstname && $lastname && $birth && $idPoste && $idEquipe)
+            if($email && $firstname && $lastname && $birth && $idPosition)
             {
                 if(filter_var($email, FILTER_VALIDATE_EMAIL))
                 {
-                    $idPoste = intval($idPoste);
-                    if(is_int($idPoste))
+                    $idPosition = intval($idPosition);
+                    if(is_int($idPosition))
                     {
-                        $idEquipe = intval($idEquipe); 
-                        if(is_int($idEquipe))
+                        $speciaux = "/[.!@#$%^&*()_+=]/";
+                        $nombres = "/[0-9]/";
+                        if(!preg_match($nombres, $firstname) && !preg_match($speciaux, $firstname))
                         {
-                            $speciaux = "/[.!@#$%^&*()_+=]/";
-                            $nombres = "/[0-9]/";
-                            if(!preg_match($nombres, $firstname) && !preg_match($speciaux, $firstname))
+                            if(!preg_match($nombres, $lastname) && !preg_match($speciaux, $lastname))
                             {
-                                if(!preg_match($nombres, $lastname) && !preg_match($speciaux, $lastname))
+                                if(!$User->checkByEmail($email))
                                 {
-                                    if(!$User->verifEmail($email))
+                                    $temporaryPassword = generateRandomString(6);
+                                    $password = password_hash($temporaryPassword, PASSWORD_BCRYPT);
+                                    
+
+                                    if($User->create($firstname, $lastname, $birth, $idPosition, $email, $idOrganization, $password))
                                     {
-                                        $temporaryPassword = generateRandomString(6);
-                                        $mdp = password_hash($temporaryPassword, PASSWORD_BCRYPT);
-                                       
+                                        $organization = new organization($idOrganization);
+                                        $organizationName = $organization->getName();
 
-                                        if($User->create($firstname, $lastname, $birth, $idPoste, $idEquipe, $email, $idOrganisation, $mdp))
-                                        {
-                                            $Organisation = new Organisation($idOrganisation);
-                                            $nomOrganisation = $Organisation->getNom();
+                                        $subject = "New registration !";
 
-                                            $subject = "New registration !";
+                                        $mailText = "You have been registered by $organizationName on StoriesHelper <br>";
+                                        $mailText .= "Your temporary password is ' $temporaryPassword ' , please change it as soon as possible.<br>";
+                                        $mailText .= "Sincerely, <br> StoriesHelper.";
 
-                                            $mailText = "You have been registered by $nomOrganisation on StoriesHelper <br>";
-                                            $mailText .= "Your temporary password is ' $temporaryPassword ' , please change it as soon as possible.<br>";
-                                            $mailText .= "Sincerely, <br> StoriesHelper.";
+                                        // Add a recipient 
+                                        $mail->addAddress($email); 
+                                        
+                                        // Set email format to HTML 
+                                        $mail->isHTML(true); 
+                                        
+                                        // Mail subject 
+                                        $mail->Subject = $subject; 
+                                        
+                                        // Mail body content  
+                                        $mail->Body    = $mailText; 
+                                        
+                                        // Send email 
+                                        if(!$mail->send()) { 
+                                            $errors[] = 'Message could not be sent. Mailer Error: '.$mail->ErrorInfo; 
+                                        } else { 
+                                            // $success = "Le collaborateur a bien été inscrit."; 
+                                            // $success .= " Un email contenant son mot de passe temporaire lui a été envoyé.";    
+                                        } 
 
-                                            // Add a recipient 
-                                            $mail->addAddress($email); 
-                                            
-                                            // Set email format to HTML 
-                                            $mail->isHTML(true); 
-                                            
-                                            // Mail subject 
-                                            $mail->Subject = $subject; 
-                                            
-                                            // Mail body content  
-                                            $mail->Body    = $mailText; 
-                                            
-                                            // Send email 
-                                            if(!$mail->send()) { 
-                                                $erreurs[] = 'Message could not be sent. Mailer Error: '.$mail->ErrorInfo; 
-                                            } else { 
-                                                // $success = "Le collaborateur a bien été inscrit."; 
-                                                // $success .= " Un email contenant son mot de passe temporaire lui a été envoyé.";    
-                                            } 
+                                        // mail($email, $subject ,$mailText);
 
-                                            // mail($email, $subject ,$mailText);
+                                        $success = "Le collaborateur a bien été inscrit."; 
+                                        $success .= " Un email contenant son mot de passe temporaire lui a été envoyé.";
 
-                                            $success = "Le collaborateur a bien été inscrit."; 
-                                            $success .= " Un email contenant son mot de passe temporaire lui a été envoyé.";
-
-                                        }
-                                        else 
-                                        {
-                                            $erreurs[] = "Erreur : L'inscription n'a pas pu aboutir.";
-                                        }
-                                    } 
+                                    }
                                     else 
                                     {
-                                        $erreurs[] = "Erreur : L'adresse email est déjà prise.";
+                                        $errors[] = "Erreur : L'inscription n'a pas pu aboutir.";
                                     }
                                 } 
                                 else 
                                 {
-                                    $erreurs[] = "Erreurs : Le nom n'est pas correct.";
+                                    $errors[] = "Erreur : L'adresse email est déjà prise.";
                                 }
                             } 
                             else 
                             {
-                                $erreurs[] = "Erreur : Le prénom n'est pas correct.";
+                                $errors[] = "errors : Le nom n'est pas correct.";
                             }
                         } 
                         else 
                         {
-                            $erreurs[] = "L'équipe n'est pas correct.";
+                            $errors[] = "Erreur : Le prénom n'est pas correct.";
                         }
                     } 
                     else 
                     {
-                        $erreurs[] = "Le poste n'est pas correct.";
+                        $errors[] = "Le poste n'est pas correct.";
                     }
                 } 
                 else 
                 {
-                    $erreurs[] = "Le format de l'adresse email n'est pas correct.";
+                    $errors[] = "Le format de l'adresse email n'est pas correct.";
                 }
             } 
             else 
             {
-                $erreurs[] = "Un champs n'est pas rempli.";
+                $errors[] = "Un champs n'est pas rempli.";
             }
         } 
     }

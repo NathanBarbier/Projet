@@ -1,18 +1,16 @@
 <?php
 require_once "layouts/entete.php";
 
-$data = json_decode(GETPOST('data'));
-
 ?>
 <div class="col-10">
 <?php
-if($erreurs)
+if($errors)
 {   ?>
     <div class="alert alert-danger mt-3" style="z-index : 0; width : max-content">
     <?php
-    foreach($erreurs as $erreur)
+    foreach($errors as $error)
     {
-        echo $erreur . "<br>";
+        echo $error . "<br>";
     }
     ?>
     </div>
@@ -28,14 +26,14 @@ if($success)
 <?php
 }
 
-if($deletePoste)
+if($deletePosition)
 {
     ?>
     <div class=" alert alert-info mt-3 text-center" style="z-index : 0; width : max-content">
-        Êtes vous sur de vouloir supprimer <?= $fetchPoste->nomPoste;?> ? <br>
+        Êtes vous sur de vouloir supprimer <?= $fetchPosition->name;?> ? <br>
         Cette action est irréversible et supprimera le poste de tous les membres ayant ce poste ! 
         <div class="text-center mt-3">
-            <a href="<?= CONTROLLERS_URL ?>admin/postesEquipes.php?action=deletePosteConf&idPoste=<?=$idPoste?>" class="btn btn-success">Confirmer</a>
+            <a href="<?= CONTROLLERS_URL ?>admin/postesEquipes.php?action=deletePositionConf&idPosition=<?=$idPosition?>" class="btn btn-success">Confirmer</a>
             <a href="<?= CONTROLLERS_URL ?>admin/postesEquipes.php" class="btn btn-danger">Annuler</a>
         </div>
     </div>
@@ -61,18 +59,19 @@ if($deletePoste)
             <table class="table">
                 <tbody id="tbodyPoste">
                     <?php
-                    foreach($postes as $cle => $poste)
+                    foreach($positions as $positionKey => $position)
                     {
-                        if($poste->nomPoste == "indéfini")
+                        // var_dump($position);
+                        if($position->name == "indéfini")
                         {
-                            foreach($nbMembresPostes as $key => $nbMembrePoste)
+                            foreach($usersByPositionCounter as $key => $usersPositionCounter)
                             {
-                                if($poste->idPoste == $key)
+                                if($position->rowid == $key)
                                 {
                                     ?>
                                     <tr>
-                                        <th style="width : 50%"><?=$poste->nomPoste;?></th>
-                                        <td style="width : 50%"><?=$nbMembrePoste;?></td>
+                                        <th style="width : 50%"><?=$position->name;?></th>
+                                        <td style="width : 50%"><?=$usersPositionCounter;?></td>
                                         <td></td>
                                         <td></td>
                                     </tr>
@@ -82,22 +81,22 @@ if($deletePoste)
                         }
                     }
 
-                    foreach($postes as $cle => $poste)
+                    foreach($positions as $positionKey => $position)
                     {
-                        if($poste->nomPoste != "indéfini") {
-                            foreach($nbMembresPostes as $key => $nbMembrePoste)
+                        if($position->name != "indéfini") {
+                            foreach($usersByPositionCounter as $key => $usersPositionCounter)
                             {
-                                if($poste->idPoste == $key)
+                                if($position->rowid == $key)
                                 {
                                     ?>
                                     <tr style="width : 150%">
-                                        <th><?=$poste->nomPoste;?></th>
-                                        <td><?=$nbMembrePoste;?></td>
+                                        <th><?= $position->name; ?></th>
+                                        <td><?= $usersPositionCounter; ?></td>
                                         <td>
-                                            <a href="<?= CONTROLLERS_URL ?>admin/postesEquipes.php?action=deletePoste&idPoste=<?=$poste->idPoste?>" class="btn btn-danger btn-sm mt-1">Supprimer</a>
+                                            <a href="<?= CONTROLLERS_URL ?>admin/postesEquipes.php?action=deletePosition&idPosition=<?= $position->rowid ?>" class="btn btn-danger btn-sm mt-1">Supprimer</a>
                                         </td>
                                         <td>
-                                            <a href="<?= CONTROLLERS_URL ?>admin/postesEquipes.php?action=updatePoste&idPoste=<?=$poste->idPoste?>" class="btn btn-primary btn-sm mt-1">Modifier</a>
+                                            <a href="<?= CONTROLLERS_URL ?>admin/postesEquipes.php?action=updatePosition&idPosition=<?= $position->rowid ?>" class="btn btn-primary btn-sm mt-1">Modifier</a>
                                         </td>
                                     </tr>
                                 <?php 
@@ -110,12 +109,12 @@ if($deletePoste)
             </table>
         </div>
         <div class="container mt-5 text-center" style="width : 30% ; float : left">
-            <form method="post" action="<?= CONTROLLERS_URL ?>admin/postesEquipes.php?action=addPoste"> 
+            <form method="post" action="<?= CONTROLLERS_URL ?>admin/postesEquipes.php?action=addPosition"> 
                 <div class="row">
                     <div class="col-6">
                        <div class="form-group text-center">
-                            <label for="nomPoste" class="mb-2">Nom du poste</label>
-                            <input type="text" class="form-control" name="nomPoste" id="nomPoste-id" placeholder="Nouveau poste" required>
+                            <label for="positionName" class="mb-2">Nom du poste</label>
+                            <input type="text" class="form-control" name="positionName" id="positionName-id" placeholder="Nouveau poste" required>
                         </div> 
                     </div>
                     <div class="col-6">
@@ -123,10 +122,10 @@ if($deletePoste)
                             <label for="idRole" class="mb-2">Habilitation</label>
                             <select name="idRole" id="idRole-id" class="form-control">
                                 <?php
-                                foreach($roles as $cle => $role)
+                                foreach($roles as $key => $role)
                                 {
                                     ?>
-                                    <option value="<?= $role->idRole; ?>"  <?= $role->nom == "Collaborateur" ? "selected" : "" ;?>  ><?= $role->nom; ?></option>
+                                    <option value="<?= $role->rowid; ?>"  <?= $role->name == "Collaborateur" ? "selected" : "" ;?>  ><?= $role->name; ?></option>
                                     <?php
                                 }
                                 ?>
@@ -140,13 +139,13 @@ if($deletePoste)
                 </div>
             </form>
             <?php
-            if($idPoste && $updatePoste)
+            if($idPosition && $updatePosition)
             {
             ?>
-                <form method="post" action="<?= CONTROLLERS_URL ?>admin/postesEquipes.php?action=updatePosteConf&idPoste=<?=$idPoste?>">
+                <form method="post" action="<?= CONTROLLERS_URL ?>admin/postesEquipes.php?action=updatePositionConf&idPosition=<?=$idPosition?>">
                     <div class="form-group ml-auto mr-auto mt-3">
-                        <label for="modifierPoste">Modifier le poste "<?=$fetchPoste->nomPoste;?>"</label>
-                        <input type="text" class="form-control" name="nomPoste" id="nomPoste-id" placeholder="entrez le nouveau nom du poste" value="<?=$fetchPoste->nomPoste;?>">
+                        <label for="positionName">Modifier le poste "<?= $fetchPosition->name; ?>"</label>
+                        <input type="text" class="form-control" name="positionName" id="positionName-id" placeholder="entrez le nouveau nom du poste" value="<?=$fetchPosition->name;?>">
                     </div>
 
                     <div class="form-group text-center mt-2">
@@ -160,23 +159,23 @@ if($deletePoste)
         </div>
     </div>
 
-    <div id="modifEquipe">
+    <!-- <div id="modifEquipe">
         <div class="infoEquipe">
             <form method="post" action="<?= CONTROLLERS_URL ?>admin/postesEquipes.php?action=addEquipe"> 
                 <div class="form-group mt-3">
                     <label for="ajoutEquipe"><h4>Nom de la nouvelle équipe</h4></label>
                 </div>
                 <div class="form-group mt-3">
-                    <input type="text" class="form-control" name="nomEquipe" id="nomEquipe-id" placeholder="Saisissez le nom de l'équipe" required>
+                    <input type="text" class="form-control" name="teamName" id="teamName-id" placeholder="Saisissez le nom de l'équipe" required>
                 </div>
                 
                 <div class="form-group text-center m-auto mt-3">
                     <button type="submit" class="btn btn-success" name="envoi" value="1" >Ajouter l'équipe</button>
                 </div>
             </form>
-        </div>
+        </div> -->
 
-        <div class="infoEquipe">
+        <!-- <div class="infoEquipe">
             <h4><u>Info de l'équipe :</u></h4>
             <?php
             foreach($equipes as $key => $equipe)
@@ -262,9 +261,9 @@ if($deletePoste)
             ?>
         </div>
         
-    </div>
+    </div> -->
 
-    <div style="width : 60%">
+    <!-- <div style="width : 60%">
         <table class="table mb-0 mt-5">
             <thead class="titreTable">
                 <tr>
@@ -325,7 +324,7 @@ if($deletePoste)
             ?>
             </tbody>
         </table>
-    </div>
+    </div> -->
 
     <script src="<?= JS_URL ?>admin/postesEquipes.js"></script>
 <?php

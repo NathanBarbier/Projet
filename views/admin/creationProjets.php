@@ -1,23 +1,24 @@
 <?php
 require_once "layouts/entete.php"; 
 ?>
-<div class="col-10 mt-4">
+<div class="col-10 mt-4 pe-4">
+
 <?php
 if($success)
 {
     ?>
-    <div class="alert alert-success">
+    <div class="alert alert-success w-25">
         <?= $success ?>
     </div>
     <?php
 }
-else if ($erreurs)
+else if ($errors)
 { ?>
-    <div class="alert alert-danger">
+    <div class="alert alert-danger w-25">
     <?php
-    foreach($erreurs as $erreur)
+    foreach($errors as $error)
     {
-        echo $erreur . "<br>";
+        echo $error . "<br>";
     }
     ?>
     </div>
@@ -27,10 +28,10 @@ else if ($erreurs)
     <h2>Création de projet</h2>
     <div class="row mt-4">
         <div class="col-4">
-            <form method="POST" action="<?= CONTROLLERS_URL ?>admin/creationProjets.php?action=addProjet&idProjet=<?= $idProjet ?? '' ?>">
+            <form method="POST" action="<?= CONTROLLERS_URL ?>admin/creationProjets.php?action=addProjet&idProject=<?= $idProject ?? '' ?>">
                 <div class="form-floating mb-3">
-                    <input required class="form-control" type="text" name="titre" id="titre-id" placeholder="Titre du projet" value="<?= $titre ?? '' ?>">
-                    <label for="titre">Titre du projet</label>
+                    <input required class="form-control" type="text" name="name" id="name-id" placeholder="Titre du projet" value="<?= $name ?? '' ?>">
+                    <label for="name">Titre du projet</label>
                 </div>
 
                 <div class="form-floating mb-3">

@@ -4,35 +4,36 @@ class BelongsTo extends Modele
     private $userIds = array();
     private $teamIds = array();
 
-    function __construct($idUser = null)
+    function __construct($fk_user = null)
     {
-        if($idUser != null)
+        if($fk_user != null)
         {
-            $sql = "SELECT fk_user, fk_equipe";
-            $sql .= " FROM appartient_a";
+            $sql = "SELECT fk_user, fk_team";
+            $sql .= " FROM belong_to";
             $sql .= " WHERE fk_user = ?";
 
             $requete = $this->getBdd()->prepare($sql);
-            $requete->execute([$idUser]);
+            $requete->execute([$fk_user]);
 
             $lines = $requete->fetchAll(PDO::FETCH_OBJ);
 
             foreach($lines as $line)
             {
                 $this->userIds[] = $line->fk_user;
-                $this->teamIds[] = $line->fk_equipe;
+                $this->teamIds[] = $line->fk_team;
             }
         }
     }
 
     // INSERT
-    public function create($idUser, $idEquipe)
+    public function create($fk_user, $fk_team)
     {
-        $sql = "INSERT INTO appartient_a (fk_user, fk_equipe)"; 
+        $sql = "INSERT INTO belong_to (fk_user, fk_team)"; 
         $sql.= " VALUES (?, ?)";
 
         $requete = $this->getBdd()->prepare($sql);
-        return $requete->execute([$idUser, $idEquipe]);
+        return $requete->execute([$fk_user, $fk_team]);
+
     }
 
     // GETTER

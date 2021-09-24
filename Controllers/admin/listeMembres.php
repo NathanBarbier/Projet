@@ -10,7 +10,7 @@ $envoi = GETPOST('envoi');
 $firstname = GETPOST('firstname');
 $lastname = GETPOST('lastname');
 $email = GETPOST('email');
-$idPoste = GETPOST('idPoste');
+$idPoste = GETPOST('idPosition');
 $idEquipe = GETPOST('idEquipe');
 $birth = GETPOST('birth');
 
@@ -18,18 +18,18 @@ $oldmdp = GETPOST('oldmdp');
 $newmdp = GETPOST('newmdp');
 $newmdp2 = GETPOST('newmdp2');
 
-$rights = $_SESSION["habilitation"] ?? false;
-$idOrganisation = $_SESSION["idOrganisation"] ?? false;
+$rights = $_SESSION["rights"] ?? false;
+$idOrganization = $_SESSION["idOrganization"] ?? false;
 
 $User = new User($idUser);
-$Poste = new Poste();
-$Equipe = new Equipe();
+$Position = new Position();
+$Team = new Team();
 
-$membres = $User->fetchAll($idOrganisation);
-$postes = $Poste->fetchAll($idOrganisation);
-$equipes = $Equipe->fetchAll($idOrganisation);
+$members = $User->fetchAll($idOrganization);
+$positions = $Position->fetchAll($idOrganization);
+$teams = $Team->fetchAll($idOrganization);
 
-$erreurs = array();
+$errors = array();
 $success = false;
 
 // $data = new stdClass;
@@ -55,7 +55,7 @@ if($rights === "admin")
                     } 
                     catch (exception $e)
                     {
-                        $erreurs[] = "Le prénom n'a pas pu être modifié.";
+                        $errors[] = "Le prénom n'a pas pu être modifié.";
                     }
 
                     if($status)
@@ -64,13 +64,13 @@ if($rights === "admin")
                     }
                     else
                     {
-                        $erreurs[] = "Le prénom n'a pas pu être modifié.";
+                        $errors[] = "Le prénom n'a pas pu être modifié.";
                     }
 
                 } 
                 else 
                 {
-                    $erreurs[] = "Le nom est le même qu'avant.";
+                    $errors[] = "Le nom est le même qu'avant.";
                 }
             } 
             else 
@@ -100,13 +100,13 @@ if($rights === "admin")
                     } 
                     catch (exception $e)
                     {
-                        $erreurs[] = "La modification de nom n'a pas pu aboutir.";
+                        $errors[] = "La modification de nom n'a pas pu aboutir.";
                     }
                     $success = "Le nom a bien été modifié.";
                 } 
                 else 
                 {
-                    $erreurs[] = "Le nom n'a pas été changé.";
+                    $errors[] = "Le nom n'a pas été changé.";
                 }
             } 
             else
@@ -120,39 +120,20 @@ if($rights === "admin")
         }
     }
     
-    if($action == "updateEquipe")
-    {
-        if($idUser && $idEquipe)
-        {
-            try
-            {
-                $User->updateEquipe($idEquipe, $idUser);
-            } 
-            catch (exception $e)
-            {
-                $erreurs[] = "La modification d'équipe n'a pas pu aboutir.";
-            }
-            $success = "Le modification d'équipe a bien été prise en compte.";
-        } 
-        else
-        {
-            header("location:".ROOT_PATH."index.php");
-        }
-    }
-    
-    if($action == "updatePoste")
+    if($action == "updatePosition")
     {
         if($idUser && $idPoste)
         {
-            try 
+            $status = $User->updatePosition($idPoste, $idUser);
+
+            if($status)
             {
-                $User->updatePoste($idPoste, $idUser);
+                $success = "La modification de poste a bien été prise en compte.";
             }
-            catch (exception $e)
+            else
             {
-                $erreurs[] = "La modification de poste n'a pas pu aboutir.";
+                $errors[] = "La modification de poste n'a pas pu aboutir.";
             }
-            $success = "La modification de poste a bien été prise en compte.";
         } 
         else
         {
@@ -164,14 +145,7 @@ if($rights === "admin")
     {
         if($idUser)
         {
-            try 
-            {
-                $status = $User->delete($idUser);
-            }
-            catch (exception $e)
-            {
-                $erreurs[] = "La modification de poste n'a pas pu aboutir.";
-            }
+            $status = $User->delete($idUser);
 
             if($status)
             {
@@ -179,7 +153,7 @@ if($rights === "admin")
             }
             else
             {
-                $erreurs[] = "La modification de poste n'a pas pu aboutir.";
+                $errors[] = "La modification de poste n'a pas pu aboutir.";
             }
         } 
         else
@@ -192,9 +166,9 @@ if($rights === "admin")
     // Rafraichir les datas si modif bdd
     if($success)
     {
-        $membres = $User->fetchAll($idOrganisation);
-        $postes = $Poste->fetchAll($idOrganisation);
-        $equipes = $Equipe->fetchAll($idOrganisation);
+        $members = $User->fetchAll($idOrganization);
+        $positions = $Position->fetchAll($idOrganization);
+        $teams = $Team->fetchAll($idOrganization);
     }
 
     require_once VIEWS_PATH."admin/".$tpl;

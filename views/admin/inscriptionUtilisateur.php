@@ -2,7 +2,8 @@
 require_once "layouts/entete.php";
 ?>
 
-<div class="col-9 container mt-5">
+<div class="col-9 mt-3">
+    <div class="container">
 
 <?php
 if($success)
@@ -15,25 +16,21 @@ if($success)
     </div>
     <?php
 }
-else if($erreurs)
+else if($errors)
 {
     ?>
     <div class="alert alert-danger">
     <?php
-    foreach($erreurs as $erreur)
+    foreach($errors as $error)
     {
-        echo $erreur . "<br>";
+        echo $error . "<br>";
     }
     ?>
     </div>
     <?php
 }
 ?>
-
-<h1>Inscription d'un collaborateur</h1>
-
-<div class="col-9 mt-4">
-    <div class="container">
+        <h1>Inscription d'un collaborateur</h1>
         <form method="post" action="<?= CONTROLLERS_URL ?>admin/inscriptionUtilisateur.php?action=signup">
                 
             <div class="form-floating mt-3 mb-3">
@@ -57,33 +54,16 @@ else if($erreurs)
             </div>
 
             <div class="row text-center ">
-                <div class="col" style="width:40%;">
-                    <label for="idPoste">Sélectionnez un poste</label>
-                    <select class="form-control col text-center" name="idPoste" id="idPoste">
+                <div class="col-6 mx-auto">
+                    <label for="idPosition">Sélectionnez un poste</label>
+                    <select class="form-control col text-center mt-3" name="idPosition" id="idPosition">
                         <?php
-                            if($postes)
+                            foreach($positions as $position)
                             {
-                                foreach($postes as $poste)
-                                {
-                                    ?>
-                                    <option value="<?= $poste->idPoste ?>"><?= $poste->nomPoste ?></option>
-                                <?php
-                                }
-                            } ?>
-                    </select>
-                </div>
-                <div class="col" style="width:40%">
-                    <label for="idEquipe">Sélectionnez une équipe</label>
-                    <select class="form-control col text-center" name="idEquipe" id="idEquipe">
-                        <?php    
-                        if($equipes)
-                        {
-                            foreach($equipes as $equipe)
-                            { ?>
-                                <option value="<?= $equipe->idEquipe ?>"><?= $equipe->nomEquipe ?></option>
+                                ?>
+                                <option value="<?= $position->rowid ?>"><?= $position->name ?></option>
                             <?php
-                            }
-                        } ?>        
+                            } ?>
                     </select>
                 </div>
             

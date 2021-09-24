@@ -1,14 +1,14 @@
 <?php
 require_once "layouts/entete.php";
 
-if(!empty($erreurs))
+if(!empty($errors))
 {
     ?>
-    <div class="alert alert-danger">
+    <div class="alert alert-danger w-50 mx-auto">
     <?php
-    foreach($erreurs as $erreur)
+    foreach($errors as $error)
     {
-        echo $erreur . "<br>";
+        echo $error . "<br>";
     }
     ?>
     </div>
@@ -24,12 +24,12 @@ if(!empty($erreurs))
 
         <div class="form-floating mt-5">
             <input type="text" class="form-control" name="email" placeholder="Saisissez votre identifiant" value="<?= $email ?? '' ?>" maxlength="50" required>
-            <label for="mail" class="mb-1">Addresse mail</label>
+            <label for="email" class="mb-1">Addresse mail</label>
         </div>
 
         <div class="form-floating mt-3">
-            <input type="password" class="form-control" name="mdp" placeholder="Saisissez votre mot de passe" required>
-            <label for="mdp" class="mb-1">Mot de passe</label>
+            <input type="password" class="form-control" name="password" placeholder="Saisissez votre mot de passe" required>
+            <label for="password" class="mb-1">Mot de passe</label>
         </div>
 
         <div class="form-group text-center mt-3">

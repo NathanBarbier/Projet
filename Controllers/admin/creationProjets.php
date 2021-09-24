@@ -2,38 +2,33 @@
 //import all models
 require_once "../../traitements/header.php";
 
-$idOrganisation = $_SESSION["idOrganisation"] ?? false;
+$idOrganization = $_SESSION["idOrganization"] ?? false;
 
 $action = GETPOST('action');
-$idProjet = GETPOST('idProjet');
+$idProject = GETPOST('idProject');
 
-$titre = GETPOST('titre');
+$name = GETPOST('name');
 $type = GETPOST('type');
 $deadline = GETPOST('deadline');
-$idClient = GETPOST('idClient');
-$chefProjet = GETPOST('chefProjet');
 $description = GETPOST('description');
 $envoi = GETPOST('envoi');
-$clientName = GETPOST('clientName');
 
-$rights = $_SESSION["habilitation"] ?? false;
+$rights = $_SESSION["rights"] ?? false;
 
 $success = false;
-$erreurs = array();
+$errors = array();
 
 if($rights == 'admin')
 {
-    $Equipe = new Equipe();
-    $Client = new Client();
-    $Projet = new Projet();
+    $Team = new Team();
+    $Project = new Project();
     $WorkTo = new WorkTo();
 
-    $equipes = $Equipe->fetchAll($idOrganisation);
-    $clients = $Client->fetchAll($idOrganisation);
+    $teams = $Team->fetchAll($idOrganization);
 
-    $maxIdProjet = $Projet->fetchMaxId()["maxId"];
+    $maxIdProject = $Project->fetchMaxId()->maxId;
 
-    $erreurs = array();
+    $errors = array();
     $success = false;
 
     $data = new stdClass;
@@ -42,11 +37,11 @@ if($rights == 'admin')
 
     if($action == "addProjet")
     {
-        if($envoi || $idProjet)
+        if($envoi || $idProject)
         {
-            if($titre && $type && $description)
+            if($name && $type)
             {
-                $status = $Projet->create($titre, $type, $deadline, $description, $idOrganisation);
+                $status = $Project->create($name, $type, $deadline, $description, $idOrganization);
 
                 if($status)
                 {
@@ -54,13 +49,13 @@ if($rights == 'admin')
                 }
                 else
                 {
-                    $erreurs[] = "Une erreur est survenue.";
+                    $errors[] = "Une erreur est survenue.";
                 }
 
             } 
             else 
             {
-                $erreurs[] = "Tous les champs ne sont pas remplis.";
+                $errors[] = "Tous les champs ne sont pas remplis.";
             }
         } 
         else 

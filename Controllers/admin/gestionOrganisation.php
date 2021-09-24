@@ -4,10 +4,10 @@ require_once "../../traitements/header.php";
 
 $action = GETPOST('action');
 
-$idOrganisation = $_SESSION["idOrganisation"] ?? false;
-$rights = $_SESSION["habilitation"] ?? false;
+$idOrganization = $_SESSION["idOrganization"] ?? false;
+$rights = $_SESSION["rights"] ?? false;
 
-$Organisation = new Organisation($idOrganisation);
+$Organization = new Organization($idOrganization);
 
 $tpl = "gestionOrganisation.php";
 $data = new stdClass;
@@ -15,21 +15,21 @@ $data = new stdClass;
 if($rights === "admin")
 {
     
-    if($action == "deleteOrganisation")
+    if($action == "deleteOrganization")
     {
-        $Organisation->delete();
+        $Organization->delete();
         header("location:".ROOT_URL."index.php");
     }
 
     
-    $CurrentOrganisation = new stdClass;
+    $CurrentOrganization = new stdClass;
 
-    $CurrentOrganisation->nom = $Organisation->getNom();
-    $CurrentOrganisation->email = $Organisation->getEmail();
-    $CurrentOrganisation->membersCount = $Organisation->countUsers();
-    $CurrentOrganisation->equipesCount = $Organisation->countEquipes();
+    $CurrentOrganization->name = $Organization->getName();
+    $CurrentOrganization->email = $Organization->getEmail();
+    $CurrentOrganization->membersCount = $Organization->countUsers();
+    $CurrentOrganization->teamsCount = $Organization->countTeams();
 
-    require_once VIEWS_PATH."admin/".$tpl;
+    require_once VIEWS_PATH."admin".DIRECTORY_SEPARATOR.$tpl;
 }
 else
 {

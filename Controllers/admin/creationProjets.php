@@ -22,7 +22,6 @@ if($rights == 'admin')
 {
     $Team = new Team();
     $Project = new Project();
-    $WorkTo = new WorkTo();
 
     $teams = $Team->fetchAll($idOrganization);
 

@@ -185,10 +185,10 @@ class User extends Modele
 
     public function fetchByTeam($idTeam)
     {
-        $sql = "SELECT u.rowid, u.lastname, u.firstname, u.birth, u.password, u.idPosition, u.email, u.fk_organization"; 
+        $sql = "SELECT u.rowid, u.lastname, u.firstname, u.birth, u.password, u.fk_position, u.email, u.fk_organization"; 
         $sql .= " FROM users AS u";
-        $sql .= " LEFT JOIN user_team AS ut" ;
-        $sql .= " WHERE ut.fk_team = ?";
+        $sql .= " LEFT JOIN belong_to AS b ON u.rowid = b.fk_user" ;
+        $sql .= " WHERE b.fk_team = ?";
         
         $requete = $this->getBdd()->prepare($sql);
         $requete->execute([$idTeam]);

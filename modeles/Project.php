@@ -105,54 +105,79 @@ Class Project extends Modele
 
     //! UPDATE
 
-    public function updateId($id)
+    public function updateName($name, $idProject = null)
     {
-        $sql = "UPDATE projects";
-        $sql .= " SET rowid = ?"; 
-        $sql .= " WHERE rowid =  ?";
+        if($idProject == null)
+        {
+            $idProject = $this->id;
+        }
 
-        $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$id, $this->id]);
-    }
-
-    public function updateNom($nom)
-    {
         $sql = "UPDATE projects";
         $sql .= " SET name = ?"; 
         $sql .= " WHERE rowid =  ?";
 
         $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$nom, $this->id]);
+        return $requete->execute([$name, $idProject]);
     }
 
-    public function updateType(string $type)
+    public function updateType(string $type, $idProject = null)
     {
+        if($idProject == null)
+        {
+            $idProject = $this->id;
+        }
+
         $sql = "UPDATE projects";
         $sql .= " SET type = ?";
         $sql .= " WHERE rowid =  ?";
 
         $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$type, $this->id]);
+        return $requete->execute([$type, $idProject]);
     }
 
-    public function updateDeadline($deadline)
+    public function updateDescription(string $description, $idProject = null)
     {
+        if($idProject == null)
+        {
+            $idProject = $this->id;
+        }
+
+        $sql = "UPDATE projects";
+        $sql .= " SET description = ?";
+        $sql .= " WHERE rowid = ?";
+
+        $requete = $this->getBdd()->prepare($sql);
+        return $requete->execute([$description, $idProject]);
+    }
+
+    public function updateDeadline($deadline, $idProject = null)
+    {
+        if($idProject == null)
+        {
+            $idProject = $this->id;
+        }
+
         $sql = "UPDATE projects";
         $sql .= " SET deadline = ?"; 
         $sql .= " WHERE rowid =  ?";
 
         $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$deadline, $this->id]);
+        return $requete->execute([$deadline, $idProject]);
     }
 
-    public function updateOpen($open)
+    public function updateOpen($open, $idProject = null)
     {
+        if($idProject == null)
+        {
+            $idProject = $this->id;
+        }
+
         $sql = "UPDATE projects";
         $sql .= " SET open = ?";
         $sql .= " WHERE rowid = ?";
 
         $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$open, $this->id]);
+        return $requete->execute([$open, $idProject]);
     }
 
 

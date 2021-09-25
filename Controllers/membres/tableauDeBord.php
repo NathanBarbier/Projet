@@ -14,8 +14,8 @@ if($rights === "user")
     $email = GETPOST('email');
 
     $User = new User($idUser);
-    $Poste = new Poste($User->getIdPoste());
-    $idRole = $Poste->getIdRole();
+    $Position = new Position($User->getIdPosition());
+    $idRole = $Position->getIdRole();
     $Role = new Role($idRole);
 
     
@@ -27,21 +27,22 @@ if($rights === "user")
     // On récupère toutes les ids équipes auxquelle appartient l'user
     foreach($BelongsTo->getTeamIds() as $teamId)
     {
-        $WorkTo = new WorkTo($teamId);
-        $Equipe = new Equipe($teamId);
+        $Team = new Team($teamId);
         
         // on récupère l'id du projet lié à cette équipe
         $idProjet = $WorkTo->getProjectId();
 
-        $Project = new Projet($idProjet);
-        $ProjectTasks = new ProjectTasks($idProjet);
+        $Project = new Project($idProjet);
+        // ! WIP
+        $Tasks = new Task($idProjet);
+        // $ProjectTasks = new ProjectTasks($idProjet);
 
         // On affecte pour chaque projets sur lequel travaille l'user
         $userProjects[$idProjet] = [
             'membersCount' => $Project->fetch_members_count(),
             'tasksCount' => $ProjectTasks->getTaskIds(),
-            'projectName' => $Project->getNom(),
-            'nomEquipe' => $Equipe->getNom(),
+            'projectName' => $Project->getName(),
+            'nomEquipe' => $Team->getName(),
         ];
 
     }
@@ -79,19 +80,19 @@ if($rights === "user")
     if($success)
     {
         $User = new User($idUser);
-        $Poste = new Poste($User->getIdPoste());
-        $Equipe = new Equipe($User->getIdEquipe());
-        $idRole = $Poste->getIdRole();
+        $Position = new Position($User->getIdPosition());
+        $Team = new Team();
+        $idRole = $Position->getIdRole();
         $Role = new Role($idRole);
-        $Projet = new Projet($Equipe->getidProjet());
+        $Project = new Project($Team->getidProject());
     }
 
     $CurrentUser = new stdClass;
     $CurrentUser->firstname = $User->getFirstname();
     $CurrentUser->lastname = $User->getLastname();
     $CurrentUser->email = $User->getEmail();
-    $CurrentUser->poste = $Poste->getNom();
-    $CurrentUser->role = $Role->getNom();
+    $CurrentUser->position = $Position->getName();
+    $CurrentUser->role = $Role->getName();
     
     require_once VIEWS_PATH."admin/".$tpl;
 }

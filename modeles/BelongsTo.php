@@ -24,8 +24,10 @@ class BelongsTo extends Modele
             }
         }
     }
+    
 
     // INSERT
+
     public function create($fk_user, $fk_team)
     {
         $sql = "INSERT INTO belong_to (fk_user, fk_team)"; 
@@ -33,10 +35,11 @@ class BelongsTo extends Modele
 
         $requete = $this->getBdd()->prepare($sql);
         return $requete->execute([$fk_user, $fk_team]);
-
     }
 
+
     // GETTER
+
     public function getUserIds()
     {
         return $this->userIds;
@@ -45,6 +48,18 @@ class BelongsTo extends Modele
     public function getTeamIds()
     {
         return $this->teamIds;
+    }
+
+
+    // DELETE
+
+    public function delete($fk_user, $fk_team)
+    {
+        $sql = "DELETE FROM belong_to";
+        $sql .= " WHERE fk_user = ? AND fk_team = ?";
+
+        $requete = $this->getBdd()->prepare($sql);
+        return $requete->execute([$fk_user, $fk_team]);
     }
 }
 

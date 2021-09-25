@@ -185,14 +185,19 @@ class Team extends Modele
 
     //! UPDATE
 
-    public function updateName($name)
+    public function updateName($name, $teamId = null)
     {
+        if($teamId == null)
+        {
+            $teamId = $this->id;
+        }
+
         $sql = "UPDATE teams";
         $sql .= " SET name = ?";
         $sql .= " WHERE rowid = ?";
 
         $requete = $this->getBdd()->prepare($sql);
-        return $requete->execute([$name, $this->id]);
+        return $requete->execute([$name, $teamId]);
     }
 
     public function updateIdProject($idProject)

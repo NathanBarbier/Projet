@@ -11,7 +11,13 @@ if($rights === "admin")
 
     $action = GETPOST('action');
     $idProject = GETPOST('idProject');
+    $projectName = GETPOST('projectName');
+    $description = GETPOST('description');
+    $type = GETPOST('type');
+
     $teamName = GETPOST('teamName');
+    $teamNameUpdate = GETPOST('teamNameUpdate');
+    $teamId = GETPOST('teamId');
     
 
     $Project = new Project($idProject);
@@ -22,8 +28,6 @@ if($rights === "admin")
     $CurrentProject->description = $Project->getDescritpion();
     $CurrentProject->type = $Project->getType();
 
-    // var_dump($CurrentProject);
-
     $success = false;
     $errors = array();
 
@@ -31,22 +35,16 @@ if($rights === "admin")
     //TODO qui ne sont pas attribué au projet
     // 
     $User = new User();
-    $WorkTo = new WorkTo();
     $Team = new Team();
     $BelongsTo = new BelongsTo();
 
     $projectFreeUsers = $User->fetchFreeUsersByProjectId($idProject);
-
-
-    // var_dump($projectFreeUsers);
-    // exit;
 
     $projectFreeUsersIds = array();
     foreach($projectFreeUsers as $user)
     {
         $projectFreeUsersIds[] = $user->rowid;
     }
-
 
     $projectTeamsIds = array();
     
@@ -72,7 +70,31 @@ if($rights === "admin")
         }
     }
 
+    if($action == "updateProject")
+    {
+        if($projectName && $description && $type)
+        {
+            $status = array();
 
+            $status[] = $Project->updateName($projectName, $idProject);
+            $status[] = $Project->updateDescription($description, $idProject);
+            $status[] = $Project->updateType($type, $idProject);
+
+            if(in_array(false, $status))
+            {
+                $errors[] = "Une erreur innatendue est survenue.";
+            }
+            else
+            {
+                $success = "Les informations du projet ont bien été mises à jour.";
+            }
+        }
+        else
+        {
+            $errors[] = "Tous les champs ne sont pas remplis.";
+        }
+    }
+    
     if($action == "addTeam")
     {
         if($teamName)
@@ -122,7 +144,93 @@ if($rights === "admin")
         }
     }
 
-    // exit;
+    if($action == "updateTeam")
+    {
+        if($teamId)
+        {
+            $status = array();
+
+            // changement de nom d'équipe
+            if($teamNameUpdate)
+            {
+                $status[] = $Team->updateName($teamNameUpdate, $teamId);
+            }
+
+            // ajout des users dans la team
+            foreach($addingUsersIds as $idUser)
+            {
+                $status[] = $BelongsTo->create($idUser, $teamId);
+            }
+
+            // suppression des users dans la team
+            foreach($CurrentProject->teams as $team)
+            {
+                if($team->rowid == $teamId)
+                {
+                    foreach($team->members as $key => $member)
+                    {
+                        if(GETPOST('removingUser'.$key))
+                        {
+                            $fk_user = GETPOST('removingUser'.$key);
+                            $status[] = $BelongsTo->delete($fk_user, $team->rowid);
+                        }
+                    }
+                }
+            }
+
+            // exit;
+
+            if(!in_array(false, $status))
+            {
+                $success = "L'équipe a bien été modifiée.";
+            }
+            else
+            {
+                $errors[] = "Une erreur innatendue est survenue.";
+            }
+        }
+        else
+        {
+            $errors[] = "Vous n'avez pas sélectionné d'équipes";
+        }
+
+    }
+
+
+    if($success)
+    {
+        $Project = new Project($idProject);
+
+        $CurrentProject = new stdClass;
+
+        $CurrentProject->name = $Project->getName();
+        $CurrentProject->description = $Project->getDescritpion();
+        $CurrentProject->type = $Project->getType();
+
+        $projectFreeUsers = $User->fetchFreeUsersByProjectId($idProject);
+
+        $projectFreeUsersIds = array();
+        foreach($projectFreeUsers as $user)
+        {
+            $projectFreeUsersIds[] = $user->rowid;
+        }
+    
+        $projectTeamsIds = array();
+        
+        $lines = $Team->fetchByProjectId($idProject);
+        foreach($lines as $line)
+        {
+            $projectTeamsIds[] = $line->rowid;
+        }
+    
+        $CurrentProject->teams = $Team->fetchByTeamIds($projectTeamsIds);
+
+        foreach($CurrentProject->teams as $key => $team)
+        {
+            $CurrentProject->teams[$key]->members = $User->fetchByTeam($team->rowid);
+        }
+    }
+
 
     require_once VIEWS_PATH."admin/".$tpl;
 }

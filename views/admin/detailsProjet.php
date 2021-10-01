@@ -73,12 +73,12 @@ else if ($success)
 
                     <!-- AFFICHER TOUTES LES EQUIPES EXISTANTES POUR CE PROJET -->
                     <h5 id="project-teams-title" class="mt-3 border-bottom w-50 mx-auto collapse show">Équipes existantes</h5>
-                    <div id="project-teams-div" class="sticker mt-3 overflow-y bg-white pt-2 collapse show" style="height: 50%;">
+                    <div id="project-teams-div" class="sticker mt-3 overflow-y bg-white pt-2 collapse show" style="height: 45%;">
                         <?php 
                         foreach($CurrentProject->teams as $team)
                         { ?>
-                            <div onclick="showTeamMembers(<?= $team->rowid ?>, '<?= $team->name ?>')" class="sticker mx-2 mt-2 pt-3 hover">
-                                <?= $team->name ?>
+                            <div id="team-sticker-<?= $team->rowid ?>" onclick="showTeamMembers(<?= $team->rowid ?>, '<?= $team->name ?>')" class="sticker mx-2 mt-2 pt-3 hover">
+                                <p><?= $team->name ?></p>
                             </div>
                         <?php 
                         }
@@ -87,8 +87,6 @@ else if ($success)
 
                         ?>
                     </div>
-
-
 
                     <form id="update-team-form" action="<?= CONTROLLERS_URL ?>admin/detailsProjet.php?action=updateTeam&idProject=<?= $idProject ?>" method="POST">
                         <input type="hidden" value="" name="teamNameUpdate" id="teamName-hidden-update">

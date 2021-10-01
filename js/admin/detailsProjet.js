@@ -15,6 +15,7 @@ $("#create-team-button").click(function() {
         }
     });
 
+
     $("#add-team-form").submit();
 });
 
@@ -24,14 +25,9 @@ $("#update-team-button").click(function() {
     // update team name
     $("#teamName-hidden-update").val($("#teamName").val());
 
-    // team->members where idTeam
     CurrentProjectTeams = CurrentProject["teams"];
 
-    // <input type="hidden" value="" name="teamId" id="team-id-update-input">
-
     teamId = $("#team-id-update-input").val();
-
-    // console.log(teamId);
 
     CurrentProjectTeams.forEach(team => {
         members = team["members"];
@@ -59,12 +55,6 @@ $("#update-team-button").click(function() {
             });
         }
     });
-
-    // create belong_to where show
-    // for free users
-
-    // delete belong_to where not show
-    // for users that belonged to team but no more
 
     $("#update-team-form").submit();
 });
@@ -101,15 +91,10 @@ function switchTeamApp()
 
     for(i = 0; i < l; i++)
     {
-        // hasClass = $("free-user-"+i).hasClass("show");
-
-        // console.log(hasClass);
-
         if($("#free-user-"+freeUsersIds[i]).hasClass("show"))
         {
             $("#adding-user-"+freeUsersIds[i]).removeClass("show");
         }
-
 
         if($("#adding-user-"+freeUsersIds[i]).hasClass("show"))
         {
@@ -142,9 +127,32 @@ function toggleUserToExistingTeam(userRowid)
     $("#adding-again-user-"+userRowid).toggleClass("show");
 }
 
-
 function showTeamMembers(teamRowid, teamName)
 {
+    $("[id^=freeing-user-]").removeClass("show");
+    $("[id^=adding-again-user-]").removeClass("show");
+
+    teamIds = [];
+    // add onclick showTeamMembers()
+    $("[id^=team-sticker-]").each(function(index, element) {
+        elementTeamRowid = $(element).attr('id');
+        elementTeamRowid = elementTeamRowid.split("-");
+        elementTeamRowid = elementTeamRowid.pop();
+
+        console.log(elementTeamRowid, teamRowid, teamRowid == elementTeamRowid);
+
+        $(element).removeAttr("onclick");
+        if(elementTeamRowid != teamRowid)
+        {
+            teamIds.push(elementTeamRowid);
+        }
+    });
+
+    $(teamIds).each(function(index, element) {
+        elementTeamName = $("#team-sticker-"+element).children().first().html();
+        $("#team-sticker-"+element).attr('onclick', "showTeamMembers("+element+",'"+elementTeamName+"')");
+    })
+
     $(".team-members-"+teamRowid).addClass("show");
 
     // remplir input avec id de l'équipe a update

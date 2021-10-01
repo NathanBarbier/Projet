@@ -49,6 +49,7 @@ if($rights === "admin")
     $projectTeamsIds = array();
     
     $lines = $Team->fetchByProjectId($idProject);
+
     foreach($lines as $line)
     {
         $projectTeamsIds[] = $line->rowid;
@@ -118,14 +119,15 @@ if($rights === "admin")
                 }
                 else
                 {
-                    $errors[] = "Une erreur innatendue est survenue.";
+                    $errors[] = "Une erreur inattendue est survenue.";
                 }
             }
             else
             {
+                // var_dump($teamName, $idOrganization, $idProject);
+                // exit;
                 // create team without users
                 $status = $Team->create($teamName, $idOrganization, $idProject);
-                
 
 
                 if($status)
@@ -134,7 +136,7 @@ if($rights === "admin")
                 }
                 else
                 {
-                    $errors[] = "Une erreur innatendue est survenue.";
+                    $errors[] = "Une erreur inattendue est survenue.";
                 }
             }
         }

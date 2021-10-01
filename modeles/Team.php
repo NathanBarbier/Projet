@@ -140,7 +140,7 @@ class Team extends Modele
 
         $sql = "SELECT t.rowid, t.name, t.fk_organization, t.fk_project";
         $sql .= " FROM teams AS t";
-        $sql .= " WHERE rowid IN ($teamIds)";
+        $sql .= " WHERE rowid IN ('$teamIds')";
 
         $requete = $this->getBdd()->prepare($sql);
         $requete->execute();
@@ -176,7 +176,7 @@ class Team extends Modele
     public function create(string $name, $fk_organization, $fk_project)
     {
         $sql = "INSERT INTO teams (name, fk_organization, fk_project)";
-        $sql .= " VALUES (?,?, ?)";
+        $sql .= " VALUES (?,?,?)";
 
         $requete = $this->getBdd()->prepare($sql);
         return $requete->execute([$name, $fk_organization, $fk_project]);

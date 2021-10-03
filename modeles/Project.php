@@ -9,7 +9,7 @@ Class Project extends Modele
     private $deadline;
     private $description;
     private $idOrganization;
-    private $tasks = array();
+    private $teams = array();
 
     public function __construct($idProject = null)
     {
@@ -33,6 +33,15 @@ Class Project extends Modele
                 $this->open = $Project->open;
                 $this->description = $Project->description;
                 $this->idOrganization = $Project->fk_organization;
+            }
+
+            $Team = new Team();
+            $lines = $Team->fetchAll($this->id);
+
+            foreach($lines as $line)
+            {
+                $Team = new Team($line->rowid);
+                $this->teams[] = $Team;
             }
                 
         }
@@ -72,6 +81,11 @@ Class Project extends Modele
     public function getDescritpion()
     {
         return $this->description;
+    }
+
+    public function getTeams()
+    {
+        return $this->teams;
     }
 
 
@@ -240,7 +254,15 @@ Class Project extends Modele
         $requete = $this->getBdd()->prepare($sql);
         $requete->execute([$projectId]);
 
-        return $requete->fetch(PDO::FETCH_OBJ);
+        $membersCount = $requete->fetch(PDO::FETCH_OBJ);
+
+        if($membersCount == false)
+        {
+            $membersCount = new stdClass;
+            $membersCount->membersCount = 0;
+        }
+
+        return $membersCount->membersCount;
     }
 
 
@@ -249,12 +271,6 @@ Class Project extends Modele
     {
         $idorganization = $idorganization ?? $this->getIdorganization();
         $status = array();
-
-        $sql = "INSERT INTO map_columns (name, fk_project)";
-        $sql .= " VALUES ('Open', ?),('Ready', ?),('In progress', ?),('Closed', ?)";
-
-        $requete = $this->getBdd()->prepare($sql);
-        $status[] = $requete->execute([$this->id, $this->id, $this->id, $this->id]);
 
         $sql = "INSERT INTO projects (name, type, open, deadline, description, fk_organization)";
         $sql .= " VALUES (?,?,NOW(),?,?,?)";

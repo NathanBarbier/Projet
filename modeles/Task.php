@@ -4,24 +4,28 @@
     private $name;
     private $description;
     private $fk_column;
+    private $options = array();
 
     public function __construct($taskId = null)
     {
-
         if($taskId != null)
         {
             $sql = "SELECT t.rowid, t.name, t.description, t.fk_column";
             $sql .= " FROM tasks AS t";
+            $sql .= " WHERE fk_column = ?";
 
             $requete = $this->getBdd()->prepare($sql);
             $requete->execute([$taskId]);
 
             $Task = $requete->fetch(PDO::FETCH_OBJ);
 
-            $this->rowid = $Task->rowid;
-            $this->name = $Task->name;
-            $this->description = $Task->descritpion;
-            $this->fk_column = $Task->fk_column;
+            if($Task != false)
+            {
+                $this->rowid = $Task->rowid;
+                $this->name = $Task->name;
+                $this->description = $Task->description;
+                $this->fk_column = $Task->fk_column;
+            }
         }
     }
 
@@ -72,6 +76,17 @@
     }
 
 
+    // CREATE
+
+    public function create(string $name,string $description, $fk_column)
+    {
+        $sql = "INSERT INTO tasks (name, description, fk_column)";
+        $sql .= " VALUES (?,?,?)";
+
+        $requete = $this->getBdd()->prepare($sql);
+        return $requete->execute([$name, $description, $fk_column]);
+    }
+
     // FETCH
 
     public function fetch($taskId)
@@ -86,6 +101,18 @@
         return $requete->fetch(PDO::FETCH_OBJ);
     }
 
+    public function fetchAll($fk_column)
+    {
+        $sql = "SELECT t.rowid, t.name, t.description, t.fk_column";
+        $sql .= " FROM tasks AS t";
+        $sql .= " WHERE fk_column = ?";
+
+        $requete = $this->getBdd()->prepare($sql);
+        $requete->execute([$fk_column]);
+
+        return $requete->fetchAll(PDO::FETCH_OBJ);
+    }
+
     public function fetchCountTodo($fk_project)
     {
         $sql = "SELECT COUNT(t.rowid) AS counter";
@@ -97,6 +124,12 @@
         $requete->execute([$fk_project]);
 
         $CountTodo = $requete->fetch(PDO::FETCH_OBJ);
+
+        if($CountTodo == false)
+        {
+            $CountTodo = new stdClass;
+            $CountTodo->counter = 0;
+        }
 
         return $CountTodo->counter;
     }
@@ -113,10 +146,67 @@
 
         $CountInProgress = $requete->fetch(PDO::FETCH_OBJ);
 
+        if($CountInProgress == false)
+        {
+            $CountInProgress = new stdClass;
+            $CountInProgress->counter = 0;
+        }
+
         return $CountInProgress->counter;
     }
 
 
+    // UPDATE
+
+    public function updateName($name, $rowid = null)
+    {
+        $rowid = $rowid == null ? $this->rowid : $rowid;
+
+        $sql = "UPDATE tasks";
+        $sql .= " SET name = ?";
+        $sql .= " WHERE rowid = ?";
+
+        $requete = $this->getBdd()->prepare($sql);
+        return $requete->execute([$name, $rowid]);
+    }
+
+    public function updateDescription($description, $rowid = null)
+    {
+        $rowid = $rowid == null ? $this->rowid : $rowid;
+
+        $sql = "UPDATE tasks";
+        $sql .= " SET description = ?";
+        $sql .= " WHERE rowid = ?";
+
+        $requete = $this->getBdd()->prepare($sql);
+        return $requete->execute([$description, $rowid]);
+    }
+
+    public function updateFk_column($fk_column, $rowid = null)
+    {
+        $rowid = $rowid == null ? $this->rowid : $rowid;
+
+        $sql = "UPDATE tasks";
+        $sql .= " SET fk_column = ?";
+        $sql .= " WHERE rowid = ?";
+
+        $requete = $this->getBdd()->prepare($sql);
+        return $requete->execute([$fk_column, $rowid]);
+    }
+
+
+    // DELETE
+
+    public function delete($rowid = null)
+    {
+        $rowid = $rowid == null ? $this->rowid : $rowid;
+
+        $sql = "DELETE FROM tasks";
+        $sql = "WHERE rowid = ?";
+
+        $requete = $this->getBdd()->prepare($sql);
+        return $requete->execute([$rowid]);
+    }
 
 }
 ?>

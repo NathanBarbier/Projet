@@ -5,7 +5,8 @@ class Team extends Modele
     private $name;
     private $idOrganization;
     private $idProject;
-    private $members = [];
+    private $members = array();
+    private $mapColumns = array();
 
     public function __construct($idTeam = null)
     {
@@ -25,7 +26,7 @@ class Team extends Modele
             $this->idOrganization = $Team->fk_organization;
             $this->idProject = $Team->fk_project;
 
-            $sql = "SELECT u.rowid AS userId, u.lastname, u.firstname, u.birth, u.password, u.fk_position, u.email, u.fk_organization";
+            $sql = "SELECT u.rowid, u.lastname, u.firstname, u.birth, u.password, u.fk_position, u.email, u.fk_organization";
             $sql .= " FROM users AS u";
             $sql .= " LEFT JOIN belong_to AS b ON u.rowid = b.fk_user";
             $sql .= " WHERE b.fk_team = ?";
@@ -41,6 +42,17 @@ class Team extends Modele
                 $this->members[] = $obj;
             }
 
+            $MapColumns = new MapColumns();
+
+            $lines = $MapColumns->fetchAll($this->id);
+
+            // var_dump($lines);
+            
+            foreach($lines as $line)
+            {
+                $obj = new MapColumns($line->rowid);
+                $this->mapColumns[] = $obj;
+            }
         }
     }
 
@@ -57,6 +69,15 @@ class Team extends Modele
         $this->idProject = $idProject;
     }
 
+    public function setMembers(array $members)
+    {
+        $this->members = $members;
+    }
+
+    public function setMapColumns(array $mapColumns)
+    {
+        $this->mapColumns = $mapColumns;
+    }
 
     //! GETTER
 
@@ -90,18 +111,23 @@ class Team extends Modele
         return count($this->members);
     }
 
+    public function getMapColumns()
+    {
+        return $this->mapColumns;
+    }
+
     //! FETCH
 
-    public function fetchAll($idorganization)
+    public function fetchAll($fk_project = null)
     {
-        $idorganization = $this->id ?? $idorganization;
+        $fk_project = $fk_project == null ? $this->idProject : $fk_project;
 
         $sql = "SELECT *"; 
         $sql .= " FROM teams"; 
-        $sql .= " WHERE idorganization = ?";
+        $sql .= " WHERE fk_project = ?";
         
         $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$idorganization]);
+        $requete->execute([$fk_project]);
 
         return $requete->fetchAll(PDO::FETCH_OBJ);
     }
@@ -175,11 +201,34 @@ class Team extends Modele
 
     public function create(string $name, $fk_organization, $fk_project)
     {
+        $status = array();
+
         $sql = "INSERT INTO teams (name, fk_organization, fk_project)";
         $sql .= " VALUES (?,?,?)";
 
         $requete = $this->getBdd()->prepare($sql);
-        return $requete->execute([$name, $fk_organization, $fk_project]);
+        $status[] = $requete->execute([$name, $fk_organization, $fk_project]);
+
+        // get fk_team
+        $sql = "SELECT MAX(rowid) AS rowid FROM teams";
+        $requete = $this->getBdd()->prepare($sql);
+        $requete->execute();
+        $fk_team = $requete->fetch(PDO::FETCH_OBJ)->rowid;
+
+        $sql = "INSERT INTO map_columns (name, fk_team)";
+        $sql .= " VALUES ('Open', ?),('Ready', ?),('In progress', ?),('Closed', ?)";
+
+        $requete = $this->getBdd()->prepare($sql);
+        $status[] = $requete->execute([$fk_team, $fk_team, $fk_team, $fk_team]);
+
+        if(in_array(false, $status))
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
     } 
 
 

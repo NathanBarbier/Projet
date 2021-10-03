@@ -17,12 +17,7 @@ $tpl = "listeProjets.php";
 
 if($rights === "admin")
 {
-
-    //TODO récuperer les projets actuels en rapport avec l'organization
-
     $Project = new Project();
-
-    var_dump($idOrganization);
 
     $Project->setidOrganization($idOrganization);
 

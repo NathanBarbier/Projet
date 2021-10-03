@@ -31,10 +31,7 @@ if($rights === 'admin')
     $Position = new Position();
 
     $fetchPosition = $idPosition ? $Position->fetch($idPosition) : false;
-    $usersByTeamCounter = $organization->CountUsersByTeams($idOrganization);
     $usersByPositionCounter = $organization->CountUsersByPosition($idOrganization);
-
-    $teamMinMax = $organization->getMinMaxIdTeam($idOrganization);
     
     //TODO OPTI ???
     $roles = $Role->fetchAll();

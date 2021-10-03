@@ -5,7 +5,6 @@ class Organization extends Modele
     private $name;
     private $email;
     private $password;
-    private $teams = [];
     private $users = [];
     private $positions = [];
     private $projects = [];
@@ -27,15 +26,6 @@ class Organization extends Modele
             $this->name = $Organization->name;
             $this->email = $Organization->email;
 
-            $Team = new Team();
-            $teams = $Team->fetchAll($this->id);
-
-            foreach($teams as $team)
-            {
-                $obj = new Team($team->rowid);
-                $this->teams[] = $obj; 
-            }
-
             $User = new User();
             $users = $User->fetchAll($this->id);
 
@@ -47,9 +37,6 @@ class Organization extends Modele
 
             $Position = new Position();
             $positions = $Position->fetchAll($this->id);
-
-            // var_dump($positions);
-            // exit;
 
             foreach($positions as $position)
             {
@@ -105,16 +92,6 @@ class Organization extends Modele
     public function getPassword()
     {
         return $this->password;
-    }
-
-    public function getTeams()
-    {
-        return $this->teams;
-    }
-
-    public function countTeams()
-    {
-        return count($this->teams);
     }
 
     public function getUsers()
@@ -198,32 +175,6 @@ class Organization extends Modele
         return $usersInfos;
     }
 
-    public function getUsersByTeamId($teamId)
-    {
-        $usersEquipe = [];
-        foreach($this->getTeams() as $equipe)
-        {
-            if($equipe->getIdEquipe() == $teamId)
-            {
-                foreach($equipe->getMembresEquipe() as $utilisateur)
-                {
-                    $usersEquipe[] = [
-                        "idUtilisateur" => $utilisateur->getIdUser(),
-                        "nom" => $utilisateur->getNomUser(),
-                        "prenom" => $utilisateur->getPrenomUser(),
-                        "dateNaiss" => $utilisateur->getDateNaissUser(),
-                        "mdp" => $utilisateur->getMdpUser(),
-                        "idPoste" => $utilisateur->getIdPosteUser(),
-                        "email" => $utilisateur->getEmailUser(),
-                        "idEquipe" => $utilisateur->getIdEquipeUser(),
-                        "idorganization" => $utilisateur->getIdorganizationUser(),
-                    ];
-                }
-                return $usersEquipe;
-            }
-        }
-    }
-
     public function getUsersByPoste($idPoste)
     {
         $usersPoste = [];
@@ -248,33 +199,6 @@ class Organization extends Modele
                 return $usersPoste;
             }
         }
-    }
-
-    public function getMinMaxIdTeam()
-    {
-        $extremes = new stdClass;
-        foreach($this->getTeams() as $cle => $Team)
-        {
-            $teamId = $Team->getId();
-            if($cle == 0)
-            {
-                $extremes->minIdE = $teamId;
-                $extremes->maxIdE = $teamId;
-            }
-            else
-            {
-                if($teamId > $extremes->maxIdE)
-                {
-                    $extremes->maxIdE = $teamId;
-                }
-                if($teamId < $extremes->minIdE)
-                {
-                    $extremes->minIdE = $teamId;
-                }
-            }
-            
-        }
-        return $extremes;
     }
 
     public function getMaxIdUser()
@@ -326,7 +250,7 @@ class Organization extends Modele
         {
             $projectId = $project->getIdProjet();
             $projectMaxId = null;
-            if($cle == 0)
+            if($key == 0)
             {
                 $projectMaxId = $project->getIdProjet();
             } 
@@ -339,19 +263,6 @@ class Organization extends Modele
             }
         }
         return $projectMaxId;
-    }
-
-    public function CountUsersByTeams()
-    {
-        $nbUsersParEquipe = [];
-        foreach($this->getTeams() as $Team)
-        {
-            $nbUsers = $Team->countMembres();
-                
-            $idE = $Team->getId();
-            $nbUsersParEquipe[$idE] = $nbUsers;
-        }
-        return $nbUsersParEquipe;
     }
 
     public function CountUsersByPosition()

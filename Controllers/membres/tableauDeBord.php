@@ -2,9 +2,9 @@
 //import all models
 require_once "../../traitements/header.php";
 
-$idUser = $_SESSION["idUtilisateur"] ?? null;
-$rights = $_SESSION["habilitation"] ?? false;
-$idOrganisation = $_SESSION["idOrganisation"] ?? false;
+$idUser = $_SESSION["idUser"] ?? null;
+$rights = $_SESSION["rights"] ?? false;
+$idOrganization = $_SESSION["idOrganization"] ?? false;
 
 if($rights === "user")
 {    
@@ -30,20 +30,29 @@ if($rights === "user")
         $Team = new Team($teamId);
         
         // on récupère l'id du projet lié à cette équipe
-        $idProjet = $WorkTo->getProjectId();
+        $projectId = $Team->getIdProject();
 
-        $Project = new Project($idProjet);
-        // ! WIP
-        $Tasks = new Task($idProjet);
-        // $ProjectTasks = new ProjectTasks($idProjet);
+        $Project = new Project($projectId);
+
+        $Tasks = new Task($projectId);
+
+        $mapColumns = $Team->getMapColumns();
+        $TasksCount = 0;
+
+        foreach($mapColumns as $mapColumn)
+        {
+            $TasksCount += count($mapColumn->getTasks());
+        }
 
         // On affecte pour chaque projets sur lequel travaille l'user
-        $userProjects[$idProjet] = [
-            'membersCount' => $Project->fetch_members_count(),
-            'tasksCount' => $ProjectTasks->getTaskIds(),
-            'projectName' => $Project->getName(),
-            'nomEquipe' => $Team->getName(),
-        ];
+        $ProjectInfo = new stdClass;
+        $ProjectInfo->membersCount = $Project->fetch_members_count();
+        $ProjectInfo->tasksCount = $TasksCount;
+        $ProjectInfo->projectName = $Project->getName();
+        $ProjectInfo->teamName = $Team->getName();
+        $ProjectInfo->rowid = $projectId;
+
+        $userProjects[$projectId] = $ProjectInfo;
 
     }
     
@@ -94,7 +103,7 @@ if($rights === "user")
     $CurrentUser->position = $Position->getName();
     $CurrentUser->role = $Role->getName();
     
-    require_once VIEWS_PATH."admin/".$tpl;
+    require_once VIEWS_PATH."membres".DIRECTORY_SEPARATOR.$tpl;
 }
 else
 {

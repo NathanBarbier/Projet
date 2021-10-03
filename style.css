@@ -1,4 +1,13 @@
-/* GENERAL */
+/* SUMMARY */
+
+/* 1. General classes */
+/* 2. Vignettes */
+/* 3. Sticker */
+/* 4. Map */
+
+
+
+/* -------------- 1. ------------- */
 
 html {
     height: 100%;
@@ -10,6 +19,20 @@ body {
     width: 100%;
 }
 
+textarea {
+    resize: none;
+}
+
+.overflow-x {
+    overflow-x: auto; 
+    overflow-y: hidden;
+    white-space:nowrap;
+}
+
+.overflow-y {
+    overflow-y: auto;
+    overflow-x: hidden;
+}
 
 #containerPoste {
     margin-left: 0% !important;
@@ -75,6 +98,16 @@ body {
     background: linear-gradient(to right,rgb(231, 239, 251), white);
 }
 
+.border-bottom {
+    border-bottom: 1px rgb(216, 214, 214) solid;
+}
+
+.hover:hover{
+    background-color: #eeeff0;
+}
+
+
+/* -------------- 2. ------------- */
 
 .vignette {
     border-radius: 45px !important;
@@ -140,12 +173,14 @@ a {
     text-shadow: 0 0 4px black,0 0 4px black,0 0 4px black,0 0 4px black,0 0 4px black,0 0 4px black,0 0 4px black,0 0 4px black,0 0 4px black,0 0 4px black,0 0 4px black,0 0 4px black,0 0 4px black,0 0 4px black,0 0 4px black,0 0 4px black,0 0 4px black,0 0 4px black,0 0 4px black,0 0 4px black;
 }
 
-/* PROFIL */
 .profile-section {
     border: solid rgb(190, 190, 190) 1px;
-
+    
     border-radius: 15px;
 }
+
+
+/* -------------- 3. ------------- */
 
 .sticker {
     border: 1px solid rgba(0, 0, 0, 0.125); 
@@ -154,10 +189,10 @@ a {
     height:60px;
 }
 
-.sticker-blue {
+.sticker-deep {
     border: 1px solid rgba(0, 0, 0, 0.125); 
     border-radius:15px; 
-    background-color: rgba(42, 165, 214, 0.125);
+    background-color: rgba(190, 190, 240, 0.125);
     height:60px;
 }
 
@@ -168,21 +203,52 @@ a {
     height:100px;
 }
 
-.overflow-x {
-    overflow-x: auto; 
-    overflow-y: hidden;
-    white-space:nowrap;
+
+/* -------------- 4. ------------- */
+
+.project-column {
+    height: 100%;
+    border: 1px solid rgba(0, 0, 0, 0.125); 
+    border-radius:15px; 
+    background-color:#f8f9fa; 
+    width: 280px;
+    margin-right: 20px;
+    padding:unset;
 }
 
-.overflow-y {
-    overflow-y: auto;
-    overflow-x: hidden;
-}
-
-.border-bottom {
+.column-title {
+    height: 50px;
+    width: 100%;
     border-bottom: 1px rgb(216, 214, 214) solid;
 }
 
-.hover:hover{
-    background-color: #eeeff0;
+.add-task-btn {
+    border: 1px solid rgba(0, 0, 0, 0.125); 
+    border-radius:5px;
+    float:right;
+    line-height: 80%;
+}
+
+.column-content {
+    height: 93%;
+    overflow-y: auto;
+}
+
+.task-bubble {
+    border: 1px solid rgba(0, 0, 0, 0.125); 
+    border-radius:5px;
+    background-color: white;
+    height: 100px;
+    width: 260px;
+}
+
+.task-bubble-input {
+    height: 100%;
+    width: 100%;
+}
+
+.task-bubble-input:focus,.task-bubble-input {
+    -webkit-appearance: none;
+    border: none;
+    outline: none;
 }

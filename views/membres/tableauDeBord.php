@@ -2,7 +2,6 @@
 require_once "layouts/entete.php";
 ?>
 
-
 <div class="col-10 mt-3" style="height: 100%;">
 <?php
 
@@ -24,54 +23,49 @@ else if ($erreurs)
         ?>
     </div>
 <?php
-}
-
-// var_dump($data);
-
-?>
+} ?>
 
     <div class="row w-100" style="height: 100%;">
 
         <div class="col-8 mt-3" style="height:85%">
             <!-- PROJECT -->
-            <div class="row profile-section mx-3" style="height: 50%;">
-                <h1 class="text-center">Projet Actuel</h1>
+            <div class="row profile-section mx-3" style="height: 75%;">
+                <h1 class="text-center">Projets Actuels</h1>
 
-                <div style="height: 80%; overflow: auto">
+                <div style="height: 90%; overflow: auto">
                     <?php 
                     if($userProjects)
                     {
+                        // var_dump($userProjects);
                         foreach($userProjects as $project)
                         {
                         ?>
-                        <div>
-                            <div class="row ms-3 mt-3 sticker align-items-center" style="width: 90%;">
-                                <b>Nom du projet : </b>
-                                <?php 
-                                $project->projectName
-                                ?>
-                                
+                        <div class="sticker pb-3 mb-4" style="height:max-content;">
+                            <div class="row text-center justify-content-around">
+                                <div class="col-10 sticker-deep mt-3 pt-3">
+                                    <p><b>Nom du projet : </b><?= $project->projectName ?></p>
+                                </div>
                             </div>
-                            <div class="row ms-3 mt-4 sticker align-items-center" style="width: 90%;">
-                                <b>Equipe : </b>
-                                <?php
-                                $project->nomEquipe
-                                ?>
+                            <div class="row text-center justify-content-around">
+                                <div class="col-10 sticker-deep mt-4 pt-3">
+                                    <p><b>Equipe : </b><?= $project->teamName ?></p>
+                                </div>
                             </div>
-                            <div class="row ms-3 mt-4 justify-content-around" style="width: 90%;">
-                                <div class="sticker col-5 text-center">
+                            <div class="row mt-4 justify-content-around">
+                                <div class="sticker-deep col-4 text-center">
                                     <b>Nb participants</b>
-                                    <p class="text-center">HOLA</p>
+                                    <p class="text-center"><?php echo $project->membersCount ?></p>
                                     <br>
-                                    <?php echo  $project->membersCount ?>
                                 </div>
                                 
-                                <div class="sticker col-5 text-center">
+                                <div class="sticker-deep col-4 text-center">
                                     <b>Nb tâches</b>
                                     <br>
-                                    <p class="text-center">HOLA</p>
-                                    <?php echo $project->tasksCount ?>
+                                    <p class="text-center"><?php echo $project->tasksCount ?></p>
                                 </div>
+                            </div>
+                            <div class="row">
+                                <a href="<?= CONTROLLERS_URL ?>membres/map.php?projectId=<?= $project->rowid ?>" class="btn btn-outline-primary w-25 mt-3 mx-auto">Aller sur la Map</a>
                             </div>
                         </div>
                         <?php 
@@ -79,37 +73,25 @@ else if ($erreurs)
                     }
                     else
                     { ?>
-                        <div class="sticker mx-auto mt-5 pt-3 text-center" style="width: 70%; height: 30%">
+                        <div class="sticker-deep mx-auto mt-5 pt-3 text-center" style="width: 70%; height: 30%">
                             <h3>Vous n'avez encore aucun projet en cours.</h3>
                         </div>
                     <?php
                     } ?>
 
                 </div>
-
-
             </div>
             
-            <!-- poste equipe role -->
-            <div class="row profile-section mt-3 mx-3 justify-content-around" style="height: 50%">
-                
-                <div class="col-3 sticker text-center pt-2 mt-3">
+            <!-- poste role -->
+            <div class="row profile-section mt-3 mx-3 justify-content-around" style="height: 25%">
+                <div class="col-3 sticker-deep text-center pt-2 mt-3">
                     <b>Poste : </b>
-                    <?= $nomPoste; ?>
+                    <?= $CurrentUser->position; ?>
                 </div>
-                <!-- <div class="col-3 sticker text-center pt-2 mt-3">
-                    <b>Equipe : </b>
-                    <?= $nomEquipe; ?>
-                </div> -->
-                <div class="col-3 sticker text-center pt-2 mt-3">
+                <div class="col-3 sticker-deep text-center pt-2 mt-3">
                     <b>Role : </b>
-                    <?= $role; ?>
+                    <?= $CurrentUser->role; ?>
                 </div>
-                <?php
-
-                
-                
-                ?>
             </div>
     
         </div> 
@@ -130,9 +112,9 @@ else if ($erreurs)
                 <div class="mt-4 text-center w-75">
                     <form action="<?= CONTROLLERS_URL ?>membres/tableauDeBord.php?action=userUpdate" method="POST">
 
-                        <input type="text" name="lastname" class="sticker form-control mt-4 pt-2 text-center" value="<?= $lastname ?>">
-                        <input type="text" name="firstname" class="sticker form-control mt-4 pt-2 text-center" value="<?= $firstname ?>">
-                        <input type="email" name="email" class="sticker form-control mt-4 pt-2 text-center" value="<?= $email ?>">
+                        <input type="text" name="lastname" class="sticker form-control mt-4 pt-2 text-center" value="<?= $CurrentUser->lastname ?>">
+                        <input type="text" name="firstname" class="sticker form-control mt-4 pt-2 text-center" value="<?= $CurrentUser->firstname ?>">
+                        <input type="email" name="email" class="sticker form-control mt-4 pt-2 text-center" value="<?= $CurrentUser->email ?>">
     
                         <button type="submit" class="w-50 mt-5 pt-2 btn btn-outline-primary text-center">Update</button>
                     </form>

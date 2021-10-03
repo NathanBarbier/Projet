@@ -36,6 +36,7 @@ if($envoi)
                     // exit;
                     $_SESSION["rights"] = "user";
                     $_SESSION["idUser"] = intval($user->rowid);
+                    $_SESSION["idOrganization"] = intval($user->fk_organization);
                     
                     $success = true;
                     // header("location:".ROOT_PATH."index.php");

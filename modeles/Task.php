@@ -155,6 +155,16 @@
         return $CountInProgress->counter;
     }
 
+    public function fetch_last_insert_id()
+    {
+        $sql = "SELECT MAX(rowid) AS rowid";
+        $sql .= " FROM tasks";
+
+        $requete = $this->getBdd()->prepare($sql);
+        $requete->execute();
+
+        return $requete->fetch(PDO::FETCH_OBJ);
+    }
 
     // UPDATE
 

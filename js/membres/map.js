@@ -14,15 +14,23 @@ $("#add-column-form").find('button').click(function() {
     $.ajax({
         url: CONTROLLERS_URL+"membres/map.php?action=addColumn&columnName="+columnName+"&projectId="+projectId,
         success: function(result) {
-            console.log(result);
+            // console.log(result);
         }
-    });    
+    });
+
+    // GET LAST INSERT COLUMN ROWID
+    $.ajax({
+        url: AJAX_URL+"membres/map.php?action=getLastColumnId",
+    })    
+    .done(function(data) {
+        columnId = data
+    });
 
     // create html
     $(this).prev().val("");
     $(this).toggleClass('show');
 
-    $("#add-column-btn").parent().prev().after("<div class='project-column'><div class='column-title text-center pt-2'><b>"+columnName+"</b><button class='btn btn-outline-dark add-task-btn me-3'>New</button></div><div class='column-content'></div></div>")
+    $("#add-column-btn").parent().prev().after("<div class='project-column'><input class='columnId-input' type='hidden' value='"+columnId+"'><div class='column-title text-center pt-2'><ul><li class='me-2'><b>"+columnName+"</b><button class='btn btn-outline-dark add-task-btn'>New</button></li><li class='mt-2 me-2'><button class='btn btn-outline-danger delete-col-btn'>Delete</button></li></ul></div><div class='column-content'></div></div>");
 
     newTaskInit();
 });
@@ -31,46 +39,39 @@ $("#add-column-form").find('button').click(function() {
 
 function newTaskInit()
 {
-    $(".add-task-btn").click(function() {
-        $(this).parents(".column-title").next().prepend("<div class='task-bubble mt-2 pt-3 mb-1 mx-2'><textarea class='task-bubble-input text-center'></textarea></div><a class='ms-2 btn btn-outline-dark task-check collapse'>Check</a><a class='ms-2 btn btn-outline-danger task-delete collapse'>Delete</a>");
-        
-        // INSERT NEW TASK IN BDD
-        columnId = $(this).parents(".column-title").prev().val();
-
-        console.log(columnId)
-
+    
+    // INSERT NEW TASK IN BDD
+    columnId = $(this).parents(".column-title").prev().val();
+    
+    $.ajax({
+        url: CONTROLLERS_URL+"membres/map.php?action=addTask&columnId="+columnId+"&projectId="+projectId,
+        success: function(result) {
+            // console.log(result);
+        }
+    }).done(function() {
+        // GET LAST INSERT TASK ROWID
         $.ajax({
-            url: CONTROLLERS_URL+"membres/map.php?action=addTask&columnId="+columnId+"&projectId="+projectId,
-            success: function(result) {
-                console.log(result);
-            }
+            url: AJAX_URL+"membres/map.php?action=getLastTaskId",
+        })
+        .done(function(data) {
+            taskId = data
         });
+    });
+
+
+
+    $(".add-task-btn").click(function() {
+        $(this).parents(".column-title").next().prepend("<input class='taskId-input' type='hidden' value='"+taskId+"'></input><div class='task-bubble mt-2 pt-3 mb-1 mx-2'><textarea class='task-bubble-input text-center'></textarea></div><a class='ms-2 btn btn-outline-dark task-check collapse'>Check</a><a class='ms-2 btn btn-outline-danger task-delete collapse'>Delete</a>");
 
         init();
         
     });
+
+    newColInit();
 }
 
 function init()
 {
-    $(".delete-col-btn").click(function() {
-        // GIT COLUMN ID
-        columnId = $(this).parents(".column-title").prev().val();
-        // DELETE HTML COLUMN
-        $(this).parents(".project-column").remove();
-
-        console.log(columnId, projectId);
-        
-        // DELETE COLUMN IN BDD
-        $.ajax({
-            url: CONTROLLERS_URL+"membres/map.php?action=deleteColumn&columnId="+columnId+"&projectId="+projectId,
-            success: function(result) {
-                console.log(result);
-            }
-        });
-
-    });
-
     $(".task-bubble").hover(function() {
         $(this).css({"background-color": "#eeeff0", "cursor": "pointer"});
         $(this).children().css({"background-color": "#eeeff0", "cursor": "pointer"});
@@ -99,7 +100,7 @@ function init()
         $.ajax({
             url: CONTROLLERS_URL+"membres/map.php?action=updateTask&taskId="+taskId+"&taskName="+taskName+"&projectId="+projectId,
             success: function(result) {
-                console.log(result);
+                // console.log(result);
             }
         });
 
@@ -108,12 +109,10 @@ function init()
 
         taskId = $(this).prevAll(".taskId-input").first().val();
         // DELETE FROM BDD
-        console.log(taskId, projectId);
-
         $.ajax({
             url: CONTROLLERS_URL+"membres/map.php?action=deleteTask&taskId="+taskId+"&projectId="+projectId,
             success: function(result) {
-                console.log(result);
+                // console.log(result);
             }
         });
 
@@ -123,4 +122,25 @@ function init()
         $(this).prevAll(".taskId-input").first().remove();
         $(this).remove();
     });   
+}
+
+function newColInit()
+{
+    $(".delete-col-btn").click(function() {
+        // GIT COLUMN ID
+        columnId = $(this).parents(".column-title").prev().val();
+
+        console.log(columnId)
+        // DELETE HTML COLUMN
+        $(this).parents(".project-column").remove();
+        
+        // DELETE COLUMN IN BDD
+        $.ajax({
+            url: CONTROLLERS_URL+"membres/map.php?action=deleteColumn&columnId="+columnId+"&projectId="+projectId,
+            success: function(result) {
+                console.log(result);
+            }
+        });
+
+    });
 }

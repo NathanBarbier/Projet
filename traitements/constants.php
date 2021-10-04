@@ -31,6 +31,7 @@ define('CONTROLLERS_URL', $rootUrl.'Controllers/');
 define('VIEWS_URL', $rootUrl.'views/');
 define('PROCESS_URL', $rootUrl.'traitements/');
 define('JS_URL', $rootUrl.'js/');
+define('AJAX_URL', $rootUrl.'Ajax/');
 define('PHP_MAILER_URL', $rootUrl.'vendor/phpmailer/phpmailer/src/');
 
  

@@ -102,6 +102,17 @@ Class MapColumns extends Modele
         return $requete->fetchAll(PDO::FETCH_OBJ);
     }
 
+    public function fetch_last_insert_id()
+    {
+        $sql = "SELECT MAX(rowid) AS rowid";
+        $sql .= " FROM map_columns";
+
+        $requete = $this->getBdd()->prepare($sql);
+        $requete->execute();
+
+        return $requete->fetch(PDO::FETCH_OBJ);
+    }
+
 
     // CREATE
 

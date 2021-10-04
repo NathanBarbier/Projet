@@ -76,7 +76,9 @@ else if ($errors)
 <script>
     const IMG_URL = <?php echo json_encode(IMG_URL); ?>;
     const CONTROLLERS_URL = <?php echo json_encode(CONTROLLERS_URL); ?>;
+    const AJAX_URL = <?php echo json_encode(AJAX_URL); ?>;
     var projectId = <?php echo json_encode($CurrentProject->getId()); ?>;
+    var teamId = <?php echo json_encode($CurrentTeam->getId()); ?>;
 </script>
 
 <script type="text/Javascript" src="<?= JS_URL ?>membres/map.js"></script>

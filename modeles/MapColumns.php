@@ -28,7 +28,7 @@ Class MapColumns extends Modele
             foreach($lines as $line)
             {
                 $Task = new Task($line->rowid);
-                $this->tasks[] = $line;
+                $this->tasks[] = $Task;
             }
         }
     }
@@ -94,6 +94,7 @@ Class MapColumns extends Modele
         $sql = "SELECT m.rowid, m.name, m.fk_team";
         $sql .= " FROM map_columns AS m";
         $sql .= " WHERE m.fk_team = ?";
+        $sql .= " ORDER BY rowid ASC";
 
         $requete = $this->getBdd()->prepare($sql);
         $requete->execute([$fk_team]);

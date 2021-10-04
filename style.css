@@ -23,6 +23,10 @@ textarea {
     resize: none;
 }
 
+li::marker{
+    content: '';
+}
+
 .overflow-x {
     overflow-x: auto; 
     overflow-y: hidden;
@@ -220,9 +224,17 @@ a {
     height: 50px;
     width: 100%;
     border-bottom: 1px rgb(216, 214, 214) solid;
+    height: max-content;
 }
 
 .add-task-btn {
+    border: 1px solid rgba(0, 0, 0, 0.125); 
+    border-radius:5px;
+    float:right;
+    line-height: 80%;
+}
+
+.delete-col-btn {
     border: 1px solid rgba(0, 0, 0, 0.125); 
     border-radius:5px;
     float:right;

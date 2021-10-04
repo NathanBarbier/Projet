@@ -9,8 +9,19 @@ $idOrganization = $_SESSION["idOrganization"] ?? null;
 if($rights == 'user')
 {
     $Organization = new Organization($idOrganization);
+    $MapColumns = new MapColumns();
+    $Task = new Task();
     
     $projectId = GETPOST('projectId');
+
+    $action = GETPOST('action');
+    
+    $columnName = GETPOST('columnName');
+    $columnId = GETPOST('columnId');
+
+    $taskId = GETPOST('taskId');
+    $taskName = GETPOST('taskName');
+    $taskDescription = GETPOST('taskDescription');
 
     $tpl = "map.php";
     $errors = array();
@@ -48,7 +59,60 @@ if($rights == 'user')
         }
     }
 
-    // var_dump($CurrentTeam);
+
+    if($action == "addColumn")
+    {
+        if($CurrentTeamId && $columnName)
+        {
+            $status = $MapColumns->create($columnName, $CurrentTeamId);
+        }
+    }
+
+    if($action == "addTask")
+    {
+        if($columnId)
+        {
+            $status = $Task->create($columnId);
+        }
+    }
+
+    if($action == "updateTask")
+    {
+        if($taskId && $taskName)
+        {
+            $status = $Task->updateName($taskName, $taskId);
+        }
+    }
+
+    if($action == "deleteTask")
+    {
+        if($taskId)
+        {
+            $status = $Task->delete($taskId);
+        }
+    }
+
+    if($action == "deleteColumn")
+    {
+        if($columnId)
+        {
+            $status = array();
+            
+            $status[] = $Task->deleteByColumnId($columnId);
+            $status[] = $MapColumns->delete($columnId);
+        }
+    }
+
+    if($action == "renameColumn")
+    {
+        if($columnId)
+        {
+
+        }
+    }
+
+
+
 
     require_once VIEWS_PATH."membres/".$tpl;
 }

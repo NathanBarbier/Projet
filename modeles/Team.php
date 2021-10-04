@@ -45,8 +45,6 @@ class Team extends Modele
             $MapColumns = new MapColumns();
 
             $lines = $MapColumns->fetchAll($this->id);
-
-            // var_dump($lines);
             
             foreach($lines as $line)
             {

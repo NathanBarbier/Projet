@@ -12,7 +12,7 @@
         {
             $sql = "SELECT t.rowid, t.name, t.description, t.fk_column";
             $sql .= " FROM tasks AS t";
-            $sql .= " WHERE fk_column = ?";
+            $sql .= " WHERE t.rowid = ?";
 
             $requete = $this->getBdd()->prepare($sql);
             $requete->execute([$taskId]);
@@ -55,22 +55,22 @@
     
     // GETTER
 
-    public function getrowid()
+    public function getRowid()
     {
         return $this->rowid;
     }
 
-    public function getname()
+    public function getName()
     {
         return $this->name;
     }
 
-    public function getdescription()
+    public function getDescription()
     {
         return $this->description;
     }
 
-    public function getfk_column()
+    public function getFk_column()
     {
         return $this->fk_column;
     }
@@ -78,7 +78,7 @@
 
     // CREATE
 
-    public function create(string $name,string $description, $fk_column)
+    public function create($fk_column, string $name = null,string $description = null)
     {
         $sql = "INSERT INTO tasks (name, description, fk_column)";
         $sql .= " VALUES (?,?,?)";
@@ -202,10 +202,19 @@
         $rowid = $rowid == null ? $this->rowid : $rowid;
 
         $sql = "DELETE FROM tasks";
-        $sql = "WHERE rowid = ?";
+        $sql .= " WHERE rowid = ?";
 
         $requete = $this->getBdd()->prepare($sql);
         return $requete->execute([$rowid]);
+    }
+
+    public function deleteByColumnId($fk_column)
+    {
+        $sql = "DELETE FROM tasks";
+        $sql .= " WHERE fk_column = ?";
+
+        $requete = $this->getBdd()->prepare($sql);
+        return $requete->execute([$fk_column]);
     }
 
 }

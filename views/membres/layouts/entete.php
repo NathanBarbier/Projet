@@ -1,6 +1,5 @@
 <?php
 // require_once "../../traitements/header.php";
-
 $rights = $_SESSION["rights"] ?? false;
 
 if($rights == 'admin')
@@ -20,8 +19,9 @@ if($rights == "user")
         <title>Stories Helper</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
         <link rel="stylesheet" href="<?= ROOT_URL ?>style.css">
-        <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
-
+        <!-- <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script> -->
+        <script src="<?= ROOT_URL ?>bower_components/jquery/dist/jquery.min.js"></script>
+        <script src="<?= ROOT_URL ?>bower_components/jquery-ui/jquery-ui.min.js"></script>
     </head>
     <body style="overflow:hidden">
     <nav class="navbar navbar-dark navbar-expand-md bg-dark">
@@ -51,6 +51,8 @@ if($rights == "user")
     <!-- <div class="container mt-4"> -->
 
         <!-- SIDE BAR -->
+    <?php if($pageName != "map.php")
+    { ?>
     <div class="row" style="height: 100%;">
         <div class="col-2">
         </div>
@@ -83,6 +85,7 @@ if($rights == "user")
 
         </div>
     <?php
+    }
 } 
 else 
 {

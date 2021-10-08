@@ -81,6 +81,10 @@ function init()
         $(this).css({"background-color": "white", "cursor": "default"});
     $(this).children().css({"background-color": "white", "cursor": "default"});
     });
+
+    $(".task-bubble-input").hover(function() {
+        $(this).blur();
+    });
     
     $(".task-bubble-input").off('focus').focus(function() {
         $(this).parent().nextAll(".task-check").first().addClass('show');
@@ -88,7 +92,7 @@ function init()
         $(this).parent().nextAll(".arrow-img-btn").first().addClass('show').next().addClass('show');
     });
     
-    $(".task-bubble").off('click').click(function() {
+    $(".task-bubble").off('mouseup').mouseup(function() {
         $(this).children().focus();
     });
     

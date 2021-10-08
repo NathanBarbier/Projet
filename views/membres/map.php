@@ -2,7 +2,6 @@
 require_once "layouts/entete.php";
 ?>
 
-
 <div class="col-10 mt-3" style="height: 100%;">
 <?php
 
@@ -47,7 +46,6 @@ else if ($errors)
                 <?php 
                 foreach($column->getTasks() as $task)
                 {   
-                    // var_dump($task);
                     ?>
                     <input class="taskId-input" type="hidden" value="<?= $task->getRowid() ?>">
                     <div class='task-bubble mt-2 pt-3 mb-1 mx-2'>
@@ -66,7 +64,7 @@ else if ($errors)
     <div class="col" style="width: 250px;">
         <button id="add-column-btn" class="btn btn-outline-dark" style="width:max-content; height:min-content; line-height:80%">Add Column</button>
        
-        <div id="add-column-form" class="sticker text-center mt-2 py-2 collapse" style="height: max-content;">
+        <div id="add-column-form" class="sticker text-center mt-2 py-2 collapse" style="height: max-content; width: 10vw">
             <input id="columnName-input" class="form-control w-75 mx-auto text-center" type="text">
             <button class="btn btn-outline-primary w-75 mt-2">Create</button>
         </div>

@@ -47,12 +47,20 @@ else if ($errors)
                 foreach($column->getTasks() as $task)
                 {   
                     ?>
-                    <input class="taskId-input" type="hidden" value="<?= $task->getRowid() ?>">
-                    <div class='task-bubble mt-2 pt-3 mb-1 mx-2'>
-                        <textarea class='task-bubble-input text-center'><?= $task->getName() ?></textarea>
+                    <div class="task">
+                        <input class="taskId-input" type="hidden" value="<?= $task->getRowid() ?>">
+                        <div class='task-bubble mt-2 pt-3 mb-1 mx-2'>
+                            <textarea class='task-bubble-input text-center'><?= $task->getName() ?></textarea>
+                        </div>
+                        <a class='ms-2 btn btn-outline-success task-check collapse'>Check</a>
+                        <a class='ms-1 btn btn-outline-danger task-delete collapse'>Delete</a>
+                        <a class="ms-1 btn btn-outline-dark arrow-img-btn task-to-left collapse">
+                            <img src="<?= IMG_URL ?>left.png" alt="" width="30px">
+                        </a>
+                        <a class="ms-1 btn btn-outline-dark arrow-img-btn task-to-right collapse">
+                            <img src="<?= IMG_URL ?>right.png" alt="" width="30px">
+                        </a>
                     </div>
-                    <a class='ms-2 btn btn-outline-dark task-check collapse'>Check</a>
-                    <a class='ms-2 btn btn-outline-danger task-delete collapse'>Delete</a>
                     <?php
                 }
                 ?>

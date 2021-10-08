@@ -264,3 +264,13 @@ a {
     border: none;
     outline: none;
 }
+
+.arrow-img-btn {
+    display: inline-block;
+    padding: 0;
+    margin: 0;
+    vertical-align: top;
+    width: 47px;
+    height: 38px;
+    padding-top:4px;
+}

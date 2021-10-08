@@ -62,7 +62,7 @@ function newTaskInit()
     
                         while(!taskId){}
                         
-                        addTaskBtn.parents(".column-title").next().prepend("<input class='taskId-input' type='hidden' value='"+taskId+"'></input><div class='task-bubble mt-2 pt-3 mb-1 mx-2'><textarea class='task-bubble-input text-center'></textarea></div><a class='ms-2 btn btn-outline-dark task-check collapse'>Check</a><a class='ms-2 btn btn-outline-danger task-delete collapse'>Delete</a>");
+                        addTaskBtn.parents(".column-title").next().prepend("<div class='task'><input class='taskId-input' type='hidden' value='"+taskId+"'></input><div class='task-bubble mt-2 pt-3 mb-1 mx-2'><textarea class='task-bubble-input text-center'></textarea></div><a class='ms-2 btn btn-outline-dark task-check collapse'>Check</a><a class='ms-2 btn btn-outline-danger task-delete collapse'>Delete</a></div>");
 
                         init();
                     }
@@ -85,6 +85,7 @@ function init()
     $(".task-bubble-input").off('focus').focus(function() {
         $(this).parent().nextAll(".task-check").first().addClass('show');
         $(this).parent().nextAll(".task-delete").first().addClass('show');
+        $(this).parent().nextAll(".arrow-img-btn").first().addClass('show').next().addClass('show');
     });
     
     $(".task-bubble").off('click').click(function() {
@@ -94,6 +95,7 @@ function init()
     $(".task-check").off('click').click(function() {
         $(this).removeClass("show");
         $(this).nextAll(".task-delete").first().removeClass("show");
+        $(this).nextAll(".arrow-img-btn").first().removeClass("show").next().removeClass("show");
 
         taskName = $(this).prevAll(".task-bubble").first().find(".task-bubble-input").val();
 
@@ -113,12 +115,30 @@ function init()
             url: AJAX_URL+"membres/map.php?action=deleteTask&taskId="+taskId,
         });
 
+        task = $(this).parents(".task").first();
         // remove task html
-        $(this).prevAll(".task-check").first().remove();
-        $(this).prevAll(".task-bubble").first().remove();
-        $(this).prevAll(".taskId-input").first().remove();
-        $(this).remove();
-    });   
+        task.remove();
+    });
+
+    $(".task-to-left").click(function() {
+        // update fk_column in bdd
+        task = $(this).parents(".task");
+        taskId = $(this).prevAll(".taskId-input").first().val();
+        // console.log($(this).prevAll(".holaquetal").first());
+        newColumn = $(this).parents(".project-column").prevAll(".project-column").first();
+
+        updateTaskColumn();
+    });
+
+    $(".task-to-right").click(function() {
+        // update fk_column in bdd
+        task = $(this).parents(".task");
+        taskId = $(this).prevAll(".taskId-input").first().val();
+        // console.log($(this).prevAll(".holaquetal").first());
+        newColumn = $(this).parents(".project-column").nextAll(".project-column").first();
+
+        updateTaskColumn();
+    })
 }
 
 function newColInit()
@@ -139,4 +159,28 @@ function newColInit()
         });
 
     });
+}
+
+function updateTaskColumn()
+{
+    if(newColumn.length == 0)
+    {
+        newColumnId = false;
+    }
+    else
+    {
+        newColumnId = newColumn.find(".columnId-input").first().val();
+    }
+
+    if(newColumnId)
+    {
+        $.ajax({
+            url: AJAX_URL+"membres/map.php?action=taskColumnUpdate&taskId="+taskId+"&columnId="+newColumnId,
+            success: function(data)
+            {
+                // prepend html from column a to column b
+                task.prependTo(newColumn.find(".column-content").first());
+            }
+        });
+    }
 }

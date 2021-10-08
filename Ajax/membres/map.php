@@ -52,6 +52,9 @@ if($rights == 'user')
         case 'updateTask':
             $status = $Task->updateName($taskName, $taskId);
             break;
+        case 'taskColumnUpdate':
+            $status = $Task->updateFk_column($columnId, $taskId);
+            break;
     }
 
 }

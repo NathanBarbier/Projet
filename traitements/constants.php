@@ -10,6 +10,7 @@ $rootDir = str_replace(DIRECTORY_SEPARATOR.$explode[max(array_keys($explode))], 
 $rootDir .= DIRECTORY_SEPARATOR;
 
 $pageName = explode("/", $url)[max(array_keys(explode("/", $url)))];
+$pageName = explode("?", $pageName)[min(array_keys(explode("?", $pageName)))];
 
 $rootUrl = explode("Projet", $url)[0];
 $rootUrl .= "Projet/";

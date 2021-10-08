@@ -1,0 +1,22 @@
+{
+  "name": "StoriesHelper",
+  "homepage": "https://github.com/NathanBarbier/Projet",
+  "authors": [
+    "CorentinMaille <maillecorentin@pm.me>"
+  ],
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "^3.6.0",
+    "masonry-layout": "desandro/masonry#^4.2.2",
+    "jquery-ui": "^1.12.1"
+  }
+}

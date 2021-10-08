@@ -39,7 +39,6 @@ if($rights == 'user')
     }
 
     // GET CurrentTeam
-
     foreach($CurrentProject->getTeams() as $team)
     {
         foreach($team->getMembers() as $member)
@@ -58,61 +57,6 @@ if($rights == 'user')
             $CurrentTeam = $team;
         }
     }
-
-
-    if($action == "addColumn")
-    {
-        if($CurrentTeamId && $columnName)
-        {
-            $status = $MapColumns->create($columnName, $CurrentTeamId);
-        }
-    }
-
-    if($action == "addTask")
-    {
-        if($columnId)
-        {
-            $status = $Task->create($columnId);
-        }
-    }
-
-    if($action == "updateTask")
-    {
-        if($taskId && $taskName)
-        {
-            $status = $Task->updateName($taskName, $taskId);
-        }
-    }
-
-    if($action == "deleteTask")
-    {
-        if($taskId)
-        {
-            $status = $Task->delete($taskId);
-        }
-    }
-
-    if($action == "deleteColumn")
-    {
-        if($columnId)
-        {
-            $status = array();
-            
-            $status[] = $Task->deleteByColumnId($columnId);
-            $status[] = $MapColumns->delete($columnId);
-        }
-    }
-
-    if($action == "renameColumn")
-    {
-        if($columnId)
-        {
-
-        }
-    }
-
-
-
 
     require_once VIEWS_PATH."membres/".$tpl;
 }

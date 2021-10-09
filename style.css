@@ -288,3 +288,8 @@ a {
 .task-comment:hover {
     cursor: pointer;
 }
+
+.task-comment {
+    width: 100%;
+    background-color: #f8f9fa;
+}

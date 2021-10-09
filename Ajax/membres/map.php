@@ -11,6 +11,7 @@ if($rights == 'user')
     // $Organization = new Organization($idOrganization);
     $MapColumns = new MapColumns();
     $Task = new Task();
+    $TaskComment = new TaskComment();
 
     $action = GETPOST('action');
     $teamId = GETPOST('teamId');
@@ -18,6 +19,8 @@ if($rights == 'user')
     $columnId = GETPOST('columnId');
     $taskName = GETPOST('taskName');
     $taskId = GETPOST('taskId');
+    $taskNote = GETPOST('taskNote');
+    $commentId = GETPOST('commentId');
 
     switch($action)
     {
@@ -54,6 +57,35 @@ if($rights == 'user')
             break;
         case 'taskColumnUpdate':
             $status = $Task->updateFk_column($columnId, $taskId);
+            break;
+        case 'upTask':
+            if($columnId && $taskId)
+            {
+                $status = $Task->switchRank($taskId, $columnId, 'up');   
+            }
+            break;
+        case 'downTask':
+            if($columnId && $taskId)
+            {
+                $status = $Task->switchRank($taskId, $columnId, 'down');   
+            }
+            break;
+        case 'addTaskNote':
+            if($taskId && $idUser)
+            {
+                $commentId = $TaskComment->create($taskId, $idUser);
+                echo json_encode($commentId);
+            }
+            break;
+        case 'updateTaskNote':
+            if($commentId && $taskNote) $TaskComment->updateNote($taskNote, $commentId);
+            break;
+        case 'getTaskComments':
+            if($taskId) 
+            {
+                $comments = $TaskComment->fetchAll($taskId);
+                echo json_encode($comments);
+            }
             break;
     }
 

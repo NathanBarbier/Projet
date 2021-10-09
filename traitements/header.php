@@ -14,3 +14,4 @@ require_once MODELS_PATH.'Inscription.php';
 require_once MODELS_PATH.'BelongsTo.php';
 require_once MODELS_PATH.'Task.php';
 require_once MODELS_PATH.'MapColumns.php';
+require_once MODELS_PATH.'TaskComment.php';

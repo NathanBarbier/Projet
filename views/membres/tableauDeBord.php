@@ -27,9 +27,9 @@ else if ($erreurs)
 
     <div class="row w-100" style="height: 100%;">
 
-        <div class="col-8 mt-3" style="height:85%">
+        <div class="col-8 mt-3" style="height:87%">
             <!-- PROJECT -->
-            <div class="row profile-section mx-3" style="height: 75%;">
+            <div class="row profile-section mx-3" style="height: 100%;">
                 <h1 class="text-center">Projets Actuels</h1>
 
                 <div style="height: 90%; overflow: auto">
@@ -40,7 +40,7 @@ else if ($erreurs)
                         foreach($userProjects as $project)
                         {
                         ?>
-                        <div class="sticker pb-3 mb-4" style="height:max-content;">
+                        <div class="sticker pb-3 mb-5" style="height:max-content;">
                             <div class="row text-center justify-content-around">
                                 <div class="col-10 sticker-deep mt-3 pt-3">
                                     <p><b>Nom du projet : </b><?= $project->projectName ?></p>
@@ -81,19 +81,6 @@ else if ($erreurs)
 
                 </div>
             </div>
-            
-            <!-- poste role -->
-            <div class="row profile-section mt-3 mx-3 justify-content-around" style="height: 25%">
-                <div class="col-3 sticker-deep text-center pt-2 mt-3">
-                    <b>Poste : </b>
-                    <?= $CurrentUser->position; ?>
-                </div>
-                <div class="col-3 sticker-deep text-center pt-2 mt-3">
-                    <b>Role : </b>
-                    <?= $CurrentUser->role; ?>
-                </div>
-            </div>
-    
         </div> 
 
         <!-- user properties -->
@@ -106,9 +93,6 @@ else if ($erreurs)
             </div>
 
             <div class="d-flex justify-content-center" style="height: 50%;">
-
-
-
                 <div class="mt-4 text-center w-75">
                     <form action="<?= CONTROLLERS_URL ?>membres/tableauDeBord.php?action=userUpdate" method="POST">
 
@@ -120,20 +104,17 @@ else if ($erreurs)
                     </form>
 
                     <a class="btn btn-outline-secondary mt-5" href="<?= CONTROLLERS_URL ?>membres/passwordUpdate.php">Modifier mot de passe</a>
-                <!-- <div class="mt-3 w-75"> -->
-                    <?php 
-                    // $avatar 
-                    ?>
-                <!-- </div> -->
+                        <div class="sticker-deep text-center pt-2 mt-3">
+                            <b>Poste : </b>
+                            <?= $CurrentUser->position; ?>
+                        </div>
+                        <div class="sticker-deep text-center pt-2 mt-3">
+                            <b>Role : </b>
+                            <?= $CurrentUser->role; ?>
+                        </div>
                 </div>
-
-
-
             </div>
         </div>
-
     </div>
-
-
 <?php
 require_once "layouts/pied.php" ?>

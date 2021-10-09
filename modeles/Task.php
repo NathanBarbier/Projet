@@ -4,13 +4,14 @@
     private $name;
     private $description;
     private $fk_column;
+    private $rank;
     private $options = array();
 
     public function __construct($taskId = null)
     {
         if($taskId != null)
         {
-            $sql = "SELECT t.rowid, t.name, t.description, t.fk_column";
+            $sql = "SELECT t.rowid, t.name, t.description, t.fk_column, t.rank";
             $sql .= " FROM tasks AS t";
             $sql .= " WHERE t.rowid = ?";
 
@@ -25,6 +26,7 @@
                 $this->name = $Task->name;
                 $this->description = $Task->description;
                 $this->fk_column = $Task->fk_column;
+                $this->rank = $Task->rank;
             }
         }
     }
@@ -80,11 +82,20 @@
 
     public function create($fk_column, string $name = null,string $description = null)
     {
-        $sql = "INSERT INTO tasks (name, description, fk_column)";
-        $sql .= " VALUES (?,?,?)";
+        $sql = "SELECT MAX(rank) AS rank";
+        $sql .= " FROM tasks";
+        $sql .= " WHERE fk_column = ?";
 
         $requete = $this->getBdd()->prepare($sql);
-        return $requete->execute([$name, $description, $fk_column]);
+        $requete->execute([$fk_column]);
+        $obj = $requete->fetch(PDO::FETCH_OBJ);
+        $rank = $obj->rank + 1;
+
+        $sql = "INSERT INTO tasks (name, description, fk_column, rank)";
+        $sql .= " VALUES (?,?,?,?)";
+
+        $requete = $this->getBdd()->prepare($sql);
+        return $requete->execute([$name, $description, $fk_column, $rank]);
     }
 
     // FETCH
@@ -106,6 +117,7 @@
         $sql = "SELECT t.rowid, t.name, t.description, t.fk_column";
         $sql .= " FROM tasks AS t";
         $sql .= " WHERE fk_column = ?";
+        $sql .= " ORDER BY t.rank DESC";
 
         $requete = $this->getBdd()->prepare($sql);
         $requete->execute([$fk_column]);
@@ -166,6 +178,49 @@
         return $requete->fetch(PDO::FETCH_OBJ);
     }
 
+    public function fetchRank($rowid)
+    {
+        $sql = "SELECT rank";
+        $sql .= " FROM tasks";
+        $sql .= " WHERE rowid = ?";
+
+        $requete = $this->getBdd()->prepare($sql);
+        $requete->execute([$rowid]);
+
+        return $requete->fetch(PDO::FETCH_OBJ)->rank;
+    }
+
+    public function fetchNextRank($rowid, $fk_column)
+    {
+        $sql = "SELECT t.rank AS nextRank, rowid";
+        $sql .= " FROM tasks AS t";
+        $sql .= " WHERE fk_column = ?";
+        $sql .= " AND t.rank > (SELECT rank FROM tasks WHERE rowid = ?)";
+        $sql .= " ORDER BY t.rank ASC";
+        $sql .= " LIMIT 1";
+
+        $requete = $this->getBdd()->prepare($sql);
+        $requete->execute([$fk_column, $rowid]);
+
+        return $requete->fetch(PDO::FETCH_OBJ);
+    }
+
+    public function fetchPrevRank($rowid, $fk_column)
+    {
+        $sql = "SELECT t.rank AS prevRank, rowid";
+        $sql .= " FROM tasks AS t";
+        $sql .= " WHERE fk_column = ?";
+        $sql .= " AND t.rank < (SELECT rank FROM tasks WHERE rowid = ?)";
+        $sql .= " ORDER BY t.rank DESC";
+        $sql .= " LIMIT 1";
+
+        $requete = $this->getBdd()->prepare($sql);
+        $requete->execute([$fk_column, $rowid]);
+
+        return $requete->fetch(PDO::FETCH_OBJ);
+    }
+
+
     // UPDATE
 
     public function updateName($name, $rowid = null)
@@ -204,6 +259,18 @@
         return $requete->execute([$fk_column, $rowid]);
     }
 
+    public function updateRank($rank, $rowid = null)
+    {
+        $rowid = $rowid == null ? $this->rowid : $rowid;
+
+        $sql = "UPDATE tasks";
+        $sql .= " SET rank = ?";
+        $sql .= " WHERE rowid = ?";
+
+        $requete = $this->getBdd()->prepare($sql);
+        return $requete->execute([$rank, $rowid]);
+    }
+
 
     // DELETE
 
@@ -225,6 +292,46 @@
 
         $requete = $this->getBdd()->prepare($sql);
         return $requete->execute([$fk_column]);
+    }
+
+    
+    // METHODS
+
+    /**
+     * Switch ranks between two tasks in two direction up or down
+     * @param string $direction 'up' or 'down'
+     */
+    public function switchRank($rowid, $fk_column, $direction = 'up')
+    {
+        $status = array();
+
+        $status[] = $rank = $this->fetchRank($rowid);
+        if($direction == 'up')
+        {
+            $obj = $this->fetchNextRank($rowid, $fk_column);
+            $otherRank = $obj->nextRank;
+            $status[] = $obj;
+        }
+        else if($direction == 'down')
+        {
+            $obj = $this->fetchPrevRank($rowid, $fk_column);
+            $otherRank = $obj->prevRank;
+            $status[] = $obj;
+        }
+
+        $otherRowid = $obj->rowid;
+
+        $status[] = $this->updateRank($otherRank, $rowid);
+        $status[] = $this->updateRank($rank, $otherRowid);
+
+        if(in_array(false, $status))
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
     }
 
 }

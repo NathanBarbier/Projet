@@ -79,29 +79,32 @@ require_once "layouts/entete.php";
     </div>
 
     <div class="col-2 pt-4 pe-4 text-center border" style="height: 100vh">
-        <h1>Title</h1>
-        <button class="btn btn-outline-dark w-75">Up task</button>
-        <button class="btn btn-outline-dark w-75 mt-3">Down task</button>
-        <h5 class="mt-3">Comment flow</h5>
-        <div class="border pb-3 ps-2" style="height: 33vh;">
-            <div class="overflow-y pe-2" style="height: 80%">
-                <!-- foreach description -->
-                <textarea class="mt-3 card task-comment px-2 text-center" name="" id="" cols="30" rows="3" style="width: 100%; background-color: #f8f9fa"></textarea>
+        <div id="task-details" class="collapse">
+            <h1>Title</h1>
+            <button id="up-task-btn" class="btn btn-outline-dark w-75">Up task</button>
+            <button id="down-task-btn" class="btn btn-outline-dark w-75 mt-3">Down task</button>
+            <h5 class="mt-3">Comment flow</h5>
+            <div class="border pb-3 ps-2" style="height: 33vh;">
+                <div id="task-comment-container" class="overflow-y pe-2" style="height: 80%">
+                    <!-- foreach description -->
+                    <!-- <textarea class="mt-3 card task-comment px-2 text-center" name="" id="" cols="30" rows="3" style="width: 100%; background-color: #f8f9fa"></textarea> -->
+                </div>
+                <button id="add-comment-btn" class="btn btn-outline-dark mt-3 me-2 collapse show">Add comment</button>
+                <button id="check-comment-btn" class="btn btn-outline-dark mt-3 me-2 collapse">Check</button>
             </div>
-            <button class="btn btn-outline-dark mt-3 me-2">Add comment</button>
+            
+            <h5 class="mt-3">Team members</h5>
+            <div>
+                
+                </div>
+                <div class="overflow-y border" style="height: 20vh;">
+                    <div class="sticker mx-auto mt-2 hover text-center pt-3" style="width: 90%;">NOM DU MEMBRE</div>
+                </div>
+                <button class="btn btn-outline-secondary w-50 mt-2">Attribute</button>
+                <button class="btn btn-outline-secondary w-50 mt-2">Desattribute</button>
+            </div>
         </div>
-
-        <h5 class="mt-3">Team members</h5>
-        <div>
-
-        </div>
-        <div class="overflow-y border" style="height: 20vh;">
-            <div class="sticker mx-auto mt-2 hover text-center pt-3" style="width: 90%;">NOM DU MEMBRE</div>
-        </div>
-        <button class="btn btn-outline-secondary w-50 mt-2">Attribute</button>
-        <button class="btn btn-outline-secondary w-50 mt-2">Desattribute</button>
     </div>
-</div>
 
 <script>
     const IMG_URL = <?php echo json_encode(IMG_URL); ?>;

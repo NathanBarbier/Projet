@@ -141,8 +141,39 @@ class TaskComment extends Modele
 
         $requete = $this->getBdd()->prepare($sql);
         $requete->execute([$fk_task]);
+        
+        $comments = $requete->fetchAll(PDO::FETCH_OBJ);
+        
+        $userIds = array();
+        
+        foreach($comments as $line)
+        {
+            $userIds[] = $line->fk_user;
+        }
+        $userIds = implode("', '", $userIds);
 
-        return $requete->fetchAll(PDO::FETCH_OBJ);
+        // add author name
+        $sql = "SELECT u.rowid ,u.lastname, u.firstname";
+        $sql .= " FROM users AS u";
+        $sql .= " WHERE rowid IN ('".$userIds."')";
+
+        $requete = $this->getBdd()->prepare($sql);
+        $requete->execute();
+
+        $authors = $requete->fetchAll(PDO::FETCH_OBJ);
+
+        foreach($comments as $cKey => $comment)
+        {
+            foreach($authors as $aKey => $author)
+            {
+                if($comment->fk_user == $author->rowid)
+                {
+                    $comments[$cKey]->author = $authors[$aKey]->lastname." ".$authors[$aKey]->firstname;
+                }
+            }
+        }
+
+        return $comments;
     }
 
     public function fetch_last_insert_id()

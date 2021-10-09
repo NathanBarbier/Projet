@@ -287,9 +287,42 @@ a {
 
 .task-comment:hover {
     cursor: pointer;
+    background-color: rgb(238, 239, 240);
 }
 
 .task-comment {
     width: 100%;
     background-color: #f8f9fa;
+}
+
+.comment-author {
+    line-height: 70%;
+    width:65%;
+}
+
+
+.btn-outline-classic {
+    color: rgba(0, 0, 0, 0.4);
+    border-color: rgba(0, 0, 0, 0.250);
+}
+
+.btn-outline-classic:hover {
+color: rgba(0, 0, 0, 0.7);
+background-color: #f3f3f3;
+border-color: rgba(0, 0, 0, 0.500);
+}
+.btn-check:focus + .btn-outline-classic, .btn-outline-classic:focus {
+box-shadow: 0 0 0 0.25rem rgba(36, 36, 36, 0.5);
+}
+.btn-check:checked + .btn-outline-classic, .btn-check:active + .btn-outline-classic, .btn-outline-classic:active, .btn-outline-classic.active, .btn-outline-classic.dropdown-toggle.show {
+color: black;
+background-color: #f3f3f3;
+border-color: #f3f3f3;
+}
+.btn-check:checked + .btn-outline-classic:focus, .btn-check:active + .btn-outline-classic:focus, .btn-outline-classic:active:focus, .btn-outline-classic.active:focus, .btn-outline-classic.dropdown-toggle.show:focus {
+box-shadow: 0 0 0 0.25rem rgba(36, 36, 36, 0.5);
+}
+.btn-outline-classic:disabled, .btn-outline-classic.disabled {
+color: black;
+background-color: transparent;
 }

@@ -79,7 +79,7 @@ require_once "layouts/entete.php";
     </div>
 
     <div class="col-2 pt-4 pe-4 text-center border" style="height: 100vh">
-        <div id="task-details" class="collapse">
+        <div id="task-details" class="collapse show">
             <h1>Title</h1>
             <button id="up-task-btn" class="btn btn-outline-dark w-75">Up task</button>
             <button id="down-task-btn" class="btn btn-outline-dark w-75 mt-3">Down task</button>
@@ -88,9 +88,11 @@ require_once "layouts/entete.php";
                 <div id="task-comment-container" class="overflow-y pe-2" style="height: 80%">
                     <!-- foreach description -->
                     <!-- <textarea class="mt-3 card task-comment px-2 text-center" name="" id="" cols="30" rows="3" style="width: 100%; background-color: #f8f9fa"></textarea> -->
+                    <!-- <div class="d-flex justify-content-start mt-1"><button class="btn btn-outline-classic comment-author">Author name</button></div> -->
                 </div>
                 <button id="add-comment-btn" class="btn btn-outline-dark mt-3 me-2 collapse show">Add comment</button>
                 <button id="check-comment-btn" class="btn btn-outline-dark mt-3 me-2 collapse">Check</button>
+                <button id="delete-comment-btn" class="btn btn-outline-danger mt-3 me-2 collapse">Delete</button>
             </div>
             
             <h5 class="mt-3">Team members</h5>

@@ -24,6 +24,25 @@ if($rights == 'user')
 
     switch($action)
     {
+        case 'updateTaskNote':
+            if($commentId && $taskNote)
+            {
+                $status = $TaskComment->updateNote($taskNote, $commentId);
+            }               
+            break;
+        case 'deleteTaskNote':
+            if($commentId)
+            {
+                $status = $TaskComment->delete($commentId);
+            }
+            break;
+        case 'addTaskNote':
+            if($taskId && $idUser)
+            {
+                $commentId = $TaskComment->create($taskId, $idUser);
+                echo json_encode($commentId);
+            }
+            break;
         case 'getLastColumnId':
             $columnId = $MapColumns->fetch_last_insert_id()->rowid;
             echo json_encode($columnId);
@@ -69,16 +88,6 @@ if($rights == 'user')
             {
                 $status = $Task->switchRank($taskId, $columnId, 'down');   
             }
-            break;
-        case 'addTaskNote':
-            if($taskId && $idUser)
-            {
-                $commentId = $TaskComment->create($taskId, $idUser);
-                echo json_encode($commentId);
-            }
-            break;
-        case 'updateTaskNote':
-            if($commentId && $taskNote) $TaskComment->updateNote($taskNote, $commentId);
             break;
         case 'getTaskComments':
             if($taskId) 

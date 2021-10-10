@@ -108,8 +108,6 @@ if($rights === "admin")
 
                 $idTeam = $Team->fetchMaxId()->rowid;
 
-                var_dump($status);
-
                 foreach($addingUsersIds as $idUser)
                 {
                     $status[] = $BelongsTo->create($idUser, $idTeam);

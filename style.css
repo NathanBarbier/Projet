@@ -42,6 +42,15 @@ li::marker{
     width: 90%;
 }
 
+.bottom-centered {
+    bottom:4%;
+    left:0;
+    right:0 ;
+    margin-left:auto;
+    margin-right:auto;
+    position:absolute;
+}
+
 #containerPoste {
     margin-left: 0% !important;
     margin-right: 0% !important;

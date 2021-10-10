@@ -25,6 +25,7 @@ class Organization extends Modele
             $this->id = $id;
             $this->name = $Organization->name;
             $this->email = $Organization->email;
+            $this->password = $Organization->password;
 
             $User = new User();
             $users = $User->fetchAll($this->id);
@@ -99,11 +100,6 @@ class Organization extends Modele
         return $this->users;
     }
 
-    public function countUsers()
-    {
-        return count($this->users);
-    }
-
     public function getPositions()
     {
         return $this->positions;
@@ -167,7 +163,6 @@ class Organization extends Modele
             $userInfos->email = $user->getEmail();
             $userInfos->birth = $user->getBirth();
             $userInfos->password = $user->getPassword();
-            $userInfos->teamName = $this->getTeams()[$user->getUserTeamId()]->getName();
             $userInfos->positionName = $this->getPositions()[$user->getUserPositionId()]->getName();
 
             $usersInfos[] = $userInfos;
@@ -291,6 +286,16 @@ class Organization extends Modele
         return $nbUsersParPoste;
     }
 
+    public function countUsers()
+    {
+        return count($this->users);
+    }
+
+    public function countProjects()
+    {
+        return count($this->projects);
+    }
+
 
     //! UPDATE
 
@@ -314,14 +319,16 @@ class Organization extends Modele
         return $requete->execute([$email, $this->id]);
     }
 
-    public function updateMdp($mdp)
+    public function updatePassword($password, $organizationId = null)
     {
+        $organizationId = $organizationId == null ? $this->id : $organizationId;
+
         $sql = "UPDATE organizations"; 
         $sql .= " SET password = ?";
-        $sql .= " WHERE idorganization = ?";
+        $sql .= " WHERE rowid = ?";
 
         $requete = $this->getBdd()->prepare($sql);
-        return $requete->execute([$mdp, $this->id]);
+        return $requete->execute([$password, $organizationId]);
     }
 
 

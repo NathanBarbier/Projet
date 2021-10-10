@@ -14,8 +14,8 @@ if($rights === 'user')
     $firstname = GETPOST('prenom');
     $lastname = GETPOST('nom');
     $email = GETPOST('email');
-    $idPoste = GETPOST('idPoste');
-    $idEquipe = GETPOST('idEquipe');
+    $idPosition = GETPOST('idPosition');
+    $idTeam = GETPOST('idTeam');
     $birth = GETPOST('birth');
     
     $oldmdp = GETPOST('oldmdp');
@@ -24,8 +24,8 @@ if($rights === 'user')
     
     
     $User = new User($idUser);
-    $Poste = new Poste();
-    $Equipe = new Equipe();
+    $Position = new Position();
+    $Team = new Team();
     
     $tpl = "passwordUpdate.php";
     
@@ -37,11 +37,7 @@ if($rights === 'user')
     if($action == "passwordUpdate")
     {
         if($envoi)
-        {
-    
-            // var_dump($oldmdp, $newmdp, $newmdp2);
-            // exit;
-    
+        {    
             if($oldmdp && $newmdp && $newmdp2)
             {
                 if($newmdp === $newmdp2)
@@ -53,12 +49,7 @@ if($rights === 'user')
                     else
                     {
                         $newmdp = password_hash($newmdp, PASSWORD_BCRYPT);
-    
                         $oldmdpbdd = $User->getPassword();
-    
-                        // var_dump($User);
-                        // var_dump($oldmdp, $oldmdpbdd);
-                        // exit;
     
                         if(!password_verify($oldmdp, $oldmdpbdd))
                         {
@@ -82,7 +73,6 @@ if($rights === 'user')
                                 {
                                     $erreurs[] = "Erreur SQL : Le mot de passe n'a pas pu être changé.";
                                 }
-    
                             }
                         }
                     }  

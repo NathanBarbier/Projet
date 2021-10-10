@@ -1,20 +1,20 @@
 <?php
 require_once "layouts/entete.php"; 
 ?>
-<div class="col-10 mt-4 pe-4">
+<div class="col-8 mt-4 pe-4">
 
 <?php
 if($success)
 {
     ?>
-    <div class="alert alert-success w-25">
+    <div class="alert alert-success w-50 mx-auto">
         <?= $success ?>
     </div>
     <?php
 }
 else if ($errors)
 { ?>
-    <div class="alert alert-danger w-25">
+    <div class="alert alert-danger w-50 mx-auto">
     <?php
     foreach($errors as $error)
     {
@@ -25,132 +25,34 @@ else if ($errors)
     <?php
 }
 ?>
-    <h2>Création de projet</h2>
+    <h2 class="mx-auto text-center border-bottom w-50">Création de projet</h2>
     <div class="row mt-4">
-        <div class="col-4">
             <form method="POST" action="<?= CONTROLLERS_URL ?>admin/creationProjets.php?action=addProjet&idProject=<?= $idProject ?? '' ?>">
-                <div class="form-floating mb-3">
+                <div class="form-floating mb-3 mt-5 w-50 mx-auto">
                     <input required class="form-control" type="text" name="name" id="name-id" placeholder="Titre du projet" value="<?= $name ?? '' ?>">
                     <label for="name">Titre du projet</label>
                 </div>
 
-                <div class="form-floating mb-3">
+                <div class="form-floating mb-3 w-50 mx-auto">
                     <input required class="form-control" type="text" name="type" id="type-id" placeholder="Type du projet" value="<?= $type ?? '' ?>">
                     <label for="type">Type du projet</label>
                 </div>
 
-                <div class="form-floating mb-3">
+                <div class="form-floating mb-3 w-50 mx-auto">
                     <input class="form-control" type="date" name="deadline" id="deadline-id" placeholder="Deadline du projet" value="<?= $deadline ?? '' ?>">
                     <label for="deadline">DeadLine</label>
                 </div>
 
-                <div class="form-floating mb-3">
+                <div class="form-floating mb-3 w-50 mx-auto">
                     <textarea required class="form-control" name="description" id="description-id" placeholder="Description" maxlength="255"><?= $description ?? '' ?></textarea>
                     <label for="description">Description</label>
                 </div>
 
-                <div class="row">
-                    <div class="col-10">
-                        <div class="form-floating mb-3">
-                            <input class="form-control" type="text" name="" id="undefined" placeholder="undefined" value="">
-                            <label for="undefined">undefined</label>
-                        </div>
-                    </div>
-
-                    <!-- <input id="inputEquipesAjoutees" class="collapse" name="equipesAjoutees" value="" required> -->
+                <div class="d-flex justify-content-center">
+                    <button type="submit" value="<?= true ?>" name="envoi" class="btn btn-outline-primary mt-3 w-50">Créer le projet</button>
                 </div>
-
-                <button type="submit" value="<?= true ?>" name="envoi" class="btn btn-outline-primary mt-3">Créer le projet</button>
 
             </form>
-        </div>
-
-        <div class="col-6">
-            <div class="row">
-                <div class="col">
-                    <div class="card" style="height: 20vh;">
-                        <div class="card-header">
-                            <h3>undefined</h3>
-                        </div>
-                        <div class="card-body">
-                            <select class="form-control" name="" required>
-                                <option selected>undefined</option>
-                                <?php 
-                                foreach($equipes as $key => $equipe)
-                                {
-                                    ?>
-                                    <option class="collapse" id="">undefined</option>
-                                    <?php
-                                }
-                                ?>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-            </form>
-            </div>
-
-            <!-- DIV DE SELECTION DES EQUIPES AJOUTEES AU PROJET ET QUE L ON PEUT RETIRER -->
-            <div class="row mt-2">
-                <div class="col-6">
-                    <div class="card" style="width: max-content;">
-                        <!-- <div class="card-header text-center">
-                            <h3>Équipes ajoutées</h3>
-                        </div>
-                        <div class="card-body">
-                            <table class="table" style="width: max-content;">
-                                <tbody class="tbodyEquipeProjet" style="width: max-content;">
-                                    <tr>
-                                        <th>Nom</th>
-                                        <th>Options</th>
-                                    </tr>
-                                    <?php 
-                                    foreach($equipes as $key => $equipe)
-                                    {
-                                        ?>
-                                        <tr class="collapse" id="equipeProjet<?= $equipe->idEquipe ?>">
-                                            <td><?= $equipe->nomEquipe ?></td>
-                                            <td><button onclick="retirerEquipe(<?= $equipe->idEquipe ?>)" class="btn btn-outline-danger">Retirer</button></td>
-                                        </tr>
-                                        <?php
-                                    }
-                                    ?>
-                                </tbody>
-                            </table>
-                        </div> -->
-                    </div>
-                </div>
-                <!-- DIV DE SELECTION DES EQUIPES A AJOUTER AU PROJET -->
-                <div class="col-6 d-flex justify-content-end">
-                    <div class="card" style="width: max-content;">
-                        <!-- <div class="card-header text-center">
-                            <h3>Équipes prêtes</h3>
-                        </div>
-                        <div class="card-body">
-                            <table class="table">
-                                <tbody class="tbodyEquipeProjet">
-                                    <tr>
-                                        <th>Nom</th>
-                                        <th>Options</th>
-                                    </tr>
-                                    <?php 
-                                    foreach($equipes as $key => $equipe)
-                                    {
-                                        ?>
-                                        <tr class="collapse show" id="equipe<?= $equipe->idEquipe ?>">
-                                            <td><?= $equipe->nomEquipe ?></td>
-                                            <td><button onclick="ajouterEquipe(<?= $equipe->idEquipe ?>)" class="btn btn-outline-success">Ajouter</button></td>
-                                        </tr>
-                                        <?php
-                                    }
-                                    ?>
-                                </tbody>
-                            </table>
-                        </div> -->
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 </div>
 

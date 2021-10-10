@@ -134,7 +134,7 @@ function init()
                         }
 
 
-                        $("#members-switch-button").click(function() {
+                        $("#members-switch-button").off('click').click(function() {
                             $(".members-label").toggleClass('show');
                             // $(".members-buttons").toggleClass('show');
                             $("#team-members-container").toggleClass('show');

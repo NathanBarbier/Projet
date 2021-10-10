@@ -45,16 +45,16 @@ else if ($success)
         <div class="sticker col-3 mt-3 ms-3 me-3 text-center" style="height: 75vh;position:relative;margin-top:5%px !important;">
             <form action="<?= CONTROLLERS_URL ?>admin/detailsProjet.php?action=updateProject&idProject=<?= $idProject ?>" method="POST">
                 <h5 class="mt-5 border-bottom w-50 mx-auto">Titre</h5>
-                <input class="sticker text-center mt-2" name="projectName" id="projectName" type="text" value="<?= $CurrentProject->name ?>">
+                <input class="sticker text-center mt-2 px-2" name="projectName" id="projectName" type="text" value="<?= $CurrentProject->name ?>">
 
                 <h5 class="mt-3 border-bottom w-50 mx-auto">Description</h5>
-                <textarea class="sticker text-center mt-2" name="description" id="description" type="text"><?= $CurrentProject->description ?></textarea>
+                <textarea class="sticker text-center mt-2 pt-3 px-2" style="height: 150px;" name="description" id="description" type="text"><?= $CurrentProject->description ?></textarea>
 
                 <h5 class="mt-3 border-bottom w-50 mx-auto">Type</h5>
-                <input class="sticker text-center mt-2" name="type" id="type" type="text" value="<?= $CurrentProject->type ?>">
+                <input class="sticker text-center mt-2 px-2" name="type" id="type" type="text" value="<?= $CurrentProject->type ?>">
 
                 <div class="row">
-                    <button class="btn btn-outline-primary mt-4 w-75 mx-auto" style="bottom:4%; left:0; right:0 ; margin-left:auto; margin-right:auto; position:absolute;" type="submit">Update</button>
+                    <button class="btn btn-outline-primary mt-4 w-75 mx-auto bottom-centered" type="submit">Update</button>
                 </div>
 
             </form>
@@ -91,13 +91,13 @@ else if ($success)
                     <form id="update-team-form" action="<?= CONTROLLERS_URL ?>admin/detailsProjet.php?action=updateTeam&idProject=<?= $idProject ?>" method="POST">
                         <input type="hidden" value="" name="teamNameUpdate" id="teamName-hidden-update">
                         <input type="hidden" value="" name="teamId" id="team-id-update-input">
-                        <a id="update-team-button" class="btn btn-outline-primary w-75 text-center collapse show" style="bottom:0; left:0; right:0 ; margin-left:auto; margin-right:auto; position:absolute;">Update</a>
+                        <a id="update-team-button" class="btn btn-outline-primary w-75 text-center collapse show bottom-centered" style="bottom: 0;">Update</a>
                     </form>
                     
 
                     <form id="add-team-form" action="<?= CONTROLLERS_URL ?>admin/detailsProjet.php?action=addTeam&idProject=<?= $idProject ?>" method="POST">
                         <input type="hidden" value="" name="teamName" id="teamName-hidden-create">
-                        <a id="create-team-button" class="btn btn-outline-primary w-75 text-center collapse" style="bottom:0; left:0; right:0 ; margin-left:auto; margin-right:auto; position:absolute;">Create</a>
+                        <a id="create-team-button" class="btn btn-outline-primary w-75 text-center collapse bottom-centered" style="bottom: 0">Create</a>
                     </form>
                 </div>
                 

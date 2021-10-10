@@ -46,10 +46,6 @@ if($rights == "user")
 
     </nav>
 
-    <!-- <div class="container mt-4" style="width: 50%"> -->
-
-    <!-- <div class="container mt-4"> -->
-
         <!-- SIDE BAR -->
     <?php if($pageName != "map.php")
     { ?>
@@ -64,7 +60,7 @@ if($rights == "user")
 
 
                     <!-- PROJETS -->
-                    <li class="mt-2">
+                    <!-- <li class="mt-2">
                         <button class="btn btn-outline-primary w-75 mt-4" data-bs-toggle="collapse" data-bs-target="#projetsCollapse" aria-expanded="false">Projets</button>
 
                         <div id="projetsCollapse" class="collapse">
@@ -74,9 +70,9 @@ if($rights == "user")
                             </ul>
                         </div>
                     
-                    </li>
+                    </li> -->
 
-                    <!-- PROFIL -->
+                    <!-- TABLEAU DE BORD -->
                     <li class="mt-2">
                         <a href="<?= CONTROLLERS_URL ?>membres/tableauDeBord.php" class="btn btn-outline-primary w-75 mt-4" >Tableau de bord</a>
                     </li>

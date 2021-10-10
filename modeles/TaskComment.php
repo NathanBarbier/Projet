@@ -116,6 +116,27 @@ class TaskComment extends Modele
         return $requete->execute([$rowid]);
     }
 
+    public function deleteByColumnId($fk_column)
+    {
+        $sql = "DELETE FROM tasks_comments";
+        $sql .= " WHERE fk_task IN";
+        $sql .= " (SELECT t.rowid";
+        $sql .= " FROM tasks AS t";
+        $sql .= " WHERE fk_column = ?)";
+
+        $requete = $this->getBdd()->prepare($sql);
+        return $requete->execute([$fk_column]);
+    }
+
+    public function deleteByTaskId($fk_task)
+    {
+        $sql = "DELETE FROM tasks_comments";
+        $sql .= " WHERE fk_task = ?";
+
+        $requete = $this->getBdd()->prepare($sql);
+        return $requete->execute([$fk_task]);
+    }
+
 
     // FETCH
 

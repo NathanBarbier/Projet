@@ -67,18 +67,14 @@ require_once "layouts/entete.php";
                 </div>   
             <?php } ?>
                 
-            <div class="col" style="width: 250px;">
+            <!-- <div class="col" style="width: 250px;">
                 <button id="add-column-btn" class="btn btn-outline-dark" style="width:max-content; height:min-content; line-height:80%">Add Column</button>
-            
-                <div id="add-column-form" class="sticker text-center mt-2 py-2 collapse" style="height: max-content; width: 10vw">
-                    <input id="columnName-input" class="form-control w-75 mx-auto text-center" type="text">
-                    <button class="btn btn-outline-primary w-75 mt-2">Create</button>
-                </div>
-            </div>
+            </div> -->
         </div>
     </div>
 
-    <div class="col-2 pt-4 pe-4 text-center border" style="height: 100vh">
+    <div class="col-2 pt-1 pe-4 text-center border" style="height: 100vh">
+        <button id="add-column-btn" class="btn btn-outline-dark mb-4 collapse show" style="width:max-content; height:min-content; line-height:80%">Add Column</button>
         <div id="task-details" class="collapse show">
             <h1>Title</h1>
             <button id="up-task-btn" class="btn btn-outline-dark w-75">Up task</button>
@@ -86,24 +82,50 @@ require_once "layouts/entete.php";
             <h5 class="mt-3">Comment flow</h5>
             <div class="border pb-3 ps-2" style="height: 33vh;">
                 <div id="task-comment-container" class="overflow-y pe-2" style="height: 80%">
-                    <!-- foreach description -->
-                    <!-- <textarea class="mt-3 card task-comment px-2 text-center" name="" id="" cols="30" rows="3" style="width: 100%; background-color: #f8f9fa"></textarea> -->
-                    <!-- <div class="d-flex justify-content-start mt-1"><button class="btn btn-outline-classic comment-author">Author name</button></div> -->
+
                 </div>
                 <button id="add-comment-btn" class="btn btn-outline-dark mt-3 me-2 collapse show">Add comment</button>
                 <button id="check-comment-btn" class="btn btn-outline-dark mt-3 me-2 collapse">Check</button>
                 <button id="delete-comment-btn" class="btn btn-outline-danger mt-3 me-2 collapse">Delete</button>
             </div>
             
-            <h5 class="mt-3">Team members</h5>
-            <div>
-                
+            <div id="members-container-div">
+                <div class="row mt-2">
+                    <div class="col-3 pt-3">
+                        <button id="members-switch-button" class="btn btn-outline-info" style="line-height: 70%;">switch</button>
+                    </div>
+                    <div class="col-9 pt-3 text-start">
+                        <h5 class="members-label collapse">Team members</h5>
+                        <h5 class="members-label collapse show">Task members</h5>
+                    </div>
                 </div>
-                <div class="overflow-y border" style="height: 20vh;">
-                    <div class="sticker mx-auto mt-2 hover text-center pt-3" style="width: 90%;">NOM DU MEMBRE</div>
+                <div id="team-members-container" class="overflow-y border collapse" style="height: 20vh;">
+                        <?php
+                        // var_dump($CurrentTeam);
+                        foreach($CurrentTeam->getMembers() as $member)
+                        {
+                            ?>
+                        <div class="team-member">
+                            <input type="hidden" class="team-member-id" value="<?= $member->getId() ?>">
+                            <div class="sticker mx-auto mt-2 hover text-center pt-3" style="width: 90%;"><?= $member->getLastname() . " " . $member->getFirstname() ?></div>
+                        </div>
+                        <?php } ?>
                 </div>
-                <button class="btn btn-outline-secondary w-50 mt-2">Attribute</button>
-                <button class="btn btn-outline-secondary w-50 mt-2">Desattribute</button>
+                <div id="task-members-container" class="overflow-y border collapse show" style="height: 20vh; width:100%">
+                    
+                </div>
+
+                <button id="attribute-member-button" class="collapse btn btn-outline-secondary w-50 mt-2">Attribute</button>
+                <button id="desattribute-member-button" class="collapse btn btn-outline-secondary w-50 mt-2">Desattribute</button>
+            </div>
+        </div>
+        <div id="add-column-form" class="sticker text-center pt-1 collapse w-100" style="height:91%">
+            <h3 class="border-bottom w-75 mx-auto">New Column</h3>
+            <div class="mt-5">
+                <label for="columnName-input">Column Name</label>
+                <input id="columnName-input" class="form-control w-75 mx-auto text-center" type="text">
+                <button id="create-column" class="btn btn-outline-success w-75 mt-5">Create</button>
+                <button id="cancel-column" class="btn btn-outline-danger w-75 mt-3">Cancel</button>
             </div>
         </div>
     </div>
@@ -114,6 +136,8 @@ require_once "layouts/entete.php";
     const AJAX_URL = <?php echo json_encode(AJAX_URL); ?>;
     var projectId = <?php echo json_encode($CurrentProject->getId()); ?>;
     var teamId = <?php echo json_encode($CurrentTeam->getId()); ?>;
+    const username = <?php echo json_encode($username); ?>;
+    const idUser = <?php echo json_encode($idUser); ?>;
 </script>
 
 <script type="text/Javascript" src="<?= JS_URL ?>membres/map.js"></script>

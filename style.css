@@ -38,6 +38,10 @@ li::marker{
     overflow-x: hidden;
 }
 
+.w-90 {
+    width: 90%;
+}
+
 #containerPoste {
     margin-left: 0% !important;
     margin-right: 0% !important;
@@ -299,6 +303,12 @@ a {
     line-height: 70%;
     width:65%;
 }
+
+#task-members-container {
+    width: 90%;
+}
+
+
 
 
 .btn-outline-classic {

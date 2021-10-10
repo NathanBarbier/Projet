@@ -8,10 +8,11 @@ $idOrganization = $_SESSION["idOrganization"] ?? null;
 
 if($rights == 'user')
 {
-    // $Organization = new Organization($idOrganization);
     $MapColumns = new MapColumns();
     $Task = new Task();
     $TaskComment = new TaskComment();
+    $TaskMembers = new TaskMembers();
+    $User = new User();
 
     $action = GETPOST('action');
     $teamId = GETPOST('teamId');
@@ -21,20 +22,19 @@ if($rights == 'user')
     $taskId = GETPOST('taskId');
     $taskNote = GETPOST('taskNote');
     $commentId = GETPOST('commentId');
+    $memberId = GETPOST('memberId');
 
     switch($action)
     {
         case 'updateTaskNote':
             if($commentId && $taskNote)
             {
-                $status = $TaskComment->updateNote($taskNote, $commentId);
+                $authorId = $TaskComment->fetch($commentId)->fk_user;
+                if($authorId == $idUser)
+                {
+                    $status = $TaskComment->updateNote($taskNote, $commentId);
+                }
             }               
-            break;
-        case 'deleteTaskNote':
-            if($commentId)
-            {
-                $status = $TaskComment->delete($commentId);
-            }
             break;
         case 'addTaskNote':
             if($taskId && $idUser)
@@ -43,27 +43,20 @@ if($rights == 'user')
                 echo json_encode($commentId);
             }
             break;
-        case 'getLastColumnId':
-            $columnId = $MapColumns->fetch_last_insert_id()->rowid;
-            echo json_encode($columnId);
+        case 'attributeMemberToTask':
+            if($taskId && $memberId)
+            {
+                $TaskMembers->create($memberId, $taskId);
+            }
             break;
-        case 'getLastTaskId':
-            $taskId = $Task->fetch_last_insert_id()->rowid;
-            echo json_encode($taskId);
+        case 'desattributeMemberToTask':
+            if($taskId && $memberId)
+            {
+                $TaskMembers->deleteByTaskIdAndUserId($taskId, $memberId);
+            }
             break;
         case 'addColumn':
             if($teamId && $columnName) $status = $MapColumns->create($columnName, $teamId);
-            break;
-        case 'deleteColumn':
-            if($columnId)
-            {
-                $status = array();
-                $status[] = $Task->deleteByColumnId($columnId);
-                $status[] = $MapColumns->delete($columnId);
-            }
-            break;
-        case 'deleteTask':
-            if($taskId) $status = $Task->delete($taskId);
             break;
         case 'renameColumn':
             if($columnId && $columnName)
@@ -89,11 +82,65 @@ if($rights == 'user')
                 $status = $Task->switchRank($taskId, $columnId, 'down');   
             }
             break;
+        case 'deleteTaskNote':
+            if($commentId)
+            {
+                //! check if is author
+                // fetch comment author id
+                $authorId = $TaskComment->fetch($commentId)->fk_user;
+                if($authorId == $idUser)
+                {
+                    $TaskComment->delete($commentId);
+                }
+            }
+            break;
+        case 'deleteColumn':
+            if($columnId)
+            {
+                $TaskComment->deleteByColumnId($columnId);
+                $Task->deleteByColumnId($columnId);
+                $MapColumns->delete($columnId);
+            }
+            break;
+        case 'deleteTask':
+            if($taskId)
+            {
+                $TaskComment->deleteByTaskId($taskId);
+                $Task->delete($taskId);
+            }
+            break;
+        case 'getLastColumnId':
+            $columnId = $MapColumns->fetch_last_insert_id()->rowid;
+            echo json_encode($columnId);
+            break;
+        case 'getLastTaskId':
+            $taskId = $Task->fetch_last_insert_id()->rowid;
+            echo json_encode($taskId);
+            break;
         case 'getTaskComments':
             if($taskId) 
             {
                 $comments = $TaskComment->fetchAll($taskId);
                 echo json_encode($comments);
+            }
+            break;
+        case 'getTaskMembers':
+            if($taskId)
+            {
+                $taskMembers = $TaskMembers->fetchAll($taskId);
+
+                $membersIds = array();
+
+                foreach($taskMembers as $member)
+                {
+                    $membersIds[] = $member->fk_user;
+                }
+                // get lastname and firstname
+                
+                $membersInfos = $User->fetchByIds($membersIds);
+                
+
+                echo json_encode($membersInfos);
             }
             break;
     }

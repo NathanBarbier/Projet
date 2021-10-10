@@ -4,9 +4,17 @@ initCol();
 // NEW COLUMN
 $("#add-column-btn").click(function() {
     $("#add-column-form").toggleClass('show');
+    $("#task-details").toggleClass('show');
+    $(this).toggleClass('show');
 });
 
-$("#add-column-form").find('button').click(function() {
+$("#cancel-column").click(function() {
+    $("#add-column-form").toggleClass('show');
+    $("#task-details").toggleClass('show');
+    $("#add-column-btn").toggleClass('show');
+});
+
+$("#add-column-form").find('#create-column').click(function() {
     
     columnName = $("#columnName-input").val();
 
@@ -28,6 +36,8 @@ $("#add-column-form").find('button').click(function() {
                     btnColumnForm.toggleClass('show');
                 
                     $("#add-column-btn").parent().before("<div class='project-column'><input class='columnId-input' type='hidden' value='"+columnId+"'><div class='column-title text-center pt-2'><ul><li class='me-2'><b>"+columnName+"</b><button class='btn btn-outline-dark add-task-btn'>New</button></li><li class='mt-2 me-2'><button class='btn btn-outline-danger delete-col-btn'>Delete</button></li></ul></div><div class='column-content'></div></div>");
+
+                    $("#add-column-btn").toggleClass('show');
             
                     initTask();
                     initCol();
@@ -43,6 +53,7 @@ function init()
     var taskId;
     var taskNote;
     var commentId;
+    var memberId;
 
     $(".task-bubble").off('hover').hover(function() {
         $(this).css({"background-color": "#eeeff0", "cursor": "pointer"});
@@ -58,6 +69,7 @@ function init()
         $(".arrow-img-btn").removeClass('show');
 
         $("#task-comment-container").children().remove();
+        $("#task-members-container").children().remove();
 
         $(this).parent().nextAll(".task-check").first().addClass('show');
         $(this).parent().nextAll(".task-delete").first().addClass('show');
@@ -91,7 +103,7 @@ function init()
 
         $("#task-details").addClass("show");
 
-        //! load task comments
+        // load task comments
         $.ajax({
             url: AJAX_URL+"membres/map.php?action=getTaskComments&taskId="+taskId,
             success: function (data) {
@@ -102,10 +114,83 @@ function init()
                     note = comments[i].note;
                     note = note == null ? '' : note,
                     author = comments[i].author;
-                    $("#task-comment-container").prepend("<div class='task-comment-div'><input type='hidden' class='comment-task-id' value='"+comments[i].rowid+"'><textarea class='mt-3 card task-comment px-2 pt-3 text-center' name='' cols='30' rows='3'>"+note+"</textarea><div class='d-flex justify-content-start mt-1'><button class='btn btn-outline-classic comment-author'>"+author+"</button></div></div>")
+                    authorId = comments[i].fk_user;
+                    $("#task-comment-container").prepend("<div class='task-comment-div'><input type='hidden' class='comment-task-id' value='"+comments[i].rowid+"'><textarea "+(authorId =! idUser ? "disabled" : "")+" class='mt-3 card task-comment px-2 pt-3 text-center' name='' cols='30' rows='3'>"+note+"</textarea><div class='d-flex justify-content-start mt-1'><button class='btn btn-outline-classic comment-author'>"+author+"</button></div></div>")
                 }
 
                 initComment();
+
+                //! CHARGER LES TASKS MEMBERS
+                $.ajax({
+                    url: AJAX_URL+"membres/map.php?action=getTaskMembers&taskId="+taskId,
+                    success: function (data) {
+                        members = $.parseJSON(data);
+
+                        l = members.length;
+
+                        for(i = 0; i < l; i++)
+                        {
+                            $("#task-members-container").prepend("<div class='task-member'><input type='hidden' class='task-member-id' value='"+members[i].rowid+"'><div class='w-90 sticker mx-auto mt-2 hover text-center pt-3'>"+members[i].lastname+" "+members[i].firstname+"</div></div>");
+                        }
+
+
+                        $("#members-switch-button").click(function() {
+                            $(".members-label").toggleClass('show');
+                            // $(".members-buttons").toggleClass('show');
+                            $("#team-members-container").toggleClass('show');
+                            $("#task-members-container").toggleClass('show');
+                
+                            $("#desattribute-member-button").removeClass('show');
+                            $("#attribute-member-button").removeClass('show');
+                        });
+                
+                        // member onclick userid
+                        $(".team-member").off('click').click(function() {
+                            memberId = $(this).find('.team-member-id').val();
+                            memberId = memberId.replace("\"", ' ').replace("\"", ' ');
+                            memberName = $(this).find('.sticker').text();
+                
+                            $("#attribute-member-button").addClass('show');
+                        })
+                
+                        $(".task-member").off('click').click(function() {
+                            memberId = $(this).find('.task-member-id').val();
+                            memberId = memberId.replace("\"", ' ').replace("\"", ' ');
+                
+                            $("#desattribute-member-button").addClass('show');
+                        })
+                
+                        $("#attribute-member-button").off('click').click(function() {
+                            btn = $(this);
+                            $.ajax({
+                                url: AJAX_URL+"membres/map.php?action=attributeMemberToTask&taskId="+taskId+"&memberId="+memberId,
+                                success: function(data) {
+                                    btn.removeClass('show');
+
+                                    $("#task-members-container").prepend("<div class='task-member'><input type='hidden' class='task-member-id' value='"+memberId+"'><div class='w-90 sticker mx-auto mt-2 hover text-center pt-3'>"+memberName+"</div></div>");
+
+                                    $(".task-member").off('click').click(function() {
+                                        memberId = $(this).find('.task-member-id').val();
+                                        memberId = memberId.replace("\"", ' ').replace("\"", ' ');
+                            
+                                        $("#desattribute-member-button").addClass('show');
+                                    })
+                                }
+                            });
+                        });
+                
+                        $("#desattribute-member-button").off('click').click(function() {
+                            btn= $(this);
+                            $.ajax({
+                                url: AJAX_URL+"membres/map.php?action=desattributeMemberToTask&taskId="+taskId+"&memberId="+memberId,
+                                success: function(data) {
+                                    btn.removeClass('show');
+                                    $(".task-member-id[value='"+memberId+"']").parent().remove();
+                                }
+                            });
+                        });
+                    }
+                });
             }
         });
     });
@@ -119,7 +204,7 @@ function init()
             success: function(data) {
                 commentId = data;
                 commentId = commentId.replace("\"", ' ').replace("\"", ' ');
-                $("#task-comment-container").prepend("<div class='task-comment-div'><input type='hidden' class='comment-task-id' value='"+commentId+"'><textarea class='mt-3 card task-comment px-2 pt-3 text-center' name='' cols='30' rows='3'></textarea><div class='d-flex justify-content-start mt-1'><button class='btn btn-outline-classic comment-author'>Author name</button></div></div>")
+                $("#task-comment-container").prepend("<div class='task-comment-div'><input type='hidden' class='comment-task-id' value='"+commentId+"'><textarea class='mt-3 card task-comment px-2 pt-3 text-center' name='' cols='30' rows='3'></textarea><div class='d-flex justify-content-start mt-1'><button class='btn btn-outline-classic comment-author'>"+username+"</button></div></div>")
 
                 initComment();
             }

@@ -220,6 +220,20 @@ class User extends Modele
         return $requete->fetch(PDO::FETCH_OBJ);
     }
 
+    public function fetchByIds(array $usersIds)
+    {
+        $usersIds = implode("', '", $usersIds);
+
+        $sql = "SELECT *";
+        $sql .= " FROM users";
+        $sql .= " WHERE rowid IN ('".$usersIds."')";
+
+        $requete = $this->getBdd()->prepare($sql);
+        $requete->execute();
+
+        return $requete->fetchAll(PDO::FETCH_OBJ);
+    }
+
     //! INSERT
 
     public function create($firstname, $lastname, $birth, $idPosition, $email, $idorganization, $password)

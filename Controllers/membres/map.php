@@ -11,14 +11,13 @@ if($rights == 'user')
     $Organization = new Organization($idOrganization);
     $MapColumns = new MapColumns();
     $Task = new Task();
+    $User = new User($idUser);
     
-    $projectId = GETPOST('projectId');
-
+    
     $action = GETPOST('action');
-    
+    $projectId = GETPOST('projectId');
     $columnName = GETPOST('columnName');
     $columnId = GETPOST('columnId');
-
     $taskId = GETPOST('taskId');
     $taskName = GETPOST('taskName');
     $taskDescription = GETPOST('taskDescription');
@@ -26,6 +25,8 @@ if($rights == 'user')
     $tpl = "map.php";
     $errors = array();
     $success = false;
+
+    $username = $User->getLastname() . " " . $User->getFirstname();
 
 
     $Projects = $Organization->getProjects();

@@ -164,7 +164,7 @@ Class MapColumns extends Modele
         $requete = $this->getBdd()->prepare($sql);
         return $requete->execute([$rowid]);
     }
-
+    
 
     // METHODS
 

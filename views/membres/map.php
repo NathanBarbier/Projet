@@ -25,10 +25,7 @@ require_once "layouts/entete.php";
     <?php
     } ?>
 
-        <div id="#success" class="alert alert-success mx-3 collapse"></div>
-        <div id="#error" class="alert alert-danger mx-3 collapse"></div>
-
-        <div class="row ms-3 me-4 overflow-x" style="height: 90%;">
+        <div id="columns-container" class="ms-3 me-4 overflow-x d-flex" style="height: 90%;">
             <?php
             foreach($CurrentTeam->getMapColumns() as $column)
             {
@@ -37,7 +34,7 @@ require_once "layouts/entete.php";
                     <input class="columnId-input" type="hidden" value="<?= $column->getRowid() ?>">
                     <div class="column-title text-center pt-2">
                         <ul>
-                            <li class="me-2"><b><?= $column->getName() ?></b><button class="btn btn-outline-dark add-task-btn">New</button></li>
+                            <li class="me-2"><b class="column-title-text"><?= $column->getName() ?></b><button class="btn btn-outline-dark add-task-btn">New</button></li>
                             <li class="mt-2 me-2"><button class="btn btn-outline-danger delete-col-btn">Delete</button></li>
                         </ul>
                     </div>
@@ -66,19 +63,17 @@ require_once "layouts/entete.php";
                     </div>
                 </div>   
             <?php } ?>
-                
-            <!-- <div class="col" style="width: 250px;">
-                <button id="add-column-btn" class="btn btn-outline-dark" style="width:max-content; height:min-content; line-height:80%">Add Column</button>
-            </div> -->
         </div>
     </div>
 
     <div class="col-2 pt-1 pe-4 text-center border" style="height: 100vh">
-        <button id="add-column-btn" class="btn btn-outline-dark mb-4 collapse show" style="width:max-content; height:min-content; line-height:80%">Add Column</button>
-        <div id="task-details" class="collapse show">
-            <h1>Title</h1>
-            <button id="up-task-btn" class="btn btn-outline-dark w-75">Up task</button>
-            <button id="down-task-btn" class="btn btn-outline-dark w-75 mt-3">Down task</button>
+        <button id="add-column-btn" class="btn btn-outline-dark collapse show" style="width:max-content; height:min-content; line-height:80%">Add Column</button>
+        <div id="task-details" class="mt-3 collapse">
+            <textarea id="task-title" class="card px-2 pt-3 text-center" cols="25" rows="2" readonly>Title</textarea>
+            <div class="mt-3">
+                <button id="up-task-btn" class="btn btn-outline-dark" style="width: 40%;">Up task</button>
+                <button id="down-task-btn" class="btn btn-outline-dark" style="width: 40%;">Down task</button>
+            </div>
             <h5 class="mt-3">Comment flow</h5>
             <div class="border pb-3 ps-2" style="height: 33vh;">
                 <div id="task-comment-container" class="overflow-y pe-2" style="height: 80%">
@@ -100,16 +95,15 @@ require_once "layouts/entete.php";
                     </div>
                 </div>
                 <div id="team-members-container" class="overflow-y border collapse" style="height: 20vh;">
-                        <?php
-                        // var_dump($CurrentTeam);
-                        foreach($CurrentTeam->getMembers() as $member)
-                        {
-                            ?>
-                        <div class="team-member">
-                            <input type="hidden" class="team-member-id" value="<?= $member->getId() ?>">
-                            <div class="sticker mx-auto mt-2 hover text-center pt-3" style="width: 90%;"><?= $member->getLastname() . " " . $member->getFirstname() ?></div>
-                        </div>
-                        <?php } ?>
+                    <?php
+                    foreach($CurrentTeam->getMembers() as $member)
+                    {
+                        ?>
+                    <div class="team-member">
+                        <input type="hidden" class="team-member-id" value="<?= $member->getId() ?>">
+                        <div class="sticker mx-auto mt-2 hover text-center pt-3" style="width: 90%;"><?= $member->getLastname() . " " . $member->getFirstname() ?></div>
+                    </div>
+                    <?php } ?>
                 </div>
                 <div id="task-members-container" class="overflow-y border collapse show" style="height: 20vh; width:100%">
                     
@@ -128,17 +122,16 @@ require_once "layouts/entete.php";
                 <button id="cancel-column" class="btn btn-outline-danger w-75 mt-3">Cancel</button>
             </div>
         </div>
+        <div id="column-details" class="mt-3 collapse">
+            <textarea id="column-title" class="card px-2 pt-3 text-center" cols="25" rows="2"></textarea>
+            <button id="column-details-check-btn" class="btn btn-outline-dark w-50 mt-3 collapse">Check</button>
+            <div class="mt-5">
+                <button id="left-column-btn" class="btn btn-outline-dark" style="width: 40%;">Left</button>
+                <button id="right-column-btn" class="btn btn-outline-dark" style="width: 40%;">Right</button>
+            </div>
+            <button id="column-details-delete-btn" class="btn btn-outline-danger w-50 mt-4">Delete</button>
+        </div>
     </div>
-
-<script>
-    const IMG_URL = <?php echo json_encode(IMG_URL); ?>;
-    const CONTROLLERS_URL = <?php echo json_encode(CONTROLLERS_URL); ?>;
-    const AJAX_URL = <?php echo json_encode(AJAX_URL); ?>;
-    var projectId = <?php echo json_encode($CurrentProject->getId()); ?>;
-    var teamId = <?php echo json_encode($CurrentTeam->getId()); ?>;
-    const username = <?php echo json_encode($username); ?>;
-    const idUser = <?php echo json_encode($idUser); ?>;
-</script>
 
 <script type="text/Javascript" src="<?= JS_URL ?>membres/map.js"></script>
 <?php 

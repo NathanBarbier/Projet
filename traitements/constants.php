@@ -15,7 +15,7 @@ $pageName = explode("?", $pageName)[min(array_keys(explode("?", $pageName)))];
 $rootUrl = explode("Projet", $url)[0];
 $rootUrl .= "Projet/";
 
-//! DIR PATH
+// DIR PATH
 define('ROOT_PATH', $rootDir);
 define('MODELS_PATH', $rootDir.'modeles'.DIRECTORY_SEPARATOR);
 define('IMG_PATH', $rootDir.'images'.DIRECTORY_SEPARATOR);
@@ -24,7 +24,7 @@ define('VIEWS_PATH', $rootDir.'views'.DIRECTORY_SEPARATOR);
 define('PROCESS_PATH', $rootDir.'traitements'.DIRECTORY_SEPARATOR);
 define('PHP_MAILER_PATH', $rootDir.'vendor'.DIRECTORY_SEPARATOR.'phpmailer'.DIRECTORY_SEPARATOR.'phpmailer'.DIRECTORY_SEPARATOR.'src'.DIRECTORY_SEPARATOR);
 
-//! URL PATH
+// URL PATH
 define('ROOT_URL', $rootUrl);
 define('MODELS_URL', $rootUrl.'modeles/');
 define('IMG_URL', $rootUrl.'images/');
@@ -35,5 +35,4 @@ define('JS_URL', $rootUrl.'js/');
 define('AJAX_URL', $rootUrl.'Ajax/');
 define('PHP_MAILER_URL', $rootUrl.'vendor/phpmailer/phpmailer/src/');
 
- 
 ?>

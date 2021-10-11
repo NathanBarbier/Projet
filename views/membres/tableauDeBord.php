@@ -36,7 +36,6 @@ else if ($erreurs)
                     <?php 
                     if($userProjects)
                     {
-                        // var_dump($userProjects);
                         foreach($userProjects as $project)
                         {
                         ?>

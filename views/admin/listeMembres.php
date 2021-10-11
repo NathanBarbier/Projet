@@ -65,7 +65,7 @@ else if($errors)
                 </div>
                 <form method="POST" action="<?= CONTROLLERS_URL ?>admin/listeMembres.php?action=updateLastname&idUser=<?= $member->rowid ?>">
                     <div id="divInputModifNom<?= $member->rowid ?>" class="collapse">
-                        <input class="form-control mb-1 text-center" value="<?= $member->lastname ?>" type="text" name="lastname" placeholder="Écrivez un nom" required>
+                        <input class="form-control mb-1 text-center w-50 mx-auto" value="<?= $member->lastname ?>" type="text" name="lastname" placeholder="Écrivez un nom" required>
                     </div>
 
                     <!-- Confirmer la modification du nom de l'utilisateur -->
@@ -86,7 +86,7 @@ else if($errors)
                 </div>
                 <form method="POST" action="<?= CONTROLLERS_URL ?>admin/listeMembres.php?action=updateFirstname&idUser=<?= $member->rowid ?>">
                     <div id="divInputModifPrenom<?= $member->rowid ?>" class="collapse">
-                        <input class="form-control mb-1 text-center" value="<?= $member->firstname ?>" type="text" name="firstname" placeholder="Écrivez un prénom" required>
+                        <input class="form-control mb-1 text-center w-50 mx-auto" value="<?= $member->firstname ?>" type="text" name="firstname" placeholder="Écrivez un prénom" required>
                     </div>
 
                     <!-- Confirmer la modification du nom de l'utilisateur -->
@@ -102,14 +102,11 @@ else if($errors)
                     <?php 
                     foreach($positions as $position)
                     {
-                        // var_dump($poste->idPoste);
-                        // var_dump($member);
                         if($position->rowid == $member->fk_position)
                         {
                             echo $position->name;
                             break;
                         }
-
                     }
                     ?>
                 </div>

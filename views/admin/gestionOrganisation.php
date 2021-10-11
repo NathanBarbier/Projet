@@ -23,7 +23,7 @@ require_once "layouts/entete.php";
         <?php } ?>
             <div id="delete-organization-div" class="sticker py-3 px-3 text-center collapse" style="height: max-content;">
                 <b>Êtes-vous sûr de vouloir supprimer l'organisation ?</b><br>
-                (Cette action est définitive et supprimer toute donnée étant en lien avec l'organisation)
+                (Cette action est définitive et supprimera toute donnée étant en lien avec celle-ci)
                 <div class="mt-5 row">
                     <div class="col-6 text-end">
                         <a class="btn btn-outline-danger w-50" href="<?= CONTROLLERS_URL ?>admin/gestionOrganisation.php?action=deleteOrganization">Oui</a>

@@ -229,6 +229,7 @@ a {
     border: 1px solid rgba(0, 0, 0, 0.125); 
     border-radius:15px; 
     background-color:#f8f9fa; 
+    min-width: 280px;
     width: 280px;
     margin-right: 20px;
     padding:unset;
@@ -239,6 +240,7 @@ a {
     width: 100%;
     border-bottom: 1px rgb(216, 214, 214) solid;
     height: max-content;
+    cursor: pointer;
 }
 
 .add-task-btn {
@@ -315,6 +317,18 @@ a {
 
 #task-members-container {
     width: 90%;
+}
+
+#task-title {
+    outline: none;
+    cursor: default;
+    font-size: x-large;
+    width: 100%;
+}
+
+#column-title {
+    font-size: x-large;
+    width: 100%;
 }
 
 

@@ -82,10 +82,16 @@ if($rights == 'user')
                 $status = $Task->switchRank($taskId, $columnId, 'down');   
             }
             break;
+        case 'updateColumn':
+            if($columnId && $columnName)
+            {
+                $status = $MapColumns->updateName($columnName, $columnId);
+            }
+            break;
         case 'deleteTaskNote':
             if($commentId)
             {
-                //! check if is author
+                // check if is author
                 // fetch comment author id
                 $authorId = $TaskComment->fetch($commentId)->fk_user;
                 if($authorId == $idUser)

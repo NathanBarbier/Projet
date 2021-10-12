@@ -2,9 +2,9 @@
 //import all models
 require_once "../../traitements/header.php";
 
-$idUser = $_SESSION["idUtilisateur"] ?? null;
-$rights = $_SESSION["habilitation"] ?? false;
-$idOrganisation = $_SESSION["idOrganisation"] ?? false;
+$idUser = $_SESSION["idUser"] ?? null;
+$rights = $_SESSION["rights"] ?? false;
+$idOrganization = $_SESSION["idOrganization"] ?? false;
 
 if($rights === 'user')
 {

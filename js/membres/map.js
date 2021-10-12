@@ -337,12 +337,36 @@ function initCol()
 
     });
 
-    $("#column-details-delete-btn").off('click').click(function() {
-        $(".columnId-input[value='"+columnId+"']").remove();
+    $("#left-column-btn").off('click').click(function() {
+        $.ajax({
+            async: true,
+            url: AJAX_URL+"membres/map.php?action=leftColumn&columnId="+columnId+"&teamId="+teamId,
+            success: function() {
+                column = $(".columnId-input[value='"+columnId+"']").parents('.project-column').first()
+                column.insertBefore(column.prevAll('.project-column').first());
+            }
+        })
+    });
 
+    $("#right-column-btn").off('click').click(function() {
+        $.ajax({
+            async: true,
+            url: AJAX_URL+"membres/map.php?action=rightColumn&columnId="+columnId+"&teamId="+teamId,
+            success: function(data) {
+                column = $(".columnId-input[value='"+columnId+"']").parents('.project-column').first();
+                column.insertAfter(column.nextAll(".project-column").first());
+            }
+        })
+    });
+
+    $("#column-details-delete-btn").off('click').click(function() {
         $.ajax({
             async: true,
             url: AJAX_URL+"membres/map.php?action=deleteColumn&columnId="+columnId,
+            success: function() {
+                $(".columnId-input[value='"+columnId+"']").parents('.project-column').first().remove();
+                $("#column-details").removeClass('show');
+            }
         });
     });
 
@@ -411,14 +435,7 @@ function initComment()
 
 function updateTaskColumn(task, taskId, newColumn)
 {
-    if(newColumn.length == 0)
-    {
-        newColumnId = false;
-    }
-    else
-    {
-        newColumnId = newColumn.find(".columnId-input").first().val();
-    }
+    newColumnId = newColumn.length == 0 ? false : newColumn.find(".columnId-input").first().val();
 
     if(newColumnId)
     {

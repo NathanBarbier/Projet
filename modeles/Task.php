@@ -263,7 +263,7 @@
     {
         $rowid = $rowid == null ? $this->rowid : $rowid;
 
-        $sql = "UPDATE tasks";
+        $sql = "UPDATE map_columns";
         $sql .= " SET rank = ?";
         $sql .= " WHERE rowid = ?";
 

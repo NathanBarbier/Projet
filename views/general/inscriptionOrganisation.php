@@ -4,7 +4,7 @@ require_once "layouts/entete.php";
 if(!empty($errors))
 {
     ?>
-    <div class="alert alert-danger w-50 mx-auto">
+    <div class="alert alert-danger w-50 mx-auto text-center">
     <?php
     foreach($errors as $error)
     {
@@ -18,7 +18,7 @@ if(!empty($errors))
 if(!empty($success))
 {
     ?>
-     <div class="alert alert-success">
+     <div class="alert alert-success w-50 mx-auto text-center">
      Votre inscription a bien été enregistrée<br>
      Vous allez être redirigé vers la page de connexion<br>
      </div>

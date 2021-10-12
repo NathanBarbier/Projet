@@ -1,6 +1,8 @@
 <?php 
 require_once "../../traitements/header.php";
 require_once "layouts/entete.php";
+
+header("location:".CONTROLLERS_URL."membres/tableauDeBord.php");
 ?>
     <div class="col-10">
 

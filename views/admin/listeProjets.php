@@ -6,14 +6,14 @@ require_once "layouts/entete.php";
 <?php
 if($success)
 { ?>
-    <div class="alert alert-success">
+    <div class="alert alert-success w-50 mx-auto text-center">
         <?= $success; ?>
     </div>
     <?php
 }
 else if ($erreurs)
 { ?>
-    <div class="alert alert-danger">
+    <div class="alert alert-danger w-50 mx-auto text-center">
     <?php
     foreach($erreurs as $erreur)
     {
@@ -22,10 +22,6 @@ else if ($erreurs)
     </div>
     <?php
 }
-
-// var_dump($currentProjects);
-
-
 ?>
 
 <h1 class="text-center mx-auto w-50 mt-5 mb-4" style="border-bottom: 1px rgb(216, 214, 214) solid;">Liste des projets</h1>
@@ -35,11 +31,11 @@ else if ($erreurs)
 if($currentProjects)
 { ?>
     <div class="row w-75 mx-auto mt-3 justify-content-between">
-        <div class="col-3 sticker-blue text-center"><h5 class="mt-3">Nom du projet</h5></div>
-        <div class="col-2 sticker-blue text-center"><h5 class="mt-3">Type</h5></div>
-        <div class="col-2 sticker-blue text-center"><h5 class="mt-3">Tâches à faire</h5></div>
-        <div class="col-2 sticker-blue text-center"><h5 class="mt-3">Tâches en cours</h5></div>
-        <div class="col-2 sticker-blue text-center"><h5 class="mt-3">Détails</h5></div>
+        <div class="col-3 sticker text-center"><h5 class="mt-3">Nom du projet</h5></div>
+        <div class="col-2 sticker text-center"><h5 class="mt-3">Type</h5></div>
+        <div class="col-2 sticker text-center"><h5 class="mt-3">Tâches à faire</h5></div>
+        <div class="col-2 sticker text-center"><h5 class="mt-3">Tâches en cours</h5></div>
+        <div class="col-2 sticker text-center"><h5 class="mt-3">Détails</h5></div>
     </div>
     <?php
     foreach($currentProjects as $project)

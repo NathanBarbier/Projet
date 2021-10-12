@@ -7,7 +7,7 @@ require_once "layouts/entete.php";
         <?php 
         if($errors)
         { ?>
-            <div class="alert alert-danger">
+            <div class="alert alert-danger w-50 mx-auto text-center">
             <?php foreach($errors as $error)
             {
                 echo $error . "<br>";
@@ -17,7 +17,7 @@ require_once "layouts/entete.php";
         }
         else if($success)
         { ?>
-            <div class="alert alert-success">
+            <div class="alert alert-success w-50 mx-auto text-center">
             <?= $success ?>
             </div>    
         <?php } ?>

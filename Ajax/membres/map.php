@@ -82,6 +82,18 @@ if($rights == 'user')
                 $status = $Task->switchRank($taskId, $columnId, 'down');   
             }
             break;
+        case 'leftColumn':
+            if($teamId && $columnId)
+            {
+                $status = $MapColumns->switchRank($columnId, $teamId, 'left');
+            }
+            break;
+        case 'rightColumn':
+            if($teamId && $columnId)
+            {
+                $status = $MapColumns->switchRank($columnId, $teamId, 'right');
+            }
+            break;
         case 'updateColumn':
             if($columnId && $columnName)
             {

@@ -25,7 +25,7 @@ require_once "layouts/entete.php";
     <?php
     } ?>
 
-        <div id="columns-container" class="ms-3 me-4 overflow-x d-flex" style="height: 90%;">
+        <div id="columns-container" class="ms-3 me-4 overflow-x d-flex" style="height: 88vh;">
             <?php
             foreach($CurrentTeam->getMapColumns() as $column)
             {
@@ -33,10 +33,15 @@ require_once "layouts/entete.php";
                 <div class="project-column">
                     <input class="columnId-input" type="hidden" value="<?= $column->getRowid() ?>">
                     <div class="column-title text-center pt-2">
-                        <ul>
-                            <li class="me-2"><b class="column-title-text"><?= $column->getName() ?></b><button class="btn btn-outline-dark add-task-btn">New</button></li>
-                            <li class="mt-2 me-2"><button class="btn btn-outline-danger delete-col-btn">Delete</button></li>
-                        </ul>
+                        <div class="row">
+                            <div class="col-8 mt-3 ps-5 column-title-name">
+                                <b class="column-title-text"><?= $column->getName() ?></b>
+                            </div>
+                            <ul class="col-4">
+                                <li class="me-2"><button class="btn btn-outline-dark add-task-btn">New</button></li>
+                                <li class="mt-2 me-2"><button class="btn btn-outline-danger delete-col-btn">Delete</button></li>
+                            </ul>
+                        </div>
                     </div>
                     <div class="column-content">
                         <?php 
@@ -66,13 +71,13 @@ require_once "layouts/entete.php";
         </div>
     </div>
 
-    <div class="col-2 pt-1 pe-4 text-center border" style="height: 100vh">
+    <div class="col-2 pt-1 pe-4 text-center border" style="height: 100vh"> 
         <button id="add-column-btn" class="btn btn-outline-dark collapse show" style="width:max-content; height:min-content; line-height:80%">Add Column</button>
         <div id="task-details" class="mt-3 collapse">
             <textarea id="task-title" class="card px-2 pt-3 text-center" cols="25" rows="2" readonly>Title</textarea>
             <div class="mt-3">
-                <button id="up-task-btn" class="btn btn-outline-dark" style="width: 40%;">Up task</button>
-                <button id="down-task-btn" class="btn btn-outline-dark" style="width: 40%;">Down task</button>
+                <button id="up-task-btn" class="btn btn-outline-dark" style="width: 40%;">Up</button>
+                <button id="down-task-btn" class="btn btn-outline-dark" style="width: 40%;">Down</button>
             </div>
             <h5 class="mt-3">Comment flow</h5>
             <div class="border pb-3 ps-2" style="height: 33vh;">
@@ -86,10 +91,10 @@ require_once "layouts/entete.php";
             
             <div id="members-container-div">
                 <div class="row mt-2">
-                    <div class="col-3 pt-3">
+                    <div class="col-4 pt-3">
                         <button id="members-switch-button" class="btn btn-outline-info" style="line-height: 70%;">switch</button>
                     </div>
-                    <div class="col-9 pt-3 text-start">
+                    <div class="col-8 pt-3 text-start">
                         <h5 class="members-label collapse">Team members</h5>
                         <h5 class="members-label collapse show">Task members</h5>
                     </div>

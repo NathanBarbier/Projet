@@ -10,7 +10,7 @@ $rights = $_SESSION["rights"] ?? false;
 $organization = new Organization($idOrganization);
 
 $success = false;
-$erreurs = array();
+$errors = array();
 
 $tpl = "listeProjets.php";
 // $data = new stdClass;

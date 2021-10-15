@@ -9,6 +9,7 @@ $envoi = GETPOST('envoi');
 
 $email = GETPOST('email');
 $password = GETPOST('password');
+$message = GETPOST('message');
 
 $User = new User();
 $Organization = new Organization();

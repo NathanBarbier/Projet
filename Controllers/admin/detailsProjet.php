@@ -83,7 +83,7 @@ if($rights === "admin")
 
             if(in_array(false, $status))
             {
-                $errors[] = "Une erreur innatendue est survenue.";
+                $errors[] = "Une erreur inattendue est survenue.";
             }
             else
             {

@@ -42,6 +42,11 @@ li::marker{
     width: 90%;
 }
 
+.border-lg {
+    border: 2px solid rgba(0, 0, 0, 0.125);
+    border-radius: 15px;
+}
+
 .bottom-centered {
     bottom:4%;
     left:0;
@@ -66,10 +71,7 @@ li::marker{
 }
 
 #tbodyEquipe{
-    /* height: 450px; */
     overflow: auto;
-    /* width : 100%; */
-    /* display: block; */
 }
 
 #tbodyEquipeProjet{
@@ -329,6 +331,11 @@ a {
 #column-title {
     font-size: x-large;
     width: 100%;
+}
+
+.column-title-name {
+    overflow-x: auto;
+    font-size:large;
 }
 
 

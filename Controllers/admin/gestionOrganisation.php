@@ -45,10 +45,11 @@ if($rights === "admin")
                 {
                     if (strlen($newPwd) < 8 || strlen($newPwd) > 100)
                     {
-                        $errors[] = "Erreur : Le mot de passe doit contenir entre 8 et 100 caractères, au moins un caractère spécial, une minuscule, une majuscule, un chiffre et ne doit pas contenir d'espace.";
+                        $errors[] = "Le mot de passe doit contenir entre 8 et 100 caractères, au moins un caractère spécial, une minuscule, une majuscule, un chiffre et ne doit pas contenir d'espace.";
                     } 
                     else
                     {
+                        $newPwdStock = $newPwd;
                         $newPwd = password_hash($newPwd, PASSWORD_BCRYPT);
                         $oldPwdbdd = $Organization->getPassword();
     
@@ -58,9 +59,9 @@ if($rights === "admin")
                         } 
                         else 
                         {
-                            if($oldPwd == $newPwd)
+                            if($oldPwd == $newPwdStock)
                             {
-                                $errors[] = "Erreur : Le mot de passe ne peut pas être le même qu'avant.";
+                                $errors[] = "Le mot de passe ne peut pas être le même qu'avant.";
                             } 
                             else 
                             {
@@ -84,12 +85,12 @@ if($rights === "admin")
                 } 
                 else 
                 {
-                    $errors[] = "Erreur : Les deux nouveaux mots de passes ne sont pas identiques.";
+                    $errors[] = "Les deux nouveaux mots de passes ne sont pas identiques.";
                 }
             } 
             else
             {
-                $errors[] = "Erreur : Un champs n'est pas rempli.";
+                $errors[] = "Un champs n'est pas rempli.";
             }
     
         } 

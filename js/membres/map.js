@@ -37,9 +37,14 @@ $("#add-column-form").find('#create-column').click(function() {
                     columnNameInput.val("");
                     btnColumnForm.addClass('show');
                 
-                    $("#columns-container").append("<div class='project-column'><input class='columnId-input' type='hidden' value='"+columnId+"'><div class='column-title text-center pt-2'><ul><li class='me-2'><b>"+columnName+"</b><button class='btn btn-outline-dark add-task-btn'>New</button></li><li class='mt-2 me-2'><button class='btn btn-outline-danger delete-col-btn'>Delete</button></li></ul></div><div class='column-content'></div></div>");
+                    $("#columns-container").append("<div class='project-column'><input class='columnId-input' type='hidden' value='"+columnId+"'><div class='column-title text-center pt-2'><div class='row'><div class='col-8 mt-3 ps-5 column-title-name'><b class='column-title-text'>"+columnName+"</b></div><ul class='col-4'><li class='me-2'><button class='btn btn-outline-dark add-task-btn'>New</button></li><li class='mt-2 me-2'><button class='btn btn-outline-danger delete-col-btn'>Delete</button></li></ul></div></div><div class='column-content'></div></div>");
                     $("#add-column-btn").toggleClass('show');
             
+
+                    
+
+
+
                     initTask();
                     initCol();
                 }
@@ -328,6 +333,7 @@ function initCol()
         columnId = $(this).parents(".column-title").prev().val();
         // DELETE HTML COLUMN
         $(this).parents(".project-column").remove();
+        $("#column-details").removeClass('show');
         
         // DELETE COLUMN IN BDD
         $.ajax({

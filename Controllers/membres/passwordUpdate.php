@@ -29,7 +29,7 @@ if($rights === 'user')
     
     $tpl = "passwordUpdate.php";
     
-    $erreurs = array();
+    $errors = array();
     $success = false;
     
     $data = new stdClass;
@@ -44,22 +44,23 @@ if($rights === 'user')
                 {
                     if (strlen($newmdp) < 8 || strlen($newmdp) > 100)
                     {
-                        $erreurs[] = "Erreur : Le mot de passe doit contenir entre 8 et 100 caractères, au moins un caractère spécial, une minuscule, une majuscule, un chiffre et ne doit pas contenir d'espace.";
+                        $errors[] = "Le mot de passe doit contenir entre 8 et 100 caractères, au moins un caractère spécial, une minuscule, une majuscule, un chiffre et ne doit pas contenir d'espace.";
                     } 
                     else
                     {
+                        $newmdpStock = $newmdp;
                         $newmdp = password_hash($newmdp, PASSWORD_BCRYPT);
                         $oldmdpbdd = $User->getPassword();
     
                         if(!password_verify($oldmdp, $oldmdpbdd))
                         {
-                            $erreurs[] = "L'ancien mot de passe est incorrect.";
+                            $errors[] = "L'ancien mot de passe est incorrect.";
                         } 
                         else 
                         {
-                            if($oldmdp == $newmdp)
+                            if($oldmdp == $newmdpStock)
                             {
-                                $erreurs[] = "Erreur : Le mot de passe ne peut pas être le même qu'avant.";
+                                $errors[] = "Le mot de passe ne peut pas être le même qu'avant.";
                             } 
                             else 
                             {
@@ -71,7 +72,7 @@ if($rights === 'user')
                                 }
                                 else
                                 {
-                                    $erreurs[] = "Erreur SQL : Le mot de passe n'a pas pu être changé.";
+                                    $errors[] = "Une erreur innatendue est survenue.";
                                 }
                             }
                         }
@@ -79,12 +80,12 @@ if($rights === 'user')
                 } 
                 else 
                 {
-                    $erreurs[] = "Erreur : Les deux nouveaux mots de passes ne sont pas identiques.";
+                    $errors[] = "Les deux nouveaux mots de passes ne sont pas identiques.";
                 }
             } 
             else
             {
-                $erreurs[] = "Erreur : Un champs n'est pas rempli.";
+                $errors[] = "Un champs n'est pas rempli.";
             }
     
         } 

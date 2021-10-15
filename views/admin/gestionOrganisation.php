@@ -3,21 +3,15 @@ require_once "layouts/entete.php";
 ?>
 <div class="col-10 pt-3">
     <div class="row">
-        <div class="col-8">
-        <?php 
-        if($errors)
-        { ?>
-            <div class="alert alert-danger w-50 mx-auto text-center">
-            <?php foreach($errors as $error)
-            {
+        <div class="col-8 position-relative">
+            <?php if($errors) { ?>
+            <div class="alert alert-danger w-50 text-center position-absolute top-0 start-50 translate-middle-x">
+            <?php foreach($errors as $error) {
                 echo $error . "<br>";
             } ?>
             </div>
-        <?php
-        }
-        else if($success)
-        { ?>
-            <div class="alert alert-success w-50 mx-auto text-center">
+        <?php } else if($success) { ?>
+            <div class="alert alert-success w-50 text-center position-absolute top-0 start-50 translate-middle-x">
             <?= $success ?>
             </div>    
         <?php } ?>

@@ -213,8 +213,8 @@ class Team extends Modele
         $requete->execute();
         $fk_team = $requete->fetch(PDO::FETCH_OBJ)->rowid;
 
-        $sql = "INSERT INTO map_columns (name, fk_team)";
-        $sql .= " VALUES ('Open', ?),('Ready', ?),('In progress', ?),('Closed', ?)";
+        $sql = "INSERT INTO map_columns (name, fk_team, rank)";
+        $sql .= " VALUES ('Open', ?, 0),('Ready', ?, 1),('In progress', ?, 2),('Closed', ?, 3)";
 
         $requete = $this->getBdd()->prepare($sql);
         $status[] = $requete->execute([$fk_team, $fk_team, $fk_team, $fk_team]);

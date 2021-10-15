@@ -2,32 +2,18 @@
 require_once "layouts/entete.php";
 ?>
 
-<div class="col-10">
-<?php
-if($success)
-{
-    ?>
-    <div class="alert alert-success mt-2 w-50 mx-auto text-center">
-    <?php
-        echo $success;
-    ?>
+<div class="col-10 position-relative">
+    <?php if($success) { ?>
+    <div class="alert alert-success mt-3 w-50 text-center position-absolute top-0 start-50 translate-middle-x">
+    <?= $success; ?>
     </div>
-    <?php
-}
-else if($errors)
-{
-    ?>
-    <div class="alert alert-danger mt-2 w-50 mx-auto text-center">
-    <?php
-    foreach($errors as $error)
-    {
+    <?php } else if($errors) { ?>
+    <div class="alert alert-danger mt-3 w-50 text-center position-absolute top-0 start-50 translate-middle-x">
+    <?php foreach($errors as $error) {
         echo $error . "<br>";
-    }
-    ?>
+    } ?>
     </div>
-    <?php
-}
-?>
+    <?php } ?>
 
 <table class="table">
     <thead>

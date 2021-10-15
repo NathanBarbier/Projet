@@ -1,33 +1,15 @@
 <?php
 require_once "layouts/entete.php";
 
-if(!empty($errors))
-{
-    ?>
-    <div class="alert alert-danger w-50 mx-auto text-center">
-    <?php
-    foreach($errors as $error)
-    {
-        echo $error . "<br>";
-    }
-    ?>
+if(!empty($errors)) { ?>
+    <div class="position-relative mx-auto">
+        <div class="alert alert-danger w-50 text-center position-absolute top-0 start-50 translate-middle-x">
+        <?php foreach($errors as $error) {
+            echo $error . "<br>";
+        } ?>
+        </div>
     </div>
-    <?php
-}
-
-if(!empty($success))
-{
-    ?>
-     <div class="alert alert-success w-50 mx-auto text-center">
-     Votre inscription a bien été enregistrée<br>
-     Vous allez être redirigé vers la page de connexion<br>
-     </div>
-     <?php 
-    header("refresh:3;".CONTROLLERS_URL."/general/connexion.php");
-} 
-else
-{
-?>
+    <?php } ?>
 
 <form class="w-50 mx-auto" method="POST" action="<?= CONTROLLERS_URL?>general/inscriptionOrganisation.php">
     <input type="hidden" name="action" value="inscriptionOrg">
@@ -65,7 +47,7 @@ else
     </div>
     
 </form>
+
 <?php
-}
 require_once 'layouts/pied.php';
 ?>

@@ -2,35 +2,23 @@
 require_once "layouts/entete.php";
 ?>
 
-<div class="col-10 mt-3" style="height: 100%;">
-<?php
-
-if($success)
-{ ?>
-    <div class="alert alert-success w-50 mx-auto text-center">
-        <?= $success ?>
-    </div>
-    <?php 
-}
-else if ($erreurs)
-{ ?>
-    <div class="alert alert-danger w-50 mx-auto text-center">
-        <?php 
-        foreach($erreurs as $erreur)
-        {
-            echo $erreur . "<br>";
-        }
-        ?>
-    </div>
-<?php
-} ?>
-
+<div class="col-10" style="height: 100%;">
     <div class="row w-100" style="height: 100%;">
-
-        <div class="col-8 mt-3" style="height:87%">
-            <!-- PROJECT -->
-            <div class="row profile-section mx-3" style="height: 100%;">
-                <h1 class="text-center">Projets Actuels</h1>
+        <div class="col-8 mt-3 position-relative" style="height:87%;">
+            
+        <?php if($success) { ?>
+            <div class="alert alert-success w-50 text-center position-absolute top-0 start-50 translate-middle-x">
+                <?= $success ?>
+            </div>
+            <?php } else if ($errors) { ?>
+            <div class="alert alert-danger w-50 text-center position-absolute top-0 start-50 translate-middle-x">
+                <?php foreach($errors as $error) {
+                    echo $error . "<br>";
+                } ?>
+            </div>
+        <?php } ?>
+            <div class="row mx-3" style="height: 100%;">
+                <h3 class="mx-auto text-center border-bottom w-50">Projets Actuels</h3>
 
                 <div style="height: 90%; overflow: auto">
                     <?php 
@@ -39,25 +27,25 @@ else if ($erreurs)
                         foreach($userProjects as $project)
                         {
                         ?>
-                        <div class="sticker pb-3 mb-5" style="height:max-content;">
+                        <div class="pb-3 mb-5 border-lg" style="height:max-content;">
                             <div class="row text-center justify-content-around">
-                                <div class="col-10 sticker-deep mt-3 pt-3">
+                                <div class="col-10 sticker mt-3 pt-3">
                                     <p><b>Nom du projet : </b><?= $project->projectName ?></p>
                                 </div>
                             </div>
                             <div class="row text-center justify-content-around">
-                                <div class="col-10 sticker-deep mt-4 pt-3">
+                                <div class="col-10 sticker mt-4 pt-3">
                                     <p><b>Equipe : </b><?= $project->teamName ?></p>
                                 </div>
                             </div>
                             <div class="row mt-4 justify-content-around">
-                                <div class="sticker-deep col-4 text-center">
+                                <div class="sticker col-4 text-center">
                                     <b>Nb participants</b>
                                     <p class="text-center"><?php echo $project->membersCount ?></p>
                                     <br>
                                 </div>
                                 
-                                <div class="sticker-deep col-4 text-center">
+                                <div class="sticker col-4 text-center">
                                     <b>Nb tâches</b>
                                     <br>
                                     <p class="text-center"><?php echo $project->tasksCount ?></p>
@@ -87,15 +75,11 @@ else if ($erreurs)
 
             <h3 class="mx-auto mt-3 text-center" style="border-bottom: black solid 1px; border-color: rgb(216, 214, 214); width: 80%">Profil</h3>
 
-            <div class="text-center" style="width:150px; height:150px;margin-left:auto; margin-right:auto">
-                <img class="mt-4" src="<?= IMG_URL ?>user.png" alt="" width="100px" style="border: 2px black solid;">
-            </div>
-
-            <div class="d-flex justify-content-center" style="height: 50%;">
-                <div class="mt-4 text-center w-75">
+            <div class="d-flex justify-content-center mt-4">
+                <div class="text-center w-75">
                     <form action="<?= CONTROLLERS_URL ?>membres/tableauDeBord.php?action=userUpdate" method="POST">
 
-                        <input type="text" name="lastname" class="sticker form-control mt-4 pt-2 text-center" value="<?= $CurrentUser->lastname ?>">
+                        <input type="text" name="lastname" class="sticker form-control pt-2 text-center" value="<?= $CurrentUser->lastname ?>">
                         <input type="text" name="firstname" class="sticker form-control mt-4 pt-2 text-center" value="<?= $CurrentUser->firstname ?>">
                         <input type="email" name="email" class="sticker form-control mt-4 pt-2 text-center" value="<?= $CurrentUser->email ?>">
     
@@ -103,14 +87,14 @@ else if ($erreurs)
                     </form>
 
                     <a class="btn btn-outline-secondary mt-5" href="<?= CONTROLLERS_URL ?>membres/passwordUpdate.php">Modifier mot de passe</a>
-                        <div class="sticker-deep text-center pt-2 mt-3">
-                            <b>Poste : </b>
-                            <?= $CurrentUser->position; ?>
-                        </div>
-                        <div class="sticker-deep text-center pt-2 mt-3">
-                            <b>Role : </b>
-                            <?= $CurrentUser->role; ?>
-                        </div>
+                    <div class="sticker-deep text-center pt-2 mt-3">
+                        <b>Poste : </b>
+                        <?= $CurrentUser->position; ?>
+                    </div>
+                    <div class="sticker-deep text-center pt-2 mt-3">
+                        <b>Role : </b>
+                        <?= $CurrentUser->role; ?>
+                    </div>
                 </div>
             </div>
         </div>

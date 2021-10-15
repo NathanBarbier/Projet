@@ -2,33 +2,20 @@
 require_once "layouts/entete.php";
 ?>
 <div class="col-9 mt-4">
-<?php
-
-if($success)
-{
-    ?>
-    <div class="alert alert-success w-50 mx-auto text-center">
-        Le mot de passe a bien été modifié<br>
-    </div>
-    <?php
-} 
-else 
-{
-    if($erreurs)
-    {
-        ?>
-        <div class="alert alert-danger w-50 mx-auto text-center">
-            <?php
-            foreach($erreurs as $erreur)
-            {
-                echo $erreur . "<br>";
-            }
-            ?>
+    <div class="position-relative mx-auto">
+        <?php if($success) { ?>
+        <div class="alert alert-success w-50 text-center position-absolute top-0 start-50 translate-middle-x">
+            Le mot de passe a bien été modifié<br>
         </div>
-        <?php
-    }
-}
-?>
+        <?php } else if($errors) {
+            ?>
+            <div class="alert alert-danger w-50 text-center position-absolute top-0 start-50 translate-middle-x">
+                <?php foreach($errors as $error) {
+                    echo $error . "<br>";
+                } ?>
+            </div>
+        <?php } ?>
+    </div>
 
     <h1 class="text-center mt-4 w-50 mx-auto" style="border-bottom: rgb(216, 214, 214) solid 1px;">Modification du mot de passe</h1>
 

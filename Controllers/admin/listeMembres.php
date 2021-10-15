@@ -106,7 +106,7 @@ if($rights === "admin")
                 } 
                 else 
                 {
-                    $errors[] = "Le nom n'a pas été changé.";
+                    $errors[] = "Le nom n'a pas été modifié.";
                 }
             } 
             else

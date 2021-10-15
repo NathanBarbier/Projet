@@ -58,7 +58,7 @@ if($rights === "user")
     
     $tpl = "tableauDeBord.php";
     
-    $erreurs = array();
+    $errors = array();
     $success = false;
     
     if($action == 'userUpdate')
@@ -75,12 +75,12 @@ if($rights === "user")
                 }
                 else
                 {
-                    $erreurs[] = "Une erreur est survenue.";
+                    $errors[] = "Une error est survenue.";
                 }
             }
             else
             {
-                $erreurs[] = "L'adresse email n'est pas valide.";
+                $errors[] = "L'adresse email n'est pas valide.";
             }
         }
     }

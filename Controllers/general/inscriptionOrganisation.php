@@ -16,14 +16,11 @@ $Inscription = new Inscription();
 $errors = array();
 $success = false;
 
-$data = array();
-
 $tpl = "inscriptionOrganisation.php";
 
 
 if($action == "inscriptionOrg")
 {
-    
     if($envoi) 
     {
         if($name && $email && $pwd && $pwd2)
@@ -46,7 +43,13 @@ if($action == "inscriptionOrg")
                                 $errors[] = "Erreur : l'inscription n'a pas pu aboutir.";
                             }
 
-                            if(!$success)
+                            if($success)
+                            {
+                                $message = "L'inscription a bien été prise en compte";
+                                header("location:".CONTROLLERS_URL.'general/connexion.php?message='.$message);
+                                exit;
+                            }
+                            else
                             {
                                 $errors[] = "Une erreur inconnue est survenue.";
                             }

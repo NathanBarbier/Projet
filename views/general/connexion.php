@@ -1,23 +1,25 @@
 <?php
 require_once "layouts/entete.php";
-
-if(!empty($errors))
-{
-    ?>
-    <div class="alert alert-danger w-50 mx-auto text-center">
-    <?php
-    foreach($errors as $error)
-    {
-        echo $error . "<br>";
-    }
-    ?>
-    </div>
-    <?php
-}
 ?>
 
-
 <div class="container mt-5">
+
+    <?php if(!empty($errors)) { ?>
+    <div class="position-relative mx-auto">
+        <div class="alert alert-danger w-50 text-center position-absolute top-0 start-50 translate-middle-x">
+        <?php foreach($errors as $error) {
+            echo $error . "<br>";
+        } ?>
+        </div>
+    </div>
+    <?php } else if($message) { ?>
+    <div class="position-relative mx-auto">
+        <div class="alert alert-success w-50 text-center position-absolute top-0 start-50 translate-middle-x">
+            <?= $message ?>
+        </div>
+    </div>
+    <?php } ?>
+    
     <h1 class="text-center w-50 mx-auto" style="border-bottom: rgb(216, 214, 214) 1px solid;">Connexion</h1>
 
     <form class="w-50 mx-auto" method="post" action="<?= CONTROLLERS_URL ?>general/Connexion.php">

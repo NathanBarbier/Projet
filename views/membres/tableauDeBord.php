@@ -3,32 +3,20 @@ require_once "layouts/entete.php";
 ?>
 
 <div class="col-10" style="height: 100%;">
-<?php
-
-if($success)
-{ ?>
-    <div class="alert alert-success w-50 mx-auto text-center">
-        <?= $success ?>
-    </div>
-    <?php 
-}
-else if ($erreurs)
-{ ?>
-    <div class="alert alert-danger w-50 mx-auto text-center">
-        <?php 
-        foreach($erreurs as $erreur)
-        {
-            echo $erreur . "<br>";
-        }
-        ?>
-    </div>
-<?php
-} ?>
-
     <div class="row w-100" style="height: 100%;">
-
-        <div class="col-8 mt-3" style="height:87%">
-            <!-- PROJECT -->
+        <div class="col-8 mt-3 position-relative" style="height:87%;">
+            
+        <?php if($success) { ?>
+            <div class="alert alert-success w-50 text-center position-absolute top-0 start-50 translate-middle-x">
+                <?= $success ?>
+            </div>
+            <?php } else if ($errors) { ?>
+            <div class="alert alert-danger w-50 text-center position-absolute top-0 start-50 translate-middle-x">
+                <?php foreach($errors as $error) {
+                    echo $error . "<br>";
+                } ?>
+            </div>
+        <?php } ?>
             <div class="row mx-3" style="height: 100%;">
                 <h3 class="mx-auto text-center border-bottom w-50">Projets Actuels</h3>
 

@@ -4,33 +4,18 @@ require_once 'layouts/entete.php';
 
 <div class="col-10">
 
-<?php
-if($errors)
-{ ?>
-    <div class="alert alert-danger mt-3 w-50 mx-auto text-center">
-
-        <?php
-    foreach($errors as $error)
-    {
-        echo $error . "<br>";
-    } ?>
-    </div>
-    <?php 
-}
-else if ($success)
-{ ?>
-    <div class="alert alert-success mt-3 w-50 mx-auto text-center">
-    <?php
-    echo $success;
-    ?>
-    </div>
-    <?php
-}
-
-
-?>
-    <div class="row">
-
+    <div class="row position-relative">
+        <?php if($errors) { ?>
+        <div class="alert alert-danger mt-3 w-50 text-center position-absolute top-0 start-50 translate-middle-x">
+        <?php foreach($errors as $error) {
+            echo $error . "<br>";
+        } ?>
+        </div>
+        <?php } else if ($success) { ?>
+        <div class="alert alert-success mt-3 w-50 text-center position-absolute top-0 start-50 translate-middle-x">
+        <?= $success; ?>
+        </div>
+        <?php } ?>
         <div class="sticker col-3 mt-3 ms-3 me-3 text-center overflow-x" style="height: 60px; ">
             <h3 class="mt-2"><?= $CurrentProject->name ?? "<b style='color:red'>No title</b>"; ?></h3>
         </div>

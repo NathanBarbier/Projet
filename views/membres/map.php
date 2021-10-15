@@ -3,33 +3,8 @@ require_once "layouts/entete.php";
 ?>
 <div class="row" style="height: 100%;">
     <div class="col-10 mt-3 ps-3" style="height: 100%;">
-    <?php
-
-    if($success)
-    { ?>
-        <div class="alert alert-success mx-3">
-            <?= $success ?>
-        </div>
-        <?php 
-    }
-    else if ($errors)
-    { ?>
-        <div class="alert alert-danger mx-3">
-            <?php 
-            foreach($errors as $error)
-            {
-                echo $error . "<br>";
-            }
-            ?>
-        </div>
-    <?php
-    } ?>
-
         <div id="columns-container" class="ms-3 me-4 overflow-x d-flex" style="height: 88vh;">
-            <?php
-            foreach($CurrentTeam->getMapColumns() as $column)
-            {
-            ?>
+            <?php foreach($CurrentTeam->getMapColumns() as $column) { ?>
                 <div class="project-column">
                     <input class="columnId-input" type="hidden" value="<?= $column->getRowid() ?>">
                     <div class="column-title text-center pt-2">
@@ -44,10 +19,7 @@ require_once "layouts/entete.php";
                         </div>
                     </div>
                     <div class="column-content">
-                        <?php 
-                        foreach($column->getTasks() as $task)
-                        {   
-                            ?>
+                        <?php foreach($column->getTasks() as $task) { ?>
                             <div class="task">
                                 <input class="taskId-input" type="hidden" value="<?= $task->getRowid() ?>">
                                 <div class='task-bubble mt-2 pt-3 mb-1 mx-2'>
@@ -62,9 +34,7 @@ require_once "layouts/entete.php";
                                     <img src="<?= IMG_URL ?>right.png" alt="" width="30px">
                                 </a>
                             </div>
-                            <?php
-                        }
-                        ?>
+                        <?php } ?>
                     </div>
                 </div>   
             <?php } ?>
@@ -81,9 +51,8 @@ require_once "layouts/entete.php";
             </div>
             <h5 class="mt-3">Comment flow</h5>
             <div class="border pb-3 ps-2" style="height: 33vh;">
-                <div id="task-comment-container" class="overflow-y pe-2" style="height: 80%">
-
-                </div>
+                <div id="task-comment-container" class="overflow-y pe-2" style="height: 80%"></div>
+               
                 <button id="add-comment-btn" class="btn btn-outline-dark mt-3 me-2 collapse show">Add comment</button>
                 <button id="check-comment-btn" class="btn btn-outline-dark mt-3 me-2 collapse">Check</button>
                 <button id="delete-comment-btn" class="btn btn-outline-danger mt-3 me-2 collapse">Delete</button>
@@ -101,9 +70,7 @@ require_once "layouts/entete.php";
                 </div>
                 <div id="team-members-container" class="overflow-y border collapse" style="height: 20vh;">
                     <?php
-                    foreach($CurrentTeam->getMembers() as $member)
-                    {
-                        ?>
+                    foreach($CurrentTeam->getMembers() as $member) { ?>
                     <div class="team-member">
                         <input type="hidden" class="team-member-id" value="<?= $member->getId() ?>">
                         <div class="sticker mx-auto mt-2 hover text-center pt-3" style="width: 90%;"><?= $member->getLastname() . " " . $member->getFirstname() ?></div>

@@ -3,26 +3,6 @@ require_once "layouts/entete.php";
 ?>
 
 <div class="col-9 mt-4">
-<?php
-if($success)
-{ ?>
-    <div class="alert alert-success w-50 mx-auto text-center">
-        <?= $success; ?>
-    </div>
-    <?php
-}
-else if ($erreurs)
-{ ?>
-    <div class="alert alert-danger w-50 mx-auto text-center">
-    <?php
-    foreach($erreurs as $erreur)
-    {
-        echo $erreur . "<br>";
-    } ?>
-    </div>
-    <?php
-}
-?>
 
 <h1 class="text-center mx-auto w-50 mt-5 mb-4" style="border-bottom: 1px rgb(216, 214, 214) solid;">Liste des projets</h1>
 
@@ -49,20 +29,13 @@ if($currentProjects)
             <a href="<?= CONTROLLERS_URL ?>admin/detailsProjet.php?idProject=<?= $project->rowid ?>" class="btn btn-info mt-1">Détails</a>
         </div>
     </div>
-    <?php
-    }   
-}
-else
-{ ?>
+    <?php }
+} else { ?>
         <div class="sticker w-75 mx-auto text-center mt-4">
             <h3 class="mt-2">Votre organisation n'a aucun projet en cours.</h3>
         </div>
-        <?php 
-}
-?>
-
+<?php } ?>
     </div>
-
 <?php
 require_once "layouts/pied.php";
 ?>

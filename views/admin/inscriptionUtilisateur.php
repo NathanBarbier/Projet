@@ -2,36 +2,21 @@
 require_once "layouts/entete.php";
 ?>
 
-<div class="col-9 mt-3">
+<div class="col-9 mt-5">
     <div class="container">
-
-<?php
-if($success)
-{
-    ?>
-    <div class="alert alert-success w-50 mx-auto text-center">
-    <?php
-        echo $success;
-    ?>
-    </div>
-    <?php
-}
-else if($errors)
-{
-    ?>
-    <div class="alert alert-danger w-50 mx-auto text-center">
-    <?php
-    foreach($errors as $error)
-    {
-        echo $error . "<br>";
-    }
-    ?>
-    </div>
-    <?php
-}
-?>
-        <h1>Inscription d'un collaborateur</h1>
-        <form method="post" action="<?= CONTROLLERS_URL ?>admin/inscriptionUtilisateur.php?action=signup">
+        <form class="w-50 mx-auto position-relative" method="post" action="<?= CONTROLLERS_URL ?>admin/inscriptionUtilisateur.php?action=signup">
+            <?php if($success) { ?>
+            <div class="alert alert-success w-100 text-center position-absolute top-0 start-50 translate-middle-x">
+            <?= $success; ?>
+            </div>
+            <?php } else if($errors) { ?>
+            <div class="alert alert-danger w-100 text-center position-absolute top-0 start-50 translate-middle-x">
+            <?php foreach($errors as $error) {
+                echo $error . "<br>";
+            } ?>
+            </div>
+            <?php } ?>
+            <h1 class="text-center">Inscription d'un collaborateur</h1>
                 
             <div class="form-floating mt-3 mb-3">
                 <input class="form-control" type="email" name="email" id="email" placeholder="adresse email" value="<?= $email ?? ""?>"  required>

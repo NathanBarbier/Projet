@@ -83,7 +83,6 @@ if($rights === "admin")
                                     $temporaryPassword = generateRandomString(6);
                                     $password = password_hash($temporaryPassword, PASSWORD_BCRYPT);
                                     
-
                                     if($User->create($firstname, $lastname, $birth, $idPosition, $email, $idOrganization, $password))
                                     {
                                         $organization = new organization($idOrganization);
@@ -113,13 +112,9 @@ if($rights === "admin")
                                         } else { 
                                             // $success = "Le collaborateur a bien été inscrit."; 
                                             // $success .= " Un email contenant son mot de passe temporaire lui a été envoyé.";    
-                                        } 
+                                        }
 
-                                        // mail($email, $subject ,$mailText);
-
-                                        $success = "Le collaborateur a bien été inscrit."; 
-                                        $success .= " Un email contenant son mot de passe temporaire lui a été envoyé.";
-
+                                        $success = "Le collaborateur a bien été inscrit et reçu son mote de passe par email."; 
                                     }
                                     else 
                                     {

@@ -16,6 +16,11 @@ if($rights === "user")
     header("location:".VIEWS_URL."membres/index.php");
 }
 
+if($rights === 'needConsent')
+{
+    header("location:".CONTROLLERS_URL."general/needConsent.php");
+}
+
 if(!$connected)
 {
     // echo VIEWS_PATH."general/connexion.php";

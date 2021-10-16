@@ -3,6 +3,7 @@ initCol();
 
 // NEW COLUMN
 $("#add-column-btn").click(function() {
+    $("#archive-btn").removeClass('show');
     $("#add-column-form").toggleClass('show');
     $("#task-details").removeClass('show');
     $("#column-details").removeClass('show');
@@ -12,9 +13,35 @@ $("#add-column-btn").click(function() {
 $("#cancel-column").click(function() {
     $("#add-column-form").toggleClass('show');
     $("#add-column-btn").toggleClass('show');
+    $("#archive-btn").addClass('show');
+});
+
+$("#archive-btn").click(function() {
+    $("#columns-container").parent().removeClass('show');
+    $("#details-section").removeClass('show');
+    $("#archive-confirmation").addClass('show');
+});
+
+$("#cancel-archive").click(function() {
+    $("#columns-container").parent().addClass('show');
+    $("#detail-section").addClass('show');
+    $("#archive-confirmation").removeClass('show');
+});
+
+$("#close-details").click(function() {
+    $("#details-section").removeClass('show');
+    $("#left-section").removeClass('col-10').addClass('col');
+    $("#open-right-section").addClass('show');
+});
+
+$("#open-right-section").click(function() {
+    $("#details-section").addClass('show');
+    $("#left-section").removeClass('col').addClass('col-10');
+    $(this).removeClass('show');
 });
 
 $("#add-column-form").find('#create-column').click(function() {
+    $("#archive-btn").addClass('show');
     $("#add-column-form").removeClass('show');
     columnName = $("#columnName-input").val();
     columnName = columnName.length == 0 ? " " : columnName;
@@ -40,11 +67,6 @@ $("#add-column-form").find('#create-column').click(function() {
                     $("#columns-container").append("<div class='project-column'><input class='columnId-input' type='hidden' value='"+columnId+"'><div class='column-title text-center pt-2'><div class='row'><div class='col-8 mt-3 ps-5 column-title-name'><b class='column-title-text'>"+columnName+"</b></div><ul class='col-4'><li class='me-2'><button class='btn btn-outline-dark add-task-btn'>New</button></li><li class='mt-2 me-2'><button class='btn btn-outline-danger delete-col-btn'>Delete</button></li></ul></div></div><div class='column-content'></div></div>");
                     $("#add-column-btn").toggleClass('show');
             
-
-                    
-
-
-
                     initTask();
                     initCol();
                 }
@@ -395,7 +417,7 @@ function initCol()
 
 function initComment()
 {
-    var taskNote;
+    var taskNote = '';
     var commentId;
 
     $(".task-comment").off('focus').focus(function() {

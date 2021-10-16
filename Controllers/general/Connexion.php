@@ -33,14 +33,21 @@ if($envoi)
 
                 if(password_verify($password, $user->password))
                 {
-
-                    // exit;
-                    $_SESSION["rights"] = "user";
+                    $consent = $user->consent;
+                    
                     $_SESSION["idUser"] = intval($user->rowid);
                     $_SESSION["idOrganization"] = intval($user->fk_organization);
                     
+                    if($consent == true)
+                    {
+                        $_SESSION["rights"] = "user";
+                    }
+                    else
+                    {
+                        $_SESSION["rights"] = "needConsent";
+                    }
+                    
                     $success = true;
-                    // header("location:".ROOT_PATH."index.php");
                 } 
                 else 
                 {

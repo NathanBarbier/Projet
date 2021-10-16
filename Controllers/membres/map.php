@@ -8,12 +8,6 @@ $idOrganization = $_SESSION["idOrganization"] ?? null;
 
 if($rights == 'user')
 {
-    $Organization = new Organization($idOrganization);
-    $MapColumns = new MapColumns();
-    $Task = new Task();
-    $User = new User($idUser);
-    
-    
     $action = GETPOST('action');
     $projectId = GETPOST('projectId');
     $columnName = GETPOST('columnName');
@@ -26,8 +20,38 @@ if($rights == 'user')
     $errors = array();
     $success = false;
 
-    $username = $User->getLastname() . " " . $User->getFirstname();
+    if($action == "archive")
+    {
+        if($projectId)
+        {
+            $Project = new Project();
 
+            $status = $Project->updateActive(0, $projectId);
+
+            if($status)
+            {
+                $message = "Le projet a bien été archivé.";
+                header("location:".CONTROLLERS_URL."membres/tableauDeBord.php?success=".$message);
+                exit;
+            }
+            else
+            {
+                $errors[] = "Une erreur innatendue est survenue.";
+            }
+        }
+        else
+        {
+            $errors[] = "Aucun projet n'a été sélectionné.";
+        }
+
+    }
+
+    $Organization = new Organization($idOrganization);
+    $MapColumns = new MapColumns();
+    $Task = new Task();
+    $User = new User($idUser);    
+
+    $username = $User->getLastname() . " " . $User->getFirstname();
 
     $Projects = $Organization->getProjects();
 
@@ -37,6 +61,14 @@ if($rights == 'user')
         {
             $CurrentProject = $Project;
         }
+    }
+
+    if($CurrentProject->getActive() == 0)
+    {
+        $errors[] = "Le projet est archivé.";
+        $errors = serialize($errors);
+        header("location:".CONTROLLERS_URL."membres/tableauDeBord.php?errors=".$errors);
+        exit;
     }
 
     // GET CurrentTeam

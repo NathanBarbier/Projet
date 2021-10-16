@@ -1,9 +1,9 @@
 <?php
-// require_once "../../traitements/header.php";
+require_once "../../traitements/header.php";
 
 $rights = $_SESSION["rights"] ?? false;
 
-if($rights)
+if($rights == "admin" OR $rights == "user")
 {
     header("location:".ROOT_URL."index.php");
 }
@@ -15,7 +15,10 @@ if($rights)
     <meta charset="UTF-8">
 
     <title>Stories Helper</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+
+    <link rel="icon" href="<?= IMG_URL ?>logo.png">
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <link rel="stylesheet" href="<?= ROOT_URL ?>style.css">
     <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
 
@@ -32,23 +35,26 @@ if($rights)
     </button>
 
     <?php 
-    if($pageName != "inscriptionOrganisation.php")
-    { ?>
-    <div class="collapse navbar-collapse" id="navbarNavDropdown">
-        <div class="navbar-nav w-100" style="padding-right: 5vh;">
-            <a class="nav-item nav-link ms-auto" href="<?php CONTROLLERS_URL ?>inscriptionOrganisation.php">Inscription</a>
-        </div>
-    </div>
-    <?php
-    }
-    if($pageName != "connexion.php")
-    { ?>
+    if($pageName != "needConsent.php")
+    {
+        if($pageName != "inscriptionOrganisation.php")
+        { ?>
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <div class="navbar-nav w-100" style="padding-right: 5vh;">
-                <a class="nav-item nav-link ms-auto" href="<?= CONTROLLERS_URL ?>general/connexion.php">Connexion</a>
+                <a class="nav-item nav-link ms-auto" href="<?php CONTROLLERS_URL ?>inscriptionOrganisation.php">Inscription</a>
             </div>
         </div>
-    <?php
+        <?php
+        }
+        if($pageName != "connexion.php")
+        { ?>
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <div class="navbar-nav w-100" style="padding-right: 5vh;">
+                    <a class="nav-item nav-link ms-auto" href="<?= CONTROLLERS_URL ?>general/connexion.php">Connexion</a>
+                </div>
+            </div>
+        <?php
+        }
     } ?>
 
 </nav>

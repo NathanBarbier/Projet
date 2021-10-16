@@ -12,12 +12,13 @@ if($rights === "user")
     $firstname = GETPOST('firstname');
     $lastname = GETPOST('lastname');
     $email = GETPOST('email');
+    $success = GETPOST('success');
+    $errors = GETPOST("errors");
 
     $User = new User($idUser);
     $Position = new Position($User->getIdPosition());
     $idRole = $Position->getIdRole();
     $Role = new Role($idRole);
-
     
     // Les équipes auxquelles l'user appartient
     $BelongsTo = new BelongsTo($idUser);
@@ -34,32 +35,40 @@ if($rights === "user")
 
         $Project = new Project($projectId);
 
-        $Tasks = new Task($projectId);
-
-        $mapColumns = $Team->getMapColumns();
-        $TasksCount = 0;
-
-        foreach($mapColumns as $mapColumn)
+        if($Project->getActive() == true)
         {
-            $TasksCount += count($mapColumn->getTasks());
+            $Tasks = new Task($projectId);
+    
+            $mapColumns = $Team->getMapColumns();
+            $TasksCount = 0;
+    
+            foreach($mapColumns as $mapColumn)
+            {
+                $TasksCount += count($mapColumn->getTasks());
+            }
+    
+            // On affecte pour chaque projets sur lequel travaille l'user
+            $ProjectInfo = new stdClass;
+            $ProjectInfo->membersCount = $Project->fetch_members_count();
+            $ProjectInfo->tasksCount = $TasksCount;
+            $ProjectInfo->projectName = $Project->getName();
+            $ProjectInfo->teamName = $Team->getName();
+            $ProjectInfo->rowid = $projectId;
+    
+            $userProjects[$projectId] = $ProjectInfo;
         }
-
-        // On affecte pour chaque projets sur lequel travaille l'user
-        $ProjectInfo = new stdClass;
-        $ProjectInfo->membersCount = $Project->fetch_members_count();
-        $ProjectInfo->tasksCount = $TasksCount;
-        $ProjectInfo->projectName = $Project->getName();
-        $ProjectInfo->teamName = $Team->getName();
-        $ProjectInfo->rowid = $projectId;
-
-        $userProjects[$projectId] = $ProjectInfo;
-
     }
     
     $tpl = "tableauDeBord.php";
     
-    $errors = array();
-    $success = false;
+    if($errors)
+    {
+        $errors = unserialize($errors);
+    }
+    else
+    {
+        $errors = array();
+    }
     
     if($action == 'userUpdate')
     {
@@ -81,6 +90,24 @@ if($rights === "user")
             else
             {
                 $errors[] = "L'adresse email n'est pas valide.";
+            }
+        }
+    }
+
+    if($action == 'accountDelete')
+    {
+        if($idUser)
+        {
+            $status = $User->delete($idUser);
+
+            if($status)
+            {
+                header("location:".CONTROLLERS_URL."general/Deconnexion.php");
+                exit;
+            }
+            else
+            {
+                $errors[] = "Une erreur innatendue est survenue.";
             }
         }
     }

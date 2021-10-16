@@ -5,12 +5,14 @@ require_once "layouts/entete.php";
 
     <?php if($success) { ?>
         <div class="alert alert-success w-50 text-center position-absolute top-0 start-50 translate-middle-x">
+            <i class="bi bi-check-circle-fill"></i>
             <?= $success ?>
         </div>
     <?php } else if ($errors) { ?>
         <div class="alert alert-danger w-50 text-center position-absolute top-0 start-50 translate-middle-x">
-    <?php foreach($errors as $error) {
-        echo $error . "<br>";
+    <?php foreach($errors as $error) { ?>
+        <i class="bi bi-exclamation-triangle-fill"></i>
+        <?php echo $error . "<br>";
     } ?>
         </div>
     <?php } ?>

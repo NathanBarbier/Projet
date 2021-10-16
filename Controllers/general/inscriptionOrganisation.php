@@ -9,6 +9,7 @@ $email = GETPOST('email');
 $name = GETPOST('name');
 $pwd = GETPOST('pwd');
 $pwd2 = GETPOST('pwd2');
+$consent = GETPOST('consent');
 
 $Organization = new Organization();
 $Inscription = new Inscription();
@@ -23,7 +24,7 @@ if($action == "inscriptionOrg")
 {
     if($envoi) 
     {
-        if($name && $email && $pwd && $pwd2)
+        if($name && $email && $pwd && $pwd2 && $consent)
         {
             if($Organization->checkByName($name) == false)
             {
@@ -36,7 +37,7 @@ if($action == "inscriptionOrg")
                             try
                             {
                                 $pwd = password_hash($pwd, PASSWORD_BCRYPT);
-                                $success = $Inscription->inscriptionOrg($email, $pwd, $name);
+                                $success = $Inscription->inscriptionOrg($email, $pwd, $name, $consent);
                             } 
                             catch (exception $e) 
                             {

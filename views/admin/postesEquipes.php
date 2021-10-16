@@ -7,12 +7,10 @@ require_once "layouts/entete.php";
 if($errors)
 {   ?>
     <div class="alert alert-danger mt-3 w-50 mx-auto text-center" style="z-index : 0; width : max-content">
-    <?php
-    foreach($errors as $error)
-    {
-        echo $error . "<br>";
-    }
-    ?>
+    <?php foreach($errors as $error) { ?>
+        <i class="bi bi-exclamation-triangle-fill"></i>
+        <?php echo $error . "<br>";
+    } ?>
     </div>
     <?php
 }

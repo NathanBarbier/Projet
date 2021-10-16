@@ -79,6 +79,7 @@ function switchTeamApp()
     // display submit button
     $("#create-team-button").toggleClass("show");
     $("#update-team-button").toggleClass("show");
+    $("#delete-team-button").toggleClass("show");
 
     // show current project existing teams
     $("#project-teams-title").toggleClass("show");
@@ -111,6 +112,8 @@ function switchTeamApp()
             $(".team-members-"+projectTeamsIds[i]).removeClass("show");
         }
     }
+
+    $("#delete-team-button").attr('href', CONTROLLERS_URL+'admin/detailsProjet.php?action=deleteTeam&idProject='+projectId);
 };
 
 
@@ -139,8 +142,6 @@ function showTeamMembers(teamRowid, teamName)
         elementTeamRowid = elementTeamRowid.split("-");
         elementTeamRowid = elementTeamRowid.pop();
 
-        console.log(elementTeamRowid, teamRowid, teamRowid == elementTeamRowid);
-
         $(element).removeAttr("onclick");
         if(elementTeamRowid != teamRowid)
         {
@@ -157,6 +158,8 @@ function showTeamMembers(teamRowid, teamName)
 
     // remplir input avec id de l'équipe a update
     $("#team-id-update-input").val(teamRowid);
+    $("#delete-team-button").addClass('show');
+    $("#delete-team-button").attr('href', CONTROLLERS_URL+'admin/detailsProjet.php?action=deleteTeam&teamId='+teamRowid+'&idProject='+projectId);
 
     $("#teamName").val(teamName);
 }

@@ -1,9 +1,12 @@
+@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.6.0/font/bootstrap-icons.css");
+
 /* SUMMARY */
 
 /* 1. General classes */
 /* 2. Vignettes */
 /* 3. Sticker */
 /* 4. Map */
+/* 5. Button Classic */
 
 
 
@@ -27,6 +30,10 @@ li::marker{
     content: '';
 }
 
+a {
+    text-decoration: none !important;
+}
+
 .overflow-x {
     overflow-x: auto; 
     overflow-y: hidden;
@@ -47,13 +54,8 @@ li::marker{
     border-radius: 15px;
 }
 
-.bottom-centered {
-    bottom:4%;
-    left:0;
-    right:0 ;
-    margin-left:auto;
-    margin-right:auto;
-    position:absolute;
+.alert {
+    font-size: x-large;
 }
 
 #containerPoste {
@@ -76,7 +78,6 @@ li::marker{
 
 #tbodyEquipeProjet{
     height: 200px;
-    overflow: auto;
     width : 100%;
     display: block;
 }
@@ -130,53 +131,40 @@ li::marker{
 /* -------------- 2. ------------- */
 
 .vignette {
-    border-radius: 45px !important;
-    background: linear-gradient(145deg, #f0f0f0, #ffbf0f) !important;
+    height: 85%;
+    width: 85%;
+    box-shadow:grey;
     box-shadow:  19px 19px 38px #727272,
-                -19px -19px 38px #ffffff !important;
+    -19px -19px 38px #ffffff !important;
+    border-radius: 45px !important;
 }
 
-.vignette:hover {
-    background: linear-gradient(40deg, #f0f0f0, #ffbf0f) !important;
+#vignette0 {
+    background: linear-gradient(145deg, #f0f0f0, #ffbf0f);
 }
-.vignette:active {
-    background: linear-gradient(40deg, #ffbf0f,#f0f0f0 ) !important;
+#vignette0:hover {
+    background: linear-gradient(40deg, #f0f0f0, #ffbf0f);
 }
-.vignette1 {
-    border-radius: 45px !important;
-    background: linear-gradient(145deg, #f0f0f0, #ff0202) !important;
-    box-shadow:  19px 19px 38px #727272,
-                -19px -19px 38px #ffffff !important;
-    background-color: white;
-    transition-property: background-color;
-    transition-duration: 3s;
+#vignette0:active {
+    background: linear-gradient(40deg, #ffbf0f,#f0f0f0);
 }
-
-.vignette1:hover {
-    background: linear-gradient(40deg, #f0f0f0, #ff0202) !important;
+#vignette1 {
+    background: linear-gradient(145deg, #f0f0f0, #ff0202);
 }
-.vignette2 {
-    border-radius: 45px !important;
-    background: linear-gradient(145deg, #f0f0f0, #0099ff) !important;
-    box-shadow:  19px 19px 38px #727272,
-                -19px -19px 38px #ffffff !important;
+#vignette1:hover {
+    background: linear-gradient(40deg, #f0f0f0, #ff0202);
 }
-.vignette2:hover {
-    background: linear-gradient(40deg, #f0f0f0, #0099ff) !important;
+#vignette2 {
+    background: linear-gradient(145deg, #f0f0f0, #0099ff);
 }
-.vignette3 {
-    border-radius: 45px !important;
-    background: linear-gradient(145deg, #f0f0f0, #d400ff) !important;
-    box-shadow:  19px 19px 38px #727272,
-                -19px -19px 38px #ffffff !important;
+#vignette2:hover {
+    background: linear-gradient(40deg, #f0f0f0, #0099ff);
 }
-
-.vignette3:hover {
-    background: linear-gradient(40deg, #f0f0f0, #d400ff) !important;
+#vignette3 {
+    background: linear-gradient(145deg, #f0f0f0, #d400ff);
 }
-
-a {
-    text-decoration: none !important;
+#vignette3:hover {
+    background: linear-gradient(40deg, #f0f0f0, #d400ff);
 }
 
 .aVignette {
@@ -187,16 +175,11 @@ a {
     color: black;
 }
 
-.titreInfoEquipe {
-    text-align: center;
-    color: white;
-    text-shadow: 0 0 4px black,0 0 4px black,0 0 4px black,0 0 4px black,0 0 4px black,0 0 4px black,0 0 4px black,0 0 4px black,0 0 4px black,0 0 4px black,0 0 4px black,0 0 4px black,0 0 4px black,0 0 4px black,0 0 4px black,0 0 4px black,0 0 4px black,0 0 4px black,0 0 4px black,0 0 4px black;
-}
-
-.profile-section {
-    border: solid rgb(190, 190, 190) 1px;
-    
-    border-radius: 15px;
+.vignette-img-container {
+    height: 10vh;
+    width:10vh;
+    margin-top:9vh;
+    margin-left:2vh;
 }
 
 
@@ -223,6 +206,11 @@ a {
     height:100px;
 }
 
+.profile-section {
+    border: solid rgb(190, 190, 190) 1px;
+    
+    border-radius: 15px;
+}
 
 /* -------------- 4. ------------- */
 
@@ -339,7 +327,7 @@ a {
 }
 
 
-
+/* -------------- button classic. ------------- */
 
 .btn-outline-classic {
     color: rgba(0, 0, 0, 0.4);

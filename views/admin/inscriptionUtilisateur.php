@@ -7,12 +7,14 @@ require_once "layouts/entete.php";
         <form class="w-50 mx-auto position-relative" method="post" action="<?= CONTROLLERS_URL ?>admin/inscriptionUtilisateur.php?action=signup">
             <?php if($success) { ?>
             <div class="alert alert-success w-100 text-center position-absolute top-0 start-50 translate-middle-x">
-            <?= $success; ?>
+                <i class="bi bi-check-circle-fill"></i>
+                <?= $success; ?>
             </div>
             <?php } else if($errors) { ?>
             <div class="alert alert-danger w-100 text-center position-absolute top-0 start-50 translate-middle-x">
-            <?php foreach($errors as $error) {
-                echo $error . "<br>";
+            <?php foreach($errors as $error) { ?>
+                <i class="bi bi-exclamation-triangle-fill"></i>
+                <?php echo $error . "<br>";
             } ?>
             </div>
             <?php } ?>

@@ -17,11 +17,12 @@ if($rights == "user")
         <meta charset="UTF-8">
 
         <title>Stories Helper</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+
+        <link rel="icon" href="<?= IMG_URL ?>logo.png">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
         <link rel="stylesheet" href="<?= ROOT_URL ?>style.css">
-        <!-- <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script> -->
-        <script src="<?= ROOT_URL ?>bower_components/jquery/dist/jquery.min.js"></script>
-        <script src="<?= ROOT_URL ?>bower_components/jquery-ui/jquery-ui.min.js"></script>
+
+        <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
     </head>
     <body style="overflow:hidden">
     <nav class="navbar navbar-dark navbar-expand-md bg-dark">
@@ -57,20 +58,6 @@ if($rights == "user")
             <nav>
                 <ul class="list-unstyled">
                     <li><a href="<?= VIEWS_URL ?>admin/index.php" class="btn btn-outline-secondary w-75">Accueil</a></li>
-
-
-                    <!-- PROJETS -->
-                    <!-- <li class="mt-2">
-                        <button class="btn btn-outline-primary w-75 mt-4" data-bs-toggle="collapse" data-bs-target="#projetsCollapse" aria-expanded="false">Projets</button>
-
-                        <div id="projetsCollapse" class="collapse">
-                            <ul class="list-unstyled">
-                                <li><a class="btn btn-outline-primary w-75 mt-2" href="<?= VIEWS_URL ?>membres/projets.php">Vue d'ensemble</a></li>
-                                <li><a class="btn btn-outline-secondary w-75 mt-2" href="<?= CONTROLLERS_URL ?>membres/map.php">Projet actuel</a></li>
-                            </ul>
-                        </div>
-                    
-                    </li> -->
 
                     <!-- TABLEAU DE BORD -->
                     <li class="mt-2">

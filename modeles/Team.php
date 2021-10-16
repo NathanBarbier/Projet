@@ -256,4 +256,28 @@ class Team extends Modele
         $requete = $this->getBdd()->prepare($sql);
         return $requete->execute([$idProject, $this->id]);
     }
+
+
+    // DELETE
+
+    public function delete($teamId = null)
+    {
+        $teamId = $teamId == null ? $this->id : $teamId;
+
+        // delete teams
+        $sql = "DELETE FROM teams WHERE rowid = ?;";
+        // delete belong_to
+        $sql .= "DELETE FROM belong_to WHERE fk_team = ?;";
+        // delete tasks_comments
+        $sql .= "DELETE FROM tasks_comments WHERE fk_task IN (SELECT rowid FROM tasks WHERE fk_column IN (SELECT rowid FROM map_columns WHERE fk_team = ?));";
+        // delete tasks_members
+        $sql .= "DELETE FROM tasks_members WHERE fk_task IN (SELECT rowid FROM tasks WHERE fk_column IN (SELECT rowid FROM map_columns WHERE fk_team = ?));";
+        // delete tasks
+        $sql .= "DELETE FROM tasks WHERE fk_column IN (SELECT rowid FROM map_columns WHERE fk_team = ?);";
+        // delete map_columns
+        $sql .= "DELETE FROM map_columns WHERE fk_team = ?;";
+        
+        $requete = $this->getBdd()->prepare($sql);
+        return $requete->execute([$teamId,$teamId,$teamId,$teamId,$teamId,$teamId]);
+    }
 }

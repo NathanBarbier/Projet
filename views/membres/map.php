@@ -1,61 +1,95 @@
 <?php 
 require_once "layouts/entete.php";
 ?>
-<div class="row" style="height: 100%;">
-    <div class="col-10 mt-3 ps-3" style="height: 100%;">
-        <div id="columns-container" class="ms-3 me-4 overflow-x d-flex" style="height: 88vh;">
-            <?php foreach($CurrentTeam->getMapColumns() as $column) { ?>
-                <div class="project-column">
-                    <input class="columnId-input" type="hidden" value="<?= $column->getRowid() ?>">
-                    <div class="column-title text-center pt-2">
-                        <div class="row">
-                            <div class="col-8 mt-3 ps-5 column-title-name">
-                                <b class="column-title-text"><?= $column->getName() ?></b>
-                            </div>
-                            <ul class="col-4">
-                                <li class="me-2"><button class="btn btn-outline-dark add-task-btn">New</button></li>
-                                <li class="mt-2 me-2"><button class="btn btn-outline-danger delete-col-btn">Delete</button></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="column-content">
-                        <?php foreach($column->getTasks() as $task) { ?>
-                            <div class="task">
-                                <input class="taskId-input" type="hidden" value="<?= $task->getRowid() ?>">
-                                <div class='task-bubble mt-2 pt-3 mb-1 mx-2'>
-                                    <textarea class='task-bubble-input text-center'><?= $task->getName() ?></textarea>
-                                </div>
-                                <a class='ms-2 btn btn-outline-success task-check collapse'>Check</a>
-                                <a class='ms-1 btn btn-outline-danger task-delete collapse'>Delete</a>
-                                <a class="ms-1 btn btn-outline-dark arrow-img-btn task-to-left collapse">
-                                    <img src="<?= IMG_URL ?>left.png" alt="" width="30px">
-                                </a>
-                                <a class="ms-1 btn btn-outline-dark arrow-img-btn task-to-right collapse">
-                                    <img src="<?= IMG_URL ?>right.png" alt="" width="30px">
-                                </a>
-                            </div>
-                        <?php } ?>
-                    </div>
-                </div>   
-            <?php } ?>
+<div class="row position-relative" style="height: 100%;">
+
+    <?php if ($errors) { ?>
+        <div class="alert alert-danger w-50 text-center position-absolute top-0 start-50 translate-middle-x">
+            <?php foreach($errors as $error) { ?>
+                <i class="bi bi-exclamation-triangle-fill"></i>
+                <?php echo $error . "<br>";
+            } ?>
+        </div>
+    <?php } ?>
+
+    <!-- <button id="open-right-section" class="position-fixed right-0 top-0 mt-2 me-2"></button> -->
+    <i id="open-right-section" class="btn btn-outline-dark bi bi-arrow-bar-left position-absolute end-0 top-0 mt-2 me-2 w-auto collapse"></i>
+
+    <div id="archive-confirmation" class="collapse mt-3">
+        <h3 class="mx-auto text-center border-bottom w-50">Archiver le projet</h3>
+
+        <div class="sticker h-auto w-50 mx-auto text-center mt-3 pb-5">
+            <p class="mt-5"><b>Êtes-vous sûr de vouloir archiver le projet ? (vous pourrez le ré-ouvrir plus tard)</b></p>
+            <a href="<?= CONTROLLERS_URL ?>membres/map.php?action=archive&projectId=<?= $CurrentProject->getId() ?>" class="btn btn-outline-success w-50 mt-5">Archiver le projet</a>
+            <a id="cancel-archive" class="btn btn-outline-danger w-50 mt-3">Annuler</a>
         </div>
     </div>
 
-    <div class="col-2 pt-1 pe-4 text-center border" style="height: 100vh"> 
-        <button id="add-column-btn" class="btn btn-outline-dark collapse show" style="width:max-content; height:min-content; line-height:80%">Add Column</button>
+    <div id="left-section" class="col-10 mt-3 ps-3" style="height: 100%;">
+        <div class="collapse show">
+            <div id="columns-container" class="ms-3 me-4 overflow-x d-flex" style="height: 88vh;">
+                <?php foreach($CurrentTeam->getMapColumns() as $column) { ?>
+                    <div class="project-column">
+                        <input class="columnId-input" type="hidden" value="<?= $column->getRowid() ?>">
+                        <div class="column-title text-center pt-2">
+                            <div class="row">
+                                <div class="col-8 mt-3 ps-5 column-title-name">
+                                    <b class="column-title-text"><?= $column->getName() ?></b>
+                                </div>
+                                <ul class="col-4">
+                                    <li class="me-2"><button class="btn btn-outline-dark add-task-btn">New</button></li>
+                                    <li class="mt-2 me-2"><button class="btn btn-outline-danger delete-col-btn">Delete</button></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="column-content">
+                            <?php foreach($column->getTasks() as $task) { ?>
+                                <div class="task">
+                                    <input class="taskId-input" type="hidden" value="<?= $task->getRowid() ?>">
+                                    <div class='task-bubble mt-2 pt-3 mb-1 mx-2'>
+                                        <textarea class='task-bubble-input text-center'><?= $task->getName() ?></textarea>
+                                    </div>
+                                    <a class='ms-2 btn btn-outline-success task-check collapse'>Check</a>
+                                    <a class='ms-1 btn btn-outline-danger task-delete collapse'>Delete</a>
+                                    <a class="ms-1 btn btn-outline-dark arrow-img-btn task-to-left collapse">
+                                        <img src="<?= IMG_URL ?>left.png" alt="" width="30px">
+                                    </a>
+                                    <a class="ms-1 btn btn-outline-dark arrow-img-btn task-to-right collapse">
+                                        <img src="<?= IMG_URL ?>right.png" alt="" width="30px">
+                                    </a>
+                                </div>
+                            <?php } ?>
+                        </div>
+                    </div>   
+                <?php } ?>
+            </div>
+        </div>
+    </div>
+
+    <div id="details-section" class="col-2 pt-1 pe-4 text-center border position-relative collapse show" style="height: 100vh"> 
+        <!-- <button id="archive-btn" class="btn btn-danger w-75 mb-2" style="line-height: 80%;">Archiver le Projet</button> -->
+        <div class="row">
+            <div class="col">
+                <i id="archive-btn" class="bi bi-archive-fill btn btn-outline-danger w-75 mb-2 collapse show"></i>
+            </div>
+            <div class="col">
+                <button id="add-column-btn" class="btn btn-outline-dark collapse show" style="width:max-content; height:min-content; line-height:80%">Add Column</button>
+            </div>
+            <div class="col">
+                <button id="close-details" type="button" class="btn-close position-absolute top-0 end-0 me-4 mt-2" aria-label="Close"></button>
+            </div>
+        </div>
         <div id="task-details" class="mt-3 collapse">
             <textarea id="task-title" class="card px-2 pt-3 text-center" cols="25" rows="2" readonly>Title</textarea>
-            <div class="mt-3">
-                <button id="up-task-btn" class="btn btn-outline-dark" style="width: 40%;">Up</button>
-                <button id="down-task-btn" class="btn btn-outline-dark" style="width: 40%;">Down</button>
+            <div class="mt-2">
+                <i id="up-task-btn" class="w-25 me-2 bi bi-arrow-up btn btn-outline-dark"></i>
+                <i id="down-task-btn" class="w-25 ms-2 bi bi-arrow-down btn btn-outline-dark"></i>
             </div>
-            <h5 class="mt-3">Comment flow</h5>
-            <div class="border pb-3 ps-2" style="height: 33vh;">
+            <div class="border ps-2 pb-4 mt-2" style="height: 28vh;">
                 <div id="task-comment-container" class="overflow-y pe-2" style="height: 80%"></div>
-               
-                <button id="add-comment-btn" class="btn btn-outline-dark mt-3 me-2 collapse show">Add comment</button>
-                <button id="check-comment-btn" class="btn btn-outline-dark mt-3 me-2 collapse">Check</button>
-                <button id="delete-comment-btn" class="btn btn-outline-danger mt-3 me-2 collapse">Delete</button>
+                <button id="add-comment-btn" class="btn btn-outline-dark mt-3 me-2 collapse show">Commenter</button>
+                <i id="check-comment-btn" class="btn btn-outline-dark mt-3 me-2 collapse bi bi-check-lg"></i>
+                <i id="delete-comment-btn" class="mt-3 me-2 btn btn-outline-dark collapse bi bi-trash"></i>
             </div>
             
             <div id="members-container-div">
@@ -97,11 +131,17 @@ require_once "layouts/entete.php";
         <div id="column-details" class="mt-3 collapse">
             <textarea id="column-title" class="card px-2 pt-3 text-center" cols="25" rows="2"></textarea>
             <button id="column-details-check-btn" class="btn btn-outline-dark w-50 mt-3 collapse">Check</button>
-            <div class="mt-5">
-                <button id="left-column-btn" class="btn btn-outline-dark" style="width: 40%;">Left</button>
-                <button id="right-column-btn" class="btn btn-outline-dark" style="width: 40%;">Right</button>
+            <div class="mt-5 row justify-content-around">
+                <!-- <button id="left-column-btn" class="btn btn-outline-dark" style="width: 40%;">Left</button>
+                <button id="right-column-btn" class="btn btn-outline-dark" style="width: 40%;">Right</button> -->
+                <div class="col">
+                    <i id="left-column-btn" class="w-100 bi bi-arrow-left btn btn-outline-dark"></i>
+                </div>
+                <div class="col">
+                    <i id="right-column-btn" class="w-100 bi bi-arrow-right btn btn-outline-dark"></i>
+                </div>
             </div>
-            <button id="column-details-delete-btn" class="btn btn-outline-danger w-50 mt-4">Delete</button>
+            <button id="column-details-delete-btn" class="btn btn-outline-danger w-75 mt-4">Delete</button>
         </div>
     </div>
 

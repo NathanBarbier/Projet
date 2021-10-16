@@ -10,12 +10,13 @@ Class Project extends Modele
     private $description;
     private $idOrganization;
     private $teams = array();
+    private $active;
 
     public function __construct($idProject = null)
     {
         if($idProject !== null)
         {
-            $sql = "SELECT p.rowid, p.name, p.type, p.open, p.deadline, p.fk_organization, p.description";
+            $sql = "SELECT p.rowid, p.name, p.type, p.open, p.deadline, p.fk_organization, p.description, p.active";
             $sql .= " FROM projects AS p";
             $sql .= " WHERE p.rowid = ?";
 
@@ -33,6 +34,7 @@ Class Project extends Modele
                 $this->open = $Project->open;
                 $this->description = $Project->description;
                 $this->idOrganization = $Project->fk_organization;
+                $this->active = $Project->active;
             }
 
             $Team = new Team();
@@ -88,6 +90,11 @@ Class Project extends Modele
         return $this->teams;
     }
 
+    public function getActive()
+    {
+        return $this->active;
+    }
+
 
     //! SETTER
 
@@ -114,6 +121,11 @@ Class Project extends Modele
     public function setIdorganization($idorganization)
     {
         $this->idorganization = $idorganization;
+    }
+
+    public function setActive($active)
+    {
+        $this->active = $active;
     }
 
 
@@ -181,10 +193,7 @@ Class Project extends Modele
 
     public function updateOpen($open, $idProject = null)
     {
-        if($idProject == null)
-        {
-            $idProject = $this->id;
-        }
+        $idProject = $idProject == null ? $this->id : $idProject;
 
         $sql = "UPDATE projects";
         $sql .= " SET open = ?";
@@ -192,6 +201,18 @@ Class Project extends Modele
 
         $requete = $this->getBdd()->prepare($sql);
         return $requete->execute([$open, $idProject]);
+    }
+
+    public function updateActive($active, $idProject = null)
+    {
+        $idProject = $idProject == null ? $this->id : $idProject;
+
+        $sql = "UPDATE projects";
+        $sql .= " SET active = ?";
+        $sql .= " WHERE rowid = ?";
+
+        $requete = $this->getBdd()->prepare($sql);
+        return $requete->execute([$active, $idProject]);
     }
 
 
@@ -272,8 +293,8 @@ Class Project extends Modele
         $idorganization = $idorganization ?? $this->getIdorganization();
         $status = array();
 
-        $sql = "INSERT INTO projects (name, type, open, deadline, description, fk_organization)";
-        $sql .= " VALUES (?,?,NOW(),?,?,?)";
+        $sql = "INSERT INTO projects (name, type, open, deadline, description, fk_organization, active)";
+        $sql .= " VALUES (?,?,NOW(),?,?,?, 1)";
 
         $requete = $this->getBdd()->prepare($sql);
 

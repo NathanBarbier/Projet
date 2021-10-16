@@ -114,7 +114,7 @@ if($rights === "admin")
                                             // $success .= " Un email contenant son mot de passe temporaire lui a été envoyé.";    
                                         }
 
-                                        $success = "Le collaborateur a bien été inscrit et reçu son mote de passe par email."; 
+                                        $success = "Le collaborateur a bien été inscrit et reçu son mot de passe par email."; 
                                     }
                                     else 
                                     {

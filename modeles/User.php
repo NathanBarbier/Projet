@@ -9,6 +9,7 @@ class User extends Modele
     private $email;
     private $idPosition;
     private $idOrganization;
+    private $consent;
 
     public function __construct($id = null)
     {
@@ -31,6 +32,7 @@ class User extends Modele
             $this->idPosition = $User->fk_position;
             $this->email = $User->email;
             $this->idOrganization = $User->fk_organization;
+            $this->consent = $User->consent;
         }
     }
 
@@ -64,6 +66,11 @@ class User extends Modele
     public function setEmail($email)
     {
         $this->email = $email;
+    }
+
+    public function setConsent(bool $consent)
+    {
+        $this->consent = $consent;
     }
 
 
@@ -109,6 +116,10 @@ class User extends Modele
         return $this->idorganization;
     }
 
+    public function getConsent()
+    {
+        return $this->consent;
+    }
     
     //! METHODES
 
@@ -240,8 +251,8 @@ class User extends Modele
     {
         $status = array();
                         
-        $sql = "INSERT INTO users (lastname, firstname, birth, fk_position, email, fk_organization, password) ";
-        $sql .= "VALUES (?,?,?,?,?,?,?)";
+        $sql = "INSERT INTO users (lastname, firstname, birth, fk_position, email, fk_organization, password, consent) ";
+        $sql .= "VALUES (?,?,?,?,?,?,?,0)";
         $requete = $this->getBdd()->prepare($sql);
 
 
@@ -352,15 +363,27 @@ class User extends Modele
         return $requete->execute([$birth, $idUser]);
     }
 
+    public function updateConsent($Consent, $idUser)
+    {
+        $sql = "UPDATE users";
+        $sql .= " SET consent = ?";
+        $sql .= " WHERE rowid = ?";
+
+        $requete = $this->getBdd()->prepare($sql);
+        return $requete->execute([$Consent, $idUser]);
+    }
+
 
     //! DELETE
 
     public function delete($idUser)
     {
-        $sql = "DELETE FROM users";
-        $sql .= " WHERE rowid = ?";
+        $sql = "DELETE FROM tasks_members WHERE fk_user = ?;";
+        $sql .= "DELETE FROM tasks_comments WHERE fk_user = ?;";
+        $sql .= "DELETE FROM belong_to WHERE fk_user = ?;";
+        $sql .= "DELETE FROM users WHERE rowid = ?";
 
         $requete = $this->getBdd()->prepare($sql);
-        return $requete->execute([$idUser]);
+        return $requete->execute([$idUser, $idUser, $idUser, $idUser]);
     }
 }

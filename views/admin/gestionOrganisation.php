@@ -6,13 +6,15 @@ require_once "layouts/entete.php";
         <div class="col-8 position-relative">
             <?php if($errors) { ?>
             <div class="alert alert-danger w-50 text-center position-absolute top-0 start-50 translate-middle-x">
-            <?php foreach($errors as $error) {
-                echo $error . "<br>";
+            <?php foreach($errors as $error) { ?>
+                <i class="bi bi-exclamation-triangle-fill"></i>
+                <?php echo $error . "<br>";
             } ?>
             </div>
         <?php } else if($success) { ?>
             <div class="alert alert-success w-50 text-center position-absolute top-0 start-50 translate-middle-x">
-            <?= $success ?>
+                <i class="bi bi-check-circle-fill"></i>
+                <?= $success ?>
             </div>    
         <?php } ?>
             <div id="delete-organization-div" class="sticker py-3 px-3 text-center collapse" style="height: max-content;">
@@ -59,13 +61,13 @@ require_once "layouts/entete.php";
         </div>
 
         <div class="col-4 pe-5" >
-            <div class="card" style="height: 90vh;">
+            <div class="card" style="height: 88vh;">
                 <div class="card-header">
                     <h4 class="text-center">Informations sur l'organisation</h4>
                 </div>
-                <div class="card-body">
+                <div class="card-body position-relative">
                     <h3 class="text-center border-bottom w-75 mx-auto"><?= $CurrentOrganization->name ?></h3>
-                    <h5 class="text-center mx-auto w-50 border-bottom mt-5">Email</h5>
+                    <h5 class="text-center mx-auto w-50 border-bottom mt-4">Email</h5>
                     <div class="d-flex justify-content-center mt-3">
                         <button type="text" class="btn btn-outline-classic form-control w-75 mx-auto text-center"><?= $CurrentOrganization->email ?></button>
                     </div>
@@ -85,7 +87,7 @@ require_once "layouts/entete.php";
                         <button type="text" class="btn btn-outline-classic form-control w-75 mx-auto text-center">UNDEFINED</button>
                     </div>
 
-                    <div class="bottom-centered text-center">
+                    <div class="w-100 mb-3 position-absolute bottom-0 start-50 translate-middle-x text-center">
                         <button id="password-update-btn" class="btn btn-outline-primary w-75">Modifier le mot de passe</button>
                         <button id="delete-organization-button" class="btn btn-outline-danger w-75 mt-4">Supprimer l'organisation</button>
                     </div>

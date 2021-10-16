@@ -4,8 +4,9 @@ require_once "layouts/entete.php";
 if(!empty($errors)) { ?>
     <div class="position-relative mx-auto">
         <div class="alert alert-danger w-50 text-center position-absolute top-0 start-50 translate-middle-x">
-        <?php foreach($errors as $error) {
-            echo $error . "<br>";
+        <?php foreach($errors as $error) { ?>
+            <i class="bi bi-exclamation-triangle-fill"></i>
+            <?php echo $error . "<br>";
         } ?>
         </div>
     </div>
@@ -33,6 +34,11 @@ if(!empty($errors)) { ?>
     <div class="form-floating mt-3">
         <input type="password" class="form-control" placeholder="Entrez le mot de passe administrateur" id="pwd2" name="pwd2" value="<?= isset($pwd2) ? $pwd2 : ''?>" required>
         <label for="pwd2">Confirmer mot de passe</label>
+    </div>
+
+    <div class="form-check mt-3">
+        <input class="form-check-input" name="consent" type="checkbox" value="" id="consent-check" required>
+        <label for="consent-check">En cochant cette case vous confirmez accepter le traitement de vos données</label>
     </div>
 
     <div class="text-center mt-3">

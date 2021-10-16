@@ -4,7 +4,7 @@ require_once "layouts/entete.php";
 
 <div class="col-9 mt-4">
 
-<h1 class="text-center mx-auto w-50 mt-5 mb-4" style="border-bottom: 1px rgb(216, 214, 214) solid;">Liste des projets</h1>
+<h1 class="text-center mx-auto w-50 mb-4" style="border-bottom: 1px rgb(216, 214, 214) solid;">Liste des projets</h1>
 
     <div class="sticker" style="width:80vw; height:65vh; overflow:auto">
         <?php

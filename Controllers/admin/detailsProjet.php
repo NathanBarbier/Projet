@@ -24,6 +24,7 @@ if($rights === "admin")
 
     $CurrentProject = new stdClass;
 
+    $CurrentProject->rowid = $idProject;
     $CurrentProject->name = $Project->getName();
     $CurrentProject->description = $Project->getDescritpion();
     $CurrentProject->type = $Project->getType();
@@ -31,9 +32,6 @@ if($rights === "admin")
     $success = false;
     $errors = array();
 
-    //TODO récupérer tous les membres d'une organization
-    //TODO qui ne sont pas attribué au projet
-    // 
     $User = new User();
     $Team = new Team();
     $BelongsTo = new BelongsTo();
@@ -127,7 +125,6 @@ if($rights === "admin")
                 // create team without users
                 $status = $Team->create($teamName, $idOrganization, $idProject);
 
-
                 if($status)
                 {
                     $success = "L'équipe a bien été créée.";
@@ -141,6 +138,27 @@ if($rights === "admin")
         else
         {
             $errors[] = "L'équipe n'a pas de nom.";
+        }
+    }
+
+    if($action == "deleteTeam")
+    {
+        if($teamId)
+        {
+            $status = $Team->delete($teamId);
+
+            if($status)
+            {
+                $success = "L'équipe a bien été supprimée.";
+            }
+            else
+            {
+                $errors[] = "Une erreur innatendue est survenue.";
+            }
+        }
+        else
+        {
+            $errors[] = "Vous n'avez pas sélectionné d'équipe";
         }
     }
 
@@ -191,7 +209,7 @@ if($rights === "admin")
         }
         else
         {
-            $errors[] = "Vous n'avez pas sélectionné d'équipes";
+            $errors[] = "Vous n'avez pas sélectionné d'équipe";
         }
 
     }
@@ -203,6 +221,7 @@ if($rights === "admin")
 
         $CurrentProject = new stdClass;
 
+        $CurrentProject->rowid = $idProject;
         $CurrentProject->name = $Project->getName();
         $CurrentProject->description = $Project->getDescritpion();
         $CurrentProject->type = $Project->getType();

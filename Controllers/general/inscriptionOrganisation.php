@@ -12,6 +12,10 @@ $name = GETPOST('name');
 $pwd = GETPOST('pwd');
 $pwd2 = GETPOST('pwd2');
 $consent = GETPOST('consent');
+if ($consent == "on")
+{
+    $consent = true;
+}
 
 $Organization = new Organization();
 $Inscription = new Inscription();
@@ -20,7 +24,6 @@ $errors = array();
 $success = false;
 
 $tpl = "inscriptionOrganisation.php";
-
 
 if($action == "inscriptionOrg")
 {

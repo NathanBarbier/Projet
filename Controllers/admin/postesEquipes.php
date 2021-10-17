@@ -54,7 +54,7 @@ if($rights === 'admin')
 
         if($status)
         {
-            $success = "Le poste a bien été supprimmé.";
+            $success = "Le poste a bien été supprimé.";
         }
         else
         {

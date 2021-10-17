@@ -51,7 +51,7 @@ class Inscription extends Modele
         $status = array();
 
         $sql = "INSERT INTO organizations (email, password, name, consent)";
-        $sql .= " VALUES(?, ?, ?)";
+        $sql .= " VALUES(?, ?, ?, ?)";
 
         $requete = $this->getBdd()->prepare($sql);
         $status[] = $requete->execute([$email, $password, $name, $consent]);

@@ -38,122 +38,126 @@ if($deletePosition)
 <?php
 }
 ?>
-    <div class="container w-75 mt-3" id="containerPoste">
-        <div style="width : 55%; margin-right : 3%; float : left">
-            <table class="table mb-0">
-                <thead class="titreTable">
-                    <tr>
-                        <th colspan="6">
-                            <div style="float : left"><strong>Liste des postes : </strong></div>
-                        </th>
-                    </tr>
-                    <tr>
-                        <th style="width : 30%"><strong>Nom du poste</strong></th>
-                        <th style="width : 50%"><strong>Nombre de membre</strong></th>
-                        <th><strong>Options</strong></th>  
-                    </tr>
-                </thead>
-            </table>
-            <table class="table">
-                <tbody id="tbodyPoste">
-                    <?php
-                    foreach($positions as $positionKey => $position)
-                    {
-                        // var_dump($position);
-                        if($position->name == "indéfini")
+    <div class="container w-100 mt-3" id="containerPoste">
+        <div class="row">
+            <div class="col-md-8">
+                <table class="table mb-0">
+                    <thead class="titreTable">
+                        <tr>
+                            <th colspan="6">
+                                <div style="float : left"><strong>Liste des postes : </strong></div>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th style="width : 30%"><strong>Nom du poste</strong></th>
+                            <th style="width : 50%"><strong>Nombre de membre</strong></th>
+                            <th><strong>Options</strong></th>  
+                        </tr>
+                    </thead>
+                </table>
+                <table class="table">
+                    <tbody id="tbodyPoste">
+                        <?php
+                        foreach($positions as $positionKey => $position)
                         {
-                            foreach($usersByPositionCounter as $key => $usersPositionCounter)
+                            // var_dump($position);
+                            if($position->name == "indéfini")
                             {
-                                if($position->rowid == $key)
+                                foreach($usersByPositionCounter as $key => $usersPositionCounter)
                                 {
-                                    ?>
-                                    <tr>
-                                        <th style="width : 50%"><?=$position->name;?></th>
-                                        <td style="width : 50%"><?=$usersPositionCounter;?></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                <?php 
-                                }           
-                            }
-                        }
-                    }
-
-                    foreach($positions as $positionKey => $position)
-                    {
-                        if($position->name != "indéfini") {
-                            foreach($usersByPositionCounter as $key => $usersPositionCounter)
-                            {
-                                if($position->rowid == $key)
-                                {
-                                    ?>
-                                    <tr style="width : 150%">
-                                        <th><?= $position->name; ?></th>
-                                        <td><?= $usersPositionCounter; ?></td>
-                                        <td>
-                                            <a href="<?= CONTROLLERS_URL ?>admin/postesEquipes.php?action=deletePosition&idPosition=<?= $position->rowid ?>" class="btn btn-danger btn-sm mt-1">Supprimer</a>
-                                        </td>
-                                        <td>
-                                            <a href="<?= CONTROLLERS_URL ?>admin/postesEquipes.php?action=updatePosition&idPosition=<?= $position->rowid ?>" class="btn btn-primary btn-sm mt-1">Modifier</a>
-                                        </td>
-                                    </tr>
-                                <?php 
-                                }           
-                            }
-                        }
-                    }
-                    ?>
-                </tbody>
-            </table>
-        </div>
-        <div class="container mt-5 text-center" style="width : 30% ; float : left">
-            <form method="post" action="<?= CONTROLLERS_URL ?>admin/postesEquipes.php?action=addPosition"> 
-                <div class="row">
-                    <div class="col-6">
-                       <div class="form-group text-center">
-                            <label for="positionName" class="mb-2">Nom du poste</label>
-                            <input type="text" class="form-control" name="positionName" id="positionName-id" placeholder="Nouveau poste" required>
-                        </div> 
-                    </div>
-                    <div class="col-6">
-                        <div class="form-group text-center">
-                            <label for="idRole" class="mb-2">Habilitation</label>
-                            <select name="idRole" id="idRole-id" class="form-control">
-                                <?php
-                                foreach($roles as $key => $role)
-                                {
-                                    ?>
-                                    <option value="<?= $role->rowid; ?>"  <?= $role->name == "Collaborateur" ? "selected" : "" ;?>  ><?= $role->name; ?></option>
-                                    <?php
+                                    if($position->rowid == $key)
+                                    {
+                                        ?>
+                                        <tr>
+                                            <th style="width : 50%"><?=$position->name;?></th>
+                                            <td style="width : 50%"><?=$usersPositionCounter;?></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                    <?php 
+                                    }           
                                 }
-                                ?>
-                            </select>
+                            }
+                        }
+
+                        foreach($positions as $positionKey => $position)
+                        {
+                            if($position->name != "indéfini") {
+                                foreach($usersByPositionCounter as $key => $usersPositionCounter)
+                                {
+                                    if($position->rowid == $key)
+                                    {
+                                        ?>
+                                        <tr style="width : 150%">
+                                            <th><?= $position->name; ?></th>
+                                            <td><?= $usersPositionCounter; ?></td>
+                                            <td>
+                                                <a href="<?= CONTROLLERS_URL ?>admin/postesEquipes.php?action=deletePosition&idPosition=<?= $position->rowid ?>" class="btn btn-danger btn-sm mt-1">Supprimer</a>
+                                            </td>
+                                            <td>
+                                                <a href="<?= CONTROLLERS_URL ?>admin/postesEquipes.php?action=updatePosition&idPosition=<?= $position->rowid ?>" class="btn btn-primary btn-sm mt-1">Modifier</a>
+                                            </td>
+                                        </tr>
+                                    <?php 
+                                    }           
+                                }
+                            }
+                        }
+                        ?>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-4">
+                <form method="post" action="<?= CONTROLLERS_URL ?>admin/postesEquipes.php?action=addPosition"> 
+                    <div class="row mt-2">
+                        <div class="col-8 offset-2">
+                           <div class="form-group text-center">
+                                <label for="positionName" class="mb-2">Nom du poste</label>
+                                <input type="text" class="form-control" name="positionName" id="positionName-id" placeholder="Nouveau poste" required>
+                            </div> 
                         </div>
                     </div>
-                </div>        
-                
-                <div class="form-group text-center m-auto mt-2">
-                    <button type="submit" class="btn btn-success" name="envoi" value="1" >Ajouter le poste</button>
-                </div>
-            </form>
-            <?php
-            if($idPosition && $updatePosition)
-            {
-            ?>
-                <form method="post" action="<?= CONTROLLERS_URL ?>admin/postesEquipes.php?action=updatePositionConf&idPosition=<?=$idPosition?>">
-                    <div class="form-group ml-auto mr-auto mt-3">
-                        <label for="positionName">Modifier le poste "<?= $fetchPosition->name; ?>"</label>
-                        <input type="text" class="form-control" name="positionName" id="positionName-id" placeholder="entrez le nouveau nom du poste" value="<?=$fetchPosition->name;?>">
-                    </div>
-
-                    <div class="form-group text-center mt-2">
-                        <button type="submit" class="btn btn-info" name="envoi" value="1" >Modifier le poste</button>
-                        <a href="<?= CONTROLLERS_URL ?>admin/postesEquipes.php" class="btn btn-warning mt-1">Annuler</a>
+                    <div class="row mt-2">
+                        <div class="col-8 offset-2">
+                            <div class="form-group text-center">
+                                <label for="idRole" class="mb-2">Habilitation</label>
+                                <select name="idRole" id="idRole-id" class="form-control">
+                                    <?php
+                                    foreach($roles as $key => $role)
+                                    {
+                                        ?>
+                                        <option value="<?= $role->rowid; ?>"  <?= $role->name == "Collaborateur" ? "selected" : "" ;?>  ><?= $role->name; ?></option>
+                                        <?php
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                        </div>
+                    </div>        
+                    
+                    <div class="form-group text-center m-auto mt-2">
+                        <button type="submit" class="btn btn-success" name="envoi" value="1" >Ajouter le poste</button>
                     </div>
                 </form>
-            <?php
-            }
-            ?>
+                <?php
+                if($idPosition && $updatePosition)
+                {
+                ?>
+                    <form method="post" action="<?= CONTROLLERS_URL ?>admin/postesEquipes.php?action=updatePositionConf&idPosition=<?=$idPosition?>">
+                        <div class="form-group ml-auto mr-auto mt-3">
+                            <label for="positionName">Modifier le poste "<?= $fetchPosition->name; ?>"</label>
+                            <input type="text" class="form-control" name="positionName" id="positionName-id" placeholder="entrez le nouveau nom du poste" value="<?=$fetchPosition->name;?>">
+                        </div>
+    
+                        <div class="form-group text-center mt-2">
+                            <button type="submit" class="btn btn-info" name="envoi" value="1" >Modifier le poste</button>
+                            <a href="<?= CONTROLLERS_URL ?>admin/postesEquipes.php" class="btn btn-warning mt-1">Annuler</a>
+                        </div>
+                    </form>
+                <?php
+                }
+                ?>
+            </div>
         </div>
     </div>
 

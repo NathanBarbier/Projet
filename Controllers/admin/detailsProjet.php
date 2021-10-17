@@ -36,7 +36,7 @@ if($rights === "admin")
     $Team = new Team();
     $BelongsTo = new BelongsTo();
 
-    $projectFreeUsers = $User->fetchFreeUsersByProjectId($idProject);
+    $projectFreeUsers = $User->fetchFreeUsersByProjectId($idProject, $idOrganization);
 
     $projectFreeUsersIds = array();
     foreach($projectFreeUsers as $user)
@@ -226,7 +226,7 @@ if($rights === "admin")
         $CurrentProject->description = $Project->getDescritpion();
         $CurrentProject->type = $Project->getType();
 
-        $projectFreeUsers = $User->fetchFreeUsersByProjectId($idProject);
+        $projectFreeUsers = $User->fetchFreeUsersByProjectId($idProject, $idOrganization);
 
         $projectFreeUsersIds = array();
         foreach($projectFreeUsers as $user)

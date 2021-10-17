@@ -37,7 +37,7 @@ if(!empty($errors)) { ?>
     </div>
 
     <div class="form-check mt-3">
-        <input class="form-check-input" name="consent" type="checkbox" value="" id="consent-check" required>
+        <input class="form-check-input" name="consent" type="checkbox" id="consent-check" required>
         <label for="consent-check">En cochant cette case vous confirmez accepter le traitement de vos données</label>
     </div>
 

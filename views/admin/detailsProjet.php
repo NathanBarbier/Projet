@@ -4,6 +4,15 @@ require_once 'layouts/entete.php';
 
 <div class="col-10">
     <div class="row position-relative">
+
+        <?php if ($CurrentProject->active == 0) { ?>
+            <div class="alert alert-info alert-visible mt-3 w-75 text-center position-absolute top-0 start-50 translate-middle-x">
+                <i class="bi bi-info-circle-fill"></i>    
+                Ce projet est archivé.
+                &nbsp;<a href="<?= CONTROLLERS_URL ?>admin/detailsProjet.php?action=openProject&idProject=<?= $CurrentProject->rowid ?>" class="btn btn-outline-secondary">Ré-ouvrir</a>
+            </div>
+        <?php } ?>
+
         <?php if($errors) { ?>
         <div class="alert alert-danger mt-3 w-50 text-center position-absolute top-0 start-50 translate-middle-x">
         <?php foreach($errors as $error) { ?>
@@ -17,17 +26,17 @@ require_once 'layouts/entete.php';
             <?= $success; ?>
         </div>
         <?php } ?>
-        <div class="sticker col-3 mt-3 ms-3 me-3 text-center overflow-x" style="height: 60px; ">
+        <div class="sticker col-3 mt-2 ms-3 me-3 text-center overflow-x" style="height: 60px; ">
             <h3 class="mt-2"><?= $CurrentProject->name ?? "<b style='color:red'>No title</b>"; ?></h3>
         </div>
         
-        <div class="sticker col mt-3 me-4 text-center">
+        <div class="sticker col mt-2 me-4 text-center">
             <h3 id="team-title" class="text-center mt-2">Modification des équipes</h3>
         </div>
     </div>
 
-    <div class="row">
-        <div class="sticker col-3 mt-3 ms-3 me-3 pb-4 text-center" style="height: 75vh">
+    <div class="row" style="height: 81vh;">
+        <div class="sticker col-3 mt-3 ms-3 me-3 pb-4 text-center h-auto">
             <div class="row position-relative h-100">
                 <form action="<?= CONTROLLERS_URL ?>admin/detailsProjet.php?action=updateProject&idProject=<?= $idProject ?>" method="POST">
                     <h5 class="mt-5 border-bottom w-50 mx-auto">Titre</h5>
@@ -39,7 +48,16 @@ require_once 'layouts/entete.php';
                     <h5 class="mt-3 border-bottom w-50 mx-auto">Type</h5>
                     <input class="sticker text-center mt-2 px-2" name="type" id="type" type="text" value="<?= $CurrentProject->type ?>">
     
-                    <button class="btn btn-outline-primary w-75 position-absolute translate-middle-x bottom-0 start-50" type="submit">Mettre à jour</button>
+                    <div class="position-absolute translate-middle-x bottom-0 start-50 w-100">
+                        <div class="row mx-auto">
+                            <div class="col-6">
+                                <button class="btn btn-outline-primary w-100" type="submit">Mettre à jour</button>
+                            </div>
+                            <div class="col-6">
+                                <a id="map-btn" href="<?= CONTROLLERS_URL ?>admin/map.php?projectId=<?= $CurrentProject->rowid ?>" class="btn btn-outline-info w-100">Tableau</a>
+                            </div>
+                        </div>
+                    </div>
                 </form>
             </div>
         </div>

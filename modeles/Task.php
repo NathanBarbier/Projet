@@ -192,9 +192,9 @@
 
     public function fetchNextRank($rowid, $fk_column)
     {
-        $sql = "SELECT t.rank AS nextRank, rowid";
+        $sql = "SELECT t.rank AS nextRank, t.rowid AS rowid";
         $sql .= " FROM tasks AS t";
-        $sql .= " WHERE fk_column = ?";
+        $sql .= " WHERE t.fk_column = ?";
         $sql .= " AND t.rank > (SELECT rank FROM tasks WHERE rowid = ?)";
         $sql .= " ORDER BY t.rank ASC";
         $sql .= " LIMIT 1";
@@ -207,9 +207,9 @@
 
     public function fetchPrevRank($rowid, $fk_column)
     {
-        $sql = "SELECT t.rank AS prevRank, rowid";
+        $sql = "SELECT t.rank AS prevRank, t.rowid AS rowid";
         $sql .= " FROM tasks AS t";
-        $sql .= " WHERE fk_column = ?";
+        $sql .= " WHERE t.fk_column = ?";
         $sql .= " AND t.rank < (SELECT rank FROM tasks WHERE rowid = ?)";
         $sql .= " ORDER BY t.rank DESC";
         $sql .= " LIMIT 1";
@@ -251,19 +251,29 @@
     {
         $rowid = $rowid == null ? $this->rowid : $rowid;
 
+        $sql = "SELECT MAX(rank) AS rank";
+        $sql .= " FROM tasks";
+        $sql .= " WHERE fk_column = ?";
+
+        $requete = $this->getBdd()->prepare($sql);
+        $requete->execute([$fk_column]);
+
+        $rank = $requete->fetch(PDO::FETCH_OBJ)->rank + 1;
+
         $sql = "UPDATE tasks";
-        $sql .= " SET fk_column = ?";
+        $sql .= " SET fk_column = ?,";
+        $sql .= " rank = ?";
         $sql .= " WHERE rowid = ?";
 
         $requete = $this->getBdd()->prepare($sql);
-        return $requete->execute([$fk_column, $rowid]);
+        return $requete->execute([$fk_column, $rank, $rowid]);
     }
 
     public function updateRank($rank, $rowid = null)
     {
         $rowid = $rowid == null ? $this->rowid : $rowid;
 
-        $sql = "UPDATE map_columns";
+        $sql = "UPDATE tasks";
         $sql .= " SET rank = ?";
         $sql .= " WHERE rowid = ?";
 

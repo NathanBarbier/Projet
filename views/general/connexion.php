@@ -27,8 +27,8 @@ require_once "layouts/entete.php";
     <form class="w-50 mx-auto" method="post" action="<?= CONTROLLERS_URL ?>general/Connexion.php">
 
         <div class="form-floating mt-5">
-            <input type="text" class="form-control" name="email" placeholder="Saisissez votre identifiant" value="<?= $email ?? '' ?>" maxlength="50" required>
-            <label for="email" class="mb-1">Addresse mail</label>
+            <input type="email" class="form-control" name="email" placeholder="Saisissez votre identifiant" value="<?= $email ?? '' ?>" maxlength="50" required>
+            <label for="email" class="mb-1">Addresse email</label>
         </div>
 
         <div class="form-floating mt-3">

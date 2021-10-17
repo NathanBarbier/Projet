@@ -2,7 +2,9 @@
 //import all models
 require_once "../../traitements/header.php";
 
-// $idOrganization = $_SESSION["idOrganization"] ?? false;
+$rights = $_SESSION["rights"] ?? false;
+$idUser = $_SESSION["idUser"] ?? false;
+
 $action = GETPOST('action');
 $envoi = GETPOST('envoi');
 $email = GETPOST('email');

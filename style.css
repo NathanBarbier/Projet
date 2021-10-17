@@ -56,6 +56,12 @@ a {
 
 .alert {
     font-size: x-large;
+    border-radius: 20px;
+}
+
+.alert-visible {
+    opacity: 1 !important;
+    display: initial !important;
 }
 
 #containerPoste {
@@ -230,7 +236,6 @@ a {
     width: 100%;
     border-bottom: 1px rgb(216, 214, 214) solid;
     height: max-content;
-    cursor: pointer;
 }
 
 .add-task-btn {
@@ -244,6 +249,12 @@ a {
     border: 1px solid rgba(0, 0, 0, 0.125); 
     border-radius:5px;
     float:right;
+    line-height: 80%;
+}
+
+#attributed-member-button,
+#attribute-member-button,
+#desattribute-member-button {
     line-height: 80%;
 }
 
@@ -322,8 +333,12 @@ a {
 }
 
 .column-title-name {
-    overflow-x: auto;
+    border-right: 1px solid rgba(0, 0, 0, 0.04);
     font-size:large;
+}
+
+.column-title-name:hover {
+    cursor: pointer;
 }
 
 
@@ -353,4 +368,11 @@ box-shadow: 0 0 0 0.25rem rgba(36, 36, 36, 0.5);
 .btn-outline-classic:disabled, .btn-outline-classic.disabled {
 color: black;
 background-color: transparent;
+}
+
+
+/* -------------- icons. ------------- */
+
+.bi-archive-fill {
+    width: max-content !important;
 }

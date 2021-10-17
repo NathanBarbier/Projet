@@ -1,8 +1,4 @@
 <?php
-require_once "../../traitements/header.php";
-
-$rights = $_SESSION["rights"] ?? false;
-
 if($rights == "admin" OR $rights == "user")
 {
     header("location:".ROOT_URL."index.php");
@@ -34,28 +30,20 @@ if($rights == "admin" OR $rights == "user")
         <span class="navbar-toggler-icon"></span>
     </button>
 
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+        <div class="navbar-nav w-100" style="padding-right: 5vh;">
     <?php 
     if($pageName != "needConsent.php")
     {
-        if($pageName != "inscriptionOrganisation.php")
-        { ?>
-        <div class="collapse navbar-collapse" id="navbarNavDropdown">
-            <div class="navbar-nav w-100" style="padding-right: 5vh;">
-                <a class="nav-item nav-link ms-auto" href="<?php CONTROLLERS_URL ?>inscriptionOrganisation.php">Inscription</a>
-            </div>
-        </div>
-        <?php
-        }
-        if($pageName != "connexion.php")
-        { ?>
-            <div class="collapse navbar-collapse" id="navbarNavDropdown">
-                <div class="navbar-nav w-100" style="padding-right: 5vh;">
-                    <a class="nav-item nav-link ms-auto" href="<?= CONTROLLERS_URL ?>general/connexion.php">Connexion</a>
-                </div>
-            </div>
-        <?php
-        }
+        if($pageName != "inscriptionOrganisation.php") { ?>
+            <a class="nav-item nav-link ms-auto" href="<?php CONTROLLERS_URL ?>inscriptionOrganisation.php">Inscription</a>
+        <?php }
+        if($pageName != "connexion.php" && $pageName != "Connexion.php") { ?>
+            <a class="nav-item nav-link ms-auto" href="<?= CONTROLLERS_URL ?>general/connexion.php">Connexion</a>
+        <?php }
     } ?>
+        </div>
+    </div>
 
 </nav>
 <div class="container mt-4">

@@ -2,11 +2,10 @@
 // import all models
 require_once "../../traitements/header.php";
 
-$idUser = $_SESSION["idUser"] ?? false;
 $rights = $_SESSION["rights"] ?? false;
 $idOrganization = $_SESSION["idOrganization"] ?? null;
 
-if($rights == 'user')
+if($rights == 'admin')
 {
     $MapColumns = new MapColumns();
     $Task = new Task();
@@ -30,16 +29,16 @@ if($rights == 'user')
             if($commentId && $taskNote)
             {
                 $authorId = $TaskComment->fetch($commentId)->fk_user;
-                if($authorId == $idUser)
+                if($authorId == $idOrganization)
                 {
                     $status = $TaskComment->updateNote($taskNote, $commentId);
                 }
             }               
             break;
         case 'addTaskNote':
-            if($taskId && $idUser)
+            if($taskId && $idOrganization)
             {
-                $commentId = $TaskComment->create($taskId, $idUser);
+                $commentId = $TaskComment->create($taskId, $idOrganization, null, true);
                 echo json_encode($commentId);
             }
             break;
@@ -73,13 +72,13 @@ if($rights == 'user')
         case 'upTask':
             if($columnId && $taskId)
             {
-                $status = $Task->switchRank($taskId, $columnId, 'up');   
+                $status = $Task->switchRank($taskId, $columnId, 'up'); 
             }
             break;
         case 'downTask':
             if($columnId && $taskId)
             {
-                $status = $Task->switchRank($taskId, $columnId, 'down');   
+                $status = $Task->switchRank($taskId, $columnId, 'down');
             }
             break;
         case 'leftColumn':
@@ -106,7 +105,7 @@ if($rights == 'user')
                 // check if is author
                 // fetch comment author id
                 $authorId = $TaskComment->fetch($commentId)->fk_user;
-                if($authorId == $idUser)
+                if($idOrganization)
                 {
                     $TaskComment->delete($commentId);
                 }
@@ -139,7 +138,6 @@ if($rights == 'user')
             if($taskId) 
             {
                 $comments = $TaskComment->fetchAll($taskId);
-
                 $Organization = new Organization();
                 $author = $Organization->fetch($idOrganization)->name;
 

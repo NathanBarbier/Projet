@@ -75,16 +75,31 @@ class TaskComment extends Modele
 
     // CREATE
 
-    public function create($fk_task, $fk_user, $note = null)
+    public function create($fk_task, $fk_user, $note = null, $admin = 0)
     {
         $sql = "INSERT INTO tasks_comments";
-        $sql .= " (fk_task, note, fk_user)";
-        $sql .= " VALUES (?,?,?)";
+        
+        if($note != null)
+        {
+            $sql .= " (fk_task, note, fk_user, admin)";
+            $sql .= " VALUES (?,?,?,?)";
+            $requete = $this->getBdd()->prepare($sql);
+            $requete->execute([$fk_task, $note, $fk_user, $admin]);
+        }
+        else
+        {
+            $sql .= " (fk_task, fk_user, admin)";
+            $sql .= " VALUES (?,?,?)";
+            $requete = $this->getBdd()->prepare($sql);
+            $requete->execute([$fk_task, $fk_user, $admin]);
+        }
 
-        $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$fk_task, $note, $fk_user]);
+        // $sql .= " VALUES ($fk_task,$fk_user,$admin)";
+
+   
 
         return $this->fetch_last_insert_id();
+        // return $sql;
     }
 
 
@@ -156,7 +171,7 @@ class TaskComment extends Modele
 
     public function fetchAll($fk_task)
     {
-        $sql = "SELECT t.rowid, t.fk_task, t.note, t.fk_user";
+        $sql = "SELECT t.rowid, t.fk_task, t.note, t.fk_user, t.admin";
         $sql .= " FROM tasks_comments AS t";
         $sql .= " WHERE fk_task = ?";
 
@@ -187,9 +202,12 @@ class TaskComment extends Modele
         {
             foreach($authors as $aKey => $author)
             {
-                if($comment->fk_user == $author->rowid)
+                if($comment->admin == false)
                 {
-                    $comments[$cKey]->author = $authors[$aKey]->lastname." ".$authors[$aKey]->firstname;
+                    if($comment->fk_user == $author->rowid)
+                    {
+                        $comments[$cKey]->author = $authors[$aKey]->lastname." ".$authors[$aKey]->firstname;
+                    }
                 }
             }
         }

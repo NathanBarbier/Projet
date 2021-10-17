@@ -159,6 +159,7 @@ class User extends Modele
         return $requete->fetchAll(PDO::FETCH_OBJ);
     }
 
+
     public function fetchFreeUsersByProjectId($projectId, $idOrganization)
     {
         // récuperer les idUtilisateurs étant dans une team bossant sur le projet
@@ -186,6 +187,7 @@ class User extends Modele
         $sql .= " WHERE u.rowid NOT IN(";
         $sql .= " SELECT rowid";
         $sql .= " FROM users";
+
         $sql .= " WHERE rowid IN ('".$notFreeUsers."') )"; 
         $sql .= " AND u.fk_organization = ?";
 

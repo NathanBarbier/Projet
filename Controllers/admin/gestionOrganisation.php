@@ -14,12 +14,15 @@ if($rights === "admin")
     $oldPwd = GETPOST('oldpwd');
     $newPwd = GETPOST('newpwd');
     $newPwd2 = GETPOST('newpwd2');
+    $email = GETPOST('email');
 
     $tpl = "gestionOrganisation.php";
     $data = new stdClass;
 
     $success = false;
     $errors = array();
+    $invalidInput = array();
+    $invalidForm = array();
 
     $CurrentOrganization = new stdClass;
 
@@ -27,6 +30,7 @@ if($rights === "admin")
     $CurrentOrganization->email = $Organization->getEmail();
     $CurrentOrganization->membersCount = $Organization->countUsers();
     $CurrentOrganization->projectsCount = $Organization->countProjects();
+    $CurrentOrganization->archivedProjectsCount = $Organization->countActiveProjects();
 
 
     if($action == "deleteOrganization")
@@ -97,6 +101,42 @@ if($rights === "admin")
         else 
         {
             header("location:".ROOT_PATH."index.php");
+        }
+    }
+
+    if($action == "updateEmail")
+    {
+        if($email)
+        {
+            if(filter_var($email, FILTER_VALIDATE_EMAIL))
+            {
+                $status = $Organization->updateEmail($email);
+
+                if($status)
+                {
+                    $success = "L'adresse email a bien été modifiée.";
+                    $email = '';
+                    $CurrentOrganization->email = $Organization->fetch()->email;
+                }
+                else
+                {
+                    $errors[] = "Une erreur innatendue est survenue.";
+                }
+            }
+            else
+            {
+                $errors[] = "L'adresse email n'est pas correcte.";
+            }
+        }
+        else
+        {
+            $errors[] = "L'adresse email n'a pas été saisie.";
+        }
+
+        if(count($errors) > 0)
+        {
+            $invalidInput[] = 'email';
+            $invalidForm[] = 'email';
         }
     }
 

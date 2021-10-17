@@ -12,7 +12,7 @@ require_once "layouts/entete.php";
         </div>
     <?php } ?>
 
-    <!-- <button id="open-right-section" class="position-fixed right-0 top-0 mt-2 me-2"></button> -->
+    <a href="<?= CONTROLLERS_URL ?>admin/detailsProjet.php?idProject=<?= $CurrentProject->getId() ?>" ><i class="btn btn-outline-dark bi bi-box-arrow-left position-absolute start-0 top-0 mt-2 me-2 w-auto"></i></a>
     <i id="open-right-section" class="btn btn-outline-dark bi bi-arrow-bar-left position-absolute end-0 top-0 mt-2 me-2 w-auto collapse"></i>
 
     <div id="archive-confirmation" class="collapse mt-3">
@@ -20,7 +20,7 @@ require_once "layouts/entete.php";
 
         <div class="sticker h-auto w-50 mx-auto text-center mt-3 pb-5">
             <p class="mt-5"><b>Êtes-vous sûr de vouloir archiver le projet ? (vous pourrez le ré-ouvrir plus tard)</b></p>
-            <a href="<?= CONTROLLERS_URL ?>membres/map.php?action=archive&projectId=<?= $CurrentProject->getId() ?>" class="btn btn-outline-success w-50 mt-5">Archiver le projet</a>
+            <a href="<?= CONTROLLERS_URL ?>admin/map.php?action=archive&projectId=<?= $CurrentProject->getId() ?>" class="btn btn-outline-success w-50 mt-5">Archiver le projet</a>
             <a id="cancel-archive" class="btn btn-outline-danger w-50 mt-3">Annuler</a>
         </div>
     </div>
@@ -148,7 +148,7 @@ require_once "layouts/entete.php";
         </div>
     </div>
 
-<script type="text/Javascript" src="<?= JS_URL ?>membres/map.js"></script>
+<script type="text/Javascript" src="<?= JS_URL ?>admin/map.js"></script>
 <?php 
 require_once "layouts/pied.php";
 ?>

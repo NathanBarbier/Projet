@@ -55,11 +55,11 @@ $("#add-column-form").find('#create-column').click(function() {
     // insert in bdd
     $.ajax({
         async: true,
-        url: AJAX_URL+"membres/map.php?action=addColumn&columnName="+columnName+"&teamId="+teamId,
+        url: AJAX_URL+"admin/map.php?action=addColumn&columnName="+columnName+"&teamId="+teamId,
         success: function(result) {
             $.ajax({
                 async: true,
-                url: AJAX_URL+"membres/map.php?action=getLastColumnId",
+                url: AJAX_URL+"admin/map.php?action=getLastColumnId",
                 success: function(data) {
                     columnId = data;    
                     columnId = columnId.replace("\"", ' ').replace("\"", ' ');
@@ -122,7 +122,7 @@ function init()
         $("#up-task-btn").off('click').click(function() {
             $.ajax({
                 async: true,
-                url: AJAX_URL+"membres/map.php?action=upTask&taskId="+taskId+"&columnId="+columnId,
+                url: AJAX_URL+"admin/map.php?action=upTask&taskId="+taskId+"&columnId="+columnId,
                 success: function (data) {
                     prevTask = task.prevAll('.task').first();
                     task.insertBefore(prevTask);
@@ -134,7 +134,7 @@ function init()
         $("#down-task-btn").off('click').click(function() {
             $.ajax({
                 async: true,
-                url: AJAX_URL+"membres/map.php?action=downTask&taskId="+taskId+"&columnId="+columnId,
+                url: AJAX_URL+"admin/map.php?action=downTask&taskId="+taskId+"&columnId="+columnId,
                 success: function (data) {
                     nextTask = task.nextAll('.task').first(); 
                     task.insertAfter(nextTask);
@@ -145,7 +145,7 @@ function init()
         // load task comments
         $.ajax({
             async: true,
-            url: AJAX_URL+"membres/map.php?action=getTaskComments&taskId="+taskId,
+            url: AJAX_URL+"admin/map.php?action=getTaskComments&taskId="+taskId,
             success: function (data) {
                 if(data != undefined)
                 {
@@ -157,13 +157,11 @@ function init()
                         note = note == null ? '' : note;
                         admin = comments[i].admin;
                         author = comments[i].author;
-                        admin = comments[i].admin;
                         authorId = comments[i].fk_user;
-                        console.log(admin);
 
                             prepend = "<div class='task-comment-div'><input type='hidden' class='comment-task-id' value='"+comments[i].rowid+"'><input type='hidden' class='comment-author-id' value='"+authorId+"'><textarea ";
                             
-                            if(authorId != idUser)
+                            if(authorId != idOrganization)
                             {
                                 prepend += "readonly ";
                             }
@@ -190,7 +188,7 @@ function init()
                 // load task members
                 $.ajax({
                     async: true,
-                    url: AJAX_URL+"membres/map.php?action=getTaskMembers&taskId="+taskId,
+                    url: AJAX_URL+"admin/map.php?action=getTaskMembers&taskId="+taskId,
                     success: function (data) {
                         members = $.parseJSON(data);
 
@@ -245,7 +243,7 @@ function init()
                             {
                                 $.ajax({
                                     async: true,
-                                    url: AJAX_URL+"membres/map.php?action=attributeMemberToTask&taskId="+taskId+"&memberId="+memberId,
+                                    url: AJAX_URL+"admin/map.php?action=attributeMemberToTask&taskId="+taskId+"&memberId="+memberId,
                                     success: function(data) {
                                         btn.removeClass('show');
     
@@ -266,7 +264,7 @@ function init()
                             btn= $(this);
                             $.ajax({
                                 async: true,
-                                url: AJAX_URL+"membres/map.php?action=desattributeMemberToTask&taskId="+taskId+"&memberId="+memberId,
+                                url: AJAX_URL+"admin/map.php?action=desattributeMemberToTask&taskId="+taskId+"&memberId="+memberId,
                                 success: function(data) {
                                     btn.removeClass('show');
                                     $(".task-member-id[value='"+memberId+"']").parent().remove();
@@ -286,11 +284,11 @@ function init()
         // INSERT INTO tasks_comments with empty note
         $.ajax({
             async: true,
-            url: AJAX_URL+"membres/map.php?action=addTaskNote&taskId="+taskId,
+            url: AJAX_URL+"admin/map.php?action=addTaskNote&taskId="+taskId,
             success: function(data) {
                 commentId = data;
                 commentId = commentId.replace("\"", ' ').replace("\"", ' ');
-                $("#task-comment-container").prepend("<div class='task-comment-div'><input type='hidden' class='comment-task-id' value='"+commentId+"'><input type='hidden' class='comment-author-id' value='"+idUser+"'><textarea class='mt-3 card task-comment px-2 pt-3 text-center' name='' cols='30' rows='3'></textarea><div class='d-flex justify-content-start mt-1'><button class='btn btn-outline-classic comment-author'>"+username+"</button></div></div>")
+                $("#task-comment-container").prepend("<div class='task-comment-div'><input type='hidden' class='comment-task-id' value='"+commentId+"'><input type='hidden' class='comment-author-id' value='"+idOrganization+"'><textarea class='mt-3 card task-comment px-2 pt-3 text-center' name='' cols='30' rows='3'></textarea><div class='d-flex justify-content-start mt-1'><button class='btn btn-outline-danger comment-author'>"+username+"</button></div></div>")
 
                 initComment();
             }
@@ -309,11 +307,11 @@ function initTask()
         // INSERT NEW TASK IN BDD    
         $.ajax({
             async: true,
-            url: AJAX_URL+"membres/map.php?action=addTask&columnId="+columnId,
+            url: AJAX_URL+"admin/map.php?action=addTask&columnId="+columnId,
             success: function(data) {
                 $.ajax({
                     async: true,
-                    url: AJAX_URL+"membres/map.php?action=getLastTaskId",
+                    url: AJAX_URL+"admin/map.php?action=getLastTaskId",
                     success: function(data) {
                         taskId = data;
                         taskId = taskId.replace("\"", ' ').replace("\"", ' ');
@@ -339,7 +337,7 @@ function initTask()
         // INSERT INTO BDD
         $.ajax({
             async: true,
-            url: AJAX_URL+"membres/map.php?action=updateTask&taskId="+taskId+"&taskName="+taskName,
+            url: AJAX_URL+"admin/map.php?action=updateTask&taskId="+taskId+"&taskName="+taskName,
         });
     });
 
@@ -349,7 +347,7 @@ function initTask()
         // DELETE FROM BDD
         $.ajax({
             async: true,
-            url: AJAX_URL+"membres/map.php?action=deleteTask&taskId="+taskId,
+            url: AJAX_URL+"admin/map.php?action=deleteTask&taskId="+taskId,
         });
 
         task = $(this).parents(".task").first();
@@ -406,7 +404,7 @@ function initCol()
         // DELETE COLUMN IN BDD
         $.ajax({
             async: true,
-            url: AJAX_URL+"membres/map.php?action=deleteColumn&columnId="+columnId,
+            url: AJAX_URL+"admin/map.php?action=deleteColumn&columnId="+columnId,
             success: function() {
                 $("#column-details").removeClass('show');
             }
@@ -417,7 +415,7 @@ function initCol()
     $("#left-column-btn").off('click').click(function() {
         $.ajax({
             async: true,
-            url: AJAX_URL+"membres/map.php?action=leftColumn&columnId="+columnId+"&teamId="+teamId,
+            url: AJAX_URL+"admin/map.php?action=leftColumn&columnId="+columnId+"&teamId="+teamId,
             success: function() {
                 column = $(".columnId-input[value='"+columnId+"']").parents('.project-column').first()
                 column.insertBefore(column.prevAll('.project-column').first());
@@ -428,7 +426,7 @@ function initCol()
     $("#right-column-btn").off('click').click(function() {
         $.ajax({
             async: true,
-            url: AJAX_URL+"membres/map.php?action=rightColumn&columnId="+columnId+"&teamId="+teamId,
+            url: AJAX_URL+"admin/map.php?action=rightColumn&columnId="+columnId+"&teamId="+teamId,
             success: function(data) {
                 column = $(".columnId-input[value='"+columnId+"']").parents('.project-column').first();
                 column.insertAfter(column.nextAll(".project-column").first());
@@ -439,7 +437,7 @@ function initCol()
     $("#column-details-delete-btn").off('click').click(function() {
         $.ajax({
             async: true,
-            url: AJAX_URL+"membres/map.php?action=deleteColumn&columnId="+columnId,
+            url: AJAX_URL+"admin/map.php?action=deleteColumn&columnId="+columnId,
             success: function() {
                 $(".columnId-input[value='"+columnId+"']").parents('.project-column').first().remove();
                 $("#column-details").removeClass('show');
@@ -451,7 +449,7 @@ function initCol()
         columnName = $("#column-title").val();
         $.ajax({
             async: true,
-            url: AJAX_URL+"membres/map.php?action=updateColumn&columnId="+columnId+"&columnName="+columnName,
+            url: AJAX_URL+"admin/map.php?action=updateColumn&columnId="+columnId+"&columnName="+columnName,
             success: function(data) {
                 $("#column-details-check-btn").removeClass('show');
                 $(".columnId-input[value='"+columnId+"']").nextAll('.column-title').first().find('.column-title-text').first().text(columnName);
@@ -474,17 +472,13 @@ function initComment()
         commentAuthorId = $(this).prevAll('.comment-author-id').first().val();
         commentAuthorId = commentAuthorId.replace("\"", ' ').replace("\"", ' ');
 
-        if(commentAuthorId == idUser)
+        if(commentAuthorId == idOrganization)
         {
             $("#check-comment-btn").addClass('show');
-            $("#delete-comment-btn").addClass('show');
-            $("#add-comment-btn").removeClass('show');
         }
         else
         {
             $("#check-comment-btn").removeClass('show');
-            $("#delete-comment-btn").removeClass('show');
-            $("#add-comment-btn").addClass('show');
         }
 
         $("#delete-comment-btn").addClass('show');
@@ -501,7 +495,7 @@ function initComment()
     $("#check-comment-btn").off('click').click(function() {
         $.ajax({
             async: true,
-            url: AJAX_URL+"membres/map.php?action=updateTaskNote&commentId="+commentId+"&taskNote="+taskNote,
+            url: AJAX_URL+"admin/map.php?action=updateTaskNote&commentId="+commentId+"&taskNote="+taskNote,
             success: function(result) {
                 $("#check-comment-btn").removeClass('show');
                 $("#delete-comment-btn").removeClass('show');
@@ -513,7 +507,7 @@ function initComment()
     $("#delete-comment-btn").off('click').click(function() {
         $.ajax({
             async: true,
-            url: AJAX_URL+"membres/map.php?action=deleteTaskNote&commentId="+commentId,
+            url: AJAX_URL+"admin/map.php?action=deleteTaskNote&commentId="+commentId,
             success: function(result) {
                 $("#check-comment-btn").removeClass('show');
                 $("#delete-comment-btn").removeClass('show');
@@ -534,7 +528,7 @@ function updateTaskColumn(task, taskId, newColumn)
     {
         $.ajax({
             async: true,
-            url: AJAX_URL+"membres/map.php?action=taskColumnUpdate&taskId="+taskId+"&columnId="+newColumnId,
+            url: AJAX_URL+"admin/map.php?action=taskColumnUpdate&taskId="+taskId+"&columnId="+newColumnId,
             success: function(data)
             {
                 // prepend html from column a to column b

@@ -20,7 +20,7 @@ if($rights === 'user')
     
     $oldmdp = GETPOST('oldmdp');
     $newmdp = GETPOST('newmdp');
-    $newmdp2 = GETPOST('newmdp');
+    $newmdp2 = GETPOST('newmdp2');
     
     
     $User = new User($idUser);

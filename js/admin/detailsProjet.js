@@ -151,7 +151,10 @@ function showTeamMembers(teamRowid, teamName)
 
     $(teamIds).each(function(index, element) {
         elementTeamName = $("#team-sticker-"+element).children().first().html();
-        $("#team-sticker-"+element).attr('onclick', "showTeamMembers("+element+",'"+elementTeamName+"')");
+        // $("#team-sticker-"+element).attr('onclick', "showTeamMembers("+element+",'"+elementTeamName+"')");
+        $("#team-sticker-"+element).off('click').click(function() {
+            showTeamMembers(element, elementTeamName);
+        })
     })
 
     $(".team-members-"+teamRowid).addClass("show");
@@ -160,6 +163,6 @@ function showTeamMembers(teamRowid, teamName)
     $("#team-id-update-input").val(teamRowid);
     $("#delete-team-button").addClass('show');
     $("#delete-team-button").attr('href', CONTROLLERS_URL+'admin/detailsProjet.php?action=deleteTeam&teamId='+teamRowid+'&idProject='+projectId);
-
+    $("#map-btn").attr('href', CONTROLLERS_URL+'admin/map.php?projectId='+projectId+'&teamId='+teamRowid);
     $("#teamName").val(teamName);
 }

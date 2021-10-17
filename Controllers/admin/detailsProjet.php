@@ -18,8 +18,8 @@ if($rights === "admin")
     $teamName = GETPOST('teamName');
     $teamNameUpdate = GETPOST('teamNameUpdate');
     $teamId = GETPOST('teamId');
+    $errors = GETPOST('errors');
     
-
     $Project = new Project($idProject);
 
     $CurrentProject = new stdClass;
@@ -28,9 +28,18 @@ if($rights === "admin")
     $CurrentProject->name = $Project->getName();
     $CurrentProject->description = $Project->getDescritpion();
     $CurrentProject->type = $Project->getType();
+    $CurrentProject->active = $Project->getActive();
 
     $success = false;
-    $errors = array();
+
+    if($errors)
+    {
+        $errors = unserialize($errors);
+    }
+    else
+    {
+        $errors = array();
+    }
 
     $User = new User();
     $Team = new Team();
@@ -66,6 +75,27 @@ if($rights === "admin")
         if(GETPOST('addingUser'.$key))
         {
             $addingUsersIds[] = GETPOST('addingUser'.$key);
+        }
+    }
+
+    if($action == "openProject")
+    {
+        if($idProject)
+        {
+            $status = $Project->updateActive(true, $idProject);
+
+            if($status)
+            {
+                $success = "Le projet à bien été ré-ouvert.";
+            }
+            else
+            {
+                $errors[] = "Une erreur innatendue est survenue.";
+            }
+        }
+        else
+        {
+            $errors[] = "Aucun projet n'a été sélectionné.";
         }
     }
 
@@ -225,6 +255,7 @@ if($rights === "admin")
         $CurrentProject->name = $Project->getName();
         $CurrentProject->description = $Project->getDescritpion();
         $CurrentProject->type = $Project->getType();
+        $CurrentProject->active = $Project->getActive();
 
         $projectFreeUsers = $User->fetchFreeUsersByProjectId($idProject, $idOrganization);
 

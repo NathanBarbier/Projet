@@ -45,6 +45,7 @@ if($rights !== "admin")
     </nav>
     <div class="row" style="height: 60px;">
     </div>
+    <?php if($pageName != 'map.php') { ?>
     <!-- SIDE BAR -->
     <div class="row">
         <div class="col-2">
@@ -95,4 +96,5 @@ if($rights !== "admin")
             </nav>
 
         </div>
+        <?php } ?>
     

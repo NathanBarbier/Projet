@@ -100,6 +100,7 @@ if($envoi)
 if($success)
 {
     header("location:".ROOT_URL."index.php");
+    exit;
 }
 else
 {

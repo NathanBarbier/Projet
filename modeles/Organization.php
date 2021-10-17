@@ -296,6 +296,20 @@ class Organization extends Modele
         return count($this->projects);
     }
 
+    public function countActiveProjects()
+    {
+        $counter = 0;
+        foreach($this->projects as $project)
+        {
+            if($project->getActive() == 0)
+            {
+                $counter++;
+            }
+        }
+
+        return $counter;
+    }
+
 
     //! UPDATE
 
@@ -309,11 +323,13 @@ class Organization extends Modele
         return $requete->execute([$name, $this->id]);
     }
 
-    public function updateEmail($email)
+    public function updateEmail($email, $rowid = null)
     {
+        $rowid = $rowid == null ? $this->id : $rowid;
+
         $sql = "UPDATE organizations"; 
         $sql .= " SET email = ?";
-        $sql .= " WHERE idorganization = ?";
+        $sql .= " WHERE rowid = ?";
 
         $requete = $this->getBdd()->prepare($sql);
         return $requete->execute([$email, $this->id]);
@@ -378,6 +394,20 @@ class Organization extends Modele
 
 
     //! FETCH
+
+    public function fetch($rowid = null)
+    {
+        $rowid = $rowid == null ? $this->id : $rowid;
+
+        $sql = "SELECT *";
+        $sql .= " FROM organizations";
+        $sql .= " WHERE rowid = ?";
+
+        $requete = $this->getBdd()->prepare($sql);
+        $requete->execute([$rowid]);
+
+        return $requete->fetch(PDO::FETCH_OBJ);
+    }
 
     public function fetchByEmail($email)
     {

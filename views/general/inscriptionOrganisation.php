@@ -14,7 +14,7 @@ if(!empty($errors)) { ?>
 
 <form class="w-50 mx-auto" method="POST" action="<?= CONTROLLERS_URL?>general/inscriptionOrganisation.php">
     <input type="hidden" name="action" value="inscriptionOrg">
-    <h1 class="mx-auto text-center mt-5" style="border-bottom: rgb(216, 214, 214) 1px solid;">Inscription </h1>
+    <h1 class="mx-auto text-center mt-3" style="border-bottom: rgb(216, 214, 214) 1px solid;">Inscription </h1>
 
     <div class="form-floating mt-5">
         <input type="text" class="form-control" placeholder="Entrez le nom de votre organisation" id='name' name="name" value="<?= isset($name) ? $name : ''?>" required>
@@ -46,7 +46,7 @@ if(!empty($errors)) { ?>
     </div>
 
     <div class="form-group text-center mt-2">
-        <div class="mt-5">
+        <div class="mt-4">
             Vous possédez un compte ?
         </div>
         <a href="<?= CONTROLLERS_URL ?>general/connexion.php" class="btn btn-info mt-3">Connectez-vous</a>

@@ -68,7 +68,9 @@ if($rights === 'user')
     
                                 if($status)
                                 {
-                                    $success = true;
+                                    $success = "Le mot de passe a bien été modifié.";
+                                    header("location:".CONTROLLERS_URL."membres/tableauDeBord.php?success=".$success);
+                                    exit;
                                 }
                                 else
                                 {

@@ -72,7 +72,7 @@ require_once "layouts/entete.php";
                         <button type="submit" class="btn btn-outline-primary w-50" name="envoi" value="1">Valider</button>
                     </div>
                     <div class="text-center mt-3">
-                        <button id="cancel-email-update" class="btn btn-outline-danger w-50">Annuler</button>
+                        <a id="cancel-email-update" class="btn btn-outline-danger w-50">Annuler</a>
                     </div>
                 </form>
             </div>

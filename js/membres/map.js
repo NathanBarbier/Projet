@@ -62,7 +62,7 @@ $("#add-column-form").find('#create-column').click(function() {
                 url: AJAX_URL+"membres/map.php?action=getLastColumnId",
                 success: function(data) {
                     columnId = data;    
-                    columnId = columnId.replace("\"", ' ').replace("\"", ' ');
+                    columnId = columnId.replace("\"", '').replace("\"", '');
                     
                     columnNameInput.val("");
                     btnColumnForm.addClass('show');
@@ -159,7 +159,6 @@ function init()
                         author = comments[i].author;
                         admin = comments[i].admin;
                         authorId = comments[i].fk_user;
-                        console.log(admin);
 
                             prepend = "<div class='task-comment-div'><input type='hidden' class='comment-task-id' value='"+comments[i].rowid+"'><input type='hidden' class='comment-author-id' value='"+authorId+"'><textarea ";
                             
@@ -317,8 +316,8 @@ function initTask()
                     success: function(data) {
                         taskId = data;
                         taskId = taskId.replace("\"", ' ').replace("\"", ' ');
-                        
-                        addTaskBtn.parents(".column-title").next().prepend("<div class='task'><input class='taskId-input' type='hidden' value='"+taskId+"'></input><div class='task-bubble mt-2 pt-3 mb-1 mx-2'><textarea class='task-bubble-input text-center'></textarea></div><a class='ms-2 btn btn-outline-success task-check collapse'>Check</a><a class='ms-2 btn btn-outline-danger task-delete collapse'>Delete</a><a class='ms-1 btn btn-outline-dark arrow-img-btn task-to-left collapse'><img src='"+IMG_URL+"left.png' alt='left arrow' width='30px'></a><a class='ms-1 btn btn-outline-dark arrow-img-btn task-to-right collapse'><img src='"+IMG_URL+"right.png' alt='right arrow' width='30px'></a></div>");
+
+                        addTaskBtn.parents(".column-title").next().prepend("<div class='task'><input class='taskId-input' type='hidden' value='"+taskId+"'><button class='btn btn-outline-classic disabled task-author mt-2 ms-2 px-0 w-50 overflow-x'>"+username+"</button><div class='task-bubble mt-2 pt-3 mb-1 mx-2'><textarea class='task-bubble-input text-center'></textarea></div><a class='ms-2 btn btn-outline-success task-check collapse'>Check</a><a class='ms-2 btn btn-outline-danger task-delete collapse'>Delete</a><a class='ms-1 btn btn-outline-dark arrow-img-btn task-to-left collapse'><img src='"+IMG_URL+"left.png' alt='left arrow' width='30px'></a><a class='ms-1 btn btn-outline-dark arrow-img-btn task-to-right collapse'><img src='"+IMG_URL+"right.png' alt='right arrow' width='30px'></a></div>");
 
                         init();
                     }
@@ -486,9 +485,6 @@ function initComment()
             $("#delete-comment-btn").removeClass('show');
             $("#add-comment-btn").addClass('show');
         }
-
-        $("#delete-comment-btn").addClass('show');
-        $("#add-comment-btn").removeClass('show');
 
         commentId = $(this).prevAll(".comment-task-id").first().val();
         commentId = commentId.replace("\"", ' ').replace("\"", ' ');

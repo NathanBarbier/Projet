@@ -183,9 +183,13 @@ a {
 
 .vignette-img-container {
     height: 10vh;
-    width:10vh;
-    margin-top:9vh;
-    margin-left:2vh;
+    width: 10vh;
+    margin-top: 9vh;
+    margin-left: 2vh;
+}
+
+.vignette-container {
+    height: 35vh;
 }
 
 
@@ -286,6 +290,10 @@ a {
     background-color: white;
 }
 
+.task-author {
+    line-height: 40%;
+}
+
 .arrow-img-btn {
     display: inline-block;
     padding: 0;
@@ -375,4 +383,8 @@ background-color: transparent;
 
 .bi-archive-fill {
     width: max-content !important;
+}
+
+.bi-building {
+    font-size: 75px;
 }

@@ -12,14 +12,15 @@ require_once "layouts/entete.php";
         </div>
     <?php } ?>
 
-    <!-- <button id="open-right-section" class="position-fixed right-0 top-0 mt-2 me-2"></button> -->
+    <a href="<?= CONTROLLERS_URL ?>membres/tableauDeBord.php" ><i class="btn btn-outline-dark bi bi-box-arrow-left position-absolute start-0 top-0 mt-2 me-2 w-auto"></i></a>
+
     <i id="open-right-section" class="btn btn-outline-dark bi bi-arrow-bar-left position-absolute end-0 top-0 mt-2 me-2 w-auto collapse"></i>
 
     <div id="archive-confirmation" class="collapse mt-3">
         <h3 class="mx-auto text-center border-bottom w-50">Archiver le projet</h3>
 
         <div class="sticker h-auto w-50 mx-auto text-center mt-3 pb-5">
-            <p class="mt-5"><b>Êtes-vous sûr de vouloir archiver le projet ? (vous pourrez le ré-ouvrir plus tard)</b></p>
+            <p class="mt-5"><b>Êtes-vous sûr de vouloir archiver le projet ? (Sa ré-ouverture nécessitera l'intervention d'un administrateur.)</b></p>
             <a href="<?= CONTROLLERS_URL ?>membres/map.php?action=archive&projectId=<?= $CurrentProject->getId() ?>" class="btn btn-outline-success w-50 mt-5">Archiver le projet</a>
             <a id="cancel-archive" class="btn btn-outline-danger w-50 mt-3">Annuler</a>
         </div>
@@ -28,7 +29,7 @@ require_once "layouts/entete.php";
     <div id="left-section" class="col-10 mt-3 ps-3" style="height: 100%;">
         <div class="collapse show">
             <div id="columns-container" class="ms-3 me-4 overflow-x d-flex" style="height: 88vh;">
-                <?php foreach($CurrentTeam->getMapColumns() as $column) { ?>
+                <?php foreach($CurrentTeam->getMapColumns() as $columnKey => $column) { ?>
                     <div class="project-column">
                         <input class="columnId-input" type="hidden" value="<?= $column->getRowid() ?>">
                         <div class="column-title text-center">
@@ -45,11 +46,12 @@ require_once "layouts/entete.php";
                             </div>
                         </div>
                         <div class="column-content">
-                            <?php foreach($column->getTasks() as $task) { ?>
+                            <?php foreach($column->getTasks() as $taskKey => $task) { ?>
                                 <div class="task">
                                     <input class="taskId-input" type="hidden" value="<?= $task->getRowid() ?>">
-                                    <div class='task-bubble mt-2 pt-3 mb-1 mx-2'>
-                                        <textarea class='task-bubble-input text-center'><?= $task->getName() ?></textarea>
+                                    <button class='btn disabled btn-outline-<?= $task->getAdmin() == 1 ? 'danger' : 'classic' ?> task-author mt-2 ms-2 px-0 w-50 overflow-x'><?= $authors[$columnKey][$taskKey] ?></button>
+                                    <div class='task-bubble pt-2 mb-1 mt-1 mx-2'>
+                                        <textarea class='task-bubble-input text-center pt-1'><?= $task->getName() ?></textarea>
                                     </div>
                                     <a class='ms-2 btn btn-outline-success task-check collapse'>Check</a>
                                     <a class='ms-1 btn btn-outline-danger task-delete collapse'>Delete</a>

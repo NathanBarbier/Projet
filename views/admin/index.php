@@ -26,8 +26,8 @@ require_once "layouts/entete.php";
                 <div id="vignette1" class="bg-info mx-auto rounded vignette">
                     <div class="row">
                         <div class="col-4">
-                            <div class="vignette-img-container">
-                                <img src="<?= IMG_URL ?>immeuble.png" width="120%">
+                            <div class="mt-3 mx-auto text-center">
+                                <i class="bi bi-building"></i>
                             </div>
                         </div>
                         <div class="col-8">

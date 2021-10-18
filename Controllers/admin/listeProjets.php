@@ -22,21 +22,7 @@ if($rights === "admin")
     $Project->setidOrganization($idOrganization);
 
     $currentProjects = $Project->fetchAll();
-
-    foreach($currentProjects as $key => $project)
-    {
-        $projectId = $project->rowid;
-
-        // Tâches à faire
-        $Task = new Task();
-        $todoCounter = $Task->fetchCountTodo($projectId);
-        $currentProjects[$key]->todoCounter = $todoCounter;
-
-        // Tâches en cours
-        $progressCounter = $Task->fetchCountInProgress($projectId);
-        $currentProjects[$key]->progressCounter = $progressCounter;
-
-    }
+    // var_dump($currentProjects);
 
     require_once VIEWS_PATH."admin/".$tpl;
 }

@@ -22,7 +22,7 @@ require_once "layouts/entete.php";
     </div>
     <?php } ?>
     
-    <h1 class="text-center w-50 mx-auto" style="border-bottom: rgb(216, 214, 214) 1px solid;">Connexion</h1>
+    <h1 class="text-center w-50 mx-auto border-bottom">Connexion</h1>
 
     <form class="w-50 mx-auto" method="post" action="<?= CONTROLLERS_URL ?>general/Connexion.php">
 

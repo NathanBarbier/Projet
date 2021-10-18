@@ -9,7 +9,8 @@ require_once 'layouts/entete.php';
             <div class="alert alert-info alert-visible mt-3 w-75 text-center position-absolute top-0 start-50 translate-middle-x">
                 <i class="bi bi-info-circle-fill"></i>    
                 Ce projet est archivé.
-                &nbsp;<a href="<?= CONTROLLERS_URL ?>admin/detailsProjet.php?action=openProject&idProject=<?= $CurrentProject->rowid ?>" class="btn btn-outline-secondary">Ré-ouvrir</a>
+                &nbsp;&nbsp;<a href="<?= CONTROLLERS_URL ?>admin/detailsProjet.php?action=openProject&idProject=<?= $CurrentProject->rowid ?>" class="btn btn-outline-secondary">Ré-ouvrir</a>
+                <button id="close-alert" type="button" class="btn-close position-absolute top-0 end-0 me-4 mt-3" aria-label="Close"></button>
             </div>
         <?php } ?>
 
@@ -89,9 +90,14 @@ require_once 'layouts/entete.php';
                                 <div class="col-6">
                                     <a id="update-team-button" class="w-100 btn btn-outline-primary text-center collapse show">Mettre à jour</a>
                                 </div>
-                                <div class="col-6">
-                                    <a href="<?= CONTROLLERS_URL ?>admin/detailsProjet.php?action=deleteTeam&idProject=<?= $CurrentProject->rowid ?>" id="delete-team-button" class="w-100 btn btn-outline-danger text-center collapse show">Supprimer</a>
+                                <div class="<?= $CurrentProject->active ? 'col-3' : 'col-6' ?>">
+                                    <a href="<?= CONTROLLERS_URL ?>admin/detailsProjet.php?action=deleteTeam&idProject=<?= $CurrentProject->rowid ?>" id="delete-team-button" class="w-100 btn btn-outline-danger text-center collapse show"><i class="bi bi-trash-fill"></i></a>
                                 </div>
+                                <?php if($CurrentProject->active) { ?>
+                                    <div id="archive-btn" class="col-3 collapse show">
+                                        <a href="<?= CONTROLLERS_URL ?>admin/detailsProjet.php?action=archive&idProject=<?= $CurrentProject->rowid ?>" class="w-100 btn btn-outline-danger text-center collapse show"><i class="bi bi-archive-fill"></i></a>
+                                    </div>
+                                <?php } ?>
                             </div>
                         </div>
                     </form>

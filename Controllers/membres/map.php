@@ -60,6 +60,7 @@ if($rights == 'user')
         if($Project->getId() == $projectId)
         {
             $CurrentProject = $Project;
+	        break;
         }
     }
 
@@ -71,7 +72,9 @@ if($rights == 'user')
         exit;
     }
 
-    // GET CurrentTeam
+    $authors = array();
+    $usernames = array();
+
     foreach($CurrentProject->getTeams() as $team)
     {
         foreach($team->getMembers() as $member)
@@ -80,6 +83,8 @@ if($rights == 'user')
             {
                 $CurrentTeamId = $team->getId();
             }
+
+            $usernames[$member->getId()] = $member->getLastname() . ' ' . $member->getFirstname();
         }
     }
 
@@ -88,6 +93,21 @@ if($rights == 'user')
         if($team->getid() == $CurrentTeamId)
         {
             $CurrentTeam = $team;
+        }
+    }
+
+    foreach($CurrentTeam->getMapColumns() as $columnKey => $column)
+    {
+        foreach($column->getTasks() as $taskKey => $task)
+        {
+            if($task->getAdmin() == 1)
+            {
+                $authors[$columnKey][$taskKey] = $Organization->getName();
+            }
+            else
+            {
+                $authors[$columnKey][$taskKey] = $usernames[$task->getFk_author()];
+            }
         }
     }
 

@@ -47,28 +47,7 @@ if($rights == "user")
 
     </nav>
 
-        <!-- SIDE BAR -->
-    <?php if($pageName != "map.php")
-    { ?>
-    <div class="row" style="height: 100%;">
-        <div class="col-2">
-        </div>
-
-        <div class="text-center pt-2 bg-light col-2" style="height: 95vh; border: 1px solid rgba(0, 0, 0, 0.125); position: fixed">
-            <nav>
-                <ul class="list-unstyled">
-                    <li><a href="<?= VIEWS_URL ?>admin/index.php" class="btn btn-outline-secondary w-75">Accueil</a></li>
-
-                    <!-- TABLEAU DE BORD -->
-                    <li class="mt-2">
-                        <a href="<?= CONTROLLERS_URL ?>membres/tableauDeBord.php" class="btn btn-outline-primary w-75 mt-4" >Tableau de bord</a>
-                    </li>
-                </ul>
-            </nav>
-
-        </div>
-    <?php
-    }
+<?php 
 } 
 else 
 {

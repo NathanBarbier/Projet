@@ -31,6 +31,7 @@ if($rights === "admin")
     $CurrentProject->active = $Project->getActive();
 
     $success = false;
+    $refresh = false;
 
     if($errors)
     {
@@ -87,6 +88,7 @@ if($rights === "admin")
             if($status)
             {
                 $success = "Le projet à bien été ré-ouvert.";
+                $refresh = true;
             }
             else
             {
@@ -116,6 +118,7 @@ if($rights === "admin")
             else
             {
                 $success = "Les informations du projet ont bien été mises à jour.";
+                $refresh = true;
             }
         }
         else
@@ -144,6 +147,7 @@ if($rights === "admin")
                 if(!in_array(false, $status))
                 {
                     $success = "L'équipe a bien été créée.";
+                    $refresh = true;
                 }
                 else
                 {
@@ -158,6 +162,7 @@ if($rights === "admin")
                 if($status)
                 {
                     $success = "L'équipe a bien été créée.";
+                    $refresh = true;
                 }
                 else
                 {
@@ -180,6 +185,7 @@ if($rights === "admin")
             if($status)
             {
                 $success = "L'équipe a bien été supprimée.";
+                $refresh = true;
             }
             else
             {
@@ -231,6 +237,7 @@ if($rights === "admin")
             if(!in_array(false, $status))
             {
                 $success = "L'équipe a bien été modifiée.";
+                $refresh = true;
             }
             else
             {
@@ -244,8 +251,29 @@ if($rights === "admin")
 
     }
 
+    if($action == "archive")
+    {
+        if($idProject)
+        {    
+            $status = $Project->updateActive(0, $idProject);
 
-    if($success)
+            if($status)
+            {
+                $refresh = true;
+            }
+            else
+            {
+                $errors[] = "Une erreur innatendue est survenue.";
+            }
+        }
+        else
+        {
+            $errors[] = "Aucun projet n'a été sélectionné.";
+        }
+    }
+
+
+    if($refresh)
     {
         $Project = new Project($idProject);
 

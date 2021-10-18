@@ -19,6 +19,10 @@ $("#create-team-button").click(function() {
     $("#add-team-form").submit();
 });
 
+$("#close-alert").click(function() {
+    $(this).parent().removeClass('show alert-visible').css({'opacity': '0', 'display': 'none'});
+});
+
 $("#update-team-button").click(function() {
     $("#teamName-hidden-update").val($("#teamName").val());
 
@@ -64,6 +68,7 @@ function switchTeamApp()
     // display switching button
     $("#create-switch-button").toggleClass("show");
     $("#update-switch-button").toggleClass("show");
+    $("#archive-btn").toggleClass("show");
 
     // display team title
     title = $("#team-title").text();

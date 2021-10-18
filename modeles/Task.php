@@ -6,12 +6,14 @@
     private $fk_column;
     private $rank;
     private $options = array();
+    private $fk_author;
+    private $admin;
 
     public function __construct($taskId = null)
     {
         if($taskId != null)
         {
-            $sql = "SELECT t.rowid, t.name, t.description, t.fk_column, t.rank";
+            $sql = "SELECT t.rowid, t.name, t.description, t.fk_column, t.rank, t.fk_author, t.admin";
             $sql .= " FROM tasks AS t";
             $sql .= " WHERE t.rowid = ?";
 
@@ -27,6 +29,8 @@
                 $this->description = $Task->description;
                 $this->fk_column = $Task->fk_column;
                 $this->rank = $Task->rank;
+                $this->fk_author = $Task->fk_author;
+                $this->admin = $Task->admin;
             }
         }
     }
@@ -77,10 +81,20 @@
         return $this->fk_column;
     }
 
+    public function getFk_author()
+    {
+        return $this->fk_author;
+    }
+
+    public function getAdmin()
+    {
+        return $this->admin;
+    }
+
 
     // CREATE
 
-    public function create($fk_column, string $name = null,string $description = null)
+    public function create($fk_column, $fk_author, $admin = 0, string $name = null,string $description = null)
     {
         $sql = "SELECT MAX(rank) AS rank";
         $sql .= " FROM tasks";
@@ -91,11 +105,11 @@
         $obj = $requete->fetch(PDO::FETCH_OBJ);
         $rank = $obj->rank + 1;
 
-        $sql = "INSERT INTO tasks (name, description, fk_column, rank)";
-        $sql .= " VALUES (?,?,?,?)";
+        $sql = "INSERT INTO tasks (name, description, fk_column, rank, fk_author, admin)";
+        $sql .= " VALUES (?,?,?,?,?,?)";
 
         $requete = $this->getBdd()->prepare($sql);
-        return $requete->execute([$name, $description, $fk_column, $rank]);
+        return $requete->execute([$name, $description, $fk_column, $rank, $fk_author, $admin]);
     }
 
     // FETCH

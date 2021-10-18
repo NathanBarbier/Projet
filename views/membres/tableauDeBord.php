@@ -2,9 +2,9 @@
 require_once "layouts/entete.php";
 ?>
 
-<div class="col-10" style="height: 100%;">
+<div class="col-12" style="height: 100%;">
     <div class="row w-100" style="height: 100%;">
-        <div class="col-8 mt-3 position-relative" style="height:87%;">
+        <div class="offset-1 col-8 mt-3 position-relative" style="height:87%;">
             <?php if($success) { ?>
                 <div class="alert alert-success w-50 text-center position-absolute top-0 start-50 translate-middle-x">
                     <i class="bi bi-check-circle-fill me-2"></i>
@@ -53,7 +53,7 @@ require_once "layouts/entete.php";
                                 </div>
                             </div>
                             <div class="row">
-                                <a href="<?= CONTROLLERS_URL ?>membres/map.php?projectId=<?= $project->rowid ?>" class="btn btn-outline-primary w-25 mt-3 mx-auto">Aller sur la Map</a>
+                                <a href="<?= CONTROLLERS_URL ?>membres/map.php?projectId=<?= $project->rowid ?>" class="btn btn-outline-info w-25 mt-3 mx-auto">Aller sur le tableau</a>
                             </div>
                         </div>
                         <?php 
@@ -81,7 +81,7 @@ require_once "layouts/entete.php";
         </div> 
 
         <!-- user properties -->
-        <div class="col-4 profile-section mt-3 position-relative" style="height:87%">
+        <div class="col-3 profile-section mt-3 position-relative" style="height:87%">
 
             <h3 class="mx-auto mt-3 text-center" style="border-bottom: black solid 1px; border-color: rgb(216, 214, 214); width: 80%">Profil</h3>
 

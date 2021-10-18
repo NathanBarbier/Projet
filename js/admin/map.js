@@ -43,6 +43,10 @@ $("#open-right-section").click(function() {
     $(this).removeClass('show');
 });
 
+$("#close-alert").click(function() {
+    $(this).parent().removeClass('show alert-visible');
+});
+
 $("#add-column-form").find('#create-column').click(function() {
     $("#archive-btn").addClass('show');
     $("#add-column-form").removeClass('show');
@@ -62,7 +66,7 @@ $("#add-column-form").find('#create-column').click(function() {
                 url: AJAX_URL+"admin/map.php?action=getLastColumnId",
                 success: function(data) {
                     columnId = data;    
-                    columnId = columnId.replace("\"", ' ').replace("\"", ' ');
+                    columnId = columnId.replace("\"", '').replace("\"", '');
                     
                     columnNameInput.val("");
                     btnColumnForm.addClass('show');
@@ -315,8 +319,8 @@ function initTask()
                     success: function(data) {
                         taskId = data;
                         taskId = taskId.replace("\"", ' ').replace("\"", ' ');
-                        
-                        addTaskBtn.parents(".column-title").next().prepend("<div class='task'><input class='taskId-input' type='hidden' value='"+taskId+"'></input><div class='task-bubble mt-2 pt-3 mb-1 mx-2'><textarea class='task-bubble-input text-center'></textarea></div><a class='ms-2 btn btn-outline-success task-check collapse'>Check</a><a class='ms-2 btn btn-outline-danger task-delete collapse'>Delete</a><a class='ms-1 btn btn-outline-dark arrow-img-btn task-to-left collapse'><img src='"+IMG_URL+"left.png' alt='left arrow' width='30px'></a><a class='ms-1 btn btn-outline-dark arrow-img-btn task-to-right collapse'><img src='"+IMG_URL+"right.png' alt='right arrow' width='30px'></a></div>");
+
+                        addTaskBtn.parents(".column-title").next().prepend("<div class='task'><input class='taskId-input' type='hidden' value='"+taskId+"'><button class='btn btn-outline-danger disabled task-author mt-2 ms-2 px-0 w-50 overflow-x'>"+username+"</button><div class='task-bubble mt-2 pt-3 mb-1 mx-2'><textarea class='task-bubble-input text-center'></textarea></div><a class='ms-2 btn btn-outline-success task-check collapse'>Check</a><a class='ms-2 btn btn-outline-danger task-delete collapse'>Delete</a><a class='ms-1 btn btn-outline-dark arrow-img-btn task-to-left collapse'><img src='"+IMG_URL+"left.png' alt='left arrow' width='30px'></a><a class='ms-1 btn btn-outline-dark arrow-img-btn task-to-right collapse'><img src='"+IMG_URL+"right.png' alt='right arrow' width='30px'></a></div>");
 
                         init();
                     }
@@ -389,7 +393,6 @@ function initCol()
         $("#column-title").val($(this).find(".column-title-text").first().text());
 
         columnId = $(this).parents('.column-title').first().prevAll('.columnId-input').first().val();
-
     });
 
 
@@ -418,7 +421,7 @@ function initCol()
             url: AJAX_URL+"admin/map.php?action=leftColumn&columnId="+columnId+"&teamId="+teamId,
             success: function() {
                 column = $(".columnId-input[value='"+columnId+"']").parents('.project-column').first()
-                column.insertBefore(column.prevAll('.project-column').first());
+                $(column).insertBefore(column.prevAll('.project-column').first());
             }
         })
     });
@@ -447,6 +450,7 @@ function initCol()
 
     $("#column-details-check-btn").off('click').click(function() {
         columnName = $("#column-title").val();
+        console.log(columnId, $(".columnId-input[value='"+columnId+"']").nextAll('.column-title').first().find('.column-title-text').first())
         $.ajax({
             async: true,
             url: AJAX_URL+"admin/map.php?action=updateColumn&columnId="+columnId+"&columnName="+columnName,

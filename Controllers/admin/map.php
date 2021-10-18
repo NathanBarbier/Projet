@@ -20,37 +20,52 @@ if($rights == 'admin')
     $errors = array();
     $success = false;
 
-    if($action == "archive")
+    if($teamId)
     {
-        if($projectId)
+        $Project = new Project();
+        $MapColumns = new MapColumns();
+        $Task = new Task();  
+
+
+        if($action == "archive")
         {
-            $Project = new Project();
-
-            $status = $Project->updateActive(0, $projectId);
-
-            if($status)
-            {
-                $message = "Le projet a bien été archivé.";
-                header("location:".CONTROLLERS_URL."membres/tableauDeBord.php?success=".$message);
-                exit;
+            if($projectId)
+            {    
+                $status = $Project->updateActive(0, $projectId);
+    
+                if(!$status)
+                {
+                    $errors[] = "Une erreur innatendue est survenue.";
+                }
             }
             else
             {
-                $errors[] = "Une erreur innatendue est survenue.";
+                $errors[] = "Aucun projet n'a été sélectionné.";
             }
         }
-        else
+    
+        if($action == "openProject")
         {
-            $errors[] = "Aucun projet n'a été sélectionné.";
+            if($projectId)
+            {
+                $status = $Project->updateActive(true, $projectId);
+    
+                if($status)
+                {
+                    $success = "Le projet à bien été ré-ouvert.";
+                }
+                else
+                {
+                    $errors[] = "Une erreur innatendue est survenue.";
+                }
+            }
+            else
+            {
+                $errors[] = "Aucun projet n'a été sélectionné.";
+            }
         }
 
-    }
-
-    if($teamId)
-    {
         $Organization = new Organization($idOrganization);
-        $MapColumns = new MapColumns();
-        $Task = new Task();  
     
         $username = $Organization->getName();
     
@@ -61,6 +76,7 @@ if($rights == 'admin')
             if($Project->getId() == $projectId)
             {
                 $CurrentProject = $Project;
+                break;
             }
         }
     
@@ -71,6 +87,30 @@ if($rights == 'admin')
             if($team->getid() == $CurrentTeamId)
             {
                 $CurrentTeam = $team;
+                break;
+            }
+        }
+
+        $authors = array();
+        $usernames = array();
+
+        foreach($CurrentTeam->getMembers() as $member)
+        {
+            $usernames[$member->getId()] = $member->getLastname() . ' ' . $member->getFirstname();
+        }
+
+        foreach($CurrentTeam->getMapColumns() as $columnKey => $column)
+        {
+            foreach($column->getTasks() as $taskKey => $task)
+            {
+                if($task->getAdmin() == 1)
+                {
+                    $authors[$columnKey][$taskKey] = $Organization->getName();
+                }
+                else
+                {
+                    $authors[$columnKey][$taskKey] = $usernames[$task->getFk_author()];
+                }
             }
         }
     

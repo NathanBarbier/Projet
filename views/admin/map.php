@@ -3,6 +3,20 @@ require_once "layouts/entete.php";
 ?>
 <div class="row position-relative" style="height: 100%;">
 
+    <?php if ($CurrentProject->getActive() == 0) { ?>
+        <div class="alert alert-info alert-visible mt-3 w-50 text-center position-absolute top-0 start-50 translate-middle-x collapse show">
+            <i class="bi bi-info-circle-fill"></i>    
+            Ce projet est archivé.
+            &nbsp;&nbsp;<a href="<?= CONTROLLERS_URL ?>admin/map.php?action=openProject&projectId=<?= $CurrentProject->getId() ?>&teamId=<?= $CurrentTeamId ?>" class="btn btn-outline-secondary">Ré-ouvrir</a>
+            <button id="close-alert" type="button" class="btn-close position-absolute top-0 end-0 me-4 mt-3" aria-label="Close"></button>
+        </div>
+    <?php } else if ($success) { ?>
+        <div class="alert alert-success mt-3 w-50 text-center position-absolute top-0 start-50 translate-middle-x">
+            <i class="bi bi-check-circle-fill"></i>
+            <?= $success; ?>
+        </div>
+    <?php } ?>
+
     <?php if ($errors) { ?>
         <div class="alert alert-danger w-50 text-center position-absolute top-0 start-50 translate-middle-x">
             <?php foreach($errors as $error) { ?>
@@ -20,7 +34,7 @@ require_once "layouts/entete.php";
 
         <div class="sticker h-auto w-50 mx-auto text-center mt-3 pb-5">
             <p class="mt-5"><b>Êtes-vous sûr de vouloir archiver le projet ? (vous pourrez le ré-ouvrir plus tard)</b></p>
-            <a href="<?= CONTROLLERS_URL ?>admin/map.php?action=archive&projectId=<?= $CurrentProject->getId() ?>" class="btn btn-outline-success w-50 mt-5">Archiver le projet</a>
+            <a href="<?= CONTROLLERS_URL ?>admin/map.php?action=archive&projectId=<?= $CurrentProject->getId() ?>&teamId=<?= $CurrentTeamId ?>" class="btn btn-outline-success w-50 mt-5">Archiver le projet</a>
             <a id="cancel-archive" class="btn btn-outline-danger w-50 mt-3">Annuler</a>
         </div>
     </div>
@@ -28,7 +42,7 @@ require_once "layouts/entete.php";
     <div id="left-section" class="col-10 mt-3 ps-3" style="height: 100%;">
         <div class="collapse show">
             <div id="columns-container" class="ms-3 me-4 overflow-x d-flex" style="height: 88vh;">
-                <?php foreach($CurrentTeam->getMapColumns() as $column) { ?>
+                <?php foreach($CurrentTeam->getMapColumns() as $columnKey => $column) { ?>
                     <div class="project-column">
                         <input class="columnId-input" type="hidden" value="<?= $column->getRowid() ?>">
                         <div class="column-title text-center">
@@ -45,11 +59,12 @@ require_once "layouts/entete.php";
                             </div>
                         </div>
                         <div class="column-content">
-                            <?php foreach($column->getTasks() as $task) { ?>
+                            <?php foreach($column->getTasks() as $taskKey => $task) { ?>
                                 <div class="task">
                                     <input class="taskId-input" type="hidden" value="<?= $task->getRowid() ?>">
-                                    <div class='task-bubble mt-2 pt-3 mb-1 mx-2'>
-                                        <textarea class='task-bubble-input text-center'><?= $task->getName() ?></textarea>
+                                    <button class='btn disabled btn-outline-<?= $task->getAdmin() == 1 ? 'danger' : 'classic' ?> task-author mt-2 ms-2 px-0 w-50 overflow-x'><?= $authors[$columnKey][$taskKey] ?></button>
+                                    <div class='task-bubble pt-2 mb-1 mt-1 mx-2'>
+                                        <textarea class='task-bubble-input text-center pt-1'><?= $task->getName() ?></textarea>
                                     </div>
                                     <a class='ms-2 btn btn-outline-success task-check collapse'>Check</a>
                                     <a class='ms-1 btn btn-outline-danger task-delete collapse'>Delete</a>
@@ -135,8 +150,6 @@ require_once "layouts/entete.php";
             <textarea id="column-title" class="card px-2 pt-3 text-center" cols="25" rows="2"></textarea>
             <button id="column-details-check-btn" class="btn btn-outline-dark w-50 mt-3 collapse">Check</button>
             <div class="mt-5 row justify-content-around">
-                <!-- <button id="left-column-btn" class="btn btn-outline-dark" style="width: 40%;">Left</button>
-                <button id="right-column-btn" class="btn btn-outline-dark" style="width: 40%;">Right</button> -->
                 <div class="col">
                     <i id="left-column-btn" class="w-100 bi bi-arrow-left btn btn-outline-dark"></i>
                 </div>

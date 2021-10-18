@@ -118,9 +118,9 @@ Class Project extends Modele
         $this->deadline = $deadline;
     }
 
-    public function setIdorganization($idorganization)
+    public function setIdOrganization($idOrganization)
     {
-        $this->idorganization = $idorganization;
+        $this->idOrganization = $idOrganization;
     }
 
     public function setActive($active)
@@ -218,19 +218,16 @@ Class Project extends Modele
 
     //! FETCH
 
-    public function fetchAll($idorganization = null)
+    public function fetchAll($idOrganization = null)
     {
-        if($idorganization == null)
-        {
-            $idorganization = $this->idorganization;
-        }
+        $idOrganization = $idOrganization == null ? $this->idOrganization : $idOrganization;
 
-        $sql = "SELECT p.rowid, p.name, p.type, p.open, p.deadline, p.description, p.fk_organization";
+        $sql = "SELECT p.rowid, p.name, p.type, p.open, p.deadline, p.description, p.fk_organization, p.active";
         $sql .= " FROM projects AS p";
         $sql .= " WHERE p.fk_organization = ?";
 
         $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$idorganization]);
+        $requete->execute([$idOrganization]);
 
         $lines = $requete->fetchAll(PDO::FETCH_OBJ);
 

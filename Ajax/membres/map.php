@@ -62,7 +62,7 @@ if($rights == 'user')
             if($columnId && $columnName)
             break;
         case 'addTask':
-            if($columnId) $status = $Task->create($columnId);
+            if($columnId) $status = $Task->create($columnId, $idUser);
             break;
         case 'updateTask':
             $status = $Task->updateName($taskName, $taskId);
@@ -139,7 +139,6 @@ if($rights == 'user')
             if($taskId) 
             {
                 $comments = $TaskComment->fetchAll($taskId);
-
                 $Organization = new Organization();
                 $author = $Organization->fetch($idOrganization)->name;
 

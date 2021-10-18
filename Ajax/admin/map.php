@@ -61,7 +61,7 @@ if($rights == 'admin')
             if($columnId && $columnName)
             break;
         case 'addTask':
-            if($columnId) $status = $Task->create($columnId);
+            if($columnId) $status = $Task->create($columnId, $idOrganization, 1);
             break;
         case 'updateTask':
             $status = $Task->updateName($taskName, $taskId);

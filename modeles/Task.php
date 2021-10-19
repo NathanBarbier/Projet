@@ -8,12 +8,13 @@
     private $options = array();
     private $fk_author;
     private $admin;
+    private $active;
 
     public function __construct($taskId = null)
     {
         if($taskId != null)
         {
-            $sql = "SELECT t.rowid, t.name, t.description, t.fk_column, t.rank, t.fk_author, t.admin";
+            $sql = "SELECT t.rowid, t.name, t.description, t.fk_column, t.rank, t.fk_author, t.admin, t.active";
             $sql .= " FROM tasks AS t";
             $sql .= " WHERE t.rowid = ?";
 
@@ -31,6 +32,7 @@
                 $this->rank = $Task->rank;
                 $this->fk_author = $Task->fk_author;
                 $this->admin = $Task->admin;
+                $this->active = $Task->active;
             }
         }
     }
@@ -56,6 +58,11 @@
     public function setfk_column($fk_column)
     {
         $this->fk_column = $fk_column;
+    }
+
+    public function setActive($active)
+    {
+        $this->active = $active;
     }
 
     
@@ -91,10 +98,15 @@
         return $this->admin;
     }
 
+    public function getActive()
+    {
+        return $this->active;
+    }
+
 
     // CREATE
 
-    public function create($fk_column, $fk_author, $admin = 0, string $name = null,string $description = null)
+    public function create($fk_column, $fk_author, $admin = 0, string $name = null,string $description = null, $active = 1)
     {
         $sql = "SELECT MAX(rank) AS rank";
         $sql .= " FROM tasks";
@@ -105,18 +117,18 @@
         $obj = $requete->fetch(PDO::FETCH_OBJ);
         $rank = $obj->rank + 1;
 
-        $sql = "INSERT INTO tasks (name, description, fk_column, rank, fk_author, admin)";
-        $sql .= " VALUES (?,?,?,?,?,?)";
+        $sql = "INSERT INTO tasks (name, description, fk_column, rank, fk_author, admin, active)";
+        $sql .= " VALUES (?,?,?,?,?,?,?)";
 
         $requete = $this->getBdd()->prepare($sql);
-        return $requete->execute([$name, $description, $fk_column, $rank, $fk_author, $admin]);
+        return $requete->execute([$name, $description, $fk_column, $rank, $fk_author, $admin, $active]);
     }
 
     // FETCH
 
     public function fetch($taskId)
     {
-        $sql = "SELECT t.rowid, t.name, t.description, t.fk_column";
+        $sql = "SELECT t.rowid, t.name, t.description, t.fk_column, t.rank, t.fk_author, t.admin, t.active";
         $sql .= " FROM tasks AS t";
         $sql .= " WHERE rowid = ?";
 
@@ -128,7 +140,7 @@
 
     public function fetchAll($fk_column)
     {
-        $sql = "SELECT t.rowid, t.name, t.description, t.fk_column";
+        $sql = "SELECT t.rowid, t.name, t.description, t.fk_column, t.rank, t.fk_author, t.admin, t.active";
         $sql .= " FROM tasks AS t";
         $sql .= " WHERE fk_column = ?";
         $sql .= " ORDER BY t.rank DESC";
@@ -293,6 +305,18 @@
 
         $requete = $this->getBdd()->prepare($sql);
         return $requete->execute([$rank, $rowid]);
+    }
+
+    public function updateActive($active, $rowid = null)
+    {
+        $rowid = $rowid == null ? $this->rowid : $rowid;
+
+        $sql = "UPDATE tasks";
+        $sql .= " SET active = ?";
+        $sql .= " WHERE rowid = ?";
+
+        $requete = $this->getBdd()->prepare($sql);
+        return $requete->execute([$active, $rowid]);
     }
 
 

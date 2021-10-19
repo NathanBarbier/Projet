@@ -52,6 +52,7 @@ $("#add-column-form").find('#create-column').click(function() {
     columnNameInput = $(this).prev();
     btnColumnForm = $(this);
     
+    $("#loading-modal").modal('show');
     // insert in bdd
     $.ajax({
         async: true,
@@ -67,8 +68,10 @@ $("#add-column-form").find('#create-column').click(function() {
                     columnNameInput.val("");
                     btnColumnForm.addClass('show');
                 
-                    $("#columns-container").append("<div class='project-column'><input class='columnId-input' type='hidden' value='"+columnId+"'><div class='column-title text-center pt-2'><div class='row'><div class='col-8 mt-3 ps-5 column-title-name'><b class='column-title-text'>"+columnName+"</b></div><ul class='col-4'><li class='me-2'><button class='btn btn-outline-dark add-task-btn'>New</button></li><li class='mt-2 me-2'><button class='btn btn-outline-danger delete-col-btn'>Delete</button></li></ul></div></div><div class='column-content'></div></div>");
+                    $("#columns-container").append("<div class='project-column'><input class='columnId-input' type='hidden' value='"+columnId+"'><div class='column-title text-center'><div class='row'><div class='col-7 pt-3 ps-2 ms-3 pe-0 column-title-name'><div class='overflow-x'><b class='column-title-text'>"+columnName+"</b></div></div><ul class='offset-1 col-3 pt-2 ps-0'><li class='me-2'><button class='btn btn-outline-dark add-task-btn'>New</button></li><li class='mt-2 me-2'><button class='btn btn-outline-danger delete-col-btn'>Delete</button></li></ul></div></div><div class='column-content'></div></div>");
                     $("#add-column-btn").toggleClass('show');
+            
+                    $("#loading-modal").modal('hide');
             
                     initTask();
                     initCol();
@@ -97,9 +100,10 @@ function init()
     $(".task-bubble-input").off('focus').focus(function() {
         $("#column-details").removeClass('show');
 
-        $(".task-check").removeClass('show');
-        $(".task-delete").removeClass('show');
-        $(".arrow-img-btn").removeClass('show');
+        $("#add-column-btn").addClass('show');
+        $("#archive-btn").addClass('show');
+
+        $(".task-buttons-container").removeClass('show');
 
         $("#check-comment-btn").removeClass('show');
         $("#delete-comment-btn").removeClass('show');
@@ -107,12 +111,15 @@ function init()
         $("#task-comment-container").children().remove();
         $("#task-members-container").children().remove();
 
+        // members buttons
+        $("#attributed-member-button").removeClass('show');
+        $("#attribute-member-button").removeClass('show');
+        $("#desattribute-member-button").removeClass('show');
+
         var title = $(this).val();
         $("#task-title").val(title);
 
-        $(this).parent().nextAll(".task-check").first().addClass('show');
-        $(this).parent().nextAll(".task-delete").first().addClass('show');
-        $(this).parent().nextAll(".arrow-img-btn").first().addClass('show').next().addClass('show');
+        $(this).parent().next().find(".task-buttons-container").first().addClass('show');
 
         columnId = $(this).parents('.project-column').first().find('.columnId-input').val();
         task = $(this).parents('.task').first();
@@ -120,24 +127,28 @@ function init()
         
         //up task
         $("#up-task-btn").off('click').click(function() {
+            $("#loading-modal").modal('show');
             $.ajax({
                 async: true,
                 url: AJAX_URL+"membres/map.php?action=upTask&taskId="+taskId+"&columnId="+columnId,
                 success: function (data) {
                     prevTask = task.prevAll('.task').first();
                     task.insertBefore(prevTask);
+                    $("#loading-modal").modal('hide');
                 }
             });
         });
         
         // down task
         $("#down-task-btn").off('click').click(function() {
+            $("#loading-modal").modal('show');
             $.ajax({
                 async: true,
                 url: AJAX_URL+"membres/map.php?action=downTask&taskId="+taskId+"&columnId="+columnId,
                 success: function (data) {
                     nextTask = task.nextAll('.task').first(); 
                     task.insertAfter(nextTask);
+                    $("#loading-modal").modal('hide');
                 }
             });
         });
@@ -157,7 +168,6 @@ function init()
                         note = note == null ? '' : note;
                         admin = comments[i].admin;
                         author = comments[i].author;
-                        admin = comments[i].admin;
                         authorId = comments[i].fk_user;
 
                             prepend = "<div class='task-comment-div'><input type='hidden' class='comment-task-id' value='"+comments[i].rowid+"'><input type='hidden' class='comment-author-id' value='"+authorId+"'><textarea ";
@@ -197,7 +207,7 @@ function init()
 
                         for(i = 0; i < l; i++)
                         {
-                            $("#task-members-container").prepend("<div class='task-member'><input type='hidden' class='task-member-id' value='"+members[i].rowid+"'><div class='w-90 sticker mx-auto mt-2 hover text-center pt-3'>"+members[i].lastname+" "+members[i].firstname+"</div></div>");
+                            $("#task-members-container").prepend("<div class='task-member'><input type='hidden' class='task-member-id' value='"+members[i].rowid+"'><input class='w-90 sticker mx-auto mt-2 hover text-center form-control' readonly value='"+members[i].lastname+" "+members[i].firstname+"'></div>");
                         }
 
 
@@ -282,6 +292,7 @@ function init()
     initTask();
 
     $("#add-comment-btn").off('click').click(function() {
+        $("#loading-modal").modal('show');
         // INSERT INTO tasks_comments with empty note
         $.ajax({
             async: true,
@@ -290,6 +301,7 @@ function init()
                 commentId = data;
                 commentId = commentId.replace("\"", ' ').replace("\"", ' ');
                 $("#task-comment-container").prepend("<div class='task-comment-div'><input type='hidden' class='comment-task-id' value='"+commentId+"'><input type='hidden' class='comment-author-id' value='"+idUser+"'><textarea class='mt-3 card task-comment px-2 pt-3 text-center' name='' cols='30' rows='3'></textarea><div class='d-flex justify-content-start mt-1'><button class='btn btn-outline-classic comment-author'>"+username+"</button></div></div>")
+                $("#loading-modal").modal('hide');
 
                 initComment();
             }
@@ -302,10 +314,13 @@ function init()
 function initTask()
 {
     $(".add-task-btn").off('click').click(function() {
+        $("#add-column-btn").addClass('show');
+        $("#archive-btn").addClass('show');
         // HTML CREATE NEW TASK
         addTaskBtn = $(this);
         columnId = addTaskBtn.parents(".column-title").prev().val();
-        // INSERT NEW TASK IN BDD    
+        // INSERT NEW TASK IN BDD
+        $("#loading-modal").modal('show');
         $.ajax({
             async: true,
             url: AJAX_URL+"membres/map.php?action=addTask&columnId="+columnId,
@@ -317,7 +332,9 @@ function initTask()
                         taskId = data;
                         taskId = taskId.replace("\"", ' ').replace("\"", ' ');
 
-                        addTaskBtn.parents(".column-title").next().prepend("<div class='task'><input class='taskId-input' type='hidden' value='"+taskId+"'><button class='btn btn-outline-classic disabled task-author mt-2 ms-2 px-0 w-50 overflow-x'>"+username+"</button><div class='task-bubble mt-2 pt-3 mb-1 mx-2'><textarea class='task-bubble-input text-center'></textarea></div><a class='ms-2 btn btn-outline-success task-check collapse'>Check</a><a class='ms-2 btn btn-outline-danger task-delete collapse'>Delete</a><a class='ms-1 btn btn-outline-dark arrow-img-btn task-to-left collapse'><img src='"+IMG_URL+"left.png' alt='left arrow' width='30px'></a><a class='ms-1 btn btn-outline-dark arrow-img-btn task-to-right collapse'><img src='"+IMG_URL+"right.png' alt='right arrow' width='30px'></a></div>");
+                        addTaskBtn.parents(".column-title").next().prepend("<div class='task'><input class='taskId-input' type='hidden' value='"+taskId+"'><button class='btn btn-outline-classic disabled task-author mt-2 ms-2 px-0 w-50 overflow-x'>"+username+"</button><div class='task-bubble pt-2 mb-1 mt-1 mx-2'><textarea class='task-bubble-input text-center'></textarea></div><div class='d-flex justify-content-between pe-2 ps-2'><div class='collapse mx-auto task-buttons-container'><i class='bi bi-check-lg btn btn-outline-success task-check'></i><i class='bi bi-trash ms-1 btn btn-outline-danger task-delete'></i><i class='bi bi-caret-left-fill ms-1 btn btn-outline-dark arrow-img-btn task-to-left'></i><i class='bi bi-caret-right-fill ms-1 btn btn-outline-dark arrow-img-btn task-to-right'></i><i class='bi bi-archive-fill task-archive ms-1 me-1 btn btn-outline-danger'></i></div></div>");
+
+                        $("#loading-modal").modal('hide');
 
                         init();
                     }
@@ -327,28 +344,38 @@ function initTask()
     });
 
     $(".task-check").off('click').click(function() {
-        $(this).removeClass("show");
-        $(this).nextAll(".task-delete").first().removeClass("show");
-        $(this).nextAll(".arrow-img-btn").first().removeClass("show").next().removeClass("show");
 
-        taskName = $(this).prevAll(".task-bubble").first().find(".task-bubble-input").val();
+        $(this).parent().removeClass('show');
 
-        taskId = $(this).prevAll(".taskId-input").first().val();
+        taskName = $(this).parents('.task').find('.task-bubble').first().find(".task-bubble-input").val();
 
+        // taskId = $(this).prevAll(".taskId-input").first().val();
+        taskId = $(this).parents(".task").find(".taskId-input").first().val();
+
+        $("#loading-modal").modal('show');
         // INSERT INTO BDD
         $.ajax({
             async: true,
             url: AJAX_URL+"membres/map.php?action=updateTask&taskId="+taskId+"&taskName="+taskName,
+            success: function() {
+                $("#loading-modal").modal('hide');
+            }
         });
     });
 
     $(".task-delete").off('click').click(function() {
+        $("#add-column-btn").addClass('show');
+        $("#archive-btn").addClass('show');
 
-        taskId = $(this).prevAll(".taskId-input").first().val();
+        taskId = $(this).parents(".task").first().find(".taskId-input").val();
+        $("#loading-modal").modal('show');
         // DELETE FROM BDD
         $.ajax({
             async: true,
             url: AJAX_URL+"membres/map.php?action=deleteTask&taskId="+taskId,
+            success: function() {
+                $("#loading-modal").modal('hide');
+            }
         });
 
         task = $(this).parents(".task").first();
@@ -361,8 +388,8 @@ function initTask()
     $(".task-to-left").click(function() {
         // update fk_column in bdd
         task = $(this).parents(".task");
-        taskId = $(this).prevAll(".taskId-input").first().val();
-        newColumn = $(this).parents(".project-column").prevAll(".project-column").first();
+        taskId = task.find(".taskId-input").first().val();
+        newColumn = task.parents(".project-column").prevAll(".project-column").first();
 
         updateTaskColumn(task, taskId, newColumn);
     });
@@ -370,11 +397,31 @@ function initTask()
     $(".task-to-right").click(function() {
         // update fk_column in bdd
         task = $(this).parents(".task");
-        taskId = $(this).prevAll(".taskId-input").first().val();
-        newColumn = $(this).parents(".project-column").nextAll(".project-column").first();
+        taskId = task.find(".taskId-input").first().val();
+        newColumn = task.parents(".project-column").nextAll(".project-column").first();
 
         updateTaskColumn(task, taskId, newColumn);
     });
+
+    $(".task-archive").click(function() {
+        // update task active
+        task = $(this).parents(".task");
+        taskId = task.find(".taskId-input").first().val();
+
+        console.log(taskId);
+
+        $("#loading-modal").modal('show');
+
+        $.ajax({
+            async: true,
+            url: AJAX_URL+"membres/map.php?action=archiveTask&taskId="+taskId,
+            success: function(data) {
+                // remove task html
+                task.remove();
+                $("#loading-modal").modal('hide');
+            }
+        });
+    })
 }
 
 function initCol()
@@ -384,8 +431,10 @@ function initCol()
     $(".column-title-name").off('click').click(function() {
         $("#task-details").removeClass('show');
         $("#add-column-form").removeClass('show');
-        $("#column-details-check-btn").removeClass('show');
-
+        $("#column-details-check-btn").removeClass('visible').addClass('invisible');
+        
+        $("#add-column-btn").addClass('show');
+        $("#archive-btn").addClass('show');
         $("#column-details").addClass('show');
         $("#column-title").val($(this).find(".column-title-text").first().text());
 
@@ -399,67 +448,76 @@ function initCol()
         columnId = $(this).parents(".column-title").prev().val();
         // DELETE HTML COLUMN
         $(this).parents(".project-column").remove();
-        // $("#column-details").removeClass('show');
-
         
+        $("#loading-modal").modal('show');
+
         // DELETE COLUMN IN BDD
         $.ajax({
             async: true,
             url: AJAX_URL+"membres/map.php?action=deleteColumn&columnId="+columnId,
             success: function() {
                 $("#column-details").removeClass('show');
+                $("#loading-modal").modal('hide');
             }
         });
 
     });
 
     $("#left-column-btn").off('click').click(function() {
+        $("#loading-modal").modal('show');
         $.ajax({
             async: true,
             url: AJAX_URL+"membres/map.php?action=leftColumn&columnId="+columnId+"&teamId="+teamId,
             success: function() {
                 column = $(".columnId-input[value='"+columnId+"']").parents('.project-column').first()
                 column.insertBefore(column.prevAll('.project-column').first());
+                $("#loading-modal").modal('hide');
             }
         })
     });
 
     $("#right-column-btn").off('click').click(function() {
+        $("#loading-modal").modal('show');
         $.ajax({
             async: true,
             url: AJAX_URL+"membres/map.php?action=rightColumn&columnId="+columnId+"&teamId="+teamId,
             success: function(data) {
                 column = $(".columnId-input[value='"+columnId+"']").parents('.project-column').first();
                 column.insertAfter(column.nextAll(".project-column").first());
+                $("#loading-modal").modal('hide');
             }
         })
     });
 
     $("#column-details-delete-btn").off('click').click(function() {
+        $("#loading-modal").modal('show');
         $.ajax({
             async: true,
             url: AJAX_URL+"membres/map.php?action=deleteColumn&columnId="+columnId,
             success: function() {
                 $(".columnId-input[value='"+columnId+"']").parents('.project-column').first().remove();
                 $("#column-details").removeClass('show');
+                $("#loading-modal").modal('hide');
             }
         });
     });
 
     $("#column-details-check-btn").off('click').click(function() {
+        $("#loading-modal").modal('show');
+        $("#column-details-check-btn").removeClass('visible').addClass('invisible');
         columnName = $("#column-title").val();
         $.ajax({
             async: true,
             url: AJAX_URL+"membres/map.php?action=updateColumn&columnId="+columnId+"&columnName="+columnName,
             success: function(data) {
-                $("#column-details-check-btn").removeClass('show');
                 $(".columnId-input[value='"+columnId+"']").nextAll('.column-title').first().find('.column-title-text').first().text(columnName);
+                $("#loading-modal").modal('hide');
             }
         });
     });
 
     $("#column-title").off('focus').focus(function() {
-        $("#column-details-check-btn").addClass('show');
+        $("#column-details-check-btn").addClass('visible').removeClass('invisible');
     });
 }
 
@@ -495,6 +553,7 @@ function initComment()
     });
 
     $("#check-comment-btn").off('click').click(function() {
+        $("#loading-modal").modal('show');
         $.ajax({
             async: true,
             url: AJAX_URL+"membres/map.php?action=updateTaskNote&commentId="+commentId+"&taskNote="+taskNote,
@@ -502,11 +561,13 @@ function initComment()
                 $("#check-comment-btn").removeClass('show');
                 $("#delete-comment-btn").removeClass('show');
                 $("#add-comment-btn").addClass('show');
+                $("#loading-modal").modal('hide');
             }
         });
     });
 
     $("#delete-comment-btn").off('click').click(function() {
+        $("#loading-modal").modal('show');
         $.ajax({
             async: true,
             url: AJAX_URL+"membres/map.php?action=deleteTaskNote&commentId="+commentId,
@@ -516,6 +577,7 @@ function initComment()
                 $("#add-comment-btn").addClass('show');
 
                 $(".comment-task-id[value='"+commentId+"']").parents('.task-comment-div').first().remove();
+                $("#loading-modal").modal('hide');
             }
         });
     });
@@ -528,13 +590,14 @@ function updateTaskColumn(task, taskId, newColumn)
 
     if(newColumnId)
     {
+        $("#loading-modal").modal('show');
         $.ajax({
             async: true,
             url: AJAX_URL+"membres/map.php?action=taskColumnUpdate&taskId="+taskId+"&columnId="+newColumnId,
-            success: function(data)
-            {
+            success: function(data) {
                 // prepend html from column a to column b
                 task.prependTo(newColumn.find(".column-content").first());
+                $("#loading-modal").modal('hide');
             }
         });
     }

@@ -26,12 +26,20 @@ textarea {
     resize: none;
 }
 
-li::marker{
+li::marker {
     content: '';
 }
 
 a {
     text-decoration: none !important;
+}
+
+input:read-only {
+    background-color: #f8f9fa !important;
+}
+
+input:read-only:hover {
+    background-color: #eeeff0 !important;
 }
 
 .overflow-x {
@@ -294,16 +302,6 @@ a {
     line-height: 40%;
 }
 
-.arrow-img-btn {
-    display: inline-block;
-    padding: 0;
-    margin: 0;
-    vertical-align: top;
-    width: 47px;
-    height: 38px;
-    padding-top:4px;
-}
-
 .task-comment:focus {
     -webkit-appearance: none;
     outline: none;
@@ -347,6 +345,10 @@ a {
 
 .column-title-name:hover {
     cursor: pointer;
+}
+
+.modal-backdrop {
+    opacity: 0 !important;
 }
 
 

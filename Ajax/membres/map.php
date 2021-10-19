@@ -62,7 +62,7 @@ if($rights == 'user')
             if($columnId && $columnName)
             break;
         case 'addTask':
-            if($columnId) $status = $Task->create($columnId, $idUser);
+            if($columnId) $status = $Task->create($columnId, $idUser, 0);
             break;
         case 'updateTask':
             $status = $Task->updateName($taskName, $taskId);
@@ -125,6 +125,12 @@ if($rights == 'user')
             {
                 $TaskComment->deleteByTaskId($taskId);
                 $Task->delete($taskId);
+            }
+            break;
+        case 'archiveTask':
+            if($taskId)
+            {
+                $Task->updateActive(0, $taskId);
             }
             break;
         case 'getLastColumnId':

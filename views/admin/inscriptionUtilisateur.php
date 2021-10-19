@@ -56,7 +56,7 @@ require_once "layouts/entete.php";
             
             
             </div>
-            <div class="text-center mt-5">
+            <div class="text-center mt-5 w-50">
                 <button style="min-width: 15%" type="submit" class="btn btn-primary" name="envoi" value="1">Inscrire</button>
             </div>
 

@@ -98,7 +98,7 @@ if($rights == 'user')
 
     foreach($CurrentTeam->getMapColumns() as $columnKey => $column)
     {
-        foreach($column->getTasks() as $taskKey => $task)
+        foreach($column->getActiveTasks() as $taskKey => $task)
         {
             if($task->getAdmin() == 1)
             {

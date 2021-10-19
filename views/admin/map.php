@@ -59,21 +59,22 @@ require_once "layouts/entete.php";
                             </div>
                         </div>
                         <div class="column-content">
-                            <?php foreach($column->getTasks() as $taskKey => $task) { ?>
+                            <?php foreach($column->getActiveTasks() as $taskKey => $task) { ?>
                                 <div class="task">
                                     <input class="taskId-input" type="hidden" value="<?= $task->getRowid() ?>">
                                     <button class='btn disabled btn-outline-<?= $task->getAdmin() == 1 ? 'danger' : 'classic' ?> task-author mt-2 ms-2 px-0 w-50 overflow-x'><?= $authors[$columnKey][$taskKey] ?></button>
                                     <div class='task-bubble pt-2 mb-1 mt-1 mx-2'>
                                         <textarea class='task-bubble-input text-center pt-1'><?= $task->getName() ?></textarea>
                                     </div>
-                                    <a class='ms-2 btn btn-outline-success task-check collapse'>Check</a>
-                                    <a class='ms-1 btn btn-outline-danger task-delete collapse'>Delete</a>
-                                    <a class="ms-1 btn btn-outline-dark arrow-img-btn task-to-left collapse">
-                                        <img src="<?= IMG_URL ?>left.png" alt="" width="30px">
-                                    </a>
-                                    <a class="ms-1 btn btn-outline-dark arrow-img-btn task-to-right collapse">
-                                        <img src="<?= IMG_URL ?>right.png" alt="" width="30px">
-                                    </a>
+                                    <div class="d-flex justify-content-between pe-2 ps-2">
+                                        <div class="collapse mx-auto task-buttons-container">
+                                            <i class="bi bi-check-lg btn btn-outline-success task-check"></i>
+                                            <i class="bi bi-trash ms-1 btn btn-outline-danger task-delete"></i>
+                                            <i class="bi bi-caret-left-fill ms-1 btn btn-outline-dark arrow-img-btn task-to-left"></i>
+                                            <i class="bi bi-caret-right-fill ms-1 btn btn-outline-dark arrow-img-btn task-to-right"></i>
+                                            <i class="bi bi-archive-fill task-archive ms-1 me-1 btn btn-outline-danger"></i>
+                                        </div>
+                                    </div>
                                 </div>
                             <?php } ?>
                         </div>
@@ -83,8 +84,7 @@ require_once "layouts/entete.php";
         </div>
     </div>
 
-    <div id="details-section" class="col-2 pt-1 pe-4 text-center border position-relative collapse show" style="height: 100vh"> 
-        <!-- <button id="archive-btn" class="btn btn-danger w-75 mb-2" style="line-height: 80%;">Archiver le Projet</button> -->
+    <div id="details-section" class="col-2 pt-1 pe-4 text-center border position-relative collapse show" style="height: 100vh">
         <div class="row">
             <div class="col">
                 <i id="archive-btn" class="bi bi-archive-fill btn btn-outline-danger w-75 mb-2 collapse show"></i>

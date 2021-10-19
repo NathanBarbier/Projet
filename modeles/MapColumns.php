@@ -81,6 +81,20 @@ Class MapColumns extends Modele
         return $this->tasks;
     }
 
+    public function getActiveTasks()
+    {
+        $activeTasks = array();
+        foreach($this->tasks as $task)
+        {
+            if($task->getActive() == 1)
+            {
+                $activeTasks[] = $task;
+            }
+        }
+
+        return $activeTasks;
+    }
+
     public function getRank()
     {
         return $this->rank;

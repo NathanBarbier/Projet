@@ -23,6 +23,8 @@ if($rights === 'needConsent')
     {
         // DELETE ACCOUNT
         $status = $User->delete($idUser);
+        header('location:'.CONTROLLERS_URL.'general/deconnexion.php');
+        exit;
     }
 
     if($action == "giveConsent")

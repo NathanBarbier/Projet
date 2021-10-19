@@ -1,4 +1,5 @@
-<?php
+<?php require_once '../../traitements/header.php';
+$rights = $_SESSION["rights"] ?? false;
 if($rights == "admin" OR $rights == "user")
 {
     header("location:".ROOT_URL."index.php");

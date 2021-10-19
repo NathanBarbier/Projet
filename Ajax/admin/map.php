@@ -126,6 +126,12 @@ if($rights == 'admin')
                 $Task->delete($taskId);
             }
             break;
+        case 'archiveTask':
+            if($taskId)
+            {
+                $Task->updateActive(0, $taskId);
+            }
+            break;
         case 'getLastColumnId':
             $columnId = $MapColumns->fetch_last_insert_id()->rowid;
             echo json_encode($columnId);

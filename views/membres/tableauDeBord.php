@@ -20,7 +20,7 @@ require_once "layouts/entete.php";
             <?php } ?>
             
             <div id="current-projects-col" class="row mx-3 collapse show" style="height: 100%;">
-                <h3 class="mx-auto text-center border-bottom w-50">Projets Actuels</h3>
+                <h3 class="mx-auto text-center border-bottom w-50">Tableaux Actifs</h3>
                 <div style="height: 90%; overflow: auto">
                     <?php 
                     if($userProjects)
@@ -62,7 +62,7 @@ require_once "layouts/entete.php";
                     else
                     { ?>
                         <div class="sticker-deep mx-auto mt-5 pt-3 text-center" style="width: 70%; height: 30%">
-                            <h3>Vous n'avez encore aucun projet en cours.</h3>
+                            <h3>Vous n'avez encore aucun tableau en cours.</h3>
                         </div>
                     <?php
                     } ?>

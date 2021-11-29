@@ -1,6 +1,6 @@
 <?php
 //import all models
-require_once "../../traitements/header.php";
+require_once "../../services/header.php";
 
 $action = GETPOST('action');
 
@@ -13,7 +13,6 @@ $success = false;
 $errors = array();
 
 $tpl = "listeProjets.php";
-// $data = new stdClass;
 
 if($rights === "admin")
 {
@@ -22,7 +21,6 @@ if($rights === "admin")
     $Project->setidOrganization($idOrganization);
 
     $currentProjects = $Project->fetchAll();
-    // var_dump($currentProjects);
 
     require_once VIEWS_PATH."admin/".$tpl;
 }

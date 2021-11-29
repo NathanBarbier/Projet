@@ -1,5 +1,5 @@
 <?php
-require_once "../../traitements/header.php";
+require_once "../../services/header.php";
 
 $idOrganization = $_SESSION["idOrganization"] ?? false;
 $rights = $_SESSION["rights"] ?? false;

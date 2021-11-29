@@ -1,5 +1,7 @@
 $("#create-switch-button").click(function() {
     switchTeamApp();
+    $("#archive-team-button").removeClass("show");
+    $("#open-team-button").removeClass("show");
 });
 $("#update-switch-button").click(function() {
     switchTeamApp();
@@ -68,7 +70,6 @@ function switchTeamApp()
     // display switching button
     $("#create-switch-button").toggleClass("show");
     $("#update-switch-button").toggleClass("show");
-    $("#archive-btn").toggleClass("show");
 
     // display team title
     title = $("#team-title").text();
@@ -137,30 +138,32 @@ function toggleUserToExistingTeam(userRowid)
 
 function showTeamMembers(teamRowid, teamName)
 {
-    $("[id^=freeing-user-]").removeClass("show");
-    $("[id^=adding-again-user-]").removeClass("show");
+    // check if team is active
+    $.ajax({
+        async: true,
+        url: AJAX_URL+"admin/detailsProjet.php?action=getTeamActive&teamId="+teamRowid,
+        success: function(data) {
+            teamActive = data;
+            teamActive = teamActive.replace("\"", '').replace("\"", '');
+            teamActive = parseInt(teamActive)
+            console.log(teamActive);
 
-    teamIds = [];
-    // add onclick showTeamMembers()
-    $("[id^=team-sticker-]").each(function(index, element) {
-        elementTeamRowid = $(element).attr('id');
-        elementTeamRowid = elementTeamRowid.split("-");
-        elementTeamRowid = elementTeamRowid.pop();
-
-        $(element).removeAttr("onclick");
-        if(elementTeamRowid != teamRowid)
-        {
-            teamIds.push(elementTeamRowid);
+            if(teamActive == 0)
+            {
+                $("#archive-team-button").removeClass("show");
+                $("#open-team-button").addClass("show").attr('href', CONTROLLERS_URL+"admin/detailsProjet.php?action=openTeam&teamId="+teamRowid+"&idProject="+projectId);
+            }
+            else
+            {
+                $("#archive-team-button").addClass("show").attr('href', CONTROLLERS_URL+"admin/detailsProjet.php?action=archiveTeam&teamId="+teamRowid+"&idProject="+projectId);
+                $("#open-team-button").removeClass("show");
+            }
         }
     });
 
-    $(teamIds).each(function(index, element) {
-        elementTeamName = $("#team-sticker-"+element).children().first().html();
-        // $("#team-sticker-"+element).attr('onclick', "showTeamMembers("+element+",'"+elementTeamName+"')");
-        $("#team-sticker-"+element).off('click').click(function() {
-            showTeamMembers(element, elementTeamName);
-        })
-    })
+
+    $("[id^=freeing-user-]").removeClass("show");
+    $("[id^=adding-again-user-]").removeClass("show");
 
     $(".team-members-"+teamRowid).addClass("show");
 
@@ -169,5 +172,13 @@ function showTeamMembers(teamRowid, teamName)
     $("#delete-team-button").addClass('show');
     $("#delete-team-button").attr('href', CONTROLLERS_URL+'admin/detailsProjet.php?action=deleteTeam&teamId='+teamRowid+'&idProject='+projectId);
     $("#map-btn").attr('href', CONTROLLERS_URL+'admin/map.php?projectId='+projectId+'&teamId='+teamRowid);
+    // console.log(teamName);
     $("#teamName").val(teamName);
+
+    teamIds.forEach(element => {
+        elementTeamName = $("#team-sticker-"+element).children().first().text();
+        $("#team-sticker-"+element).off('click').click(function() {
+            showTeamMembers(element, elementTeamName);
+        })
+    });
 }

@@ -1,6 +1,6 @@
 <?php 
 // import all models
-require_once "../../traitements/header.php";
+require_once "../../services/header.php";
 
 $rights = $_SESSION["rights"] ?? false;
 $idOrganization = $_SESSION["idOrganization"] ?? null;
@@ -27,13 +27,40 @@ if($rights == 'admin')
         $Task = new Task();  
 
 
-        if($action == "archive")
+        if($action == "archiveTeam")
         {
             if($projectId)
-            {    
-                $status = $Project->updateActive(0, $projectId);
+            {   
+                $Team = new Team();
+                $status = $Team->updateActive(0, $teamId);
     
-                if(!$status)
+                if($status)
+                {
+                    $success = "Le tableau a bien été archivé.";
+                }
+                else
+                {
+                    $errors[] = "Une erreur innatendue est survenue.";
+                }
+            }
+            else
+            {
+                $errors[] = "Aucun projet n'a été sélectionné.";
+            }
+        }
+
+        if($action == "openTeam")
+        {
+            if($projectId)
+            {   
+                $Team = new Team();
+                $status = $Team->updateActive(1, $teamId);
+    
+                if($status)
+                {
+                    $success = "Le tableau a bien été ré-ouvert.";
+                }
+                else
                 {
                     $errors[] = "Une erreur innatendue est survenue.";
                 }
@@ -113,18 +140,28 @@ if($rights == 'admin')
                 }
             }
         }
-    
+
+        // notification count
+        $notificationCount = 0;
+        if($CurrentTeam->getActive() == 0) {
+            $notificationCount++;
+        }
+        if($CurrentProject->getActive() == 0) {
+            $notificationCount++;
+        }
+
         ?><script>
         const ROOT_URL = <?php echo json_encode(ROOT_URL); ?>;
         const MODELS_URL = <?php echo json_encode(MODELS_URL); ?>;
         const IMG_URL = <?php echo json_encode(IMG_URL); ?>;
         const CONTROLLERS_URL = <?php echo json_encode(CONTROLLERS_URL); ?>;
         const VIEWS_URL = <?php echo json_encode(VIEWS_URL); ?>;
-        const PROCESS_URL = <?php echo json_encode(PROCESS_URL); ?>;
+        const SERVICES_URL = <?php echo json_encode(SERVICES_URL); ?>;
         const JS_URL = <?php echo json_encode(JS_URL); ?>;
         const AJAX_URL = <?php echo json_encode(AJAX_URL); ?>;
         var projectId = <?php echo json_encode($CurrentProject->getId()); ?>;
         var teamId = <?php echo json_encode($CurrentTeam->getId()); ?>;
+        var notificationCount = <?php echo json_encode($notificationCount); ?>;
         const username = <?php echo json_encode($username); ?>;
         const idOrganization = <?php echo json_encode($idOrganization); ?>;
         </script><?php

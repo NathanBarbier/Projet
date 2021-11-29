@@ -1,6 +1,6 @@
 <?php 
 // import all models
-require_once "../../traitements/header.php";
+require_once "../../services/header.php";
 
 $idUser = $_SESSION["idUser"] ?? false;
 $rights = $_SESSION["rights"] ?? false;
@@ -15,22 +15,23 @@ if($rights == 'user')
     $taskId = GETPOST('taskId');
     $taskName = GETPOST('taskName');
     $taskDescription = GETPOST('taskDescription');
+    $teamId = GETPOST('teamId');
 
     $tpl = "map.php";
     $errors = array();
     $success = false;
 
-    if($action == "archive")
+    if($action == "archiveTeam")
     {
         if($projectId)
         {
-            $Project = new Project();
+            $Team = new Team();
 
-            $status = $Project->updateActive(0, $projectId);
+            $status = $Team->updateActive(0, $teamId);
 
             if($status)
             {
-                $message = "Le projet a bien été archivé.";
+                $message = "Le tableau a bien été archivé.";
                 header("location:".CONTROLLERS_URL."membres/tableauDeBord.php?success=".$message);
                 exit;
             }
@@ -54,7 +55,7 @@ if($rights == 'user')
     $username = $User->getLastname() . " " . $User->getFirstname();
 
     $Projects = $Organization->getProjects();
-
+    
     foreach($Projects as $Project)
     {
         if($Project->getId() == $projectId)
@@ -117,7 +118,7 @@ if($rights == 'user')
     const IMG_URL = <?php echo json_encode(IMG_URL); ?>;
     const CONTROLLERS_URL = <?php echo json_encode(CONTROLLERS_URL); ?>;
     const VIEWS_URL = <?php echo json_encode(VIEWS_URL); ?>;
-    const PROCESS_URL = <?php echo json_encode(PROCESS_URL); ?>;
+    const SERVICES_URL = <?php echo json_encode(SERVICES_URL); ?>;
     const JS_URL = <?php echo json_encode(JS_URL); ?>;
     const AJAX_URL = <?php echo json_encode(AJAX_URL); ?>;
     var projectId = <?php echo json_encode($CurrentProject->getId()); ?>;

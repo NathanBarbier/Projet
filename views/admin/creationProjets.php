@@ -30,11 +30,6 @@ require_once "layouts/entete.php";
                 </div>
 
                 <div class="form-floating mb-3 w-50 mx-auto">
-                    <input class="form-control" type="date" name="deadline" id="deadline-id" placeholder="Deadline du projet" value="<?= $deadline ?? '' ?>">
-                    <label for="deadline">DeadLine</label>
-                </div>
-
-                <div class="form-floating mb-3 w-50 mx-auto">
                     <textarea required class="form-control" name="description" id="description-id" placeholder="Description" maxlength="255"><?= $description ?? '' ?></textarea>
                     <label for="description">Description</label>
                 </div>

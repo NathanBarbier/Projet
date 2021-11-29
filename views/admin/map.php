@@ -4,21 +4,36 @@ require_once "layouts/entete.php";
 <div class="row position-relative" style="height: 100%;">
 
     <?php if ($CurrentProject->getActive() == 0) { ?>
-        <div class="alert alert-info alert-visible mt-3 w-50 text-center position-absolute top-0 start-50 translate-middle-x collapse show">
+        <div class="alert alert-info alert-visible mt-3 w-50 text-center position-absolute top-0 start-50 translate-middle-x collapse show" style="z-index: 1;">
             <i class="bi bi-info-circle-fill"></i>    
             Ce projet est archivé.
             &nbsp;&nbsp;<a href="<?= CONTROLLERS_URL ?>admin/map.php?action=openProject&projectId=<?= $CurrentProject->getId() ?>&teamId=<?= $CurrentTeamId ?>" class="btn btn-outline-secondary">Ré-ouvrir</a>
-            <button id="close-alert" type="button" class="btn-close position-absolute top-0 end-0 me-4 mt-3" aria-label="Close"></button>
+            <button type="button" class="close-alert btn-close position-absolute top-0 end-0 me-4 mt-3" aria-label="Close"></button>
+            <span class="notificationCount position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark">
+                <?= $notificationCount . "+" ?>
+            </span>
         </div>
-    <?php } else if ($success) { ?>
-        <div class="alert alert-success mt-3 w-50 text-center position-absolute top-0 start-50 translate-middle-x">
+    <?php } ?>
+    <?php if ($CurrentTeam->getActive() == 0) { ?>
+        <div class="alert alert-info alert-visible mt-3 w-50 text-center position-absolute top-0 start-50 translate-middle-x collapse show" style="z-index: 1;">
+            <i class="bi bi-info-circle-fill"></i>    
+            Ce tableau est archivé.
+            &nbsp;&nbsp;<a href="<?= CONTROLLERS_URL ?>admin/map.php?action=openTeam&projectId=<?= $CurrentProject->getId() ?>&teamId=<?= $CurrentTeamId ?>" class="btn btn-outline-secondary">Ré-ouvrir</a>
+            <button type="button" class="close-alert btn-close position-absolute top-0 end-0 me-4 mt-3" aria-label="Close"></button>
+            <span class="notificationCount position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark">
+                <?= $notificationCount . "+" ?>
+            </span>
+        </div>
+    <?php } ?>
+    <?php if ($success) { ?>
+        <div class="alert alert-success mt-3 w-50 text-center position-absolute top-0 start-50 translate-middle-x" style="z-index: 1;">
             <i class="bi bi-check-circle-fill"></i>
             <?= $success; ?>
         </div>
     <?php } ?>
 
     <?php if ($errors) { ?>
-        <div class="alert alert-danger w-50 text-center position-absolute top-0 start-50 translate-middle-x">
+        <div class="alert alert-danger w-50 text-center position-absolute top-0 start-50 translate-middle-x" style="z-index: 1;">
             <?php foreach($errors as $error) { ?>
                 <i class="bi bi-exclamation-triangle-fill"></i>
                 <?php echo $error . "<br>";
@@ -26,22 +41,39 @@ require_once "layouts/entete.php";
         </div>
     <?php } ?>
 
-    <a href="<?= CONTROLLERS_URL ?>admin/detailsProjet.php?idProject=<?= $CurrentProject->getId() ?>" ><i class="btn btn-outline-dark bi bi-box-arrow-left position-absolute start-0 top-0 mt-2 me-2 w-auto"></i></a>
+    <!-- Modal -->
+    <div class="modal" id="loading-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog position-absolute bottom-0 end-0 me-3" style="width: 200px;">
+            <div class="modal-content">
+                <div class="modal-body position-relative">
+                    <div class="d-flex align-items-center">
+                        <strong>Chargement...</strong>
+                        <div class="spinner-border ms-auto" role="status" aria-hidden="true"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Back Page -->
+    <a href="<?= CONTROLLERS_URL ?>admin/detailsProjet.php?idProject=<?= $CurrentProject->getId() ?>" ><i class="btn btn-outline-dark bi bi-box-arrow-left position-absolute start-0 top-0 mt-2 me-2 w-auto" style="z-index: 1;"></i></a>
+    <!-- Expand right section -->
     <i id="open-right-section" class="btn btn-outline-dark bi bi-arrow-bar-left position-absolute end-0 top-0 mt-2 me-2 w-auto collapse"></i>
 
     <div id="archive-confirmation" class="collapse mt-3">
-        <h3 class="mx-auto text-center border-bottom w-50">Archiver le projet</h3>
+        <h3 class="mx-auto text-center border-bottom w-50">Archiver le tableau</h3>
 
         <div class="sticker h-auto w-50 mx-auto text-center mt-3 pb-5">
-            <p class="mt-5"><b>Êtes-vous sûr de vouloir archiver le projet ? (vous pourrez le ré-ouvrir plus tard)</b></p>
-            <a href="<?= CONTROLLERS_URL ?>admin/map.php?action=archive&projectId=<?= $CurrentProject->getId() ?>&teamId=<?= $CurrentTeamId ?>" class="btn btn-outline-success w-50 mt-5">Archiver le projet</a>
+            <p class="mt-5"><b>Êtes-vous sûr de vouloir archiver le tableau ? (vous pourrez le ré-ouvrir plus tard)</b></p>
+            <a href="<?= CONTROLLERS_URL ?>admin/map.php?action=archiveTeam&projectId=<?= $projectId ?>&teamId=<?= $CurrentTeamId ?>" class="btn btn-outline-success w-50 mt-5">Archiver le tableau</a>
             <a id="cancel-archive" class="btn btn-outline-danger w-50 mt-3">Annuler</a>
         </div>
     </div>
 
-    <div id="left-section" class="col-10 mt-3 ps-3" style="height: 100%;">
-        <div class="collapse show">
-            <div id="columns-container" class="ms-3 me-4 overflow-x d-flex" style="height: 88vh;">
+    <div id="left-section" class="col-10 mt-2 ps-3">
+        <div class="collapse show position-relative">
+            <i id="close-details" class="btn btn-outline-dark bi bi-arrow-bar-right position-absolute end-0 top-0 w-auto collapse show"></i>
+            <div id="columns-container" class="ms-3 overflow-x d-flex" style="height: 88vh;">
                 <?php foreach($CurrentTeam->getMapColumns() as $columnKey => $column) { ?>
                     <div class="project-column">
                         <input class="columnId-input" type="hidden" value="<?= $column->getRowid() ?>">
@@ -68,7 +100,7 @@ require_once "layouts/entete.php";
                                     </div>
                                     <div class="d-flex justify-content-between pe-2 ps-2">
                                         <div class="collapse mx-auto task-buttons-container">
-                                            <i class="bi bi-check-lg btn btn-outline-success task-check"></i>
+                                            <i class="bi bi-check-lg btn btn-outline-success task-check" tabindex="0" data-bs-toggle="tooltip" title="Enregistrer"></i>
                                             <i class="bi bi-trash ms-1 btn btn-outline-danger task-delete"></i>
                                             <i class="bi bi-caret-left-fill ms-1 btn btn-outline-dark arrow-img-btn task-to-left"></i>
                                             <i class="bi bi-caret-right-fill ms-1 btn btn-outline-dark arrow-img-btn task-to-right"></i>
@@ -87,13 +119,10 @@ require_once "layouts/entete.php";
     <div id="details-section" class="col-2 pt-1 pe-4 text-center border position-relative collapse show" style="height: 100vh">
         <div class="row">
             <div class="col">
-                <i id="archive-btn" class="bi bi-archive-fill btn btn-outline-danger w-75 mb-2 collapse show"></i>
+                <i id="archive-btn" class="bi bi-archive-fill btn btn-outline-danger w-75 mb-2 collapse show" tabindex="0" data-bs-toggle="tooltip" title="Archiver le tableau" data-bs-placement="left"></i>
             </div>
             <div class="col">
-                <button id="add-column-btn" class="btn btn-outline-dark collapse show" style="width:max-content; height:min-content; line-height:80%">Add Column</button>
-            </div>
-            <div class="col">
-                <button id="close-details" type="button" class="btn-close position-absolute top-0 end-0 me-4 mt-2" aria-label="Close"></button>
+                <button id="add-column-btn" class="btn btn-outline-dark collapse show">Nouvelle colonne</button>
             </div>
         </div>
         <div id="task-details" class="mt-3 collapse">
@@ -104,15 +133,24 @@ require_once "layouts/entete.php";
             </div>
             <div class="border ps-2 pb-4 mt-2" style="height: 28vh;">
                 <div id="task-comment-container" class="overflow-y pe-2" style="height: 80%"></div>
-                <button id="add-comment-btn" class="btn btn-outline-dark mt-3 me-2 collapse show">Commenter</button>
-                <i id="check-comment-btn" class="btn btn-outline-dark mt-3 me-2 collapse bi bi-check-lg"></i>
-                <i id="delete-comment-btn" class="mt-3 me-2 btn btn-outline-dark collapse bi bi-trash"></i>
+                <i id="add-comment-btn" class="bi bi-chat-square-text-fill btn btn-outline-classic mt-3 me-2 collapse show w-25" style="font-size: larger;"></i>
+                <i id="check-comment-btn" class="btn btn-outline-success mt-3 me-2 collapse bi bi-check-lg" tabindex="0" data-bs-toggle="tooltip" title="Enregistrer"></i>
+                <i id="delete-comment-btn" class="mt-3 me-2 btn btn-outline-danger collapse bi bi-trash" tabindex="0" data-bs-toggle="tooltip" title="Supprimer"></i>
             </div>
             
             <div id="members-container-div">
                 <div class="row mt-2">
                     <div class="col-4 pt-3">
-                        <button id="members-switch-button" class="btn btn-outline-info" style="line-height: 70%;">switch</button>
+                        <button id="members-switch-button" class="btn btn-outline-info" style="line-height: 70%;">
+                            <div class="row mx-auto">
+                                <div class="col-6 p-0">
+                                    <i class="bi bi-caret-left-fill"></i>
+                                </div>
+                                <div class="col-6 p-0">
+                                    <i class="bi bi-caret-right-fill"></i>
+                                </div>
+                            </div>
+                        </button>
                     </div>
                     <div class="col-8 pt-3 text-start">
                         <h5 class="members-label collapse">Team members</h5>
@@ -124,7 +162,7 @@ require_once "layouts/entete.php";
                     foreach($CurrentTeam->getMembers() as $member) { ?>
                     <div class="team-member">
                         <input type="hidden" class="team-member-id" value="<?= $member->getId() ?>">
-                        <div class="sticker mx-auto mt-2 hover text-center pt-3" style="width: 90%;"><?= $member->getLastname() . " " . $member->getFirstname() ?></div>
+                        <input type="text" class="form-control sticker mx-auto mt-2 hover text-center w-90" readonly  value="<?= $member->getLastname() . " " . $member->getFirstname() ?>">
                     </div>
                     <?php } ?>
                 </div>
@@ -138,26 +176,26 @@ require_once "layouts/entete.php";
             </div>
         </div>
         <div id="add-column-form" class="sticker text-center pt-1 collapse w-100" style="height:91%">
-            <h3 class="border-bottom w-75 mx-auto">New Column</h3>
+            <h4 class="border-bottom w-75 mx-auto">Nouvelle colonne</h4>
             <div class="mt-5">
-                <label for="columnName-input">Column Name</label>
+                <label for="columnName-input">Titre</label>
                 <input id="columnName-input" class="form-control w-75 mx-auto text-center" type="text">
-                <button id="create-column" class="btn btn-outline-success w-75 mt-5">Create</button>
-                <button id="cancel-column" class="btn btn-outline-danger w-75 mt-3">Cancel</button>
+                <button id="create-column" class="btn btn-outline-success w-75 mt-5">Créer</button>
+                <button id="cancel-column" class="btn btn-outline-danger w-75 mt-3">Annuler</button>
             </div>
         </div>
         <div id="column-details" class="mt-3 collapse">
             <textarea id="column-title" class="card px-2 pt-3 text-center" cols="25" rows="2"></textarea>
-            <button id="column-details-check-btn" class="btn btn-outline-dark w-50 mt-3 collapse">Check</button>
-            <div class="mt-5 row justify-content-around">
-                <div class="col">
+            <i id="column-details-check-btn" class="bi bi-check-lg btn btn-outline-success w-25 mt-3 invisible p-0" style="font-size: 1.5rem;"></i>
+            <div class="mt-5 mx-auto row justify-content-center">
+                <div class="col-5">
                     <i id="left-column-btn" class="w-100 bi bi-arrow-left btn btn-outline-dark"></i>
                 </div>
-                <div class="col">
+                <div class="col-5">
                     <i id="right-column-btn" class="w-100 bi bi-arrow-right btn btn-outline-dark"></i>
                 </div>
             </div>
-            <button id="column-details-delete-btn" class="btn btn-outline-danger w-75 mt-4">Delete</button>
+            <i id="column-details-delete-btn" class="bi bi-trash-fill btn btn-outline-danger w-75 mt-4" tabindex="0" data-bs-toggle="tooltip" title="Supprimer la colonne"></i>
         </div>
     </div>
 

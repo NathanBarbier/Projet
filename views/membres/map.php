@@ -12,7 +12,7 @@ require_once "layouts/entete.php";
         </div>
     <?php } ?>
 
-    <!-- MODAL -->
+    <!-- Modal -->
     <div class="modal" id="loading-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog position-absolute bottom-0 end-0 me-3" style="width: 200px;">
             <div class="modal-content">
@@ -27,23 +27,24 @@ require_once "layouts/entete.php";
     </div>
 
     <!-- Back Page -->
-    <a href="<?= CONTROLLERS_URL ?>membres/tableauDeBord.php" ><i class="btn btn-outline-dark bi bi-box-arrow-left position-absolute start-0 top-0 mt-2 me-2 w-auto"></i></a>
+    <a href="<?= CONTROLLERS_URL ?>membres/tableauDeBord.php" ><i class="btn btn-outline-dark bi bi-box-arrow-left position-absolute start-0 top-0 mt-2 me-2 w-auto" style="z-index: 1;"></i></a>
     <!-- Expand right section -->
     <i id="open-right-section" class="btn btn-outline-dark bi bi-arrow-bar-left position-absolute end-0 top-0 mt-2 me-2 w-auto collapse"></i>
 
     <div id="archive-confirmation" class="collapse mt-3">
-        <h3 class="mx-auto text-center border-bottom w-50">Archiver le projet</h3>
+        <h3 class="mx-auto text-center border-bottom w-50">Archiver le tableau</h3>
 
         <div class="sticker h-auto w-50 mx-auto text-center mt-3 pb-5">
-            <p class="mt-5"><b>Êtes-vous sûr de vouloir archiver le projet ? (Sa ré-ouverture nécessitera l'intervention d'un administrateur.)</b></p>
-            <a href="<?= CONTROLLERS_URL ?>membres/map.php?action=archive&projectId=<?= $CurrentProject->getId() ?>" class="btn btn-outline-success w-50 mt-5">Archiver le projet</a>
+            <p class="mt-5"><b>Êtes-vous sûr de vouloir archiver le tableau ? (Sa ré-ouverture nécessitera l'intervention d'un administrateur.)</b></p>
+            <a href="<?= CONTROLLERS_URL ?>membres/map.php?action=archiveTeam&teamId=<?= $CurrentTeamId ?>&projectId=<?= $projectId ?>" class="btn btn-outline-success w-50 mt-5">Archiver le tableau</a>
             <a id="cancel-archive" class="btn btn-outline-danger w-50 mt-3">Annuler</a>
         </div>
     </div>
 
-    <div id="left-section" class="col-10 mt-3 ps-3" style="height: 100%;">
-        <div class="collapse show">
-            <div id="columns-container" class="ms-3 me-4 overflow-x d-flex" style="height: 88vh;">
+    <div id="left-section" class="col-10 mt-2 ps-3">
+        <div class="collapse show position-relative">
+            <i id="close-details" class="btn btn-outline-dark bi bi-arrow-bar-right position-absolute end-0 top-0 w-auto collapse show"></i>
+            <div id="columns-container" class="ms-3 overflow-x d-flex" style="height: 88vh;">
                 <?php foreach($CurrentTeam->getMapColumns() as $columnKey => $column) { ?>
                     <div class="project-column">
                         <input class="columnId-input" type="hidden" value="<?= $column->getRowid() ?>">
@@ -70,7 +71,7 @@ require_once "layouts/entete.php";
                                     </div>
                                     <div class="d-flex justify-content-between pe-2 ps-2">
                                         <div class="collapse mx-auto task-buttons-container">
-                                            <i class="bi bi-check-lg btn btn-outline-success task-check"></i>
+                                            <i class="bi bi-check-lg btn btn-outline-success task-check" tabindex="0" data-bs-toggle="tooltip" title="Enregistrer"></i>
                                             <i class="bi bi-trash ms-1 btn btn-outline-danger task-delete"></i>
                                             <i class="bi bi-caret-left-fill ms-1 btn btn-outline-dark arrow-img-btn task-to-left"></i>
                                             <i class="bi bi-caret-right-fill ms-1 btn btn-outline-dark arrow-img-btn task-to-right"></i>
@@ -87,16 +88,12 @@ require_once "layouts/entete.php";
     </div>
 
     <div id="details-section" class="col-2 pt-1 pe-4 text-center border position-relative collapse show" style="height: 100vh"> 
-        <!-- <button id="archive-btn" class="btn btn-danger w-75 mb-2" style="line-height: 80%;">Archiver le Projet</button> -->
         <div class="row">
             <div class="col">
-                <i id="archive-btn" class="bi bi-archive-fill btn btn-outline-danger w-75 mb-2 collapse show"></i>
+                <i id="archive-btn" class="bi bi-archive-fill btn btn-outline-danger w-75 mb-2 collapse show" tabindex="0" data-bs-toggle="tooltip" title="Archiver le tableau" data-bs-placement="left"></i>
             </div>
             <div class="col">
-                <button id="add-column-btn" class="btn btn-outline-dark collapse show" style="width:max-content; height:min-content; line-height:80%">Nouvelle colonne</button>
-            </div>
-            <div class="col">
-                <button id="close-details" type="button" class="btn-close position-absolute top-0 end-0 me-4 mt-2" aria-label="Close"></button>
+                <button id="add-column-btn" class="btn btn-outline-dark collapse show">Nouvelle colonne</button>
             </div>
         </div>
         <div id="task-details" class="mt-3 collapse">
@@ -107,16 +104,24 @@ require_once "layouts/entete.php";
             </div>
             <div class="border ps-2 pb-4 mt-2" style="height: 28vh;">
                 <div id="task-comment-container" class="overflow-y pe-2" style="height: 80%"></div>
-                <!-- <button id="add-comment-btn" class="btn btn-outline-dark mt-3 me-2 collapse show">Commenter</button> -->
-                <i id="add-comment-btn" class="bi bi-chat-square-text-fill btn btn-outline-classic mt-3 me-2 collapse show w-25" style="color: cornflowerblue; font-size: larger;"></i>
-                <i id="check-comment-btn" class="btn btn-outline-success mt-3 me-2 collapse bi bi-check-lg"></i>
-                <i id="delete-comment-btn" class="mt-3 me-2 btn btn-outline-danger collapse bi bi-trash"></i>
+                <i id="add-comment-btn" class="bi bi-chat-square-text-fill btn btn-outline-classic mt-3 me-2 collapse show w-25" style="font-size: larger;"></i>
+                <i id="check-comment-btn" class="btn btn-outline-success mt-3 me-2 collapse bi bi-check-lg" tabindex="0" data-bs-toggle="tooltip" title="Enregistrer"></i>
+                <i id="delete-comment-btn" class="mt-3 me-2 btn btn-outline-danger collapse bi bi-trash" tabindex="0" data-bs-toggle="tooltip" title="Supprimer"></i>
             </div>
             
             <div id="members-container-div">
                 <div class="row mt-2">
                     <div class="col-4 pt-3">
-                        <button id="members-switch-button" class="btn btn-outline-info" style="line-height: 70%;">switch</button>
+                        <button id="members-switch-button" class="btn btn-outline-info" style="line-height: 70%;">
+                            <div class="row mx-auto">
+                                <div class="col-6 p-0">
+                                    <i class="bi bi-caret-left-fill"></i>
+                                </div>
+                                <div class="col-6 p-0">
+                                    <i class="bi bi-caret-right-fill"></i>
+                                </div>
+                            </div>
+                        </button>
                     </div>
                     <div class="col-8 pt-3 text-start">
                         <h5 class="members-label collapse">Team members</h5>
@@ -161,7 +166,7 @@ require_once "layouts/entete.php";
                     <i id="right-column-btn" class="w-100 bi bi-arrow-right btn btn-outline-dark"></i>
                 </div>
             </div>
-            <i id="column-details-delete-btn" class="bi bi-trash-fill btn btn-outline-danger w-75 mt-4"></i>
+            <i id="column-details-delete-btn" class="bi bi-trash-fill btn btn-outline-danger w-75 mt-4" tabindex="0" data-bs-toggle="tooltip" title="Supprimer la colonne"></i>
         </div>
     </div>
 

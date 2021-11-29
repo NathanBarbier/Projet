@@ -52,11 +52,16 @@ require_once 'layouts/entete.php';
                     <div class="position-absolute translate-middle-x bottom-0 start-50 w-100">
                         <div class="row mx-auto">
                             <div class="col-6">
-                                <button class="btn btn-outline-primary w-100" type="submit">Mettre à jour</button>
+                                <button class="btn btn-outline-primary w-100" type="submit" tabindex="0" data-bs-toggle="tooltip" title="Mettre à jour les informations du projet"><i class="bi bi-arrow-clockwise big-icon"></i></button>
                             </div>
-                            <div class="col-6">
-                                <a id="map-btn" href="<?= CONTROLLERS_URL ?>admin/map.php?projectId=<?= $CurrentProject->rowid ?>" class="btn btn-outline-info w-100">Tableau</a>
+                            <div class="col-3">
+                                <a id="map-btn" href="<?= CONTROLLERS_URL ?>admin/map.php?projectId=<?= $CurrentProject->rowid ?>" class="btn btn-outline-info w-100" tabindex="0" data-bs-toggle="tooltip" title="Tableau de l'équipe"><i class="bi bi-layout-three-columns big-icon"></i></a>
                             </div>
+                            <?php if($CurrentProject->active) { ?>
+                                <div id="archive-btn" class="col-3 collapse show">
+                                    <a href="<?= CONTROLLERS_URL ?>admin/detailsProjet.php?action=archive&idProject=<?= $CurrentProject->rowid ?>" class="w-100 btn btn-outline-danger text-center collapse show" tabindex="0" data-bs-toggle="tooltip" title="Archiver le projet"><i class="bi bi-archive-fill big-icon"></i></a>
+                                </div>
+                            <?php } ?>
                         </div>
                     </div>
                 </form>
@@ -76,7 +81,7 @@ require_once 'layouts/entete.php';
                     <h5 id="project-teams-title" class="mt-3 border-bottom w-50 mx-auto collapse show">Équipes existantes</h5>
                     <div id="project-teams-div" class="sticker mt-3 overflow-y bg-white pt-2 collapse show" style="height: 45%;">
                         <?php foreach($CurrentProject->teams as $team) { ?>
-                            <div id="team-sticker-<?= $team->rowid ?>" onclick="showTeamMembers(<?= $team->rowid ?>, '<?= $team->name ?>')" class="sticker mx-2 mt-2 pt-3 hover">
+                            <div id="team-sticker-<?= $team->rowid ?>" onclick="showTeamMembers(<?= $team->rowid ?>, '<?= $team->name ?>')" class="<?= intval($team->active) == 0 ? 'archived-team ' : '' ?>sticker mx-2 mt-2 pt-3 hover">
                                 <p><?= $team->name ?></p>
                             </div>
                         <?php } ?>
@@ -88,16 +93,15 @@ require_once 'layouts/entete.php';
                         <div class="position-absolute start-50 translate-middle-x bottom-0 w-100">
                             <div class="row mx-auto">
                                 <div class="col-6">
-                                    <a id="update-team-button" class="w-100 btn btn-outline-primary text-center collapse show">Mettre à jour</a>
+                                    <a id="update-team-button" class="w-100 btn btn-outline-primary text-center collapse show" tabindex="0" data-bs-toggle="tooltip" title="Mettre à jour les informations de l'équipe"><i class="bi bi-arrow-clockwise big-icon"></i></a>
                                 </div>
-                                <div class="<?= $CurrentProject->active ? 'col-3' : 'col-6' ?>">
-                                    <a href="<?= CONTROLLERS_URL ?>admin/detailsProjet.php?action=deleteTeam&idProject=<?= $CurrentProject->rowid ?>" id="delete-team-button" class="w-100 btn btn-outline-danger text-center collapse show"><i class="bi bi-trash-fill"></i></a>
+                                <div class="col-3">
+                                    <a href="<?= CONTROLLERS_URL ?>admin/detailsProjet.php?action=deleteTeam&idProject=<?= $CurrentProject->rowid ?>" id="delete-team-button" class="w-100 btn btn-outline-danger text-center collapse show" tabindex="0" data-bs-toggle="tooltip" title="Supprimer l'équipe"><i class="bi bi-trash-fill big-icon"></i></a>
                                 </div>
-                                <?php if($CurrentProject->active) { ?>
-                                    <div id="archive-btn" class="col-3 collapse show">
-                                        <a href="<?= CONTROLLERS_URL ?>admin/detailsProjet.php?action=archive&idProject=<?= $CurrentProject->rowid ?>" class="w-100 btn btn-outline-danger text-center collapse show"><i class="bi bi-archive-fill"></i></a>
-                                    </div>
-                                <?php } ?>
+                                <div class="col-3">
+                                    <a id="archive-team-button" class="w-100 btn btn-outline-danger text-center collapse" tabindex="0" data-bs-toggle="tooltip" title="Archiver l'équipe"><i class="bi bi-archive-fill big-icon"></i></a>
+                                    <a id="open-team-button" class="w-100 btn btn-outline-success text-center collapse" tabindex="0" data-bs-toggle="tooltip" title="Désarchiver l'équipe"><i class="bi bi-archive-fill big-icon"></i></a>
+                                </div>
                             </div>
                         </div>
                     </form>
@@ -192,8 +196,6 @@ require_once 'layouts/entete.php';
         </div>
 
         <script>
-            const CONTROLLERS_URL = <?php echo json_encode(CONTROLLERS_URL); ?>;
-            const projectId = <?php echo json_encode($CurrentProject->rowid); ?>;
             var projectTeamsIds = <?php echo json_encode($projectTeamsIds); ?>;
             var freeUsersIds = <?php echo json_encode($projectFreeUsersIds); ?>;
             var CurrentProject = <?php echo json_encode($CurrentProject); ?>;

@@ -1,6 +1,6 @@
 <?php
 //import all models
-require_once "../../traitements/header.php";
+require_once "../../services/header.php";
 
 // Import PHPMailer classes into the global namespace 
 use PHPMailer\PHPMailer\PHPMailer; 

@@ -32,15 +32,25 @@ $("#cancel-archive").click(function() {
 });
 
 $("#close-details").click(function() {
+    $(this).removeClass('show');
     $("#details-section").removeClass('show');
     $("#left-section").removeClass('col-10').addClass('col');
     $("#open-right-section").addClass('show');
 });
 
 $("#open-right-section").click(function() {
+    $("#close-details").addClass('show');
     $("#details-section").addClass('show');
     $("#left-section").removeClass('col').addClass('col-10');
     $(this).removeClass('show');
+});
+
+$(".close-alert").click(function() {
+    $(this).parent().removeClass('show alert-visible');
+
+    // decrement notification count
+    notificationCount--;
+    $(".notificationCount").text(notificationCount + "+");
 });
 
 $("#add-column-form").find('#create-column').click(function() {
@@ -226,7 +236,7 @@ function init()
                         $(".team-member").off('click').click(function() {
                             memberId = $(this).find('.team-member-id').val();
                             memberId = memberId.replace("\"", ' ').replace("\"", ' ');
-                            memberName = $(this).find('.sticker').text();
+                            memberName = $(this).find('.sticker').val();
                 
                             if($(".task-member-id[value='"+memberId+"']").length > 0)
                             {

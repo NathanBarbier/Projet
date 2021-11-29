@@ -1,6 +1,6 @@
 <?php
 //import all models
-require_once "../../traitements/header.php";
+require_once "../../services/header.php";
 
 $idUser = $_SESSION["idUser"] ?? null;
 $rights = $_SESSION["rights"] ?? false;
@@ -29,33 +29,36 @@ if($rights === "user")
     foreach($BelongsTo->getTeamIds() as $teamId)
     {
         $Team = new Team($teamId);
-        
-        // on récupère l'id du projet lié à cette équipe
-        $projectId = $Team->getIdProject();
 
-        $Project = new Project($projectId);
-
-        if($Project->getActive() == true)
+        if($Team->getActive() == true)
         {
-            $Tasks = new Task($projectId);
+            // on récupère l'id du projet lié à cette équipe
+            $projectId = $Team->getIdProject();
     
-            $mapColumns = $Team->getMapColumns();
-            $TasksCount = 0;
+            $Project = new Project($projectId);
     
-            foreach($mapColumns as $mapColumn)
+            if($Project->getActive() == true)
             {
-                $TasksCount += count($mapColumn->getTasks());
+                $Tasks = new Task($projectId);
+        
+                $mapColumns = $Team->getMapColumns();
+                $TasksCount = 0;
+        
+                foreach($mapColumns as $mapColumn)
+                {
+                    $TasksCount += count($mapColumn->getTasks());
+                }
+        
+                // On affecte pour chaque projets sur lequel travaille l'user
+                $ProjectInfo = new stdClass;
+                $ProjectInfo->membersCount = $Project->fetch_members_count();
+                $ProjectInfo->tasksCount = $TasksCount;
+                $ProjectInfo->projectName = $Project->getName();
+                $ProjectInfo->teamName = $Team->getName();
+                $ProjectInfo->rowid = $projectId;
+        
+                $userProjects[$projectId] = $ProjectInfo;
             }
-    
-            // On affecte pour chaque projets sur lequel travaille l'user
-            $ProjectInfo = new stdClass;
-            $ProjectInfo->membersCount = $Project->fetch_members_count();
-            $ProjectInfo->tasksCount = $TasksCount;
-            $ProjectInfo->projectName = $Project->getName();
-            $ProjectInfo->teamName = $Team->getName();
-            $ProjectInfo->rowid = $projectId;
-    
-            $userProjects[$projectId] = $ProjectInfo;
         }
     }
     

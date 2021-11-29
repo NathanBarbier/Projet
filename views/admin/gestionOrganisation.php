@@ -87,7 +87,7 @@ require_once "layouts/entete.php";
                     <h3 class="text-center border-bottom w-75 mx-auto"><?= $CurrentOrganization->name ?></h3>
                     <h5 class="text-center mx-auto w-50 border-bottom mt-3">Email</h5>
                     <div class="d-flex justify-content-center mt-3">
-                        <button id="email-info-btn" type="text" class="btn btn-outline-classic form-control w-75 mx-auto text-center"><?= $CurrentOrganization->email ?></button>
+                        <button id="email-info-btn" type="text" class="btn btn-outline-classic form-control w-75 mx-auto text-center" tabindex="0" data-bs-toggle="tooltip" title="Modifier l'adresse email"><?= $CurrentOrganization->email ?></button>
                     </div>
 
                     <h5 class="mt-3 text-center mx-auto w-50 border-bottom">Membres</h5>

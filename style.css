@@ -6,7 +6,9 @@
 /* 2. Vignettes */
 /* 3. Sticker */
 /* 4. Map */
-/* 5. Button Classic */
+/* 5. DetailsProjet */
+/* 6. Button Classic */
+/* 7. Icons */
 
 
 
@@ -141,7 +143,6 @@ input:read-only:hover {
     cursor: pointer;
 }
 
-
 /* -------------- 2. ------------- */
 
 .vignette {
@@ -232,6 +233,21 @@ input:read-only:hover {
 
 /* -------------- 4. ------------- */
 
+#left-section {
+    height: 100%;
+    padding-right: 0;
+}
+
+#open-right-section {
+    z-index: 1;
+}
+
+#close-details {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-right: none;
+}
+
 .project-column {
     height: 100%;
     border: 1px solid rgba(0, 0, 0, 0.125); 
@@ -255,6 +271,12 @@ input:read-only:hover {
     border-radius:5px;
     float:right;
     line-height: 80%;
+}
+
+#add-column-btn {
+    width:max-content;
+    height:min-content;
+    line-height:80%;
 }
 
 .delete-col-btn {
@@ -286,6 +308,7 @@ input:read-only:hover {
 .task-bubble-input {
     height: 100%;
     width: 100%;
+    border-radius: 5px;
 }
 
 .task-bubble-input:focus,.task-bubble-input {
@@ -351,8 +374,18 @@ input:read-only:hover {
     opacity: 0 !important;
 }
 
+/* -------------- 5. ------------- */
 
-/* -------------- button classic. ------------- */
+.archived-team {
+    border: 1px solid rgba(0, 0, 0, 0.075);
+    color: rgba(0, 0, 0, 0.30);
+}
+
+.archived-team:hover {
+    background-color: #eeeff09f !important;
+}
+
+/* -------------- 6. ------------- */
 
 .btn-outline-classic {
     color: rgba(0, 0, 0, 0.4);
@@ -381,7 +414,7 @@ background-color: transparent;
 }
 
 
-/* -------------- icons. ------------- */
+/* -------------- 7. ------------- */
 
 .bi-archive-fill {
     width: max-content !important;
@@ -389,4 +422,8 @@ background-color: transparent;
 
 .bi-building {
     font-size: 75px;
+}
+
+.big-icon {
+    font-size: x-large;
 }

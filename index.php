@@ -1,5 +1,5 @@
 <?php
-require_once "traitements/header.php";
+require_once "services/header.php";
 
 $rights = $_SESSION["rights"] ?? false;
 $email = $_SESSION["email"] ?? false;

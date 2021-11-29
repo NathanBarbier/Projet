@@ -1,6 +1,6 @@
 <?php
 //import all models
-require_once "../../traitements/header.php";
+require_once "../../services/header.php";
 
 $idOrganization = $_SESSION["idOrganization"] ?? false;
 
@@ -9,7 +9,6 @@ $idProject = GETPOST('idProject');
 
 $name = GETPOST('name');
 $type = GETPOST('type');
-$deadline = GETPOST('deadline');
 $description = GETPOST('description');
 $envoi = GETPOST('envoi');
 
@@ -40,7 +39,7 @@ if($rights == 'admin')
         {
             if($name && $type)
             {
-                $status = $Project->create($name, $type, $deadline, $description, $idOrganization);
+                $status = $Project->create($name, $type, $description, $idOrganization);
 
                 if($status)
                 {

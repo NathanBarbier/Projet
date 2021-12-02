@@ -327,9 +327,13 @@ class Organization extends Modele
     {
         $rowid = $rowid == null ? $this->id : $rowid;
 
-        $sql = "UPDATE organizations"; 
+        /*$sql = "UPDATE organizations"; 
         $sql .= " SET email = ?";
-        $sql .= " WHERE rowid = ?";
+        $sql .= " WHERE rowid = ?";*/
+        $sql = "SET @rowid = ?;";
+        $sql .= " SET @email = ?;";
+        $sql .= " CALL PROCEDURE updateEmail(@rowid, @email, @status);";
+        $sql .= " SELECT @status;";
 
         $requete = $this->getBdd()->prepare($sql);
         return $requete->execute([$email, $this->id]);

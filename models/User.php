@@ -141,7 +141,26 @@ class User extends Modele
             return false;
         }
     }
+    
+    public function checkToken($idUser, $token)
+    {
+        $sql = "SELECT *";
+        $sql .= " FROM users";
+        $sql .= " WHERE rowid = ?";
+        $sql .= " AND token = ?";
 
+        $requete = $this->getBdd()->prepare($sql);
+        $requete->execute([$idUser, $token]);
+
+        if($requete->rowcount() > 0)
+        {
+            return true;
+        } 
+        else 
+        {
+            return false;
+        }
+    }
 
     //! FETCH
 
@@ -389,5 +408,15 @@ class User extends Modele
 
         $requete = $this->getBdd()->prepare($sql);
         return $requete->execute([$idUser, $idUser, $idUser, $idUser]);
+    }
+    
+    public function addCookie($idUser, $token)
+    {
+        $sql = "UPDATE users";
+        $sql .= " SET token = ?";
+        $sql .= " WHERE rowid = ?";
+
+        $requete = $this->getBdd()->prepare($sql);
+        return $requete->execute([$token, $idUser]);
     }
 }

@@ -7,10 +7,10 @@ $idOrganization = $_SESSION["idOrganization"] ?? null;
 
 if($rights == 'admin')
 {
-    $MapColumns = new MapColumns();
+    $MapColumn = new MapColumn();
     $Task = new Task();
     $TaskComment = new TaskComment();
-    $TaskMembers = new TaskMembers();
+    $TaskMember = new TaskMember();
     $User = new User();
 
     $action = GETPOST('action');
@@ -45,17 +45,17 @@ if($rights == 'admin')
         case 'attributeMemberToTask':
             if($taskId && $memberId)
             {
-                $TaskMembers->create($memberId, $taskId);
+                $TaskMember->create($memberId, $taskId);
             }
             break;
         case 'desattributeMemberToTask':
             if($taskId && $memberId)
             {
-                $TaskMembers->deleteByTaskIdAndUserId($taskId, $memberId);
+                $TaskMember->deleteByTaskIdAndUserId($taskId, $memberId);
             }
             break;
         case 'addColumn':
-            if($teamId && $columnName) $status = $MapColumns->create($columnName, $teamId);
+            if($teamId && $columnName) $status = $MapColumn->create($columnName, $teamId);
             break;
         case 'renameColumn':
             if($columnId && $columnName)
@@ -84,19 +84,19 @@ if($rights == 'admin')
         case 'leftColumn':
             if($teamId && $columnId)
             {
-                $status = $MapColumns->switchRank($columnId, $teamId, 'left');
+                $status = $MapColumn->switchRank($columnId, $teamId, 'left');
             }
             break;
         case 'rightColumn':
             if($teamId && $columnId)
             {
-                $status = $MapColumns->switchRank($columnId, $teamId, 'right');
+                $status = $MapColumn->switchRank($columnId, $teamId, 'right');
             }
             break;
         case 'updateColumn':
             if($columnId && $columnName)
             {
-                $status = $MapColumns->updateName($columnName, $columnId);
+                $status = $MapColumn->updateName($columnName, $columnId);
             }
             break;
         case 'deleteTaskNote':
@@ -116,7 +116,7 @@ if($rights == 'admin')
             {
                 $TaskComment->deleteByColumnId($columnId);
                 $Task->deleteByColumnId($columnId);
-                $MapColumns->delete($columnId);
+                $MapColumn->delete($columnId);
             }
             break;
         case 'deleteTask':
@@ -133,7 +133,7 @@ if($rights == 'admin')
             }
             break;
         case 'getLastColumnId':
-            $columnId = $MapColumns->fetch_last_insert_id()->rowid;
+            $columnId = $MapColumn->fetch_last_insert_id()->rowid;
             echo json_encode($columnId);
             break;
         case 'getLastTaskId':
@@ -161,7 +161,7 @@ if($rights == 'admin')
         case 'getTaskMembers':
             if($taskId)
             {
-                $taskMembers = $TaskMembers->fetchAll($taskId);
+                $taskMembers = $TaskMember->fetchAll($taskId);
 
                 $membersIds = array();
 

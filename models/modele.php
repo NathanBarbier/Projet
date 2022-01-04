@@ -1,11 +1,13 @@
 <?php
 class Modele 
 {
-    public function getBdd()
+    protected function getBdd()
     {
-        // INITIALISATION DE LA CONNEXION A LA BDD
+        // for development environment
         return new PDO('mysql:host=localhost;dbname=storieshelper;charset=UTF8', 'root');
+        
+        // for production environment
+        // return new PDO('mysql:host=ipssisqstorieshe;dbname=ipssisqstorieshe;charset=UTF8', 'root');
     }
-
 }
 ?>

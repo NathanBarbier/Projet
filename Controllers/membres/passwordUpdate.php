@@ -14,7 +14,6 @@ if($rights === 'user')
     $firstname = GETPOST('prenom');
     $lastname = GETPOST('nom');
     $email = GETPOST('email');
-    $idPosition = GETPOST('idPosition');
     $idTeam = GETPOST('idTeam');
     $birth = GETPOST('birth');
     
@@ -24,7 +23,6 @@ if($rights === 'user')
     
     
     $User = new User($idUser);
-    $Position = new Position();
     $Team = new Team();
     
     $tpl = "passwordUpdate.php";

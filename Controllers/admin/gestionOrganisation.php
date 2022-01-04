@@ -116,7 +116,7 @@ if($rights === "admin")
                 {
                     $success = "L'adresse email a bien été modifiée.";
                     $email = '';
-                    $CurrentOrganization->email = $Organization->fetch()->email;
+                    $CurrentOrganization->email = $Organization->getEmail();
                 }
                 else
                 {

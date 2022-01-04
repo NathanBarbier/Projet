@@ -48,7 +48,7 @@ if($rights == 'user')
     }
 
     $Organization = new Organization($idOrganization);
-    $MapColumns = new MapColumns();
+    $MapColumn = new MapColumn();
     $Task = new Task();
     $User = new User($idUser);    
 

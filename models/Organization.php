@@ -6,7 +6,6 @@ class Organization extends Modele
     private $email;
     private $password;
     private $users = [];
-    private $positions = [];
     private $projects = [];
 
     public function __construct($id = null)
@@ -34,15 +33,6 @@ class Organization extends Modele
             {
                 $obj = new User($user->rowid);
                 $this->users[] = $obj;
-            }
-
-            $Position = new Position();
-            $positions = $Position->fetchAll($this->id);
-
-            foreach($positions as $position)
-            {
-                $obj = new Position($position->rowid);
-                $this->positions[] = $obj;
             }
 
             $Project = new Project();
@@ -100,53 +90,12 @@ class Organization extends Modele
         return $this->users;
     }
 
-    public function getPositions()
-    {
-        return $this->positions;
-    }
-
     public function getProjects()
     {
         return $this->projects;
     }
 
-    public function getPositionNameByUserId($UserId)
-    {
-        foreach($this->getUsers() as $user)
-        {
-            if($user->getIdUser() == $UserId)
-            {
-                $userPositionId = $user->getUserPositionId();
-            }
-        }
-
-        foreach($this->getPositions() as $position)
-        {
-            if($position->getPositionId() == $userPositionId)
-            {
-                return $position->getPositionName();
-            }
-        }
-    }
-
-    public function getPositionInfosByPositionId($positionId)
-    {
-        $infosPoste = [];
-        foreach($this->getPositions() as $Position)
-        {
-            if($Position->idPoste == $positionId)
-            {
-                $positionInfos = new stdClass;
-
-                $positionInfos->id = $Position->rowid;
-                $positionInfos->name = $Position->name;
-                $positionInfos->idOrganization = $Position->fk_organization;
-                $positionInfos->idRole = $Position->fk_role;
-            }
-            return $positionInfos;
-        }
-    }
-
+    //* outdated, use instead $this->getUsers()
     public function getOrgUsersInfos()
     {
         $usersInfos = array();
@@ -155,7 +104,6 @@ class Organization extends Modele
             $userInfos  = new stdClass;
 
             $userInfos->id = $user->getId();
-            $userInfos->idPosition = $user->getPositionId();
             $userInfos->idTeam = $user->getTeamId();
             $userInfos->idOrganization = $user->getOrganizationId();
             $userInfos->firstname = $user->getFirstname();
@@ -163,37 +111,10 @@ class Organization extends Modele
             $userInfos->email = $user->getEmail();
             $userInfos->birth = $user->getBirth();
             $userInfos->password = $user->getPassword();
-            $userInfos->positionName = $this->getPositions()[$user->getUserPositionId()]->getName();
 
             $usersInfos[] = $userInfos;
         }
         return $usersInfos;
-    }
-
-    public function getUsersByPoste($idPoste)
-    {
-        $usersPoste = [];
-        foreach($this->getPositions() as $position)
-        {
-            if($position->getIdEquipe() == $idPoste)
-            {
-                foreach($position->getMembresPoste() as $utilisateur)
-                {
-                    $usersEquipe[] = [
-                        "idUtilisateur" => $utilisateur->getIdUser(),
-                        "nom" => $utilisateur->getNomUser(),
-                        "prenom" => $utilisateur->getPrenomUser(),
-                        "dateNaiss" => $utilisateur->getDateNaissUser(),
-                        "mdp" => $utilisateur->getMdpUser(),
-                        "idPoste" => $utilisateur->getIdPosteUser(),
-                        "email" => $utilisateur->getEmailUser(),
-                        "idEquipe" => $utilisateur->getIdEquipeUser(),
-                        "idorganization" => $utilisateur->getIdorganizationUser(),
-                    ];
-                }
-                return $usersPoste;
-            }
-        }
     }
 
     public function getMaxIdUser()
@@ -218,27 +139,6 @@ class Organization extends Modele
         return $maxIdUser;
     }
 
-    public function getMaxIdPosition()
-    {
-        foreach($this->getPositions() as $cle => $position)
-        {
-            $idPoste = $position->getId();
-            $maxIdPoste = null;
-            if($cle == 0)
-            {
-                $maxIdPoste = $position->getIdPoste();
-            }
-            else
-            {
-                if($maxIdPoste < $idPoste)
-                {
-                    $maxIdPoste = $idPoste;
-                }
-            }
-        }
-        return $maxIdPoste;
-    }
-
     public function getMaxIdProject()
     {
         foreach($this->getProjects() as $key => $project)
@@ -260,37 +160,13 @@ class Organization extends Modele
         return $projectMaxId;
     }
 
-    public function CountUsersByPosition()
-    {
-        $nbUsersParPoste = [];
-        foreach($this->getPositions() as $Position)
-        {
-            if(!empty($this->getUsers()))
-            {
-                foreach($this->getUsers() as $user)
-                {
-                    $users = [];
-                    if($user->getIdPosition() == $Position->getId())
-                    {
-                        $users[] = $user->getId();
-                    }
-                    $nbUsers = count($users);
-                    $nbUsersParPoste[$Position->getId()] = $nbUsers;
-                }
-            }
-            else
-            {
-                $nbUsersParPoste[$Position->getId()] = 0;
-            }
-        }
-        return $nbUsersParPoste;
-    }
-
+    //* outdated, use directly count($object->users)
     public function countUsers()
     {
         return count($this->users);
     }
 
+    //* outdated, use directly count($object->projects)
     public function countProjects()
     {
         return count($this->projects);
@@ -311,7 +187,7 @@ class Organization extends Modele
     }
 
 
-    //! UPDATE
+    // UPDATE
 
     public function updateName($name)
     {
@@ -352,52 +228,57 @@ class Organization extends Modele
     }
 
 
-    //! DELETE 
+    // DELETE 
 
     public function delete()
     {
+        $status = array();
+
         $sql = "DELETE FROM work_to AS w";
         $sql .= " INNER JOIN teams AS t ON w.fk_team = t.rowid";
         $sql .= " WHERE fk_organization = ?";
         
         $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$this->id]);
+        $status [] = $requete->execute([$this->id]);
     
         $sql = "DELETE FROM projects"; 
         $sql .= " WHERE fk_organization = ?";
 
         $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$this->id]);
+        $status [] = $requete->execute([$this->id]);
     
         $sql = "DELETE FROM users"; 
         $sql .= " WHERE fk_organization = ?";
 
         $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$this->id]);
+        $status [] = $requete->execute([$this->id]);
         
         $sql = "DELETE FROM teams";
         $sql .= " WHERE fk_organization = ?";
 
         $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$this->id]);
-        
-        $sql = "DELETE FROM positions";
-        $sql .= " WHERE fk_organization = ?";
-
-        $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$this->id]);
+        $status [] = $requete->execute([$this->id]);
         
         $sql = "DELETE FROM organizations";
         $sql .= " WHERE rowid = ?";
         
         $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$this->id]);
+        $status [] = $requete->execute([$this->id]);
     
         session_destroy();
+
+        if(in_array(false, $status))
+        {
+            return false;
+        }
+        else 
+        {
+            return true;
+        }
     }
 
 
-    //! FETCH
+    // FETCH
 
     public function fetch($rowid = null)
     {
@@ -408,9 +289,39 @@ class Organization extends Modele
         $sql .= " WHERE rowid = ?";
 
         $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$rowid]);
+        $status = $requete->execute([$rowid]);
+    
+        if($status)
+        {
+            $Organization = $requete->fetch(PDO::FETCH_OBJ);
+            
+            $this->id = $rowid;
+            $this->name = $Organization->name;
+            $this->email = $Organization->email;
+            $this->password = $Organization->password;
 
-        return $requete->fetch(PDO::FETCH_OBJ);
+            $User = new User();
+            $users = $User->fetchAll($this->id);
+
+            foreach($users as $user)
+            {
+                $obj = new User($user->rowid);
+                $this->users[] = $obj;
+            }
+
+            $Project = new Project();
+            $projects = $Project->fetchAll($this->id);
+            foreach($projects as $project)
+            {
+                $obj = new Project($project->rowid);
+                $this->projects[] = $obj; 
+            }
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     public function fetchByEmail($email)

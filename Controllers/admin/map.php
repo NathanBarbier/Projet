@@ -23,7 +23,7 @@ if($rights == 'admin')
     if($teamId)
     {
         $Project = new Project();
-        $MapColumns = new MapColumns();
+        $MapColumn = new MapColumn();
         $Task = new Task();  
 
 

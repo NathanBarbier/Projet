@@ -28,7 +28,7 @@ class Team extends Modele
             $this->idProject = $Team->fk_project;
             $this->active = $Team->active;
 
-            $sql = "SELECT u.rowid, u.lastname, u.firstname, u.birth, u.password, u.fk_position, u.email, u.fk_organization";
+            $sql = "SELECT u.rowid, u.lastname, u.firstname, u.birth, u.password, u.email, u.fk_organization";
             $sql .= " FROM users AS u";
             $sql .= " LEFT JOIN belong_to AS b ON u.rowid = b.fk_user";
             $sql .= " WHERE b.fk_team = ?";
@@ -44,13 +44,13 @@ class Team extends Modele
                 $this->members[] = $obj;
             }
 
-            $MapColumns = new MapColumns();
+            $MapColumn = new MapColumn();
 
-            $lines = $MapColumns->fetchAll($this->id);
+            $lines = $MapColumn->fetchAll($this->id);
             
             foreach($lines as $line)
             {
-                $obj = new MapColumns($line->rowid);
+                $obj = new MapColumn($line->rowid);
                 $this->mapColumns[] = $obj;
             }
         }
@@ -111,6 +111,7 @@ class Team extends Modele
         return $this->members;
     }
 
+    //* outdated, use instead count($this->members)
     public function countMembers()
     {
         return count($this->members);
@@ -142,16 +143,48 @@ class Team extends Modele
         return $requete->fetchAll(PDO::FETCH_OBJ);
     }
 
-    public function fetch($idTeam)
+    public function fetch(int $idTeam)
     {
         $sql = "SELECT *"; 
         $sql .= " FROM teams"; 
         $sql .= " WHERE rowid = ?";
-
+        
         $requete = $this->getBdd()->prepare($sql);
         $requete->execute([$idTeam]);
 
-        return $requete->fetch(PDO::FETCH_OBJ);
+        $Team = $requete->fetch(PDO::FETCH_OBJ);
+
+        $this->id = $idTeam;
+        $this->name = $Team->name;
+        $this->idOrganization = $Team->fk_organization;
+        $this->idProject = $Team->fk_project;
+        $this->active = $Team->active;
+
+        $sql = "SELECT u.rowid, u.lastname, u.firstname, u.birth, u.password, u.email, u.fk_organization";
+        $sql .= " FROM users AS u";
+        $sql .= " LEFT JOIN belong_to AS b ON u.rowid = b.fk_user";
+        $sql .= " WHERE b.fk_team = ?";
+
+        $requete = $this->getBdd()->prepare($sql);
+        $requete->execute([$this->id]);
+
+        $members = $requete->fetchAll(PDO::FETCH_OBJ);
+
+        foreach($members as $member)
+        {
+            $obj = new User($member->rowid);
+            $this->members[] = $obj;
+        }
+
+        $MapColumn = new MapColumn();
+
+        $lines = $MapColumn->fetchAll($this->id);
+        
+        foreach($lines as $line)
+        {
+            $obj = new MapColumn($line->rowid);
+            $this->mapColumns[] = $obj;
+        }
     }
 
     public function fetchNameByUserIdAndProjectId($idUser, $idProject)
@@ -184,6 +217,7 @@ class Team extends Modele
         return $requete->fetchAll(PDO::FETCH_OBJ);
     }
 
+    //* outdated, only used in detailsProjet, use instead $Project->getTeams()
     public function fetchByProjectId($fk_project)
     {
         $sql = "SELECT t.rowid, t.name, t.fk_organization, t.fk_project, t.active";
@@ -285,17 +319,11 @@ class Team extends Modele
     {
         $teamId = $teamId == null ? $this->id : $teamId;
 
-        // delete teams
         $sql = "DELETE FROM teams WHERE rowid = ?;";
-        // delete belong_to
         $sql .= "DELETE FROM belong_to WHERE fk_team = ?;";
-        // delete tasks_comments
         $sql .= "DELETE FROM tasks_comments WHERE fk_task IN (SELECT rowid FROM tasks WHERE fk_column IN (SELECT rowid FROM map_columns WHERE fk_team = ?));";
-        // delete tasks_members
         $sql .= "DELETE FROM tasks_members WHERE fk_task IN (SELECT rowid FROM tasks WHERE fk_column IN (SELECT rowid FROM map_columns WHERE fk_team = ?));";
-        // delete tasks
         $sql .= "DELETE FROM tasks WHERE fk_column IN (SELECT rowid FROM map_columns WHERE fk_team = ?);";
-        // delete map_columns
         $sql .= "DELETE FROM map_columns WHERE fk_team = ?;";
         
         $requete = $this->getBdd()->prepare($sql);

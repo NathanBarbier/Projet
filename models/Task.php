@@ -9,6 +9,7 @@
     private $fk_author;
     private $admin;
     private $active;
+    private $comments = array();
 
     public function __construct($taskId = null)
     {
@@ -33,6 +34,20 @@
                 $this->fk_author = $Task->fk_author;
                 $this->admin = $Task->admin;
                 $this->active = $Task->active;
+
+                $sql = "SELECT tc.rowid, tc.fk_task, tc.note, tc.fk_user, tc.admin";
+                $sql .= " FROM tasks_comments AS tc";
+                $sql .= " WHERE tc.fk_task = ?";
+
+                $requete = $this->getBdd()->prepare($sql);
+                $requete->execute([$taskId]);
+
+                $lines = $requete->fetchAll(PDO::FETCH_OBJ);
+
+                foreach($lines as $obj)
+                {
+                    $this->comments = new TaskComment($obj->rowid);
+                }
             }
         }
     }
@@ -148,9 +163,19 @@
         $requete = $this->getBdd()->prepare($sql);
         $requete->execute([$fk_column]);
 
-        return $requete->fetchAll(PDO::FETCH_OBJ);
+        $lines = $requete->fetchAll(PDO::FETCH_OBJ);
+
+        $Tasks = array();
+
+        foreach($lines as $line)
+        {
+            $Tasks[] = new Task($line->rowid);
+        }
+
+        return $Tasks;
     }
 
+    //* not sure to keep it
     public function fetchCountTodo($fk_project)
     {
         $sql = "SELECT COUNT(t.rowid) AS counter";
@@ -172,6 +197,7 @@
         return $CountTodo->counter;
     }
 
+    //* not sure to keep it
     public function fetchCountInProgress($fk_project)
     {
         $sql = "SELECT COUNT(t.rowid) AS counter";

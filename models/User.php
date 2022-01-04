@@ -7,7 +7,6 @@ class User extends Modele
     private $birth;
     private $password;
     private $email;
-    private $idPosition;
     private $idOrganization;
     private $consent;
 
@@ -29,7 +28,6 @@ class User extends Modele
             $this->firstname = $User->firstname;
             $this->birth = $User->birth;
             $this->password = $User->password;
-            $this->idPosition = $User->fk_position;
             $this->email = $User->email;
             $this->idOrganization = $User->fk_organization;
             $this->consent = $User->consent;
@@ -56,11 +54,6 @@ class User extends Modele
     public function setPassword($password)
     {
         $this->password = hash($password, PASSWORD_BCRYPT);
-    }
-
-    public function setIdPosition($idPosition)
-    {
-        $this->idPosition = $idPosition;
     }
 
     public function setEmail($email)
@@ -101,11 +94,6 @@ class User extends Modele
         return $this->password;
     }
 
-    public function getIdPosition()
-    {
-        return $this->idPosition;
-    }
-
     public function getEmail()
     {
         return $this->email;
@@ -123,6 +111,10 @@ class User extends Modele
     
     //! METHODES
 
+    /** Check if an email is linked to a user
+     * @param string $email the email to check
+     * @return boolean true if email is linked to a user, otherwise not linked
+     */
     public function checkByEmail(string $email)
     {
         $sql = "SELECT u.email";
@@ -159,10 +151,13 @@ class User extends Modele
         return $requete->fetchAll(PDO::FETCH_OBJ);
     }
 
-
-    public function fetchFreeUsersByProjectId($projectId, $idOrganization)
+    /** Return users that are not related to a project
+     * @param int $projectId The project for which we are looking for unrelated users
+     * @param int $idOrganization The organization in which we will search for users.
+     * @return List<User>|false unrelated users if any, otherwise false
+     */
+    public function fetchFreeUsersByProjectId(int $projectId, int $idOrganization)
     {
-        // récuperer les idUtilisateurs étant dans une team bossant sur le projet
         $sql = "SELECT u.rowid";
         $sql .= " FROM users AS u";
         $sql .= " LEFT JOIN belong_to AS b ON u.rowid = b.fk_user";
@@ -182,7 +177,7 @@ class User extends Modele
 
         $notFreeUsers = implode("', '", $notFreeUsers);
         
-        $sql = "SELECT u.rowid, u.lastname, u.firstname, u.birth, u.password, u.fk_position, u.email, u.fk_organization";
+        $sql = "SELECT u.rowid, u.lastname, u.firstname, u.birth, u.password, u.email, u.fk_organization";
         $sql .= " FROM users AS u";
         $sql .= " WHERE u.rowid NOT IN(";
         $sql .= " SELECT rowid";
@@ -197,9 +192,10 @@ class User extends Modele
         return $requete->fetchAll(PDO::FETCH_OBJ);
     }
 
+    //* outdated, use instead $Project->getTeams()->getUsers()
     public function fetchByTeam($idTeam)
     {
-        $sql = "SELECT u.rowid, u.lastname, u.firstname, u.birth, u.password, u.fk_position, u.email, u.fk_organization"; 
+        $sql = "SELECT u.rowid, u.lastname, u.firstname, u.birth, u.password, u.email, u.fk_organization"; 
         $sql .= " FROM users AS u";
         $sql .= " LEFT JOIN belong_to AS b ON u.rowid = b.fk_user" ;
         $sql .= " WHERE b.fk_team = ?";
@@ -221,18 +217,6 @@ class User extends Modele
 
         return $requete->fetch(PDO::FETCH_OBJ);
     }
-    
-    public function fetchByLastnameAndFirstname($lastname, $firstname, $idorganization)
-    {
-        $sql = "SELECT *"; 
-        $sql .= " FROM users";
-        $sql.= "WHERE lastname = ? && firstname = ? && fk_organization = ?";
-
-        $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$lastname, $firstname, $idorganization]);
-
-        return $requete->fetch(PDO::FETCH_OBJ);
-    }
 
     public function fetchByIds(array $usersIds)
     {
@@ -250,16 +234,16 @@ class User extends Modele
 
     //! INSERT
 
-    public function create($firstname, $lastname, $birth, $idPosition, $email, $idorganization, $password)
+    public function create($firstname, $lastname, $birth, $email, $idorganization, $password)
     {
         $status = array();
                         
-        $sql = "INSERT INTO users (lastname, firstname, birth, fk_position, email, fk_organization, password, consent) ";
+        $sql = "INSERT INTO users (lastname, firstname, birth, email, fk_organization, password, consent) ";
         $sql .= "VALUES (?,?,?,?,?,?,?,0)";
         $requete = $this->getBdd()->prepare($sql);
 
 
-        $status[] = $requete->execute([$lastname, $firstname, $birth, $idPosition, $email, $idorganization, $password]);
+        $status[] = $requete->execute([$lastname, $firstname, $birth, $email, $idorganization, $password]);
 
         $sql = "SELECT MAX(rowid) as rowid"; 
         $sql .= " FROM users";
@@ -322,16 +306,6 @@ class User extends Modele
         
         $requete = $this->getBdd()->prepare($sql);
         return $requete->execute([$lastname, $idUser]);
-    }
-
-    public function updatePosition($idPosition, $idUser)
-    {
-        $sql = "UPDATE users"; 
-        $sql .= " SET fk_Position = ?";
-        $sql .= " WHERE rowid = ?";
-        
-        $requete = $this->getBdd()->prepare($sql);
-        return $requete->execute([$idPosition, $idUser]);
     }
 
     public function updatePassword($password, $idUser = null)

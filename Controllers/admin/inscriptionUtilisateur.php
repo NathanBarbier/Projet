@@ -38,40 +38,29 @@ if($rights === "admin")
     $firstname = GETPOST('firstname');
     $lastname = GETPOST('lastname');
     $email = GETPOST('email');
-    $idPosition = GETPOST('idPosition');
     $birth = GETPOST('birth');
     $oldpwd = GETPOST('oldpassword');
     $newpwd = GETPOST('newpassword');
     $newpwd = GETPOST('newpassword2');
 
     $User = new User($idUser);
-    $Position = new Position();
     $Team = new Team();
 
-    $positions = $Position->fetchAll($idOrganization);
     $teams = $Team->fetchAll($idOrganization);
 
     $errors = array();
     $success = false;
 
-    // $data = new stdClass;
-
     $tpl = "inscriptionUtilisateur.php";
 
-    
-    // exit;
-    
     if($action == "signup")
     {
         if($envoi)
         {
-            if($email && $firstname && $lastname && $birth && $idPosition)
+            if($email && $firstname && $lastname && $birth)
             {
                 if(filter_var($email, FILTER_VALIDATE_EMAIL))
                 {
-                    $idPosition = intval($idPosition);
-                    if(is_int($idPosition))
-                    {
                         $speciaux = "/[.!@#$%^&*()_+=]/";
                         $nombres = "/[0-9]/";
                         if(!preg_match($nombres, $firstname) && !preg_match($speciaux, $firstname))
@@ -83,7 +72,7 @@ if($rights === "admin")
                                     $temporaryPassword = generateRandomString(6);
                                     $password = password_hash($temporaryPassword, PASSWORD_BCRYPT);
                                     
-                                    if($User->create($firstname, $lastname, $birth, $idPosition, $email, $idOrganization, $password))
+                                    if($User->create($firstname, $lastname, $birth, $email, $idOrganization, $password))
                                     {
                                         $organization = new organization($idOrganization);
                                         $organizationName = $organization->getName();
@@ -135,11 +124,6 @@ if($rights === "admin")
                         {
                             $errors[] = "Erreur : Le prénom n'est pas correct.";
                         }
-                    } 
-                    else 
-                    {
-                        $errors[] = "Le poste n'est pas correct.";
-                    }
                 } 
                 else 
                 {

@@ -9,13 +9,11 @@ if($rights === "admin")
 {
     $action = GETPOST('action');
     $idUser = GETPOST('idUser');
-
     $envoi = GETPOST('envoi');
 
     $firstname = GETPOST('firstname');
     $lastname = GETPOST('lastname');
     $email = GETPOST('email');
-    $idPoste = GETPOST('idPosition');
     $idEquipe = GETPOST('idEquipe');
     $birth = GETPOST('birth');
 
@@ -24,11 +22,9 @@ if($rights === "admin")
     $newmdp2 = GETPOST('newmdp2');
 
     $User = new User($idUser);
-    $Position = new Position();
     $Team = new Team();
 
     $members = $User->fetchAll($idOrganization);
-    $positions = $Position->fetchAll($idOrganization);
     $teams = $Team->fetchAll($idOrganization);
 
     $errors = array();
@@ -116,27 +112,6 @@ if($rights === "admin")
             header("location:".ROOT_URL."index.php");
         }
     }
-    
-    if($action == "updatePosition")
-    {
-        if($idUser && $idPoste)
-        {
-            $status = $User->updatePosition($idPoste, $idUser);
-
-            if($status)
-            {
-                $success = "La modification de poste a bien été prise en compte.";
-            }
-            else
-            {
-                $errors[] = "La modification de poste n'a pas pu aboutir.";
-            }
-        } 
-        else
-        {
-            header("location:".ROOT_PATH."index.php");
-        }
-    }
 
     if($action == "deleteUser")
     {
@@ -164,7 +139,6 @@ if($rights === "admin")
     if($success)
     {
         $members = $User->fetchAll($idOrganization);
-        $positions = $Position->fetchAll($idOrganization);
         $teams = $Team->fetchAll($idOrganization);
     }
 

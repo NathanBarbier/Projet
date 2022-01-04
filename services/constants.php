@@ -12,8 +12,17 @@ $rootDir .= DIRECTORY_SEPARATOR;
 $pageName = explode("/", $url)[max(array_keys(explode("/", $url)))];
 $pageName = explode("?", $pageName)[min(array_keys(explode("?", $pageName)))];
 
-$rootUrl = explode("storieshelper", $url)[0];
-$rootUrl .= "storieshelper/";
+$rootUrl = "";
+
+$splittedUrl = explode("/", $url);
+foreach($splittedUrl as $urlPiece)
+{
+    $rootUrl .= $urlPiece . "/";
+    if(strpos($urlPiece, "storieshelper") !== false)
+    {
+        break;
+    }
+}
 
 // DIR PATH
 define('ROOT_PATH', $rootDir);

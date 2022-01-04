@@ -40,22 +40,6 @@ require_once "layouts/entete.php";
                 <label for="dateNaiss">Date de naissance</label>
             </div>
 
-            <div class="row text-center ">
-                <div class="col-6 mx-auto">
-                    <label for="idPosition">Sélectionnez un poste</label>
-                    <select class="form-control col text-center mt-3" name="idPosition" id="idPosition">
-                        <?php
-                            foreach($positions as $position)
-                            {
-                                ?>
-                                <option value="<?= $position->rowid ?>"><?= $position->name ?></option>
-                            <?php
-                            } ?>
-                    </select>
-                </div>
-            
-            
-            </div>
             <div class="text-center mt-5 w-50">
                 <button style="min-width: 15%" type="submit" class="btn btn-primary" name="envoi" value="1">Inscrire</button>
             </div>

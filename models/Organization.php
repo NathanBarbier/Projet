@@ -443,6 +443,26 @@ class Organization extends Modele
         }
 
     }
+            
+    public function checkToken($idUser, $token)
+    {
+        $sql = "SELECT *";
+        $sql .= " FROM organizations";
+        $sql .= " WHERE rowid = ?";
+        $sql .= " AND token = ?";
+
+        $requete = $this->getBdd()->prepare($sql);
+        $requete->execute([$idUser, $token]);
+
+        if($requete->rowcount() > 0)
+        {
+            return true;
+        } 
+        else 
+        {
+            return false;
+        }
+    }
 
     public function checkByEmail($email)
     {
@@ -461,6 +481,16 @@ class Organization extends Modele
         {
             return false;
         }
+    }
+        
+    public function addCookie($idUser, $token)
+    {
+        $sql = "UPDATE organizations";
+        $sql .= " SET token = ?";
+        $sql .= " WHERE rowid = ?";
+
+        $requete = $this->getBdd()->prepare($sql);
+        $requete->execute([$token, $idUser]);
     }
 }
 ?>

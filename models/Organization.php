@@ -336,6 +336,18 @@ class Organization extends Modele
         return $requete->fetch(PDO::FETCH_OBJ);
     }
 
+    public function fetchById($rowid)
+    {
+        $sql = "SELECT *";
+        $sql .= " FROM organizations"; 
+        $sql .= " WHERE rowid = ?";
+        
+        $requete = $this->getBdd()->prepare($sql);
+        $requete->execute([$rowid]);
+
+        return $requete->fetch(PDO::FETCH_OBJ);
+    }
+
 
     //! METHODES
 

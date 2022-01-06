@@ -73,9 +73,9 @@ if($envoi)
                     {
                         $token = bin2hex(random_bytes(15));
                         setcookie(
-                            $user->rowid,
-                            $token,
-                            time() + 604800,
+                            'remember_me',
+                            $user->rowid . "-" . $token,
+                            time() + 604800
                         );
                     }
 
@@ -115,7 +115,7 @@ if($envoi)
                             setcookie(
                                 'remember_me',
                                 $user->rowid . "-" . $token,
-                                time() + 604800,
+                                time() + 604800
                             );
                         }
     

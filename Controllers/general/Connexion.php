@@ -28,7 +28,7 @@ if(isset($_COOKIE["remember_me"]))
     print_r($cookie);
     if($Organization->checkToken($cookie[0], $cookie[1]))
     {
-        $user = $Organization->fetch($cookie[0]);
+        $user = $Organization->fetchById($cookie[0]);
 
         $_SESSION["rights"] = "admin";
         $_SESSION["idOrganization"] = $user->rowid;
@@ -41,7 +41,7 @@ if(isset($_COOKIE["remember_me"]))
     {
         if($User->checkToken($cookie[0], $cookie[1]))
         {
-            $user = $Organization->fetch($cookie[0]);
+            $user = $Organization->fetchById($cookie[0]);
     
             $_SESSION["rights"] = "user";
             $_SESSION["idUser"] = intval($user->rowid);

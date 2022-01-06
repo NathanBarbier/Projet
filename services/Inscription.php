@@ -48,43 +48,11 @@ class Inscription extends Modele
 
     public function inscriptionOrg($email, $password, $name, $consent)
     {
-        $status = array();
-
         $sql = "INSERT INTO organizations (email, password, name, consent)";
         $sql .= " VALUES(?, ?, ?, ?)";
 
         $requete = $this->getBdd()->prepare($sql);
-        $status[] = $requete->execute([$email, $password, $name, $consent]);
-    
-        $sql = "SELECT max(rowid) AS maxId"; 
-        $sql .= " FROM organizations";
-
-        $requete = $this->getBdd()->prepare($sql);
-        $status[] = $requete->execute();
-
-        $idMax = $requete->fetch(PDO::FETCH_OBJ);
-    
-        if($idMax->maxId == null)
-        {
-            $idMax->maxId = 1;
-        }
-
-        $idMax->maxId = intval($idMax->maxId);
-        
-        $sql = "INSERT INTO positions (name, fk_organization, fk_role)";
-        $sql .= " VALUES (?, ?, ?);";
-
-        $requete = $this->getBdd()->prepare($sql);
-        $status[] = $requete->execute(["indéfini",$idMax->maxId, 4]);
-
-        if(in_array(false, $status))
-        {
-            return false;
-        }
-        else
-        {
-            return true;
-        }
+        return $requete->execute([$email, $password, $name, $consent]);
     }
 }
 ?>

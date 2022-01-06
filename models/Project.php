@@ -42,8 +42,7 @@ Class Project extends Modele
             {
                 $Team = new Team($line->rowid);
                 $this->teams[] = $Team;
-            }
-                
+            } 
         }
     }
 
@@ -189,7 +188,7 @@ Class Project extends Modele
     }
 
 
-    //! FETCH
+    // FETCH
 
     public function fetchAll($idOrganization = null)
     {
@@ -204,7 +203,14 @@ Class Project extends Modele
 
         $lines = $requete->fetchAll(PDO::FETCH_OBJ);
 
-        return $lines;
+        $Organizations = array();
+
+        foreach($lines as $line)
+        {
+            $Organizations[] = new Organization($line->rowid);
+        }
+
+        return $Organizations;
     }
 
     public function fetchByTeam($idTeam)
@@ -257,7 +263,7 @@ Class Project extends Modele
     }
 
 
-    //! INSERT
+    // INSERT
     public function create($name, $type, $description = "", $idorganization = false)
     {
         $idorganization = $idorganization ?? $this->getIdorganization();

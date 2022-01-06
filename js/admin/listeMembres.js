@@ -95,30 +95,3 @@ function annulerModifEquipe($idUser)
     document.getElementById(cacher).classList.remove("show");
     document.getElementById(cacher2).classList.remove("show");
 }
-
-// Modification du poste de l'utilisateur
-function afficherConfModifPoste($idUser)
-{
-    var cacher = "divModifPoste" + $idUser;
-    var cacher2 = "divNomPoste" + $idUser;
-    var afficher = "divConfModifPoste" + $idUser;
-    var afficher2 = "divSelectPostes" + $idUser;
-
-    document.getElementById(cacher).classList.remove("show");
-    document.getElementById(cacher2).classList.remove("show");
-    document.getElementById(afficher).classList.add("show");
-    document.getElementById(afficher2).classList.add("show");
-}
-
-function annulerModifPoste($idUser)
-{
-    var cacher = "divConfModifPoste" + $idUser;
-    var cacher2 = "divSelectPostes" + $idUser;
-    var afficher = "divModifPoste" + $idUser;
-    var afficher2 = "divNomPoste" + $idUser;
-
-    document.getElementById(cacher).classList.remove("show");
-    document.getElementById(cacher2).classList.remove("show");
-    document.getElementById(afficher).classList.add("show");
-    document.getElementById(afficher2).classList.add("show");
-}

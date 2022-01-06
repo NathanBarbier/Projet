@@ -1,3 +1,2 @@
 Options -Indexes
-SetEnvIf Host ^ suppress-error-charset
-ErrorDocument 403 "<html><head><meta http-equiv='Content-Type' content='text/html; charset=utf-8'></head><body>Error 403 - Vous n'avez pas l'autorisation d'accéder à cette ressource.</body></html>"
+ErrorDocument 403 http://127.0.0.1/school/storieshelper/errors/403

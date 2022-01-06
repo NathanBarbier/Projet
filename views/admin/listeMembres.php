@@ -32,7 +32,6 @@ require_once "layouts/entete.php";
             <tr class="text-center">
                 <th>NOM</th>
                 <th>Prénom</th>
-                <th>Poste</th>
                 <th>Adresse email</th>
                 <th>Options</th>
             </tr>
@@ -80,41 +79,6 @@ require_once "layouts/entete.php";
                         <div id="divConfModifPrenom<?= $member->rowid ?>" class="collapse">
                             <button type="submit" name="envoi" value="<?= true ?>" class="btn btn-success">Confirmer</button>
                             <a onclick="annulerModifPrenom(<?= $member->rowid ?>)" class="btn btn-warning">Annuler</a>
-                        </div>
-                    </form>
-                </td>
-
-                <td>
-                    <div id="divNomPoste<?= $member->rowid ?>" class="collapse show">
-                        <?php 
-                        foreach($positions as $position)
-                        {
-                            if($position->rowid == $member->fk_position)
-                            {
-                                echo $position->name;
-                                break;
-                            }
-                        }
-                        ?>
-                    </div>
-                    <!-- On affiche tous les postes de l'organisation -->
-                    <form method="POST" action="<?= CONTROLLERS_URL ?>admin/listeMembres.php?action=updatePosition&idUser=<?= $member->rowid ?>">
-                        <div id="divSelectPostes<?= $member->rowid ?>" class="collapse text-center">
-                            <select name="idPosition" class="text-center form-control w-75 mx-auto mb-1">
-                                <?php foreach($positions as $position)
-                                { 
-                                    ?>
-                                    <option value="<?= $position->rowid ?>" <?= $position->rowid == $member->fk_position ? "selected" : "" ?>><?= $position->name ?></option>
-                                <?php } ?>
-                            </select>
-                        </div>
-                        <div id="divModifPoste<?= $member->rowid ?>" class="collapse show mt-3">
-                            <a onclick="afficherConfModifPoste(<?= $member->rowid ?>)" class="btn btn-outline-info">Modifier</a>
-                        </div>
-                        <div id="divConfModifPoste<?= $member->rowid ?>" class="collapse">
-                            <button type="submit" class="btn btn-outline-success">Confirmer</button><br>
-
-                            <a onclick="annulerModifPoste(<?= $member->rowid ?>)" class="btn btn-outline-danger mt-1">Annuler</a>
                         </div>
                     </form>
                 </td>

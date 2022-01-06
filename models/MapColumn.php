@@ -1,5 +1,5 @@
 <?php 
-Class MapColumns extends Modele
+Class MapColumn extends Modele
 {
     private $rowid;
     private $name;
@@ -124,7 +124,16 @@ Class MapColumns extends Modele
         $requete = $this->getBdd()->prepare($sql);
         $requete->execute([$fk_team]);
 
-        return $requete->fetchAll(PDO::FETCH_OBJ);
+        $lines = $requete->fetchAll(PDO::FETCH_OBJ);
+
+        $MapColumns = array();
+
+        foreach($lines as $line)
+        {
+            $MapColumns[] = new MapColumn($line->rowid);        
+        }
+
+        return $MapColumns;
     }
 
     public function fetch_last_insert_id()

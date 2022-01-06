@@ -166,7 +166,12 @@ class TaskComment extends Modele
         $requete = $this->getBdd()->prepare($sql);
         $requete->execute([$rowid]);
 
-        return $requete->fetch(PDO::FETCH_OBJ);
+        $obj = $requete->fetch(PDO::FETCH_OBJ);
+
+        $this->rowid = $rowid;
+        $this->fk_task = $obj->fk_task;
+        $this->note = $obj->note;
+        $this->fk_user = $obj->fk_user;
     }
 
     public function fetchAll($fk_task)

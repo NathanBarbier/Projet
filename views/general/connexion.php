@@ -35,7 +35,12 @@ require_once "layouts/entete.php";
             <input type="password" class="form-control" name="password" placeholder="Saisissez votre mot de passe" required>
             <label for="password" class="mb-1">Mot de passe</label>
         </div>
-
+        
+        <div class="mt-3 text-center">
+            <input type="checkbox" id="rememberMe" name="rememberMe">
+            <label for="rememberMe" class="mb-1">Se souvenir de moi ?</label>
+        </div>
+        
         <div class="form-group text-center mt-3">
             <button type="submit" class="btn btn-primary w-50 mt-3" name="envoi" value="1">Se connecter</button>
         </div>

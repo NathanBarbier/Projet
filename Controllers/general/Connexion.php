@@ -10,6 +10,7 @@ $envoi = GETPOST('envoi');
 $email = GETPOST('email');
 $password = GETPOST('password');
 $message = GETPOST('message');
+$rememberMe = GETPOST('rememberMe');
 
 $User = new User();
 $Organization = new Organization();
@@ -20,6 +21,36 @@ $success = false;
 $data = array();
 
 $tpl = "connexion.php";
+
+if(isset($_COOKIE["remember_me"]))
+{
+    $cookie = explode("-", $_COOKIE["remember_me"]);
+    print_r($cookie);
+    if($Organization->checkToken($cookie[0], $cookie[1]))
+    {
+        $user = $Organization->fetch($cookie[0]);
+
+        $_SESSION["rights"] = "admin";
+        $_SESSION["idOrganization"] = $user->rowid;
+        $_SESSION["email"] = $user->email;
+
+        $success = true;
+    }
+
+    if(!$success)
+    {
+        if($User->checkToken($cookie[0], $cookie[1]))
+        {
+            $user = $Organization->fetch($cookie[0]);
+    
+            $_SESSION["rights"] = "user";
+            $_SESSION["idUser"] = intval($user->rowid);
+            $_SESSION["idOrganization"] = intval($user->fk_organization);
+    
+            $success = true;
+        }
+    }
+}
 
 if($envoi)
 {
@@ -37,6 +68,18 @@ if($envoi)
                     
                     $_SESSION["idUser"] = intval($user->rowid);
                     $_SESSION["idOrganization"] = intval($user->fk_organization);
+
+                    if($rememberMe)
+                    {
+                        $token = bin2hex(random_bytes(15));
+                        setcookie(
+                            $user->rowid,
+                            $token,
+                            time() + 604800,
+                        );
+                    }
+
+                    $User->addCookie($user->rowid, $token);
                     
                     if($consent == true)
                     {
@@ -65,7 +108,19 @@ if($envoi)
                         $_SESSION["rights"] = "admin";
                         $_SESSION["idOrganization"] = $user->rowid;
                         $_SESSION["email"] = $user->email;
-                        
+
+                        if($rememberMe)
+                        {
+                            $token = bin2hex(random_bytes(15));
+                            setcookie(
+                                'remember_me',
+                                $user->rowid . "-" . $token,
+                                time() + 604800,
+                            );
+                        }
+    
+                        $Organization->addCookie($user->rowid, $token);
+
                         $success = true;
                     } 
                     else 

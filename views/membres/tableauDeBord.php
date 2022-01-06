@@ -96,21 +96,6 @@ require_once "layouts/entete.php";
                         <button type="submit" class="w-50 mt-4 pt-2 btn btn-outline-primary text-center">Mettre à jour</button>
                     </form>
 
-                    <div class="row justify-content-around mt-5">
-                        <div class="col-5 sticker-deep text-center pt-2">
-                            <b>Poste</b><br>
-                            <div class="overflow-x">
-                                <p><?= $CurrentUser->position; ?></p>
-                            </div>
-                        </div>
-                        <div class="col-5 sticker-deep text-center pt-2">
-                            <b>Role</b><br>
-                            <div class="overflow-x">
-                                <p><?= $CurrentUser->role; ?></p>
-                            </div>
-                        </div>
-                    </div>
-
                     <div class="text-center position-absolute bottom-0 start-50 translate-middle-x">
                         <a class="btn btn-outline-secondary mt-5 w-100" href="<?= CONTROLLERS_URL ?>membres/passwordUpdate.php">Modifier mot de passe</a>
                         <button id="delete-account-btn" class="btn btn-outline-danger mt-3 mb-3 w-100">Supprimer le compte</button>

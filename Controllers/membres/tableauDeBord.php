@@ -16,18 +16,16 @@ if($rights === "user")
     $errors = GETPOST("errors");
 
     $User = new User($idUser);
-    $Position = new Position($User->getIdPosition());
-    $idRole = $Position->getIdRole();
-    $Role = new Role($idRole);
     
-    // Les équipes auxquelles l'user appartient
-    $BelongsTo = new BelongsTo($idUser);
+    $BelongsTo = new BelongsTo();
+    // All associated teams with the user
+    $BelongsToAll = $BelongsTo->fetchAll($idUser);
 
     $userProjects = array();
 
-    // On récupère toutes les ids équipes auxquelle appartient l'user
-    foreach($BelongsTo->getTeamIds() as $teamId)
+    foreach($BelongsToAll as $BelongsTo)
     {
+        $teamId = $BelongsTo->getFk_team();
         $Team = new Team($teamId);
 
         if($Team->getActive() == true)
@@ -119,10 +117,7 @@ if($rights === "user")
     if($success)
     {
         $User = new User($idUser);
-        $Position = new Position($User->getIdPosition());
         $Team = new Team();
-        $idRole = $Position->getIdRole();
-        $Role = new Role($idRole);
         $Project = new Project($Team->getidProject());
     }
 
@@ -130,8 +125,6 @@ if($rights === "user")
     $CurrentUser->firstname = $User->getFirstname();
     $CurrentUser->lastname = $User->getLastname();
     $CurrentUser->email = $User->getEmail();
-    $CurrentUser->position = $Position->getName();
-    $CurrentUser->role = $Role->getName();
     
     require_once VIEWS_PATH."membres".DIRECTORY_SEPARATOR.$tpl;
 }

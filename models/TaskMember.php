@@ -1,5 +1,5 @@
 <?php 
-Class TaskMembers extends Modele 
+Class TaskMember extends Modele 
 {
     private $rowid;
     private $fk_user;
@@ -16,11 +16,11 @@ Class TaskMembers extends Modele
             $requete = $this->getBdd()->prepare($sql);
             $requete->execute([$rowid]);
 
-            $line = $requete->fetch(PDO::FETCH_OBJ);
+            $obj = $requete->fetch(PDO::FETCH_OBJ);
 
-            $this->rowid = $line->rowid;
-            $this->fk_user = $line->fk_user;
-            $this->fk_task = $line->fk_task;
+            $this->rowid = $obj->rowid;
+            $this->fk_user = $obj->fk_user;
+            $this->fk_task = $obj->fk_task;
         }
     }
 
@@ -133,7 +133,11 @@ Class TaskMembers extends Modele
         $requete = $this->getBdd()->prepare($sql);
         $requete->execute([$rowid]);
 
-        return $requete->fetch(PDO::FETCH_OBJ);
+        $obj = $requete->fetch(PDO::FETCH_OBJ);
+
+        $this->rowid = $obj->rowid;
+        $this->fk_user = $obj->fk_user;
+        $this->fk_task = $obj->fk_task;
     }
 
     public function fetchAll($fk_task)

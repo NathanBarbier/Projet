@@ -22,18 +22,13 @@ if($rights === "admin")
 
     if($idProject)
     {
+        $Organization = new Organization($idOrganization);
         $Project = new Project($idProject);
-
-        $CurrentProject = new stdClass;
-
-        $CurrentProject->rowid = $idProject;
-        $CurrentProject->name = $Project->getName();
-        $CurrentProject->description = $Project->getDescritpion();
-        $CurrentProject->type = $Project->getType();
-        $CurrentProject->active = intval($Project->getActive());
+        $User = new User();
+        $Team = new Team($teamId);
+        $BelongsTo = new BelongsTo();
 
         $success = false;
-        $refresh = false;
 
         if($errors)
         {
@@ -44,56 +39,62 @@ if($rights === "admin")
             $errors = array();
         }
 
-        $User = new User();
-        $Team = new Team();
-        $BelongsTo = new BelongsTo();
+        // Retrieve users who can join a new team
+        $freeUsers = $Organization->getUsers();
+        $freeUsersIds = array();
 
-        $projectFreeUsers = $User->fetchFreeUsersByProjectId($idProject, $idOrganization);
-
-        $projectFreeUsersIds = array();
-        foreach($projectFreeUsers as $user)
+        // remove admins
+        foreach($freeUsers as $key => $User)
         {
-            $projectFreeUsersIds[] = $user->rowid;
-        }
-
-        $projectTeamsIds = array();
-        
-        $lines = $Team->fetchByProjectId($idProject);
-
-        foreach($lines as $line)
-        {
-            $projectTeamsIds[] = $line->rowid;
-        }
-
-        $CurrentProject->teams = $Team->fetchByTeamIds($projectTeamsIds);
-
-        foreach($CurrentProject->teams as $key => $team)
-        {
-            $CurrentProject->teams[$key]->members = $User->fetchByTeam($team->rowid);
-        }
-
-        $addingUsersIds = array();
-        foreach($projectFreeUsers as $key => $user)
-        {
-            if(GETPOST('addingUser'.$key))
+            if($User->isAdmin())
             {
-                $addingUsersIds[] = GETPOST('addingUser'.$key);
+                unset($freeUsers[$key]);
+            }
+            else
+            {
+                $freeUsersIds[] = $User->getRowid();
             }
         }
 
+        // Remove users belonging to a team
+        foreach($Organization->getProjects() as $Project)
+        {
+            foreach($Project->getTeams() as $Team)
+            {
+                foreach($Team->getMembers() as $Member)
+                {
+                    if(in_array($Member, $freeUsers))
+                    {
+                        $key = array_search($Member, $freeUsers);
+                        unset($freeUsers[$key]);
+                    }
+                }
+            }
+        }
+
+        if($action == 'addTeam' || $action == "updateTeam")
+        {
+            $addingUsersIds = array();
+            foreach($freeUsers as $key => $user)
+            {
+                if(GETPOST('addingUser'.$key))
+                {
+                    $addingUsersIds[] = GETPOST('addingUser'.$key);
+                }
+            }
+        }
+
+        // actions
         if($action == "archiveTeam")
         {
             if($teamId)
             {
-                $status = $Team->updateActive(0, $teamId);
-
-                if($status)
-                {
+                try {
+                    $Team->setActive(0);
+                    $Team->update();
                     $success = "Le tableau de l'équipe à bien été archivé.";
-                    $refresh = true;
-                }
-                else
-                {
+                } catch (\Throwable $th) {
+                    //throw $th;
                     $errors[] = "Une erreur innatendue est survenue.";
                 }
             }
@@ -107,15 +108,11 @@ if($rights === "admin")
         {
             if($teamId)
             {
-                $status = $Team->updateActive(1, $teamId);
-
-                if($status)
-                {
+                try {
+                    $Team->setActive(1);
+                    $Team->update();
                     $success = "Le tableau de l'équipe à bien été ré-ouvert.";
-                    $refresh = true;
-                }
-                else
-                {
+                } catch (\Throwable $th) {
                     $errors[] = "Une erreur innatendue est survenue.";
                 }
             }
@@ -127,16 +124,13 @@ if($rights === "admin")
 
         if($action == "openProject")
         {
-            $status = $Project->updateActive(true, $idProject);
-
-            if($status)
-            {
+            try {
+                $Project->setActive(1);
+                $Project->update();
                 $success = "Le projet à bien été ré-ouvert.";
-                $refresh = true;
-            }
-            else
-            {
+            } catch (\Throwable $th) {
                 $errors[] = "Une erreur innatendue est survenue.";
+                //throw $th;
             }
         }
 
@@ -144,20 +138,20 @@ if($rights === "admin")
         {
             if($projectName && $description && $type)
             {
-                $status = array();
-
-                $status[] = $Project->updateName($projectName, $idProject);
-                $status[] = $Project->updateDescription($description, $idProject);
-                $status[] = $Project->updateType($type, $idProject);
-
-                if(in_array(false, $status))
+                try 
                 {
-                    $errors[] = "Une erreur inattendue est survenue.";
-                }
-                else
-                {
+                    $Project->setName($projectName);
+                    $Project->setDescription($description);
+                    $Project->setType($type);
+
+                    $Project->update();
+
                     $success = "Les informations du projet ont bien été mises à jour.";
-                    $refresh = true;
+                } 
+                catch (\Throwable $th) 
+                {
+                    echo $th->getMessage();
+                    $errors[] = "Une erreur inattendue est survenue.";
                 }
             }
             else
@@ -172,39 +166,53 @@ if($rights === "admin")
             {
                 if($addingUsersIds)
                 {
-                    $status = array();
-                    // create team with users
-                    $status[] = $Team->create($teamName, $idOrganization, $idProject);
+                    try {
+                        $Team = new Team();
+                        $Team->setName($teamName);
+                        $Team->setFk_project($idProject);
+                        $Team->setActive(1);
 
-                    $idTeam = $Team->fetchMaxId()->rowid;
+                        $Team->create();
 
-                    foreach($addingUsersIds as $idUser)
-                    {
-                        $status[] = $BelongsTo->create($idUser, $idTeam);
-                    }
+                        $teamId = $Team->fetchMaxId()->rowid;
+    
+                        $Team->setRowid($teamId);
 
-                    if(!in_array(false, $status))
-                    {
+                        foreach($addingUsersIds as $idUser)
+                        {
+                            $UserToAdd = $freeUsers[array_search($idUser, array_column($freeUsers, 'rowid'))];
+                            $Team->addUser($UserToAdd);
+
+                            $BelongsTo->create($idUser, $teamId);
+                        }
+
+                        $Project->addTeam($Team);
+
                         $success = "L'équipe a bien été créée.";
-                        $refresh = true;
-                    }
-                    else
-                    {
+                    } catch (\Throwable $th) {
+                        //throw $th;
                         $errors[] = "Une erreur inattendue est survenue.";
                     }
                 }
                 else
                 {
-                    // create team without users
-                    $status = $Team->create($teamName, $idOrganization, $idProject);
+                    try {
+                        // create team without users
+                        $Team = new Team();
+                        $Team->setName($teamName);
+                        $Team->setFk_project($idProject);
+                        $Team->setActive(1);
 
-                    if($status)
-                    {
+                        $Team->create();
+
+                        $teamId = $Team->fetchMaxId()->rowid;
+                        $Team->setRowid($teamId);
+
+                        $Project->addTeam($Team);
+
                         $success = "L'équipe a bien été créée.";
-                        $refresh = true;
-                    }
-                    else
-                    {
+                    } catch (\Throwable $th) {
+                        //throw $th;
                         $errors[] = "Une erreur inattendue est survenue.";
                     }
                 }
@@ -219,15 +227,14 @@ if($rights === "admin")
         {
             if($teamId)
             {
-                $status = $Team->delete($teamId);
+                try {
+                    $Team->delete($teamId);
 
-                if($status)
-                {
+                    $Project->removeTeam($teamId);
+
                     $success = "L'équipe a bien été supprimée.";
-                    $refresh = true;
-                }
-                else
-                {
+                } catch (\Throwable $th) {
+                    //throw $th;
                     $errors[] = "Une erreur innatendue est survenue.";
                 }
             }
@@ -241,45 +248,38 @@ if($rights === "admin")
         {
             if($teamId)
             {
-                $status = array();
-
-                // changement de nom d'équipe
-                if($teamNameUpdate)
-                {
-                    $status[] = $Team->updateName($teamNameUpdate, $teamId);
-                }
-
-                // ajout des users dans la team
-                foreach($addingUsersIds as $idUser)
-                {
-                    $status[] = $BelongsTo->create($idUser, $teamId);
-                }
-
-                // suppression des users dans la team
-                foreach($CurrentProject->teams as $team)
-                {
-                    if($team->rowid == $teamId)
+                try {
+                    // changement de nom d'équipe
+                    if($teamNameUpdate)
                     {
-                        foreach($team->members as $key => $member)
+                        $Team->updateName($teamNameUpdate, $teamId);
+                    }
+
+                    // ajout des users dans la team
+                    foreach($addingUsersIds as $idUser)
+                    {
+                        $BelongsTo->create($idUser, $teamId);
+                    }
+
+                    // suppression des users dans la team
+                    foreach($CurrentProject->teams as $team)
+                    {
+                        if($team->rowid == $teamId)
                         {
-                            if(GETPOST('removingUser'.$key))
+                            foreach($team->members as $key => $member)
                             {
-                                $fk_user = GETPOST('removingUser'.$key);
-                                $status[] = $BelongsTo->delete($fk_user, $team->rowid);
+                                if(GETPOST('removingUser'.$key))
+                                {
+                                    $fk_user = GETPOST('removingUser'.$key);
+                                    $BelongsTo->delete($fk_user, $team->rowid);
+                                }
                             }
                         }
                     }
-                }
 
-                // exit;
-
-                if(!in_array(false, $status))
-                {
                     $success = "L'équipe a bien été modifiée.";
-                    $refresh = true;
-                }
-                else
-                {
+                } catch (\Throwable $th) {
+                    //throw $th;
                     $errors[] = "Une erreur innatendue est survenue.";
                 }
             }
@@ -293,15 +293,12 @@ if($rights === "admin")
         if($action == "archive")
         {
             if($idProject)
-            {    
-                $status = $Project->updateActive(0, $idProject);
-
-                if($status)
-                {
-                    $refresh = true;
-                }
-                else
-                {
+            {  
+                try {
+                    $Project->setActive(0);
+                    $Project->update();
+                } catch (\Throwable $th) {
+                    //throw $th;
                     $errors[] = "Une erreur innatendue est survenue.";
                 }
             }
@@ -311,54 +308,27 @@ if($rights === "admin")
             }
         }
 
+        // For JS
+        $teamsIds = array();
 
-        if($refresh)
+        foreach($Project->getTeams() as $Team)
         {
-            $Project = new Project($idProject);
-
-            $CurrentProject = new stdClass;
-
-            $CurrentProject->rowid = $idProject;
-            $CurrentProject->name = $Project->getName();
-            $CurrentProject->description = $Project->getDescritpion();
-            $CurrentProject->type = $Project->getType();
-            $CurrentProject->active = $Project->getActive();
-
-            $projectFreeUsers = $User->fetchFreeUsersByProjectId($idProject, $idOrganization);
-
-            $projectFreeUsersIds = array();
-            foreach($projectFreeUsers as $user)
-            {
-                $projectFreeUsersIds[] = $user->rowid;
-            }
-        
-            $projectTeamsIds = array();
-            
-            $lines = $Team->fetchByProjectId($idProject);
-            foreach($lines as $line)
-            {
-                $projectTeamsIds[] = $line->rowid;
-            }
-        
-            $CurrentProject->teams = $Team->fetchByTeamIds($projectTeamsIds);
-
-            foreach($CurrentProject->teams as $key => $team)
-            {
-                $CurrentProject->teams[$key]->members = $User->fetchByTeam($team->rowid);
-            }
+            $teamsIds[] = $Team->getRowid();
         }
+
+        ?>
+        <script>
+        const CONTROLLERS_URL = <?php echo json_encode(CONTROLLERS_URL); ?>;
+        const projectId = <?php echo json_encode($Project->getRowid()); ?>;
+        var teamIds = <?php echo json_encode($teamsIds); ?>;
+        //var ProjectTeams = <?php echo json_encode($Project->getTeams()); ?>;
+        </script>
+        <?php
     }
     else
     {
         $errors[] = "Aucun projet n'a été sélectionné.";
     }
-
-    ?><script>
-        const AJAX_URL = <?php echo json_encode(AJAX_URL); ?>;
-        const CONTROLLERS_URL = <?php echo json_encode(CONTROLLERS_URL); ?>;
-        const projectId = <?php echo json_encode($CurrentProject->rowid); ?>;
-        var teamIds = <?php echo json_encode($projectTeamsIds); ?>;
-    </script><?php
 
     require_once VIEWS_PATH."admin/".$tpl;
 }

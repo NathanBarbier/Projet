@@ -31,11 +31,12 @@ $("#update-team-button").click(function() {
     // update team name
     $("#teamName-hidden-update").val($("#teamName").val());
 
-    CurrentProjectTeams = CurrentProject["teams"];
+    ProjectTeams = Project["teams"];
+    console.log(ProjectTeams)
 
     teamId = $("#team-id-update-input").val();
 
-    CurrentProjectTeams.forEach(team => {
+    ProjectTeams.forEach(team => {
         members = team["members"];
         teamRowid = team["rowid"];
         if(teamId == teamRowid)
@@ -110,12 +111,12 @@ function switchTeamApp()
         }
     }
 
-    l = projectTeamsIds.length;
+    l = teamsIds.length;
     for(i = 0; i < l; i++)
     {
-        if($(".team-members-"+projectTeamsIds[i]).hasClass("show"))
+        if($(".team-members-"+teamsIds[i]).hasClass("show"))
         {
-            $(".team-members-"+projectTeamsIds[i]).removeClass("show");
+            $(".team-members-"+teamsIds[i]).removeClass("show");
         }
     }
 

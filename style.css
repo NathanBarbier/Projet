@@ -54,6 +54,10 @@ input:read-only:hover {
   overflow-x: hidden;
 }
 
+.top-15 {
+  top: 15% !important;
+}
+
 .top-25 {
   top: 25% !important;
 }
@@ -75,6 +79,10 @@ input:read-only:hover {
 .alert-visible {
   opacity: 1 !important;
   display: initial !important;
+}
+
+.before {
+  z-index: 1;
 }
 
 #tbodyEquipeProjet {

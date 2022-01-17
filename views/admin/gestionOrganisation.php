@@ -84,20 +84,20 @@ require_once "layouts/entete.php";
                     <h4 class="text-center">Informations sur l'organisation</h4>
                 </div>
                 <div class="card-body position-relative">
-                    <h3 class="text-center border-bottom w-75 mx-auto"><?= $CurrentOrganization->name ?></h3>
+                    <h3 class="text-center border-bottom w-75 mx-auto"><?= $Organization->getName() ?></h3>
                     <h5 class="text-center mx-auto w-50 border-bottom mt-3">Email</h5>
                     <div class="d-flex justify-content-center mt-3">
-                        <button id="email-info-btn" type="text" class="btn btn-outline-classic form-control w-75 mx-auto text-center" tabindex="0" data-bs-toggle="tooltip" title="Modifier l'adresse email"><?= $CurrentOrganization->email ?></button>
+                        <button id="email-info-btn" type="text" class="btn btn-outline-classic form-control w-75 mx-auto text-center" tabindex="0" data-bs-toggle="tooltip" title="Modifier l'adresse email"><?= $Organization->getEmail() ?></button>
                     </div>
 
                     <h5 class="mt-3 text-center mx-auto w-50 border-bottom">Membres</h5>
                     <div class="d-flex justify-content-center mt-3">
-                        <button type="text" class="btn btn-outline-classic form-control w-75 mx-auto text-center"><?= $CurrentOrganization->membersCount ?></button>
+                        <button type="text" class="btn btn-outline-classic form-control w-75 mx-auto text-center"><?= count($Organization->getUsers()) ?></button>
                     </div>
 
                     <h5 class="mt-3 text-center mx-auto w-50 border-bottom">Projets en cours</h5>
                     <div class="d-flex justify-content-center mt-3">
-                        <button type="text" class="btn btn-outline-classic form-control w-75 mx-auto text-center"><?= $CurrentOrganization->projectsCount ?></button>
+                        <button type="text" class="btn btn-outline-classic form-control w-75 mx-auto text-center"><?= count($Organization->getProjects) ?></button>
                     </div>
 
                     <h5 class="mt-3 text-center mx-auto w-50 border-bottom">Projets terminés</h5>

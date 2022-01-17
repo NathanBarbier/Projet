@@ -7,8 +7,6 @@ $action = GETPOST('action');
 $idOrganization = $_SESSION["idOrganization"] ?? false;
 $rights = $_SESSION["rights"] ?? false;
 
-$organization = new Organization($idOrganization);
-
 $success = false;
 $errors = array();
 
@@ -16,11 +14,7 @@ $tpl = "listeProjets.php";
 
 if($rights === "admin")
 {
-    $Project = new Project();
-
-    $Project->setidOrganization($idOrganization);
-
-    $currentProjects = $Project->fetchAll();
+    $Organization = new Organization($idOrganization);
 
     require_once VIEWS_PATH."admin/".$tpl;
 }

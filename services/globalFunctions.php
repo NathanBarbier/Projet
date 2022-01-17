@@ -14,7 +14,7 @@ function GETPOST(string $dataName)
     }
     else
     {
-        return false;
+        return null;
     }
 
 }

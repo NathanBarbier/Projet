@@ -1,40 +1,27 @@
 <?php
 class User extends Modele
 {
-    private $id;
+    private $rowid;
     private $firstname;
     private $lastname;
     private $birth;
     private $password;
     private $email;
-    private $idOrganization;
+    // private $Organization;
+    private $fk_organization;
+    private $BelongsTo;
     private $consent;
+    private $admin;
 
-    public function __construct($id = null)
+    public function __construct($rowid = null)
     {
-        if($id != null)
+        if($rowid != null)
         {
-            $sql = "SELECT *"; 
-            $sql .= " FROM users"; 
-            $sql .= " WHERE rowid = ?";
-
-            $requete = $this->getBdd()->prepare($sql);
-            $requete->execute([$id]);
-
-            $User = $requete->fetch(PDO::FETCH_OBJ);
-
-            $this->id = $id;
-            $this->lastname = $User->lastname;
-            $this->firstname = $User->firstname;
-            $this->birth = $User->birth;
-            $this->password = $User->password;
-            $this->email = $User->email;
-            $this->idOrganization = $User->fk_organization;
-            $this->consent = $User->consent;
+            $this->fetch($rowid);
         }
     }
 
-    //! SETTER
+    // SETTER
 
     public function setFirstname($firstname)
     {
@@ -61,17 +48,31 @@ class User extends Modele
         $this->email = $email;
     }
 
+    // public function setOrganization(Organization $Organization)
+    // {
+    //     $this->Organization = $Organization;
+    // }
+    public function setFk_organization(int $fk_organization)
+    {
+        $this->fk_organization = $fk_organization;
+    }
+
     public function setConsent(bool $consent)
     {
         $this->consent = $consent;
     }
 
-
-    //! GETTER
-
-    public function getId()
+    public function setAdmin(int $admin)
     {
-        return $this->id;
+        $this->admin = $admin;
+    }
+
+
+    // GETTER
+
+    public function getRowid()
+    {
+        return $this->rowid;
     }
 
     public function getLastname()
@@ -99,17 +100,31 @@ class User extends Modele
         return $this->email;
     }
 
-    public function getIdorganization()
+    // public function getOrganization()
+    // {
+    //     return $this->Organization;
+    // }
+    public function getFk_organization()
     {
-        return $this->idorganization;
+        return $this->fk_organization;
     }
 
     public function getConsent()
     {
         return $this->consent;
     }
+
+    public function isAdmin()
+    {
+        return $this->admin;
+    }
+
+    public function getBelongsTo()
+    {
+        return $this->BelongsTo;
+    }
     
-    //! METHODES
+    // METHODES
 
     /** Check if an email is linked to a user
      * @param string $email the email to check
@@ -118,7 +133,7 @@ class User extends Modele
     public function checkByEmail(string $email)
     {
         $sql = "SELECT u.email";
-        $sql .= " FROM users AS u"; 
+        $sql .= " FROM user AS u"; 
         $sql .= " WHERE u.email = ?";
 
         $requete = $this->getBdd()->prepare($sql);
@@ -137,7 +152,7 @@ class User extends Modele
     public function checkToken($idUser, $token)
     {
         $sql = "SELECT *";
-        $sql .= " FROM users";
+        $sql .= " FROM user";
         $sql .= " WHERE rowid = ?";
         $sql .= " AND token = ?";
 
@@ -154,20 +169,36 @@ class User extends Modele
         }
     }
 
-    //! FETCH
+    // FETCH
 
-    public function fetchAll($idorganization = null)
+    public function fetch(int $rowid)
     {
-        $idorganization = $idorganization == null ? $this->getIdorganization() : $idorganization;
-
-        $sql = "SELECT *";
-        $sql .= " FROM users";
-        $sql .= " WHERE fk_organization = ?";
+        $sql = "SELECT *"; 
+        $sql .= " FROM user"; 
+        $sql .= " WHERE rowid = ?";
 
         $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$idorganization]);
-        
-        return $requete->fetchAll(PDO::FETCH_OBJ);
+        $requete->execute([$rowid]);
+
+        if($requete->rowCount() > 0)
+        {
+            $obj = $requete->fetch(PDO::FETCH_OBJ);
+
+            $this->rowid = $rowid;
+            $this->lastname = $obj->lastname;
+            $this->firstname = $obj->firstname;
+            $this->birth = $obj->birth;
+            $this->password = $obj->password;
+            $this->email = $obj->email;
+            // $this->Organization = new Organization($obj->fk_organization);
+            $this->fk_organization;
+            $this->consent = $obj->consent;
+            $this->admin = $obj->admin;
+
+            $BelongsTo = new BelongsTo();
+
+            $this->BelongsTo = $BelongsTo->fetchAll($obj->rowid);
+        }
     }
 
     /** Return users that are not related to a project
@@ -178,7 +209,7 @@ class User extends Modele
     public function fetchFreeUsersByProjectId(int $projectId, int $idOrganization)
     {
         $sql = "SELECT u.rowid";
-        $sql .= " FROM users AS u";
+        $sql .= " FROM user AS u";
         $sql .= " LEFT JOIN belong_to AS b ON u.rowid = b.fk_user";
         $sql .= " LEFT JOIN teams AS t ON b.fk_team = t.rowid";
         $sql .= " WHERE t.fk_project = ?";
@@ -197,10 +228,10 @@ class User extends Modele
         $notFreeUsers = implode("', '", $notFreeUsers);
         
         $sql = "SELECT u.rowid, u.lastname, u.firstname, u.birth, u.password, u.email, u.fk_organization";
-        $sql .= " FROM users AS u";
+        $sql .= " FROM user AS u";
         $sql .= " WHERE u.rowid NOT IN(";
         $sql .= " SELECT rowid";
-        $sql .= " FROM users";
+        $sql .= " FROM user";
 
         $sql .= " WHERE rowid IN ('".$notFreeUsers."') )"; 
         $sql .= " AND u.fk_organization = ?";
@@ -215,7 +246,7 @@ class User extends Modele
     public function fetchByTeam($idTeam)
     {
         $sql = "SELECT u.rowid, u.lastname, u.firstname, u.birth, u.password, u.email, u.fk_organization"; 
-        $sql .= " FROM users AS u";
+        $sql .= " FROM user AS u";
         $sql .= " LEFT JOIN belong_to AS b ON u.rowid = b.fk_user" ;
         $sql .= " WHERE b.fk_team = ?";
         
@@ -228,25 +259,38 @@ class User extends Modele
     public function fetchByEmail($email)
     {
         $sql = "SELECT *"; 
-        $sql .= " FROM users"; 
+        $sql .= " FROM user"; 
         $sql .= " WHERE email = ?";
 
         $requete = $this->getBdd()->prepare($sql);
         $requete->execute([$email]);
 
-        return $requete->fetch(PDO::FETCH_OBJ);
-    }
-    
-    public function fetchById($rowid)
-    {
-        $sql = "SELECT *";
-        $sql .= " FROM users"; 
-        $sql .= " WHERE rowid = ?";
-        
-        $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$rowid]);
+        if($requete->rowCount() > 0)
+        {
+            $obj = $requete->fetch(PDO::FETCH_OBJ);
 
-        return $requete->fetch(PDO::FETCH_OBJ);
+            $this->rowid = $obj->rowid;
+            $this->lastname = $obj->lastname;
+            $this->firstname = $obj->firstname;
+            $this->birth = $obj->birth;
+            $this->password = $obj->password;
+            $this->email = $obj->email;
+            // $this->Organization = new Organization($obj->fk_organization);
+            $this->fk_organization = $obj->fk_organization;
+            $this->consent = $obj->consent;
+            $this->admin = $obj->admin;
+
+            $BelongsTo = new BelongsTo();
+
+            $this->BelongsTo = $BelongsTo->fetchAll($obj->rowid);
+            
+            // $BelongsTo = new BelongsTo();
+            // $teamIds = $BelongsTo->fetchTeamIds($obj->rowid);
+            // foreach($teamIds as $teamId)
+            // {
+            //     $this->teams[] = new Team($teamId->fk_team);
+            // }
+        }
     }
 
     public function fetchByIds(array $usersIds)
@@ -254,7 +298,7 @@ class User extends Modele
         $usersIds = implode("', '", $usersIds);
 
         $sql = "SELECT *";
-        $sql .= " FROM users";
+        $sql .= " FROM user";
         $sql .= " WHERE rowid IN ('".$usersIds."')";
 
         $requete = $this->getBdd()->prepare($sql);
@@ -263,21 +307,21 @@ class User extends Modele
         return $requete->fetchAll(PDO::FETCH_OBJ);
     }
 
-    //! INSERT
+    // INSERT
 
-    public function create($firstname, $lastname, $birth, $email, $idorganization, $password)
+    public function create(string $email, int $fk_organization, string $password, int $admin = 0, string $firstname = null, string $lastname = null, string $birth = null)
     {
         $status = array();
                         
-        $sql = "INSERT INTO users (lastname, firstname, birth, email, fk_organization, password, consent) ";
-        $sql .= "VALUES (?,?,?,?,?,?,?,0)";
+        $sql = "INSERT INTO user (lastname, firstname, birth, email, fk_organization, password, consent, admin) ";
+        $sql .= "VALUES (?,?,?,?,?,?,?,?)";
         $requete = $this->getBdd()->prepare($sql);
 
 
-        $status[] = $requete->execute([$lastname, $firstname, $birth, $email, $idorganization, $password]);
+        $status[] = $requete->execute([$lastname, $firstname, $birth, $email, $fk_organization, $password, 0, $admin]);
 
         $sql = "SELECT MAX(rowid) as rowid"; 
-        $sql .= " FROM users";
+        $sql .= " FROM user";
 
         $requete = $this->getBdd()->prepare($sql);
         $status[] = $requete->execute();
@@ -286,12 +330,11 @@ class User extends Modele
         $maxIdUser = $User->rowid;
 
         $sql = "SELECT *"; 
-        $sql .= " FROM users"; 
+        $sql .= " FROM user"; 
         $sql .= " WHERE rowid = ?";
 
         $requete = $this->getBdd()->prepare($sql);
         $status[] = $requete->execute([$maxIdUser]);
-
 
         if(in_array(false, $status))
         {
@@ -304,13 +347,13 @@ class User extends Modele
     }
 
 
-    //! UPDATE
+    // UPDATE
 
     public function updateInformations($firstname, $lastname, $email, $idUser = null)
     {
         $idUser = $this->id ?? $idUser;
 
-        $sql = "UPDATE users";
+        $sql = "UPDATE user";
         $sql .= " SET firstname = ?, lastname = ?, email = ?";
         $sql .= " WHERE rowid = ?";
 
@@ -321,7 +364,7 @@ class User extends Modele
 
     public function updateFirstname($firstname, $idUser)
     {
-        $sql = "UPDATE users";
+        $sql = "UPDATE user";
         $sql .= " SET firstname = ?"; 
         $sql .= " WHERE rowid = ?";
 
@@ -331,7 +374,7 @@ class User extends Modele
 
     public function updateLastname($lastname, $idUser)
     {
-        $sql = "UPDATE users";
+        $sql = "UPDATE user";
         $sql .= " SET lastname = ?";
         $sql .= " WHERE rowid = ?";
         
@@ -343,7 +386,7 @@ class User extends Modele
     {
         $idUser = $this->id ?? $idUser;
 
-        $sql = "UPDATE users"; 
+        $sql = "UPDATE user"; 
         $sql .= " SET password = ?"; 
         $sql .= " WHERE rowid = ?";
 
@@ -353,7 +396,7 @@ class User extends Modele
 
     public function updateEmail($email, $idUser)
     {
-        $sql = "UPDATE users"; 
+        $sql = "UPDATE user"; 
         $sql .= " SET email = ?";
         $sql .= " WHERE rowid = ?";
         
@@ -363,7 +406,7 @@ class User extends Modele
 
     public function updateBirth($birth, $idUser)
     {
-        $sql = "UPDATE users"; 
+        $sql = "UPDATE user"; 
         $sql .= " SET birth = ?";
         $sql .= " WHERE rowid = ?";
         
@@ -371,34 +414,38 @@ class User extends Modele
         return $requete->execute([$birth, $idUser]);
     }
 
-    public function updateConsent($Consent, $idUser)
+    public function updateConsent($Consent, int $rowid = null)
     {
-        $sql = "UPDATE users";
+        $idUser = $this->rowid ? $this->rowid : $rowid;
+
+        $sql = "UPDATE user";
         $sql .= " SET consent = ?,";
         $sql .= " consent_date = NOW()";
         $sql .= " WHERE rowid = ?";
 
         $requete = $this->getBdd()->prepare($sql);
-        return $requete->execute([$Consent, $idUser]);
+        return $requete->execute([$Consent, $rowid]);
     }
 
 
-    //! DELETE
+    // DELETE
 
-    public function delete($idUser)
+    public function delete(int $rowid = null)
     {
+        $idUser = $this->rowid ? $this->rowid : $rowid;
+
         $sql = "DELETE FROM tasks_members WHERE fk_user = ?;";
         $sql .= "DELETE FROM tasks_comments WHERE fk_user = ?;";
         $sql .= "DELETE FROM belong_to WHERE fk_user = ?;";
-        $sql .= "DELETE FROM users WHERE rowid = ?";
+        $sql .= "DELETE FROM user WHERE rowid = ?";
 
         $requete = $this->getBdd()->prepare($sql);
-        return $requete->execute([$idUser, $idUser, $idUser, $idUser]);
+        return $requete->execute([$rowid, $rowid, $rowid, $rowid]);
     }
     
     public function addCookie($idUser, $token)
     {
-        $sql = "UPDATE users";
+        $sql = "UPDATE user";
         $sql .= " SET token = ?";
         $sql .= " WHERE rowid = ?";
 

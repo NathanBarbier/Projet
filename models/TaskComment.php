@@ -2,27 +2,15 @@
 class TaskComment extends Modele 
 {
     private $rowid;
-    private $fk_task;
+    private $Task;
     private $note;
-    private $fk_user;
+    private $User;
 
     public function __construct($rowid = null)
     {
         if($rowid != null)
         {
-            $sql = "SELECT t.fk_task, t.note, t.fk_user";
-            $sql .= " FROM tasks_comments AS t";
-            $sql .= " WHERE t.rowid = ?";
-
-            $requete = $this->getBdd()->prepare($sql);
-            $requete->execute([$rowid]);
-
-            $obj = $requete->fetch(PDO::FETCH_OBJ);
-
-            $this->rowid = $rowid;
-            $this->fk_task = $obj->fk_task;
-            $this->note = $obj->note;
-            $this->fk_user = $obj->fk_user;
+            $this->fetch($rowid);
         }
     }
 
@@ -34,9 +22,9 @@ class TaskComment extends Modele
         $this->rowid = $rowid;
     }
 
-    public function setFk_task($fk_task)
+    public function setTask(Task $Task)
     {
-        $this->fk_task = $fk_task;
+        $this->Task = $Task;
     }
 
     public function setNote($note)
@@ -44,9 +32,9 @@ class TaskComment extends Modele
         $this->note = $note;
     }
 
-    public function setFk_user($fk_user)
+    public function setUser(User $User)
     {
-        $this->fk_user = $fk_user;
+        $this->User = $User;
     }
 
 
@@ -57,9 +45,9 @@ class TaskComment extends Modele
         return $this->rowid;
     }
 
-    public function getFk_task()
+    public function getTask()
     {
-        return $this->fk_task;
+        return $this->Task;
     }
 
     public function getNote()
@@ -67,9 +55,9 @@ class TaskComment extends Modele
         return $this->note;
     }
 
-    public function getFk_user()
+    public function getUser()
     {
-        return $this->fk_user;
+        return $this->User;
     }
 
 
@@ -94,12 +82,7 @@ class TaskComment extends Modele
             $requete->execute([$fk_task, $fk_user, $admin]);
         }
 
-        // $sql .= " VALUES ($fk_task,$fk_user,$admin)";
-
-   
-
         return $this->fetch_last_insert_id();
-        // return $sql;
     }
 
 
@@ -166,58 +149,15 @@ class TaskComment extends Modele
         $requete = $this->getBdd()->prepare($sql);
         $requete->execute([$rowid]);
 
-        $obj = $requete->fetch(PDO::FETCH_OBJ);
-
-        $this->rowid = $rowid;
-        $this->fk_task = $obj->fk_task;
-        $this->note = $obj->note;
-        $this->fk_user = $obj->fk_user;
-    }
-
-    public function fetchAll($fk_task)
-    {
-        $sql = "SELECT t.rowid, t.fk_task, t.note, t.fk_user, t.admin";
-        $sql .= " FROM tasks_comments AS t";
-        $sql .= " WHERE fk_task = ?";
-
-        $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$fk_task]);
-        
-        $comments = $requete->fetchAll(PDO::FETCH_OBJ);
-        
-        $userIds = array();
-        
-        foreach($comments as $line)
+        if($requete->rowCount() > 0)
         {
-            $userIds[] = $line->fk_user;
+            $obj = $requete->fetch(PDO::FETCH_OBJ);
+
+            $this->rowid = $rowid;
+            $this->Task = new Task($obj->fk_task);
+            $this->note = $obj->note;
+            $this->User = new User($obj->fk_user);
         }
-        $userIds = implode("', '", $userIds);
-
-        // add author name
-        $sql = "SELECT u.rowid ,u.lastname, u.firstname";
-        $sql .= " FROM users AS u";
-        $sql .= " WHERE rowid IN ('".$userIds."')";
-
-        $requete = $this->getBdd()->prepare($sql);
-        $requete->execute();
-
-        $authors = $requete->fetchAll(PDO::FETCH_OBJ);
-
-        foreach($comments as $cKey => $comment)
-        {
-            foreach($authors as $aKey => $author)
-            {
-                if($comment->admin == false)
-                {
-                    if($comment->fk_user == $author->rowid)
-                    {
-                        $comments[$cKey]->author = $authors[$aKey]->lastname." ".$authors[$aKey]->firstname;
-                    }
-                }
-            }
-        }
-
-        return $comments;
     }
 
     public function fetch_last_insert_id()

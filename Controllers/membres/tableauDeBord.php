@@ -17,45 +17,30 @@ if($rights === "user")
 
     $User = new User($idUser);
     
-    $BelongsTo = new BelongsTo();
     // All associated teams with the user
-    $BelongsToAll = $BelongsTo->fetchAll($idUser);
 
-    $userProjects = array();
+    $Projects = array();
 
-    foreach($BelongsToAll as $BelongsTo)
+    foreach($User->getBelongsTo() as $BelongsTo)
     {
-        $teamId = $BelongsTo->getFk_team();
-        $Team = new Team($teamId);
+        $Team = new Team($BelongsTo->getFk_team());
 
         if($Team->getActive() == true)
         {
-            // on récupère l'id du projet lié à cette équipe
-            $projectId = $Team->getIdProject();
-    
-            $Project = new Project($projectId);
-    
-            if($Project->getActive() == true)
+            if($Team->getProject()->getActive() == true)
             {
-                $Tasks = new Task($projectId);
-        
-                $mapColumns = $Team->getMapColumns();
                 $TasksCount = 0;
-        
-                foreach($mapColumns as $mapColumn)
+                foreach($Team->getMapColumns() as $mapColumn)
                 {
                     $TasksCount += count($mapColumn->getTasks());
                 }
+
+                $Project = $Team->getProject();
+                $Project->membersCount = count($Team->getMembers());
+                $Project->tasksCount = $TasksCount;
+                $Project->teamName = $Team->getName();
         
-                // On affecte pour chaque projets sur lequel travaille l'user
-                $ProjectInfo = new stdClass;
-                $ProjectInfo->membersCount = $Project->fetch_members_count();
-                $ProjectInfo->tasksCount = $TasksCount;
-                $ProjectInfo->projectName = $Project->getName();
-                $ProjectInfo->teamName = $Team->getName();
-                $ProjectInfo->rowid = $projectId;
-        
-                $userProjects[$projectId] = $ProjectInfo;
+                $Projects[] = $Project;
             }
         }
     }

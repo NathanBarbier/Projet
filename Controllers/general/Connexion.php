@@ -25,30 +25,16 @@ $tpl = "connexion.php";
 if(isset($_COOKIE["remember_me"]))
 {
     $cookie = explode("-", $_COOKIE["remember_me"]);
-    print_r($cookie);
-    if($Organization->checkToken($cookie[0], $cookie[1]))
-    {
-        $user = $Organization->fetchById($cookie[0]);
 
-        $_SESSION["rights"] = "admin";
-        $_SESSION["idOrganization"] = $user->rowid;
-        $_SESSION["email"] = $user->email;
+    if($User->checkToken($cookie[0], $cookie[1]))
+    {
+        $User->fetch($cookie[0]);
+
+        $_SESSION["rights"] = $User->isAdmin() == 1 ? "admin" : "user";
+        $_SESSION["idUser"] = intval($User->getRowid());
+        $_SESSION["idOrganization"] = intval($User->getFk_organization());
 
         $success = true;
-    }
-
-    if(!$success)
-    {
-        if($User->checkToken($cookie[0], $cookie[1]))
-        {
-            $user = $Organization->fetchById($cookie[0]);
-    
-            $_SESSION["rights"] = "user";
-            $_SESSION["idUser"] = intval($user->rowid);
-            $_SESSION["idOrganization"] = intval($user->fk_organization);
-    
-            $success = true;
-        }
     }
 }
 
@@ -58,32 +44,32 @@ if($envoi)
     {
         if(filter_var($email, FILTER_VALIDATE_EMAIL))
         {
-            if($User->checkByEmail($email) == true)
+            if($User->checkByEmail($email))
             {
-                $user = $User->fetchByEmail($email);
+                $User->fetchByEmail($email);
 
-                if(password_verify($password, $user->password))
+                if(password_verify($password, $User->getPassword()))
                 {
-                    $consent = $user->consent;
+                    $consent = $User->getConsent();
                     
-                    $_SESSION["idUser"] = intval($user->rowid);
-                    $_SESSION["idOrganization"] = intval($user->fk_organization);
+                    $_SESSION["idUser"] = intval($User->getRowid());
+                    $_SESSION["idOrganization"] = intval($User->getFk_organization());
 
                     if($rememberMe)
                     {
                         $token = bin2hex(random_bytes(15));
                         setcookie(
                             'remember_me',
-                            $user->rowid . "-" . $token,
+                            $User->getRowid() . "-" . $token,
                             time() + 604800
                         );
                     }
 
-                    $User->addCookie($user->rowid, $token);
+                    $User->addCookie($User->getRowid(), $token);
                     
                     if($consent == true)
                     {
-                        $_SESSION["rights"] = "user";
+                        $_SESSION["rights"] = $User->isAdmin() == 1 ? "admin" : "user";
                     }
                     else
                     {
@@ -96,46 +82,10 @@ if($envoi)
                 {
                     $errors[] = "Le mot de passe est incorrect.";
                 }
-            } 
-            
-            if(!$success)
-            {
-                if($Organization->checkByEmail($email) == true) 
-                {
-                    $user = $Organization->fetchByEmail($email);
-                    if(password_verify($password, $user->password))
-                    {
-                        $_SESSION["rights"] = "admin";
-                        $_SESSION["idOrganization"] = $user->rowid;
-                        $_SESSION["email"] = $user->email;
-
-                        if($rememberMe)
-                        {
-                            $token = bin2hex(random_bytes(15));
-                            setcookie(
-                                'remember_me',
-                                $user->rowid . "-" . $token,
-                                time() + 604800
-                            );
-                        }
-    
-                        $Organization->addCookie($user->rowid, $token);
-
-                        $success = true;
-                    } 
-                    else 
-                    {
-                        $errors[] = "Le mot de passe est incorrect.";
-                    }
-                }
             }
-
-            if(!$success)
+            else
             {
-                if( (!$User->checkByEmail($email)) && !$Organization->checkByEmail($email) )
-                {
-                    $errors[] = "Cette adresse email n'est associée à aucun compte.";
-                }
+                $errors[] = "Cette adresse email n'est associée à aucun compte.";
             }
         } 
         else 
@@ -148,9 +98,7 @@ if($envoi)
         $errors[] = "Un champs n'a pas été rempli.";
     }
 
-} 
-
-
+}
 
 if($success)
 {

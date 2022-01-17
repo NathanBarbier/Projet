@@ -21,11 +21,7 @@ if($rights === "admin")
     $newmdp = GETPOST('newmdp');
     $newmdp2 = GETPOST('newmdp2');
 
-    $User = new User($idUser);
-    $Team = new Team();
-
-    $members = $User->fetchAll($idOrganization);
-    $teams = $Team->fetchAll($idOrganization);
+    $Organization = new Organization($idOrganization);
 
     $errors = array();
     $success = false;
@@ -38,9 +34,10 @@ if($rights === "admin")
         {
             if($envoi)
             {
-                $userFirstname = $User->getFirstname();
+                $User = $Organization->fetchUser($idUser);
+                $oldFirstname = $User->getFirstname();
             
-                if($firstname != $userFirstname)
+                if($firstname != $oldFirstname)
                 {
                     try
                     {
@@ -83,9 +80,10 @@ if($rights === "admin")
         {
             if($envoi)
             {
-                $userLastname = $User->getLastname();
+                $User = $Organization->fetchUser($idUser);
+                $oldLastname = $User->getLastname();
             
-                if($lastname != $userLastname)
+                if($lastname != $oldLastname)
                 {
                     try
                     {
@@ -117,6 +115,7 @@ if($rights === "admin")
     {
         if($idUser)
         {
+            $User = $Organization->fetchUser($idUser);
             $status = $User->delete($idUser);
 
             if($status)
@@ -135,11 +134,10 @@ if($rights === "admin")
     }
 
 
-    // Rafraichir les datas si modif bdd
+    // refresh datas if modifications in db
     if($success)
     {
-        $members = $User->fetchAll($idOrganization);
-        $teams = $Team->fetchAll($idOrganization);
+        $Organization = new Organization($idOrganization);
     }
 
     require_once VIEWS_PATH."admin/".$tpl;

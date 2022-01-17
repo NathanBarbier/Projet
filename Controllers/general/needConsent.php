@@ -5,11 +5,11 @@ require_once "../../services/header.php";
 $rights = $_SESSION["rights"] ?? false;
 $idUser = $_SESSION["idUser"] ?? false;
 
-if($rights === 'needConsent')
+if($rights === 'needConsent' && $idUser)
 {
     $action = GETPOST('action');
     
-    $User = new User();
+    $User = new User($idUser);
     $Organization = new Organization();
     
     $errors = array();
@@ -22,7 +22,7 @@ if($rights === 'needConsent')
     if($action == "refuseConsent")
     {
         // DELETE ACCOUNT
-        $status = $User->delete($idUser);
+        $status = $User->delete();
         header('location:'.CONTROLLERS_URL.'general/deconnexion.php');
         exit;
     }
@@ -30,11 +30,11 @@ if($rights === 'needConsent')
     if($action == "giveConsent")
     {
         $consent = true;
-        $status = $User->updateConsent($consent, $idUser);
+        $status = $User->updateConsent($consent);
 
         if($status)
         {
-            $_SESSION["rights"] = 'user';
+            $_SESSION["rights"] = $User->getAdmin() ? 'admin' : 'user';
             header('location:'.ROOT_URL.'index.php');
             exit;
         }

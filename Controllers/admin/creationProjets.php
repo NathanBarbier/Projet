@@ -19,12 +19,7 @@ $errors = array();
 
 if($rights == 'admin')
 {
-    $Team = new Team();
     $Project = new Project();
-
-    $teams = $Team->fetchAll($idOrganization);
-
-    $maxIdProject = $Project->fetchMaxId()->maxId;
 
     $errors = array();
     $success = false;

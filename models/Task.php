@@ -3,52 +3,20 @@
     private $rowid;
     private $name;
     private $description;
-    private $fk_column;
+    private $MapColumn;
     private $rank;
-    private $options = array();
-    private $fk_author;
+    // private $options = array();
+    private $Author; // task author - User()
     private $admin;
     private $active;
+    private $members = array();
     private $comments = array();
 
-    public function __construct($taskId = null)
+    public function __construct($rowid = null)
     {
-        if($taskId != null)
+        if($rowid != null)
         {
-            $sql = "SELECT t.rowid, t.name, t.description, t.fk_column, t.rank, t.fk_author, t.admin, t.active";
-            $sql .= " FROM tasks AS t";
-            $sql .= " WHERE t.rowid = ?";
-
-            $requete = $this->getBdd()->prepare($sql);
-            $requete->execute([$taskId]);
-
-            $Task = $requete->fetch(PDO::FETCH_OBJ);
-
-            if($Task != false)
-            {
-                $this->rowid = $Task->rowid;
-                $this->name = $Task->name;
-                $this->description = $Task->description;
-                $this->fk_column = $Task->fk_column;
-                $this->rank = $Task->rank;
-                $this->fk_author = $Task->fk_author;
-                $this->admin = $Task->admin;
-                $this->active = $Task->active;
-
-                $sql = "SELECT tc.rowid, tc.fk_task, tc.note, tc.fk_user, tc.admin";
-                $sql .= " FROM tasks_comments AS tc";
-                $sql .= " WHERE tc.fk_task = ?";
-
-                $requete = $this->getBdd()->prepare($sql);
-                $requete->execute([$taskId]);
-
-                $lines = $requete->fetchAll(PDO::FETCH_OBJ);
-
-                foreach($lines as $obj)
-                {
-                    $this->comments = new TaskComment($obj->rowid);
-                }
-            }
+            $this->fetch($rowid);
         }
     }
 
@@ -73,6 +41,16 @@
     public function setfk_column($fk_column)
     {
         $this->fk_column = $fk_column;
+    }
+
+    public function setRank($rank)
+    {
+        $this->rank = $rank;
+    }
+
+    public function setAuthor(User $Author)
+    {
+        $this->Author = $Author;
     }
 
     public function setActive($active)
@@ -105,7 +83,7 @@
 
     public function getFk_author()
     {
-        return $this->fk_author;
+        return $this->Author;
     }
 
     public function getAdmin()
@@ -113,7 +91,7 @@
         return $this->admin;
     }
 
-    public function getActive()
+    public function isActive()
     {
         return $this->active;
     }
@@ -141,82 +119,49 @@
 
     // FETCH
 
-    public function fetch($taskId)
+    public function fetch($rowid)
     {
         $sql = "SELECT t.rowid, t.name, t.description, t.fk_column, t.rank, t.fk_author, t.admin, t.active";
         $sql .= " FROM tasks AS t";
-        $sql .= " WHERE rowid = ?";
+        $sql .= " WHERE t.rowid = ?";
 
         $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$taskId]);
+        $requete->execute([$rowid]);
+        
+        if($requete->rowCount() > 0)
+        {
+            $obj = $requete->fetch(PDO::FETCH_OBJ);
 
-        return $requete->fetch(PDO::FETCH_OBJ);
+            $this->rowid = $obj->rowid;
+            $this->name = $obj->name;
+            $this->description = $obj->description;
+            $this->fk_column = new MapColumn($obj->fk_column);
+            $this->rank = $obj->rank;
+            $this->Author = new User($obj->fk_author);
+            $this->admin = $obj->admin;
+            $this->active = $obj->active;
+            $this->fetchComments();
+        }
     }
 
-    public function fetchAll($fk_column)
+    public function fetchComments()
     {
-        $sql = "SELECT t.rowid, t.name, t.description, t.fk_column, t.rank, t.fk_author, t.admin, t.active";
-        $sql .= " FROM tasks AS t";
-        $sql .= " WHERE fk_column = ?";
-        $sql .= " ORDER BY t.rank DESC";
+        $sql = "SELECT tc.rowid";
+        $sql .= " FROM tasks_comments AS tc";
+        $sql .= " WHERE tc.fk_task = ?";
 
         $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$fk_column]);
+        $requete->execute([$this->rowid]);
 
-        $lines = $requete->fetchAll(PDO::FETCH_OBJ);
-
-        $Tasks = array();
-
-        foreach($lines as $line)
+        if($requete->rowCount() > 0)
         {
-            $Tasks[] = new Task($line->rowid);
+            $lines = $requete->fetchAll(PDO::FETCH_OBJ);
+
+            foreach($lines as $line)
+            {
+                $this->comments[] = new TaskComment($line->rowid);
+            }
         }
-
-        return $Tasks;
-    }
-
-    //* not sure to keep it
-    public function fetchCountTodo($fk_project)
-    {
-        $sql = "SELECT COUNT(t.rowid) AS counter";
-        $sql .= " FROM tasks AS t";
-        $sql .= " LEFT JOIN map_columns AS m ON m.rowId = t.fk_column";
-        $sql .= " WHERE m.name = 'Ready' AND fk_project = ?";
-
-        $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$fk_project]);
-
-        $CountTodo = $requete->fetch(PDO::FETCH_OBJ);
-
-        if($CountTodo == false)
-        {
-            $CountTodo = new stdClass;
-            $CountTodo->counter = 0;
-        }
-
-        return $CountTodo->counter;
-    }
-
-    //* not sure to keep it
-    public function fetchCountInProgress($fk_project)
-    {
-        $sql = "SELECT COUNT(t.rowid) AS counter";
-        $sql .= " FROM tasks AS t";
-        $sql .= " LEFT JOIN map_columns AS m ON m.rowId = t.fk_column";
-        $sql .= " WHERE m.name = 'In progress' AND fk_project = ?";
-
-        $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$fk_project]);
-
-        $CountInProgress = $requete->fetch(PDO::FETCH_OBJ);
-
-        if($CountInProgress == false)
-        {
-            $CountInProgress = new stdClass;
-            $CountInProgress->counter = 0;
-        }
-
-        return $CountInProgress->counter;
     }
 
     public function fetch_last_insert_id()

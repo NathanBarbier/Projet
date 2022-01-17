@@ -18,7 +18,7 @@ if ($consent == "on")
 }
 
 $Organization = new Organization();
-$Inscription = new Inscription();
+$User = new User();
 
 $errors = array();
 $success = false;
@@ -35,21 +35,24 @@ if($action == "inscriptionOrg")
             {
                 if(filter_var($email, FILTER_VALIDATE_EMAIL))
                 {
-                    if($Organization->checkByEmail($email) == false)
+                    if($User->checkByEmail($email) == false)
                     {
                         if($pwd === $pwd2)
                         {
                             try
                             {
+                                $status = array();
                                 $pwd = password_hash($pwd, PASSWORD_BCRYPT);
-                                $success = $Inscription->inscriptionOrg($email, $pwd, $name, $consent);
+                                $status[] = $Organization->create($name);
+                                $fk_organization = $Organization->fetch_last_insert_id();
+                                $status[] = $User->create($email, $fk_organization, $pwd, true);
                             } 
                             catch (exception $e) 
                             {
                                 $errors[] = "Erreur : l'inscription n'a pas pu aboutir.";
                             }
 
-                            if($success)
+                            if(!in_array(false, $status))
                             {
                                 $message = "L'inscription a bien été prise en compte";
                                 header("location:".CONTROLLERS_URL.'general/connexion.php?message='.$message);

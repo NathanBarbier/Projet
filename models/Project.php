@@ -2,54 +2,28 @@
 
 Class Project extends Modele
 {
-    private $id;
+    private $rowid;
     private $name;
     private $type;
     private $open;
     private $description;
-    private $idOrganization;
+    // private $Organization;
+    private $fk_organization;
     private $teams = array();
     private $active;
 
-    public function __construct($idProject = null)
+    public function __construct($rowid = null)
     {
-        if($idProject !== null)
+        if($rowid !== null)
         {
-            $sql = "SELECT p.rowid, p.name, p.type, p.open, p.fk_organization, p.description, p.active";
-            $sql .= " FROM projects AS p";
-            $sql .= " WHERE p.rowid = ?";
-
-            $requete = $this->getBdd()->prepare($sql);
-            $requete->execute([$idProject]);
-
-            $Project = $requete->fetch(PDO::FETCH_OBJ);
-
-            if($Project != false)
-            {
-                $this->id = $idProject;
-                $this->name = $Project->name;
-                $this->type = $Project->type;
-                $this->open = $Project->open;
-                $this->description = $Project->description;
-                $this->idOrganization = $Project->fk_organization;
-                $this->active = $Project->active;
-            }
-
-            $Team = new Team();
-            $lines = $Team->fetchAll($this->id);
-
-            foreach($lines as $line)
-            {
-                $Team = new Team($line->rowid);
-                $this->teams[] = $Team;
-            } 
+           $this->fetch($rowid);
         }
     }
 
-    //! GETTER
-    public function getId()
+    // GETTER
+    public function getRowid()
     {
-        return $this->id;
+        return $this->rowid;
     }
 
     public function getName()
@@ -67,12 +41,16 @@ Class Project extends Modele
         return $this->open;
     }
 
-    public function getIdorganization()
+    // public function getOrganization()
+    // {
+    //     return $this->Organization;
+    // }
+    public function getFk_organization()
     {
-        return $this->idorganization;
+        return $this->fk_organization;
     }
 
-    public function getDescritpion()
+    public function getDescription()
     {
         return $this->description;
     }
@@ -82,17 +60,16 @@ Class Project extends Modele
         return $this->teams;
     }
 
-    public function getActive()
+    public function isActive()
     {
         return $this->active;
     }
 
+    // SETTER
 
-    //! SETTER
-
-    public function setId(int $id)
+    public function setRowid(int $rowid)
     {
-        $this->id = $id;
+        $this->rowid = $rowid;
     }
 
     public function setName(string $name)
@@ -100,14 +77,28 @@ Class Project extends Modele
         $this->name = $name;
     }
 
+    public function setDescription(string $description)
+    {
+        $this->description = $description;
+    }
+
     public function setType(string $type)
     {
         $this->type = $type;
     }
 
-    public function setIdOrganization($idOrganization)
+    public function setTeams(array $teams)
     {
-        $this->idOrganization = $idOrganization;
+        $this->teams[] = $teams;
+    }
+
+    // public function setOrganization(Organization $Organization)
+    // {
+    //     $this->Organization = $Organization;
+    // }
+    public function setFk_organization(int $fk_organization)
+    {
+        $this->fk_organization = $fk_organization;
     }
 
     public function setActive($active)
@@ -115,122 +106,171 @@ Class Project extends Modele
         $this->active = $active;
     }
 
-
-    //! UPDATE
-
-    public function updateName($name, $idProject = null)
+    public function addTeam(Team $Team)
     {
-        if($idProject == null)
-        {
-            $idProject = $this->id;
-        }
+        $this->teams[] = $Team;
+    }
 
-        $sql = "UPDATE projects";
+    public function removeTeam($fk_team)
+    {
+        $key = array_search($fk_team, array_column($this->teams, 'rowid'));
+        unset($this->teams[$key]);
+    }
+
+
+    // UPDATE
+
+    public function update()
+    {
+        $sql = "UDPATE project";
+        $sql .= " SET";
+        $sql .= " name = $this->name";
+        $sql .= " ,type = $this->type";
+        $sql .= " ,open = $this->open";
+        $sql .= " ,fk_organization = $this->fk_organization";
+        $sql .= " ,description = $this->description";
+        $sql .= " ,active = $this->active";
+        $sql .= " WHERE rowid = $this->rowid";
+
+        $requete = $this->getBdd()->prepare($sql);
+        return $requete->execute();
+    }
+
+    public function updateName($name)
+    {
+        $sql = "UPDATE project";
         $sql .= " SET name = ?"; 
         $sql .= " WHERE rowid =  ?";
 
         $requete = $this->getBdd()->prepare($sql);
-        return $requete->execute([$name, $idProject]);
+        return $requete->execute([$name, $this->rowid]);
     }
 
-    public function updateType(string $type, $idProject = null)
+    public function updateType(string $type)
     {
-        if($idProject == null)
-        {
-            $idProject = $this->id;
-        }
-
-        $sql = "UPDATE projects";
+        $sql = "UPDATE project";
         $sql .= " SET type = ?";
         $sql .= " WHERE rowid =  ?";
 
         $requete = $this->getBdd()->prepare($sql);
-        return $requete->execute([$type, $idProject]);
+        return $requete->execute([$type, $this->rowid]);
     }
 
-    public function updateDescription(string $description, $idProject = null)
+    public function updateDescription(string $description)
     {
-        if($idProject == null)
-        {
-            $idProject = $this->id;
-        }
-
-        $sql = "UPDATE projects";
+        $sql = "UPDATE project";
         $sql .= " SET description = ?";
         $sql .= " WHERE rowid = ?";
 
         $requete = $this->getBdd()->prepare($sql);
-        return $requete->execute([$description, $idProject]);
+        return $requete->execute([$description, $this->rowid]);
     }
 
-    public function updateOpen($open, $idProject = null)
+    public function updateOpen($open)
     {
-        $idProject = $idProject == null ? $this->id : $idProject;
-
-        $sql = "UPDATE projects";
+        $sql = "UPDATE project";
         $sql .= " SET open = ?";
         $sql .= " WHERE rowid = ?";
 
         $requete = $this->getBdd()->prepare($sql);
-        return $requete->execute([$open, $idProject]);
+        return $requete->execute([$open, $this->rowid]);
     }
 
-    public function updateActive($active, $idProject = null)
+    public function updateActive($active)
     {
-        $idProject = $idProject == null ? $this->id : $idProject;
-
-        $sql = "UPDATE projects";
+        $sql = "UPDATE project";
         $sql .= " SET active = ?";
         $sql .= " WHERE rowid = ?";
 
         $requete = $this->getBdd()->prepare($sql);
-        return $requete->execute([$active, $idProject]);
+        return $requete->execute([$active, $this->rowid]);
     }
 
 
     // FETCH
 
-    public function fetchAll($idOrganization = null)
+    public function fetch(int $rowid)
     {
-        $idOrganization = $idOrganization == null ? $this->idOrganization : $idOrganization;
-
-        $sql = "SELECT p.rowid, p.name, p.type, p.open, p.description, p.fk_organization, p.active";
-        $sql .= " FROM projects AS p";
-        $sql .= " WHERE p.fk_organization = ?";
+        $sql = "SELECT p.rowid, p.name, p.type, p.open, p.fk_organization, p.description, p.active";
+        $sql .= " FROM project AS p";
+        $sql .= " WHERE p.rowid = ?";
 
         $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$idOrganization]);
+        $requete->execute([$rowid]);
 
-        $lines = $requete->fetchAll(PDO::FETCH_OBJ);
-
-        $Organizations = array();
-
-        foreach($lines as $line)
+        if($requete->rowCount() > 0)
         {
-            $Organizations[] = new Organization($line->rowid);
-        }
+            $obj = $requete->fetch(PDO::FETCH_OBJ);
 
-        return $Organizations;
+            $this->rowid = $rowid;
+            $this->name = $obj->name;
+            $this->type = $obj->type;
+            $this->open = $obj->open;
+            $this->description = $obj->description;
+            $this->active = $obj->active;
+            $this->fk_organization = $obj->fk_organization;
+            
+            $this->fetchTeams();
+            // $this->fetchOrganization();
+        }
     }
 
-    public function fetchByTeam($idTeam)
+    public function fetchByTeam($fk_team)
     {
-        $sql = "SELECT e.name AS teamName, p.name AS projectName, p.type";
-        $sql .= " FROM work_to AS w";
-        $sql .= " INNER JOIN teams AS t ON w.fk_team = t.rowid"; 
-        $sql .= " INNER JOIN projects AS p t.rowid = p.fk_team";
-        $sql .= " WHERE w.fk_team = ?";
+        $sql = "SELECT fk_project";
+        $sql .= " FROM team";
+        $sql .= " WHERE rowid = ?";
 
         $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$idTeam]);
+        $status = $requete->execute([$fk_team]);
 
-        return $requete->fetchAll(PDO::FETCH_OBJ);
-    } 
+        if($status)
+        {
+            $obj = $requete->fetch(PDO::FETCH_OBJ);
+            $this->fetch($obj->fk_project);
+        }
+    }
+
+    public function fetchTeams()
+    {
+        $sql = "SELECT t.rowid"; 
+        $sql .= " FROM team as t"; 
+        $sql .= " WHERE fk_project = ?";
+        
+        $requete = $this->getBdd()->prepare($sql);
+        $requete->execute([$this->rowid]);
+
+        if($requete->rowCount() > 0)
+        {
+            $lines = $requete->fetchAll(PDO::FETCH_OBJ);
+            
+            foreach($lines as $line)
+            {
+                $this->teams[] = new Team($line->rowid);
+            }
+        }
+    }
+
+    public function fetchOrganization()
+    {
+        $sql = "SELECT p.fk_organization";
+        $sql .= " FROM project AS p";
+        $sql .= " WHERE p.rowid = ?";
+
+        $requete = $this->getBdd()->prepare($sql);
+        $status = $requete->execute([$this->rowid]);
+
+        if($status)
+        {
+            $obj = $requete->fetch(PDO::FETCH_OBJ);
+            $this->Organization = new Organization($obj->fk_organization);
+        }
+    }
 
     public function fetchMaxId()
     {
         $sql = "SELECT max(rowid) AS maxId";
-        $sql .=" FROM projects";
+        $sql .=" FROM project";
 
         $requete = $this->getBdd()->prepare($sql);
         $requete->execute();
@@ -243,7 +283,7 @@ Class Project extends Modele
         $projectId = $this->id ?? $projectId;
 
         $sql = "SELECT COUNT(u.rowid) as membersCount";
-        $sql .= " FROM projects as p";
+        $sql .= " FROM project as p";
         $sql .= " LEFT JOIN work_to as w ON p.rowid = w.fk_project";
         $sql .= " LEFT JOIN belong_to as b ON b.fk_team = w.fk_team";
         $sql .= " LEFT JOIN users as u ON b.fk_user = u.rowid";
@@ -264,25 +304,17 @@ Class Project extends Modele
 
 
     // INSERT
-    public function create($name, $type, $description = "", $idorganization = false)
+    
+    /** Create object in db
+     * 
+     */
+    public function create($name, $type, $description = "", int $fk_organization)
     {
-        $idorganization = $idorganization ?? $this->getIdorganization();
-        $status = array();
-
-        $sql = "INSERT INTO projects (name, type, open, description, fk_organization, active)";
-        $sql .= " VALUES (?,?,NOW(),?,?, 1)";
+        $sql = "INSERT INTO project (name, type, open, description, fk_organization, active)";
+        $sql .= " VALUES (?,?,NOW(),?,?,1)";
 
         $requete = $this->getBdd()->prepare($sql);
 
-        $status[] = $requete->execute([$name, $type, $description, $idorganization]);
-
-        if(in_array(false, $status))
-        {
-            return false;
-        }
-        else
-        {
-            return true;
-        }
+        return $requete->execute([$name, $type, $description, $fk_organization]);
     }
 }

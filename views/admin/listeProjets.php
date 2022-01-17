@@ -4,35 +4,37 @@ require_once "layouts/entete.php";
 
 <div class="col-9 mt-4">
 
-<h1 class="text-center mx-auto w-50 mb-4" style="border-bottom: 1px rgb(216, 214, 214) solid;">Liste des projets</h1>
+    <h1 class="text-center mx-auto w-50 mb-4 border-bottom">Liste des projets</h1>
 
     <div class="sticker" style="width:80vw; height:65vh; overflow:auto">
-        <?php
-if($currentProjects)
-{ ?>
-    <div class="row w-75 mx-auto mt-3 justify-content-between">
-        <div class="col-3 sticker text-center"><h5 class="mt-3">Nom du projet</h5></div>
-        <div class="col-2 sticker text-center"><h5 class="mt-3">Type</h5></div>
-        <div class="col-4 sticker text-center"><h5 class="mt-3">État</h5></div>
-        <div class="col-2 sticker text-center"><h5 class="mt-3">Détails</h5></div>
-    </div>
     <?php
-    foreach($currentProjects as $project)
+    if(count($Organization->getProjects()) > 0)
     { ?>
-    <div class="row sticker w-75 mx-auto mt-4" style="height: 80px;">
-        <div class="col-3 text-center pt-4 mx-auto"><b><?= $project->name ?></b></div>
-        <div class="col-2 text-center pt-4 mx-auto"><b><?= $project->type ?></b></div>
-        <div class="col-4 text-center pt-4 mx-auto"><b><?= $project->active == 1 ? '<span style="color:green">Ouvert</span>' : '<span style="color:red">Archivé</span>' ?></b></div>
-        <div class="col-2 text-center pt-3 mx-auto">
-            <a href="<?= CONTROLLERS_URL ?>admin/detailsProjet.php?idProject=<?= $project->rowid ?>" class="btn btn-info mt-1">Détails</a>
+        <div class="row w-75 mx-auto mt-3 justify-content-between">
+            <div class="col-3 sticker text-center"><h5 class="mt-3">Nom du projet</h5></div>
+            <div class="col-2 sticker text-center"><h5 class="mt-3">Type</h5></div>
+            <div class="col-4 sticker text-center"><h5 class="mt-3">État</h5></div>
+            <div class="col-2 sticker text-center"><h5 class="mt-3">Détails</h5></div>
         </div>
-    </div>
-    <?php }
-} else { ?>
+        <?php
+        foreach($Organization->getProjects() as $Project)
+        { ?>
+        <div class="row sticker w-75 mx-auto mt-4" style="height: 80px;">
+            <div class="col-3 text-center pt-4 mx-auto"><b><?= $Project->getName() ?></b></div>
+            <div class="col-2 text-center pt-4 mx-auto"><b><?= $Project->getType() ?></b></div>
+            <div class="col-4 text-center pt-4 mx-auto"><b><?= $Project->isActive() == 1 ? '<span style="color:green">Ouvert</span>' : '<span style="color:red">Archivé</span>' ?></b></div>
+            <div class="col-2 text-center pt-3 mx-auto">
+                <a href="<?= CONTROLLERS_URL ?>admin/detailsProjet.php?idProject=<?= $Project->getRowid() ?>" class="btn btn-info mt-1">Détails</a>
+            </div>
+        </div>
+        <?php }
+    } 
+    else 
+    { ?>
         <div class="sticker w-75 mx-auto text-center mt-4">
-            <h3 class="mt-2">Votre organisation n'a aucun projet en cours.</h3>
+            <h3 class="mt-2">Votre organisation n'a aucun projet.</h3>
         </div>
-<?php } ?>
+    <?php } ?>
     </div>
 <?php
 require_once "layouts/pied.php";

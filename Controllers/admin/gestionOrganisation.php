@@ -24,15 +24,6 @@ if($rights === "admin")
     $invalidInput = array();
     $invalidForm = array();
 
-    $CurrentOrganization = new stdClass;
-
-    $CurrentOrganization->name = $Organization->getName();
-    $CurrentOrganization->email = $Organization->getEmail();
-    $CurrentOrganization->membersCount = $Organization->countUsers();
-    $CurrentOrganization->projectsCount = $Organization->countProjects();
-    $CurrentOrganization->archivedProjectsCount = $Organization->countActiveProjects();
-
-
     if($action == "deleteOrganization")
     {
         $Organization->delete();

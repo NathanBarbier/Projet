@@ -23,33 +23,33 @@ require_once "layouts/entete.php";
                 <h3 class="mx-auto text-center border-bottom w-50">Tableaux Actifs</h3>
                 <div style="height: 90%; overflow: auto">
                     <?php 
-                    if($userProjects)
+                    if(count($Projects) > 0)
                     {
-                        foreach($userProjects as $project)
+                        foreach($Projects as $Project)
                         {
                         ?>
                         <div class="pb-3 mb-5 border-lg" style="height:max-content;">
                             <div class="row text-center justify-content-around">
                                 <div class="col-10 sticker mt-3 pt-3">
-                                    <p><b>Nom du projet : </b><?= $project->projectName ?></p>
+                                    <p><b>Nom du projet : </b><?= $Project->getName() ?></p>
                                 </div>
                             </div>
                             <div class="row text-center justify-content-around">
                                 <div class="col-10 sticker mt-4 pt-3">
-                                    <p><b>Equipe : </b><?= $project->teamName ?></p>
+                                    <p><b>Equipe : </b><?= $Project->teamName ?></p>
                                 </div>
                             </div>
                             <div class="row mt-4 justify-content-around">
                                 <div class="sticker col-4 text-center">
                                     <b>Nb membres</b>
-                                    <p class="text-center"><?php echo $project->membersCount ?></p>
+                                    <p class="text-center"><?= $Project->membersCount ?></p>
                                     <br>
                                 </div>
                                 
                                 <div class="sticker col-4 text-center">
                                     <b>Nb tâches</b>
                                     <br>
-                                    <p class="text-center"><?php echo $project->tasksCount ?></p>
+                                    <p class="text-center"><?= $Project->tasksCount ?></p>
                                 </div>
                             </div>
                             <div class="row">

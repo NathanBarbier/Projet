@@ -4,12 +4,11 @@ require_once 'layouts/entete.php';
 
 <div class="col-10">
     <div class="row position-relative">
-
-        <?php if ($CurrentProject->active == 0) { ?>
+        <?php if (!$Project->isActive()) { ?>
             <div class="alert alert-info alert-visible mt-3 w-75 text-center position-absolute top-0 start-50 translate-middle-x">
                 <i class="bi bi-info-circle-fill"></i>    
                 Ce projet est archivé.
-                &nbsp;&nbsp;<a href="<?= CONTROLLERS_URL ?>admin/detailsProjet.php?action=openProject&idProject=<?= $CurrentProject->rowid ?>" class="btn btn-outline-secondary">Ré-ouvrir</a>
+                &nbsp;&nbsp;<a href="<?= CONTROLLERS_URL ?>admin/detailsProjet.php?action=openProject&idProject=<?= $Project->getRowid() ?>" class="btn btn-outline-secondary">Ré-ouvrir</a>
                 <button id="close-alert" type="button" class="btn-close position-absolute top-0 end-0 me-4 mt-3" aria-label="Close"></button>
             </div>
         <?php } ?>
@@ -27,8 +26,9 @@ require_once 'layouts/entete.php';
             <?= $success; ?>
         </div>
         <?php } ?>
+        
         <div class="sticker col-3 mt-2 ms-3 me-3 text-center overflow-x" style="height: 60px; ">
-            <h3 class="mt-2"><?= $CurrentProject->name ?? "<b style='color:red'>No title</b>"; ?></h3>
+            <h3 class="mt-2"><?= $Project->getName() ?? "<b style='color:red'>No title</b>"; ?></h3>
         </div>
         
         <div class="sticker col mt-2 me-4 text-center">
@@ -39,15 +39,15 @@ require_once 'layouts/entete.php';
     <div class="row" style="height: 81vh;">
         <div class="sticker col-3 mt-3 ms-3 me-3 pb-4 text-center h-auto">
             <div class="row position-relative h-100">
-                <form action="<?= CONTROLLERS_URL ?>admin/detailsProjet.php?action=updateProject&idProject=<?= $idProject ?>" method="POST">
+                <form action="<?= CONTROLLERS_URL ?>admin/detailsProjet.php?action=updateProject&idProject=<?= $Project->getRowid() ?>" method="POST">
                     <h5 class="mt-5 border-bottom w-50 mx-auto">Titre</h5>
-                    <input class="sticker text-center mt-2 px-2" name="projectName" id="projectName" type="text" value="<?= $CurrentProject->name ?>">
+                    <input class="sticker text-center mt-2 px-2" name="projectName" id="projectName" type="text" value="<?= $Project->getName() ?>">
     
                     <h5 class="mt-3 border-bottom w-50 mx-auto">Description</h5>
-                    <textarea class="sticker text-center mt-2 pt-3 px-2" style="height: 150px;" name="description" id="description" type="text"><?= $CurrentProject->description ?></textarea>
+                    <textarea class="sticker text-center mt-2 pt-3 px-2" style="height: 150px;" name="description" id="description" type="text"><?= $Project->getDescription() ?></textarea>
     
                     <h5 class="mt-3 border-bottom w-50 mx-auto">Type</h5>
-                    <input class="sticker text-center mt-2 px-2" name="type" id="type" type="text" value="<?= $CurrentProject->type ?>">
+                    <input class="sticker text-center mt-2 px-2" name="type" id="type" type="text" value="<?= $Project->getType() ?>">
     
                     <div class="position-absolute translate-middle-x bottom-0 start-50 w-100">
                         <div class="row mx-auto">
@@ -55,11 +55,11 @@ require_once 'layouts/entete.php';
                                 <button class="btn btn-outline-primary w-100" type="submit" tabindex="0" data-bs-toggle="tooltip" title="Mettre à jour les informations du projet"><i class="bi bi-arrow-clockwise big-icon"></i></button>
                             </div>
                             <div class="col-3">
-                                <a id="map-btn" href="<?= CONTROLLERS_URL ?>admin/map.php?projectId=<?= $CurrentProject->rowid ?>" class="btn btn-outline-info w-100" tabindex="0" data-bs-toggle="tooltip" title="Tableau de l'équipe"><i class="bi bi-layout-three-columns big-icon"></i></a>
+                                <a id="map-btn" href="<?= CONTROLLERS_URL ?>admin/map.php?projectId=<?= $Project->getRowid() ?>" class="btn btn-outline-info w-100" tabindex="0" data-bs-toggle="tooltip" title="Tableau de l'équipe"><i class="bi bi-layout-three-columns big-icon"></i></a>
                             </div>
-                            <?php if($CurrentProject->active) { ?>
+                            <?php if($Project->isActive()) { ?>
                                 <div id="archive-btn" class="col-3 collapse show">
-                                    <a href="<?= CONTROLLERS_URL ?>admin/detailsProjet.php?action=archive&idProject=<?= $CurrentProject->rowid ?>" class="w-100 btn btn-outline-danger text-center collapse show" tabindex="0" data-bs-toggle="tooltip" title="Archiver le projet"><i class="bi bi-archive-fill big-icon"></i></a>
+                                    <a href="<?= CONTROLLERS_URL ?>admin/detailsProjet.php?action=archive&idProject=<?= $Project->getRowid() ?>" class="w-100 btn btn-outline-danger text-center collapse show" tabindex="0" data-bs-toggle="tooltip" title="Archiver le projet"><i class="bi bi-archive-fill big-icon"></i></a>
                                 </div>
                             <?php } ?>
                         </div>
@@ -80,14 +80,14 @@ require_once 'layouts/entete.php';
                     <!-- AFFICHER TOUTES LES EQUIPES EXISTANTES POUR CE PROJET -->
                     <h5 id="project-teams-title" class="mt-3 border-bottom w-50 mx-auto collapse show">Équipes existantes</h5>
                     <div id="project-teams-div" class="sticker mt-3 overflow-y bg-white pt-2 collapse show" style="height: 45%;">
-                        <?php foreach($CurrentProject->teams as $team) { ?>
-                            <div id="team-sticker-<?= $team->rowid ?>" onclick="showTeamMembers(<?= $team->rowid ?>, '<?= $team->name ?>')" class="<?= intval($team->active) == 0 ? 'archived-team ' : '' ?>sticker mx-2 mt-2 pt-3 hover">
-                                <p><?= $team->name ?></p>
+                        <?php foreach($Project->getTeams() as $Team) { ?>
+                            <div id="team-sticker-<?= $Team->getRowid() ?>" onclick="showTeamMembers(<?= $Team->getRowid() ?>, '<?= $Team->getName() ?>')" class="<?= !$Team->isActive() ? 'archived-team ' : '' ?>sticker mx-2 mt-2 pt-3 hover">
+                                <p><?= $Team->getName() ?></p>
                             </div>
                         <?php } ?>
                     </div>
 
-                    <form id="update-team-form" action="<?= CONTROLLERS_URL ?>admin/detailsProjet.php?action=updateTeam&idProject=<?= $idProject ?>" method="POST">
+                    <form id="update-team-form" action="<?= CONTROLLERS_URL ?>admin/detailsProjet.php?action=updateTeam&idProject=<?= $Project->getRowid() ?>" method="POST">
                         <input type="hidden" value="" name="teamNameUpdate" id="teamName-hidden-update">
                         <input type="hidden" value="" name="teamId" id="team-id-update-input">
                         <div class="position-absolute start-50 translate-middle-x bottom-0 w-100">
@@ -96,7 +96,7 @@ require_once 'layouts/entete.php';
                                     <a id="update-team-button" class="w-100 btn btn-outline-primary text-center collapse show" tabindex="0" data-bs-toggle="tooltip" title="Mettre à jour les informations de l'équipe"><i class="bi bi-arrow-clockwise big-icon"></i></a>
                                 </div>
                                 <div class="col-3">
-                                    <a href="<?= CONTROLLERS_URL ?>admin/detailsProjet.php?action=deleteTeam&idProject=<?= $CurrentProject->rowid ?>" id="delete-team-button" class="w-100 btn btn-outline-danger text-center collapse show" tabindex="0" data-bs-toggle="tooltip" title="Supprimer l'équipe"><i class="bi bi-trash-fill big-icon"></i></a>
+                                    <a href="<?= CONTROLLERS_URL ?>admin/detailsProjet.php?action=deleteTeam&idProject=<?= $Project->getRowid() ?>" id="delete-team-button" class="w-100 btn btn-outline-danger text-center collapse show" tabindex="0" data-bs-toggle="tooltip" title="Supprimer l'équipe"><i class="bi bi-trash-fill big-icon"></i></a>
                                 </div>
                                 <div class="col-3">
                                     <a id="archive-team-button" class="w-100 btn btn-outline-danger text-center collapse" tabindex="0" data-bs-toggle="tooltip" title="Archiver l'équipe"><i class="bi bi-archive-fill big-icon"></i></a>
@@ -106,7 +106,7 @@ require_once 'layouts/entete.php';
                         </div>
                     </form>
 
-                    <form id="add-team-form" action="<?= CONTROLLERS_URL ?>admin/detailsProjet.php?action=addTeam&idProject=<?= $idProject ?>" method="POST">
+                    <form id="add-team-form" action="<?= CONTROLLERS_URL ?>admin/detailsProjet.php?action=addTeam&idProject=<?= $Project->getRowid() ?>" method="POST">
                         <input type="hidden" value="" name="teamName" id="teamName-hidden-create">
                         <a id="create-team-button" class="btn btn-outline-primary w-75 text-center collapse position-absolute bottom-0 translate-middle-x">Créer l'équipe</a>
                     </form>
@@ -129,27 +129,26 @@ require_once 'layouts/entete.php';
 
                                 <!-- Membres en cours d'affectation -->
                                 <?php
-                                foreach($projectFreeUsers as $key => $user)
-                                {
-                                    ?>
-                                    <tr class="collapse" id="adding-user-<?= $user->rowid ?>">
-                                        <td><?= $user->lastname ?></td>
-                                        <td><?= $user->firstname ?></td>
-                                        <td><button onclick="toggleUserToTeam(<?= $user->rowid ?>)" class="btn btn-outline-danger">Retirer</button></td>
+                                foreach($freeUsers as $key => $User)
+                                { ?>
+                                    <tr class="collapse" id="adding-user-<?= $User->getRowid() ?>">
+                                        <td><?= $User->getLastname() ?></td>
+                                        <td><?= $User->getFirstname() ?></td>
+                                        <td><button onclick="toggleUserToTeam(<?= $User->getRowid() ?>)" class="btn btn-outline-danger">Retirer</button></td>
                                     </tr>
                                     <?php
-                                } ?>
+                                }
 
-                                <!-- Membres déjà affectés aux équipes déjà créées -->
-                                <?php
-                                foreach($CurrentProject->teams as $team) {
-                                    foreach($team->members as $member) { ?>
-                                        <tr class="team-members-<?= $team->rowid ?> collapse" id="adding-again-user-<?= $member->rowid ?>">
-                                            <td><?= $member->lastname ?></td>
-                                            <td><?= $member->firstname ?></td>
-                                            <td><button onclick="toggleUserToExistingTeam(<?= $member->rowid ?>)" class="btn btn-outline-danger">Retirer</button></td>
+                                // Membres déjà affectés aux équipes déjà créées
+                                foreach($Project->getTeams() as $Team) {
+                                    foreach($Team->getMembers() as $Member) { ?>
+                                        <tr class="team-members-<?= $Team->getRowid() ?> collapse" id="adding-again-user-<?= $Member->getRowid() ?>">
+                                            <td><?= $Member->getLastname() ?></td>
+                                            <td><?= $Member->getFirstname() ?></td>
+                                            <td><button onclick="toggleUserToExistingTeam(<?= $Member->getRowid() ?>)" class="btn btn-outline-danger">Retirer</button></td>
                                         </tr>
-                                    <?php }
+                                        <?php
+                                    }
                                 } ?>
                                 </div>
                             </table>
@@ -170,20 +169,20 @@ require_once 'layouts/entete.php';
                                         <th>Prénom</th>
                                         <th>Options</th>
                                     </tr>
-                                    <?php foreach($projectFreeUsers as $key => $user) { ?>
-                                        <tr class="collapse show" id="free-user-<?= $user->rowid ?>">
-                                            <td><?= $user->lastname ?></td>
-                                            <td><?= $user->firstname ?></td>
-                                            <td><button onclick="toggleUserToTeam(<?= $user->rowid ?>)" class="btn btn-outline-success">Ajouter</button></td>
+                                    <?php foreach($freeUsers as $key => $User) { ?>
+                                        <tr class="collapse show" id="free-user-<?= $User->getRowid() ?>">
+                                            <td><?= $User->getLastname() ?></td>
+                                            <td><?= $User->getFirstname() ?></td>
+                                            <td><button onclick="toggleUserToTeam(<?= $User->getRowid() ?>)" class="btn btn-outline-success">Ajouter</button></td>
                                         </tr>
                                     <?php } ?>
                                     <!-- Membres en cours de désaffectation des équipe déjà créées -->
-                                    <?php foreach($CurrentProject->teams as $team) {
-                                        foreach($team->members as $member) { ?>
-                                            <tr class="freeing-team-members-<?= $team->rowid ?> collapse" id="freeing-user-<?= $member->rowid ?>">
-                                                <td><?= $member->lastname ?></td>
-                                                <td><?= $member->firstname ?></td>
-                                                <td><button onclick="toggleUserToExistingTeam(<?= $member->rowid ?>)" class="btn btn-outline-success">Ajouter</button></td>
+                                    <?php foreach($Project->getTeams() as $Team) {
+                                        foreach($Team->getMembers() as $Member) { ?>
+                                            <tr class="freeing-team-members-<?= $Team->getRowid() ?> collapse" id="freeing-user-<?= $Member->getRowid() ?>">
+                                                <td><?= $Member->getLastname() ?></td>
+                                                <td><?= $Member->getFirstname() ?></td>
+                                                <td><button onclick="toggleUserToExistingTeam(<?= $Member->getRowid() ?>)" class="btn btn-outline-success">Ajouter</button></td>
                                             </tr>
                                         <?php }
                                     } ?>
@@ -196,9 +195,9 @@ require_once 'layouts/entete.php';
         </div>
 
         <script>
-            var projectTeamsIds = <?php echo json_encode($projectTeamsIds); ?>;
-            var freeUsersIds = <?php echo json_encode($projectFreeUsersIds); ?>;
-            var CurrentProject = <?php echo json_encode($CurrentProject); ?>;
+            var teamsIds = <?php echo json_encode($teamsIds); ?>;
+            var freeUsersIds = <?php echo json_encode($freeUsersIds); ?>;
+            var Project = <?php echo json_encode($Project); ?>;
         </script>
         <script type="text/javascript" src="<?= JS_URL ?>admin/detailsProjet.js"></script>
 <?php 

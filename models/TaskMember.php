@@ -1,26 +1,14 @@
 <?php 
 Class TaskMember extends Modele 
 {
-    private $rowid;
-    private $fk_user;
-    private $fk_task;
+    private $User;
+    private $Task;
 
-    public function __construct($rowid = null)
+    public function __construct($fk_task = null)
     {
-        if($rowid != null)
+        if($fk_task != null)
         {
-            $sql = "SELECT t.rowid, t.fk_user, t.fk_task";
-            $sql .= " FROM tasks_members";
-            $sql .= " WHERE t.rowid = ?";
-
-            $requete = $this->getBdd()->prepare($sql);
-            $requete->execute([$rowid]);
-
-            $obj = $requete->fetch(PDO::FETCH_OBJ);
-
-            $this->rowid = $obj->rowid;
-            $this->fk_user = $obj->fk_user;
-            $this->fk_task = $obj->fk_task;
+            $this->fetchByTaskId($fk_task);
         }
     }
 
@@ -31,14 +19,14 @@ Class TaskMember extends Modele
         $this->rowid = $rowid;
     }
 
-    public function setFk_user($fk_user)
+    public function setUser($User)
     {
-        $this->fk_user = $fk_user;
+        $this->User = $User;
     }
 
-    public function setFk_task($fk_task)
+    public function setTask($Task)
     {
-        $this->fk_task = $fk_task;
+        $this->Task = $Task;
     }
 
     
@@ -49,14 +37,14 @@ Class TaskMember extends Modele
         return $this->rowid;
     }
 
-    public function getFk_user()
+    public function getUser()
     {
-        return $this->fk_user;
+        return $this->User;
     }
 
-    public function getFk_task()
+    public function getTask()
     {
-        return $this->fk_task;
+        return $this->Task;
     }
 
 
@@ -124,20 +112,20 @@ Class TaskMember extends Modele
 
     // FETCH
 
-    public function fetch($rowid)
+    public function fetchByTaskId(int $fk_task)
     {
-        $sql = "SELECT t.rowid, t.fk_user, t.fk_task";
-        $sql .= " FROM tasks_members AS t";
-        $sql .= " WHERE rowid = ?";
+        $sql = "SELECT t.fk_user";
+        $sql .= " FROM tasks_members";
+        $sql .= " WHERE t.fk_user = ?";
 
         $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$rowid]);
+        $requete->execute([$fk_task]);
 
         $obj = $requete->fetch(PDO::FETCH_OBJ);
 
         $this->rowid = $obj->rowid;
-        $this->fk_user = $obj->fk_user;
-        $this->fk_task = $obj->fk_task;
+        $this->User = new User($obj->fk_user);
+        // $this->Task = new Task($obj->fk_task);
     }
 
     public function fetchAll($fk_task)

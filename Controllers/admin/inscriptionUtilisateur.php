@@ -43,10 +43,7 @@ if($rights === "admin")
     $newpwd = GETPOST('newpassword');
     $newpwd = GETPOST('newpassword2');
 
-    $User = new User($idUser);
-    $Team = new Team();
-
-    $teams = $Team->fetchAll($idOrganization);
+    $User = new User();
 
     $errors = array();
     $success = false;
@@ -72,14 +69,13 @@ if($rights === "admin")
                                     $temporaryPassword = generateRandomString(6);
                                     $password = password_hash($temporaryPassword, PASSWORD_BCRYPT);
                                     
-                                    if($User->create($firstname, $lastname, $birth, $email, $idOrganization, $password))
+                                    if($User->create($email, $idOrganization, $password, 0, $firstname, $lastname, $birth))
                                     {
-                                        $organization = new organization($idOrganization);
-                                        $organizationName = $organization->getName();
+                                        $Organization = new Organization($idOrganization);
 
                                         $subject = "New registration !";
 
-                                        $mailText = "You have been registered by $organizationName on StoriesHelper <br>";
+                                        $mailText = "You have been registered by ".$Organization->getName()." on StoriesHelper <br>";
                                         $mailText .= "Your temporary password is ' $temporaryPassword ' , please change it as soon as possible.<br>";
                                         $mailText .= "Sincerely, <br> StoriesHelper.";
 
@@ -107,22 +103,22 @@ if($rights === "admin")
                                     }
                                     else 
                                     {
-                                        $errors[] = "Erreur : L'inscription n'a pas pu aboutir.";
+                                        $errors[] = "L'inscription n'a pas pu aboutir.";
                                     }
                                 } 
                                 else 
                                 {
-                                    $errors[] = "Erreur : L'adresse email est déjà prise.";
+                                    $errors[] = "L'adresse email est déjà prise.";
                                 }
                             } 
                             else 
                             {
-                                $errors[] = "errors : Le nom n'est pas correct.";
+                                $errors[] = "Le nom n'est pas correct.";
                             }
                         } 
                         else 
                         {
-                            $errors[] = "Erreur : Le prénom n'est pas correct.";
+                            $errors[] = "Le prénom n'est pas correct.";
                         }
                 } 
                 else 

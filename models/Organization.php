@@ -1,73 +1,36 @@
 <?php
 class Organization extends Modele
 {
-    private $id;
+    private $rowid;
     private $name;
-    private $email;
-    private $password;
     private $users = [];
     private $projects = [];
 
-    public function __construct($id = null)
+    public function __construct($rowid = null)
     {
-        if($id != null)
+        if($rowid != null)
         {
-            $sql = "SELECT * ";
-            $sql .= " FROM organizations"; 
-            $sql .= " WHERE rowid = ?";
-
-            $requete = $this->getBdd()->prepare($sql);
-            $requete->execute([$id]);
-
-            $Organization = $requete->fetch(PDO::FETCH_OBJ);
-            
-            $this->id = $id;
-            $this->name = $Organization->name;
-            $this->email = $Organization->email;
-            $this->password = $Organization->password;
-
-            $User = new User();
-            $users = $User->fetchAll($this->id);
-
-            foreach($users as $user)
-            {
-                $obj = new User($user->rowid);
-                $this->users[] = $obj;
-            }
-
-            $Project = new Project();
-            $projects = $Project->fetchAll($this->id);
-            foreach($projects as $project)
-            {
-                $obj = new Project($project->rowid);
-                $this->projects[] = $obj; 
-            }
+            $this->fetch($rowid);
         }
     }
 
+    // SETTER
 
-    //! SETTER
+    public function setRowid(int $rowid)
+    {
+        $this->rowid = $rowid;
+    }
 
-    public function setName($name)
+    public function setName(string $name)
     {
         $this->name = $name;
     }
 
-    public function setEmail($email)
-    {
-        $this->email = $email;
-    }
 
-    public function setPassword($password)
+    // GETTER
+    public function getRowid()
     {
-        $this->password = password_hash($password, PASSWORD_BCRYPT);
-    }
-
-
-    //! GETTER
-    public function getId()
-    {
-        return $this->id;
+        return $this->rowid;
     }
 
     public function getName()
@@ -75,15 +38,6 @@ class Organization extends Modele
         return $this->name;
     }
 
-    public function getEmail()
-    {
-        return $this->email;
-    }
-
-    public function getPassword()
-    {
-        return $this->password;
-    }
 
     public function getUsers()
     {
@@ -95,95 +49,55 @@ class Organization extends Modele
         return $this->projects;
     }
 
-    //* outdated, use instead $this->getUsers()
-    public function getOrgUsersInfos()
-    {
-        $usersInfos = array();
-        foreach($this->getUsers() as $user)
-        {
-            $userInfos  = new stdClass;
-
-            $userInfos->id = $user->getId();
-            $userInfos->idTeam = $user->getTeamId();
-            $userInfos->idOrganization = $user->getOrganizationId();
-            $userInfos->firstname = $user->getFirstname();
-            $userInfos->lastname = $user->getLastname();
-            $userInfos->email = $user->getEmail();
-            $userInfos->birth = $user->getBirth();
-            $userInfos->password = $user->getPassword();
-
-            $usersInfos[] = $userInfos;
-        }
-        return $usersInfos;
-    }
-
     public function getMaxIdUser()
     {
-        foreach($this->getUsers() as $cle => $user)
-        {
-            $idUser = $user->getIdUser();
-            $maxIdUser = null;
-            if ($cle == 0)
-            {
-                $maxIdUser = $user->getIdUser();
-            }
-            else
-            {
-                if($maxIdUser < $idUser)
-                {
-                    $maxIdUser = $idUser;
-                }
-            }
-        }
-
-        return $maxIdUser;
+        return max(array_map(function($user) {
+            return $user->rowid;
+        }, $this->users));
     }
 
     public function getMaxIdProject()
     {
-        foreach($this->getProjects() as $key => $project)
-        {
-            $projectId = $project->getIdProjet();
-            $projectMaxId = null;
-            if($key == 0)
-            {
-                $projectMaxId = $project->getIdProjet();
-            } 
-            else 
-            {
-                if($projectMaxId < $projectId)
-                {
-                    $projectMaxId = $projectId;
-                }
-            }
-        }
-        return $projectMaxId;
-    }
-
-    //* outdated, use directly count($object->users)
-    public function countUsers()
-    {
-        return count($this->users);
-    }
-
-    //* outdated, use directly count($object->projects)
-    public function countProjects()
-    {
-        return count($this->projects);
+        return max(array_map(function($project) {
+            return $project->rowid;
+        }, $this->projects));
     }
 
     public function countActiveProjects()
     {
         $counter = 0;
-        foreach($this->projects as $project)
+        foreach(array_column($this->projects, 'active') as $value)
         {
-            if($project->getActive() == 0)
+            if($value == 1)
             {
                 $counter++;
             }
         }
-
         return $counter;
+    }
+
+    public function countArchivedProjects()
+    {
+        $counter = 0;
+        foreach(array_column($this->projects, 'active') as $value)
+        {
+            if($value == 0)
+            {
+                $counter++;
+            }
+        }
+        return $counter;
+    }
+
+    // CREATE
+
+    public function create(string $name)
+    {
+        $sql = "INSERT INTO organization (name)";
+        $sql .= " VALUES (?)";
+
+        $requete = $this->getBdd()->prepare($sql);
+        return $requete->execute([$name]);
     }
 
 
@@ -191,42 +105,13 @@ class Organization extends Modele
 
     public function updateName($name)
     {
-        $sql = "UPDATE organizations"; 
+        $sql = "UPDATE organization"; 
         $sql .= " SET nom = ?";
-        $sql .= " WHERE idorganization = ?";
-
-        $requete = $this->getBdd()->prepare($sql);
-        return $requete->execute([$name, $this->id]);
-    }
-
-    public function updateEmail($email, $rowid = null)
-    {
-        $rowid = $rowid == null ? $this->id : $rowid;
-
-        /*$sql = "UPDATE organizations"; 
-        $sql .= " SET email = ?";
-        $sql .= " WHERE rowid = ?";*/
-        $sql = "SET @rowid = ?;";
-        $sql .= " SET @email = ?;";
-        $sql .= " CALL PROCEDURE updateEmail(@rowid, @email, @status);";
-        $sql .= " SELECT @status;";
-
-        $requete = $this->getBdd()->prepare($sql);
-        return $requete->execute([$email, $this->id]);
-    }
-
-    public function updatePassword($password, $organizationId = null)
-    {
-        $organizationId = $organizationId == null ? $this->id : $organizationId;
-
-        $sql = "UPDATE organizations"; 
-        $sql .= " SET password = ?";
         $sql .= " WHERE rowid = ?";
 
         $requete = $this->getBdd()->prepare($sql);
-        return $requete->execute([$password, $organizationId]);
+        return $requete->execute([$name, $this->rowid]);
     }
-
 
     // DELETE 
 
@@ -234,36 +119,36 @@ class Organization extends Modele
     {
         $status = array();
 
-        $sql = "DELETE FROM work_to AS w";
-        $sql .= " INNER JOIN teams AS t ON w.fk_team = t.rowid";
+        $sql = "DELETE FROM belong_to AS w";
+        $sql .= " INNER JOIN team AS t ON w.fk_team = t.rowid";
         $sql .= " WHERE fk_organization = ?";
         
         $requete = $this->getBdd()->prepare($sql);
-        $status [] = $requete->execute([$this->id]);
+        $status [] = $requete->execute([$this->rowid]);
     
-        $sql = "DELETE FROM projects"; 
+        $sql = "DELETE FROM project"; 
         $sql .= " WHERE fk_organization = ?";
 
         $requete = $this->getBdd()->prepare($sql);
-        $status [] = $requete->execute([$this->id]);
+        $status [] = $requete->execute([$this->rowid]);
     
-        $sql = "DELETE FROM users"; 
+        $sql = "DELETE FROM user"; 
         $sql .= " WHERE fk_organization = ?";
 
         $requete = $this->getBdd()->prepare($sql);
-        $status [] = $requete->execute([$this->id]);
+        $status [] = $requete->execute([$this->rowid]);
         
-        $sql = "DELETE FROM teams";
+        $sql = "DELETE FROM team";
         $sql .= " WHERE fk_organization = ?";
 
         $requete = $this->getBdd()->prepare($sql);
-        $status [] = $requete->execute([$this->id]);
+        $status [] = $requete->execute([$this->rowid]);
         
-        $sql = "DELETE FROM organizations";
+        $sql = "DELETE FROM organization";
         $sql .= " WHERE rowid = ?";
         
         $requete = $this->getBdd()->prepare($sql);
-        $status [] = $requete->execute([$this->id]);
+        $status [] = $requete->execute([$this->rowid]);
     
         session_destroy();
 
@@ -282,40 +167,26 @@ class Organization extends Modele
 
     public function fetch($rowid = null)
     {
-        $rowid = $rowid == null ? $this->id : $rowid;
+        $rowid = $rowid == null ? $this->rowid : $rowid;
 
         $sql = "SELECT *";
-        $sql .= " FROM organizations";
+        $sql .= " FROM organization";
         $sql .= " WHERE rowid = ?";
 
         $requete = $this->getBdd()->prepare($sql);
-        $status = $requete->execute([$rowid]);
+        $requete->execute([$rowid]);
+
     
-        if($status)
+        if($requete->rowCount() > 0)
         {
-            $Organization = $requete->fetch(PDO::FETCH_OBJ);
+            $obj = $requete->fetch(PDO::FETCH_OBJ);
             
-            $this->id = $rowid;
-            $this->name = $Organization->name;
-            $this->email = $Organization->email;
-            $this->password = $Organization->password;
+            $this->rowid = $rowid;
+            $this->name = $obj->name;
 
-            $User = new User();
-            $users = $User->fetchAll($this->id);
-
-            foreach($users as $user)
-            {
-                $obj = new User($user->rowid);
-                $this->users[] = $obj;
-            }
-
-            $Project = new Project();
-            $projects = $Project->fetchAll($this->id);
-            foreach($projects as $project)
-            {
-                $obj = new Project($project->rowid);
-                $this->projects[] = $obj; 
-            }
+            $this->fetchUsers();
+            $this->fetchProjects();
+            
             return true;
         }
         else
@@ -324,37 +195,69 @@ class Organization extends Modele
         }
     }
 
-    public function fetchByEmail($email)
+    public function fetchUsers()
     {
-        $sql = "SELECT *";
-        $sql .= " FROM organizations"; 
-        $sql .= " WHERE email = ?";
-        
-        $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$email]);
+        $sql = "SELECT rowid";
+        $sql .= " FROM user";
+        $sql .= " WHERE fk_organization = ?";
 
-        return $requete->fetch(PDO::FETCH_OBJ);
+        $requete = $this->getBdd()->prepare($sql);
+        $requete->execute([$this->rowid]);
+        
+        $lines = $requete->fetchAll(PDO::FETCH_OBJ);
+
+        foreach($lines as $line)
+        {
+            $this->users[] = new User($line->rowid);
+        }
     }
 
-    public function fetchById($rowid)
+    public function fetchProjects()
     {
-        $sql = "SELECT *";
-        $sql .= " FROM organizations"; 
-        $sql .= " WHERE rowid = ?";
-        
-        $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$rowid]);
+        $sql = "SELECT p.rowid";
+        $sql .= " FROM project AS p";
+        $sql .= " WHERE p.fk_organization = ?";
 
-        return $requete->fetch(PDO::FETCH_OBJ);
+        $requete = $this->getBdd()->prepare($sql);
+        $requete->execute([$this->rowid]);
+
+        $lines = $requete->fetchAll(PDO::FETCH_OBJ);
+    
+        foreach($lines as $line)
+        {
+            $this->projects[] = new Project($line->rowid);
+        }
+    }
+
+    public function fetchUser(int $idUser)
+    {
+        foreach($this->users as $User)
+        {
+            if($User->getRowid() == $idUser)
+            {
+                return $User;
+            }
+        }
+    }
+
+    public function fetch_last_insert_id()
+    {
+        $sql = "SELECT MAX(rowid) as rowid";
+        $sql .= " FROM organization";
+
+        $requete = $this->getBdd()->prepare($sql);
+        $requete->execute();
+
+        return $requete->fetch(PDO::FETCH_OBJ)->rowid;
     }
 
 
-    //! METHODES
+    // METHODES
 
     public function checkByName($name)
     {
         $sql = "SELECT *";
-        $sql .= " FROM organizations";
+        $sql .= " FROM organization";
         $sql .= " WHERE name = ?";
 
         $requete = $this->getBdd()->prepare($sql);
@@ -371,10 +274,11 @@ class Organization extends Modele
 
     }
             
+    //* outdated
     public function checkToken($idUser, $token)
     {
         $sql = "SELECT *";
-        $sql .= " FROM organizations";
+        $sql .= " FROM organization";
         $sql .= " WHERE rowid = ?";
         $sql .= " AND token = ?";
 
@@ -390,29 +294,11 @@ class Organization extends Modele
             return false;
         }
     }
-
-    public function checkByEmail($email)
-    {
-        $sql = "SELECT * ";
-        $sql .= " FROM organizations";
-        $sql .= " WHERE email = ?";
         
-        $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$email]);
-
-        if($requete->rowCount() > 0)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-        
+    //* outdated
     public function addCookie($idUser, $token)
     {
-        $sql = "UPDATE organizations";
+        $sql = "UPDATE organization";
         $sql .= " SET token = ?";
         $sql .= " WHERE rowid = ?";
 

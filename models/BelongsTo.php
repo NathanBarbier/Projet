@@ -8,19 +8,19 @@ class BelongsTo extends Modele
     {
         if($fk_user != null && $fk_team != null)
         {
-            $sql = "SELECT fk_user, fk_team";
+            $sql = "SELECT *";
             $sql .= " FROM belong_to";
-            $sql .= " WHERE fk_user = ? AND fk_team";
+            $sql .= " WHERE fk_user = ? AND fk_team = ?";
 
             $requete = $this->getBdd()->prepare($sql);
             $requete->execute([$fk_user, $fk_team]);
 
-            $result = $requete->fetch(PDO::FETCH_OBJ);
-
-            if($result)
+            
+            if($requete->rowCount() > 0)
             {
-                $this->userId = $result->fk_user;
-                $this->teamId = $result->fk_team;
+                $obj = $requete->fetch(PDO::FETCH_OBJ);
+                $this->fk_user = $obj->fk_user; 
+                $this->fk_team = $obj->fk_team; 
             }
         }
     }
@@ -92,10 +92,22 @@ class BelongsTo extends Modele
 
         foreach($lines as $line)
         {
-            $BelongsTos[] = new BelongsTo($line->rowid);
+            $BelongsTos[] = new BelongsTo($line->fk_user, $line->fk_team);
         }
 
         return $BelongsTos;
+    }
+
+    public function fetchTeamIds(int $fk_user)
+    {
+        $sql = "SELECT fk_team";
+        $sql .= " FROM belong_to";
+        $sql .= " WHERE fk_user = ?";
+
+        $requete = $this->getBdd()->prepare($sql);
+        $requete->execute([$fk_user]);
+
+        return $requete->fetchAll(PDO::FETCH_OBJ);
     }
 }
 

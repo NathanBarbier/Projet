@@ -1,11 +1,11 @@
 <?php 
 Class MapColumn extends Modele
 {
-    private $rowid;
-    private $name;
-    private $tasks = array();
-    private $fk_team;
-    private $rank;
+    protected $rowid;
+    protected $name;
+    protected $tasks = array();
+    protected $fk_team;
+    protected $rank;
 
     public function __construct($rowid = null)
     {

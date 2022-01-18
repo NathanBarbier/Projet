@@ -1,17 +1,17 @@
 <?php
 class User extends Modele
 {
-    private $rowid;
-    private $firstname;
-    private $lastname;
-    private $birth;
-    private $password;
-    private $email;
+    protected $rowid;
+    protected $firstname;
+    protected $lastname;
+    protected $birth;
+    protected $password;
+    protected $email;
     // private $Organization;
-    private $fk_organization;
-    private $BelongsTo;
-    private $consent;
-    private $admin;
+    protected $fk_organization;
+    protected $BelongsTo;
+    protected $consent;
+    protected $admin;
 
     public function __construct($rowid = null)
     {
@@ -184,7 +184,7 @@ class User extends Modele
         {
             $obj = $requete->fetch(PDO::FETCH_OBJ);
 
-            $this->rowid = $rowid;
+            $this->rowid = intval($rowid);
             $this->lastname = $obj->lastname;
             $this->firstname = $obj->firstname;
             $this->birth = $obj->birth;

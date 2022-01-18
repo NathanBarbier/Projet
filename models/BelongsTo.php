@@ -1,8 +1,8 @@
 <?php
 class BelongsTo extends Modele
 {
-    private $fk_user;
-    private $fk_team;
+    protected $fk_user;
+    protected $fk_team;
 
     function __construct($fk_user = null, $fk_team = null)
     {

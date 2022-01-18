@@ -1,14 +1,14 @@
 <?php
 class Team extends Modele
 {
-    private $rowid;
-    private $name;
+    protected $rowid;
+    protected $name;
     // private $Organization;
     // private $Project;
-    private $fk_project;
-    private $members = array();
-    private $mapColumns = array();
-    private $active;
+    protected $fk_project;
+    protected $members = array();
+    protected $mapColumns = array();
+    protected $active;
 
     public function __construct($rowid = null)
     {
@@ -58,6 +58,12 @@ class Team extends Modele
     public function addUser(User $User)
     {
         $this->members[] = $User;
+    }
+
+    public function removeUser(int $fk_user)
+    {
+        $key = array_search($fk_user, array_column($this->object_to_array($this->members), 'rowid'));
+        unset($this->members[$key]);
     }
 
     // GETTER

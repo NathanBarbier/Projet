@@ -1,10 +1,10 @@
 <?php
 class Organization extends Modele
 {
-    private $rowid;
-    private $name;
-    private $users = [];
-    private $projects = [];
+    protected $rowid;
+    protected $name;
+    protected $users = [];
+    protected $projects = [];
 
     public function __construct($rowid = null)
     {

@@ -2,15 +2,15 @@
 
 Class Project extends Modele
 {
-    private $rowid;
-    private $name;
-    private $type;
-    private $open;
-    private $description;
+    protected $rowid;
+    protected $name;
+    protected $type;
+    protected $open;
+    protected $description;
     // private $Organization;
-    private $fk_organization;
-    private $teams = array();
-    private $active;
+    protected $fk_organization;
+    protected $teams = array();
+    protected $active;
 
     public function __construct($rowid = null)
     {

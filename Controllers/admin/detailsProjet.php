@@ -23,6 +23,7 @@ if($rights === "admin")
     if($idProject)
     {
         $Organization = new Organization($idOrganization);
+        //todo : get the project from $Organization->projects
         $Project = new Project($idProject);
         $User = new User();
         $Team = new Team($teamId);
@@ -68,8 +69,11 @@ if($rights === "admin")
                         $key = array_search($Member, $freeUsers);
                         unset($freeUsers[$key]);
                     }
+                    if(count($freeUsers) == 0) break;
                 }
+                if(count($freeUsers) == 0) break;
             }
+            if(count($freeUsers) == 0) break;
         }
 
         if($action == 'addTeam' || $action == "updateTeam")
@@ -79,7 +83,7 @@ if($rights === "admin")
             {
                 if(GETPOST('addingUser'.$key))
                 {
-                    $addingUsersIds[] = GETPOST('addingUser'.$key);
+                    $addingUsersIds[] = intval(GETPOST('addingUser'.$key));
                 }
             }
         }
@@ -248,39 +252,71 @@ if($rights === "admin")
         {
             if($teamId)
             {
-                try {
+                try 
+                {
                     // changement de nom d'équipe
                     if($teamNameUpdate)
                     {
-                        $Team->updateName($teamNameUpdate, $teamId);
+                        $Team->setName($teamNameUpdate);
+                        // $Team->updateName($teamNameUpdate, $teamId);
                     }
 
                     // ajout des users dans la team
-                    foreach($addingUsersIds as $idUser)
+                    foreach($addingUsersIds as $userId)
                     {
-                        $BelongsTo->create($idUser, $teamId);
-                    }
-
-                    // suppression des users dans la team
-                    foreach($CurrentProject->teams as $team)
-                    {
-                        if($team->rowid == $teamId)
+                        $UserToAdd = false;
+                        // get the user to add
+                        foreach($Organization->getUsers() as $User)
                         {
-                            foreach($team->members as $key => $member)
+                            if($User->getRowid() == $userId)
                             {
-                                if(GETPOST('removingUser'.$key))
+                                $BelongsTo->create($userId, $Team->getRowid());
+
+                                $Team->addUser($User);
+
+                                // removing user from freeUsers
+                                unset($freeUsersIds[array_search($User->getRowid(), $freeUsersIds)]);
+                                foreach($freeUsers as $key => $freeUser)
                                 {
-                                    $fk_user = GETPOST('removingUser'.$key);
-                                    $BelongsTo->delete($fk_user, $team->rowid);
+                                    if($freeUser->getRowid() == $User->getRowid())
+                                    {
+                                        unset($freeUsers[$key]);
+                                        break;
+                                    }
                                 }
+                                break;
                             }
                         }
                     }
 
+                    // suppression des users dans la team
+                    foreach($Team->getMembers() as $key => $User)
+                    {
+                        if(GETPOST('removingUser'.$key))
+                        {
+                            $fk_user = intval(GETPOST('removingUser'.$key)); 
+
+                            $BelongsTo->delete($fk_user, $Team->getRowid());
+
+                            $freeUsersIds[] = $User->getRowid();
+                            $freeUsers[] = $User;
+
+                            $Team->removeUser($User->getRowid());
+                        }
+                    }
+
+                    // update project -> team object
+                    $Project->removeTeam($Team->getRowid());
+                    $Project->addTeam($Team);
+                    
+                    $Team->update();
+
                     $success = "L'équipe a bien été modifiée.";
-                } catch (\Throwable $th) {
+                } 
+                catch (\Throwable $th) 
+                {
                     //throw $th;
-                    $errors[] = "Une erreur innatendue est survenue.";
+                    $errors[] = "Une erreur est survenue.";
                 }
             }
             else

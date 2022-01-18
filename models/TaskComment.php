@@ -1,10 +1,10 @@
 <?php 
 class TaskComment extends Modele 
 {
-    private $rowid;
-    private $Task;
-    private $note;
-    private $User;
+    protected $rowid;
+    protected $Task;
+    protected $note;
+    protected $User;
 
     public function __construct($rowid = null)
     {

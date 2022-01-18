@@ -32,7 +32,7 @@ $("#update-team-button").click(function() {
     $("#teamName-hidden-update").val($("#teamName").val());
 
     ProjectTeams = Project["teams"];
-    console.log(ProjectTeams)
+    console.log(ProjectTeams);
 
     teamId = $("#team-id-update-input").val();
 
@@ -41,6 +41,7 @@ $("#update-team-button").click(function() {
         teamRowid = team["rowid"];
         if(teamId == teamRowid)
         {
+            console.log(members)
             members.forEach(function(member, key) {
                 userRowid = member["rowid"];
     
@@ -147,7 +148,6 @@ function showTeamMembers(teamRowid, teamName)
             teamActive = data;
             teamActive = teamActive.replace("\"", '').replace("\"", '');
             teamActive = parseInt(teamActive)
-            console.log(teamActive);
 
             if(teamActive == 0)
             {
@@ -173,7 +173,7 @@ function showTeamMembers(teamRowid, teamName)
     $("#delete-team-button").addClass('show');
     $("#delete-team-button").attr('href', CONTROLLERS_URL+'admin/detailsProjet.php?action=deleteTeam&teamId='+teamRowid+'&idProject='+projectId);
     $("#map-btn").attr('href', CONTROLLERS_URL+'admin/map.php?projectId='+projectId+'&teamId='+teamRowid);
-    // console.log(teamName);
+
     $("#teamName").val(teamName);
 
     teamIds.forEach(element => {

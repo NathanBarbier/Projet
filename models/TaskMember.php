@@ -1,8 +1,8 @@
 <?php 
 Class TaskMember extends Modele 
 {
-    private $User;
-    private $Task;
+    protected $User;
+    protected $Task;
 
     public function __construct($fk_task = null)
     {

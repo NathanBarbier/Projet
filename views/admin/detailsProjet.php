@@ -37,8 +37,8 @@ require_once 'layouts/entete.php';
     </div>
 
     <div class="row" style="height: 81vh;">
-        <div class="sticker col-3 mt-3 ms-3 me-3 pb-4 text-center h-auto">
-            <div class="row position-relative h-100">
+        <div class="sticker col-3 mt-3 ms-3 me-3 pb-4 text-center" style="height: 98%;">
+            <div class="row position-relative" style="height: 100%;">
                 <form action="<?= CONTROLLERS_URL ?>admin/detailsProjet.php?action=updateProject&idProject=<?= $Project->getRowid() ?>" method="POST">
                     <h5 class="mt-5 border-bottom w-50 mx-auto">Titre</h5>
                     <input class="sticker text-center mt-2 px-2" name="projectName" id="projectName" type="text" value="<?= $Project->getName() ?>">
@@ -81,7 +81,7 @@ require_once 'layouts/entete.php';
                     <h5 id="project-teams-title" class="mt-3 border-bottom w-50 mx-auto collapse show">Équipes existantes</h5>
                     <div id="project-teams-div" class="sticker mt-3 overflow-y bg-white pt-2 collapse show" style="height: 45%;">
                         <?php foreach($Project->getTeams() as $Team) { ?>
-                            <div id="team-sticker-<?= $Team->getRowid() ?>" onclick="showTeamMembers(<?= $Team->getRowid() ?>, '<?= $Team->getName() ?>')" class="<?= !$Team->isActive() ? 'archived-team ' : '' ?>sticker mx-2 mt-2 pt-3 hover">
+                            <div id="team-sticker-<?= $Team->getRowid() ?>" onclick="showTeamMembers(<?= $Team->getRowid() ?>, '<?= addslashes($Team->getName()) ?>')" class="<?= !$Team->isActive() ? 'archived-team ' : '' ?>sticker mx-2 mt-2 pt-3 hover">
                                 <p><?= $Team->getName() ?></p>
                             </div>
                         <?php } ?>
@@ -195,10 +195,12 @@ require_once 'layouts/entete.php';
         </div>
 
         <script>
+            var Project = <?php echo json_encode($Project->object_to_array($Project)); ?>;
             var teamsIds = <?php echo json_encode($teamsIds); ?>;
             var freeUsersIds = <?php echo json_encode($freeUsersIds); ?>;
-            var Project = <?php echo json_encode($Project); ?>;
         </script>
+
+
         <script type="text/javascript" src="<?= JS_URL ?>admin/detailsProjet.js"></script>
 <?php 
 require_once 'layouts/pied.php';

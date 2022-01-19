@@ -10,14 +10,15 @@ if($rights === "admin")
     $tpl = "detailsProjet.php";
 
     $action = GETPOST('action');
-    $idProject = GETPOST('idProject');
+    $idProject = intval(GETPOST('idProject'));
     $projectName = GETPOST('projectName');
     $description = GETPOST('description');
     $type = GETPOST('type');
 
     $teamName = GETPOST('teamName');
     $teamNameUpdate = GETPOST('teamNameUpdate');
-    $teamId = GETPOST('teamId');
+    $teamId = intval(GETPOST('teamId'));
+
     $errors = GETPOST('errors');
 
     if($idProject)
@@ -62,12 +63,14 @@ if($rights === "admin")
         {
             foreach($Project->getTeams() as $Team)
             {
-                foreach($Team->getMembers() as $Member)
+                foreach($Team->getUsers() as $User)
                 {
-                    if(in_array($Member, $freeUsers))
+                    if(in_array($User, $freeUsers))
                     {
-                        $key = array_search($Member, $freeUsers);
+                        $key = array_search($User, $freeUsers);
                         unset($freeUsers[$key]);
+                        $key = array_search($User->getRowid(), $freeUsersIds);
+                        unset($freeUsersIds[$key]);
                     }
                     if(count($freeUsers) == 0) break;
                 }
@@ -258,7 +261,6 @@ if($rights === "admin")
                     if($teamNameUpdate)
                     {
                         $Team->setName($teamNameUpdate);
-                        // $Team->updateName($teamNameUpdate, $teamId);
                     }
 
                     // ajout des users dans la team
@@ -290,7 +292,7 @@ if($rights === "admin")
                     }
 
                     // suppression des users dans la team
-                    foreach($Team->getMembers() as $key => $User)
+                    foreach($Team->getUsers() as $key => $User)
                     {
                         if(GETPOST('removingUser'.$key))
                         {
@@ -345,19 +347,21 @@ if($rights === "admin")
         }
 
         // For JS
-        $teamsIds = array();
+        $teamIds = array();
 
         foreach($Project->getTeams() as $Team)
         {
-            $teamsIds[] = $Team->getRowid();
+            $teamIds[] = $Team->getRowid();
         }
 
         ?>
         <script>
         const CONTROLLERS_URL = <?php echo json_encode(CONTROLLERS_URL); ?>;
         const projectId = <?php echo json_encode($Project->getRowid()); ?>;
-        var teamIds = <?php echo json_encode($teamsIds); ?>;
-        //var ProjectTeams = <?php echo json_encode($Project->getTeams()); ?>;
+        var teamIds = <?php echo json_encode($teamIds); ?>;
+        // use of array_values to avoid JS object conversion
+        var freeUsersIds = <?php echo json_encode(array_values($freeUsersIds)); ?>;
+        var Project = <?php echo json_encode($Project->object_to_array($Project)); ?>;
         </script>
         <?php
     }

@@ -2,7 +2,7 @@
 
 Class Project extends Modele
 {
-    protected $rowid;
+    public $rowid;
     protected $name;
     protected $type;
     protected $open;
@@ -111,10 +111,15 @@ Class Project extends Modele
         $this->teams[] = $Team;
     }
 
-    public function removeTeam($fk_team)
+    public function removeTeam(int $fk_team)
     {
-        $key = array_search($fk_team, array_column($this->teams, 'rowid'));
-        unset($this->teams[$key]);
+        foreach($this->teams as $key => $Team)
+        {
+            if($Team->getRowid() == $fk_team)
+            {
+                unset($this->teams[$key]);
+            }
+        }
     }
 
 

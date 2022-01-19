@@ -3,20 +3,21 @@ $("#create-switch-button").click(function() {
     $("#archive-team-button").removeClass("show");
     $("#open-team-button").removeClass("show");
 });
+
 $("#update-switch-button").click(function() {
     switchTeamApp();
 });
 
 $("#create-team-button").click(function() {
     $("#teamName-hidden-create").val($("#teamName").val());
-
+    
     freeUsersIds.forEach(function(id, key) {
         if($("#adding-user-"+id).hasClass("show"))
         {
             $("#add-team-form").append("<input type='hidden' name='addingUser"+key+"' value='"+id+"'>")
         }
     });
-
+    
 
     $("#add-team-form").submit();
 });
@@ -30,20 +31,31 @@ $("#update-team-button").click(function() {
 
     // update team name
     $("#teamName-hidden-update").val($("#teamName").val());
-
-    ProjectTeams = Project["teams"];
-    console.log(ProjectTeams);
+    
+    Obj = Project["teams"];
+    ProjectTeams = [];
+    
+    // convert to array
+    Object.keys(Obj).forEach(key => ProjectTeams.push({
+        rowid: Obj[key]["rowid"],
+        users: Obj[key]["users"]
+    }));
 
     teamId = $("#team-id-update-input").val();
 
     ProjectTeams.forEach(team => {
-        members = team["members"];
+        // get teams members ids
+        Obj = team["users"];
+        users = [];
+        Object.keys(Obj).forEach(key => users.push({
+            rowid: Obj[key]["rowid"],
+        }));
+
         teamRowid = team["rowid"];
         if(teamId == teamRowid)
         {
-            console.log(members)
-            members.forEach(function(member, key) {
-                userRowid = member["rowid"];
+            users.forEach(function(user, key) {
+                userRowid = user["rowid"];
     
                 if($("#freeing-user-"+userRowid).hasClass("show"))
                 {
@@ -112,12 +124,12 @@ function switchTeamApp()
         }
     }
 
-    l = teamsIds.length;
+    l = teamIds.length;
     for(i = 0; i < l; i++)
     {
-        if($(".team-members-"+teamsIds[i]).hasClass("show"))
+        if($(".team-members-"+teamIds[i]).hasClass("show"))
         {
-            $(".team-members-"+teamsIds[i]).removeClass("show");
+            $(".team-members-"+teamIds[i]).removeClass("show");
         }
     }
 

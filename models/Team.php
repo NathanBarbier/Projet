@@ -6,7 +6,7 @@ class Team extends Modele
     // private $Organization;
     // private $Project;
     protected $fk_project;
-    protected $members = array();
+    protected $users = array();
     protected $mapColumns = array();
     protected $active;
 
@@ -31,18 +31,14 @@ class Team extends Modele
         $this->name = $name;
     }
 
-    // public function setProject(Project $Project)
-    // {
-    //     $this->Project = $Project;
-    // }
     public function setFk_project(int $fk_project)
     {
         $this->fk_project = $fk_project;
     }
 
-    public function setMembers(array $members)
+    public function setUsers(array $users)
     {
-        $this->members = $members;
+        $this->users = $users;
     }
 
     public function setMapColumns(array $mapColumns)
@@ -57,13 +53,13 @@ class Team extends Modele
 
     public function addUser(User $User)
     {
-        $this->members[] = $User;
+        $this->users[] = $User;
     }
 
     public function removeUser(int $fk_user)
     {
-        $key = array_search($fk_user, array_column($this->object_to_array($this->members), 'rowid'));
-        unset($this->members[$key]);
+        $key = array_search($fk_user, array_column($this->object_to_array($this->users), 'rowid'));
+        unset($this->users[$key]);
     }
 
     // GETTER
@@ -78,10 +74,6 @@ class Team extends Modele
         return $this->rowid;
     }
 
-    // public function getProject()
-    // {
-    //     return $this->Project;
-    // }
     public function getFk_project()
     {
         return $this->fk_project;
@@ -92,9 +84,9 @@ class Team extends Modele
         return $this->Organization;
     }
 
-    public function getMembers()
+    public function getUsers()
     {
-        return $this->members;
+        return $this->users;
     }
 
     public function getMapColumns()
@@ -126,7 +118,7 @@ class Team extends Modele
         $this->fk_project = $obj->fk_project;
         $this->active = $obj->active;
 
-        // fetch team members
+        // fetch team users
         $sql = "SELECT u.rowid";
         $sql .= " FROM user AS u";
         $sql .= " LEFT JOIN belong_to AS b ON u.rowid = b.fk_user";
@@ -141,7 +133,7 @@ class Team extends Modele
 
             foreach($lines as $line)
             {
-                $this->members[] = new User($line->rowid);
+                $this->users[] = new User($line->rowid);
             }
         }
 

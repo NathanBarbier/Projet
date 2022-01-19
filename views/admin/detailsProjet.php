@@ -141,11 +141,11 @@ require_once 'layouts/entete.php';
 
                                 // Membres déjà affectés aux équipes déjà créées
                                 foreach($Project->getTeams() as $Team) {
-                                    foreach($Team->getMembers() as $Member) { ?>
-                                        <tr class="team-members-<?= $Team->getRowid() ?> collapse" id="adding-again-user-<?= $Member->getRowid() ?>">
-                                            <td><?= $Member->getLastname() ?></td>
-                                            <td><?= $Member->getFirstname() ?></td>
-                                            <td><button onclick="toggleUserToExistingTeam(<?= $Member->getRowid() ?>)" class="btn btn-outline-danger">Retirer</button></td>
+                                    foreach($Team->getUsers() as $User) { ?>
+                                        <tr class="team-members-<?= $Team->getRowid() ?> collapse" id="adding-again-user-<?= $User->getRowid() ?>">
+                                            <td><?= $User->getLastname() ?></td>
+                                            <td><?= $User->getFirstname() ?></td>
+                                            <td><button onclick="toggleUserToExistingTeam(<?= $User->getRowid() ?>)" class="btn btn-outline-danger">Retirer</button></td>
                                         </tr>
                                         <?php
                                     }
@@ -178,11 +178,11 @@ require_once 'layouts/entete.php';
                                     <?php } ?>
                                     <!-- Membres en cours de désaffectation des équipe déjà créées -->
                                     <?php foreach($Project->getTeams() as $Team) {
-                                        foreach($Team->getMembers() as $Member) { ?>
-                                            <tr class="freeing-team-members-<?= $Team->getRowid() ?> collapse" id="freeing-user-<?= $Member->getRowid() ?>">
-                                                <td><?= $Member->getLastname() ?></td>
-                                                <td><?= $Member->getFirstname() ?></td>
-                                                <td><button onclick="toggleUserToExistingTeam(<?= $Member->getRowid() ?>)" class="btn btn-outline-success">Ajouter</button></td>
+                                        foreach($Team->getUsers() as $User) { ?>
+                                            <tr class="freeing-team-members-<?= $Team->getRowid() ?> collapse" id="freeing-user-<?= $User->getRowid() ?>">
+                                                <td><?= $User->getLastname() ?></td>
+                                                <td><?= $User->getFirstname() ?></td>
+                                                <td><button onclick="toggleUserToExistingTeam(<?= $User->getRowid() ?>)" class="btn btn-outline-success">Ajouter</button></td>
                                             </tr>
                                         <?php }
                                     } ?>
@@ -193,13 +193,6 @@ require_once 'layouts/entete.php';
                 </div>
             </div>
         </div>
-
-        <script>
-            var Project = <?php echo json_encode($Project->object_to_array($Project)); ?>;
-            var teamsIds = <?php echo json_encode($teamsIds); ?>;
-            var freeUsersIds = <?php echo json_encode($freeUsersIds); ?>;
-        </script>
-
 
         <script type="text/javascript" src="<?= JS_URL ?>admin/detailsProjet.js"></script>
 <?php 

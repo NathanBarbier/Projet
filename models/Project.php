@@ -127,13 +127,13 @@ Class Project extends Modele
 
     public function update()
     {
-        $sql = "UDPATE project";
+        $sql = "UPDATE project";
         $sql .= " SET";
-        $sql .= " name = $this->name";
-        $sql .= " ,type = $this->type";
-        $sql .= " ,open = $this->open";
+        $sql .= " name = '$this->name'";
+        $sql .= " ,type = '$this->type'";
+        $sql .= " ,open = '$this->open'";
         $sql .= " ,fk_organization = $this->fk_organization";
-        $sql .= " ,description = $this->description";
+        $sql .= " ,description = '$this->description'";
         $sql .= " ,active = $this->active";
         $sql .= " WHERE rowid = $this->rowid";
 

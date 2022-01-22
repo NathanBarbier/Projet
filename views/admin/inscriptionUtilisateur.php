@@ -1,8 +1,6 @@
 <?php 
 require_once "layouts/entete.php";
 ?>
-
-<div class="col-9 mt-5">
     <div class="container">
         <form class="w-50 mx-auto position-relative" method="post" action="<?= CONTROLLERS_URL ?>admin/inscriptionUtilisateur.php?action=signup">
             <?php if($success) { ?>

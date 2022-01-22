@@ -19,7 +19,7 @@ $("#create-team-button").click(function() {
     });
     
 
-    $("#add-team-form").submit();
+   $("#add-team-form").submit();
 });
 
 $("#close-alert").click(function() {
@@ -157,6 +157,7 @@ function showTeamMembers(teamRowid, teamName)
         async: true,
         url: AJAX_URL+"admin/detailsProjet.php?action=getTeamActive&teamId="+teamRowid,
         success: function(data) {
+            console.log(data)
             teamActive = data;
             teamActive = teamActive.replace("\"", '').replace("\"", '');
             teamActive = parseInt(teamActive)

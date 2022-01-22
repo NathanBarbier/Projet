@@ -28,8 +28,6 @@ $mail->addReplyTo('storiesHelperSignUp@gmail.com', 'storiesHelper');
 $rights = $_SESSION["rights"] ?? false;
 $idOrganization = $_SESSION["idOrganization"] ?? false;
 
-// var_dump($rights);
-
 if($rights === "admin")
 {
     $action = GETPOST('action');

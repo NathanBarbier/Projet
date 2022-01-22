@@ -1,8 +1,6 @@
 <?php
 require_once "layouts/entete.php"; 
 ?>
-<div class="col-8 mt-4 pe-4 position-relative">
-
     <?php if($success) { ?>
         <div class="alert alert-success w-50 text-center position-absolute top-0 start-50 translate-middle-x">
             <i class="bi bi-check-circle-fill"></i>
@@ -41,9 +39,6 @@ require_once "layouts/entete.php";
             </form>
     </div>
 </div>
-
-<script type="text/Javascript">
-</script>
 
 <script type="text/Javascript" src="<?= JS_URL ?>admin/creationProjets.js"></script>
 

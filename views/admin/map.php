@@ -3,22 +3,22 @@ require_once "layouts/entete.php";
 ?>
 <div class="row position-relative" style="height: 100%;">
 
-    <?php if ($CurrentProject->getActive() == 0) { ?>
+    <?php if (!$Project->isActive()) { ?>
         <div class="alert alert-info alert-visible mt-3 w-50 text-center position-absolute top-0 start-50 translate-middle-x collapse show" style="z-index: 1;">
             <i class="bi bi-info-circle-fill"></i>    
             Ce projet est archivé.
-            &nbsp;&nbsp;<a href="<?= CONTROLLERS_URL ?>admin/map.php?action=openProject&projectId=<?= $CurrentProject->getId() ?>&teamId=<?= $CurrentTeamId ?>" class="btn btn-outline-secondary">Ré-ouvrir</a>
+            &nbsp;&nbsp;<a href="<?= CONTROLLERS_URL ?>admin/map.php?action=openProject&projectId=<?= $Project->getRowid() ?>&teamId=<?= $teamId ?>" class="btn btn-outline-secondary">Ré-ouvrir</a>
             <button type="button" class="close-alert btn-close position-absolute top-0 end-0 me-4 mt-3" aria-label="Close"></button>
             <span class="notificationCount position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark">
                 <?= $notificationCount . "+" ?>
             </span>
         </div>
     <?php } ?>
-    <?php if ($CurrentTeam->getActive() == 0) { ?>
+    <?php if (!$Team->isActive()) { ?>
         <div class="alert alert-info alert-visible mt-3 w-50 text-center position-absolute top-0 start-50 translate-middle-x collapse show" style="z-index: 1;">
             <i class="bi bi-info-circle-fill"></i>    
             Ce tableau est archivé.
-            &nbsp;&nbsp;<a href="<?= CONTROLLERS_URL ?>admin/map.php?action=openTeam&projectId=<?= $CurrentProject->getId() ?>&teamId=<?= $CurrentTeamId ?>" class="btn btn-outline-secondary">Ré-ouvrir</a>
+            &nbsp;&nbsp;<a href="<?= CONTROLLERS_URL ?>admin/map.php?action=openTeam&projectId=<?= $Project->getRowid() ?>&teamId=<?= $teamId ?>" class="btn btn-outline-secondary">Ré-ouvrir</a>
             <button type="button" class="close-alert btn-close position-absolute top-0 end-0 me-4 mt-3" aria-label="Close"></button>
             <span class="notificationCount position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark">
                 <?= $notificationCount . "+" ?>
@@ -56,7 +56,7 @@ require_once "layouts/entete.php";
     </div>
 
     <!-- Back Page -->
-    <a href="<?= CONTROLLERS_URL ?>admin/detailsProjet.php?idProject=<?= $CurrentProject->getId() ?>" ><i class="btn btn-outline-dark bi bi-box-arrow-left position-absolute start-0 top-0 mt-2 me-2 w-auto" style="z-index: 1;"></i></a>
+    <a href="<?= CONTROLLERS_URL ?>admin/detailsProjet.php?idProject=<?= $Project->getRowid() ?>" ><i class="btn btn-outline-dark bi bi-box-arrow-left position-absolute start-0 top-0 mt-2 me-2 w-auto" style="z-index: 1;"></i></a>
     <!-- Expand right section -->
     <i id="open-right-section" class="btn btn-outline-dark bi bi-arrow-bar-left position-absolute end-0 top-0 mt-2 me-2 w-auto collapse"></i>
 
@@ -65,7 +65,7 @@ require_once "layouts/entete.php";
 
         <div class="sticker h-auto w-50 mx-auto text-center mt-3 pb-5">
             <p class="mt-5"><b>Êtes-vous sûr de vouloir archiver le tableau ? (vous pourrez le ré-ouvrir plus tard)</b></p>
-            <a href="<?= CONTROLLERS_URL ?>admin/map.php?action=archiveTeam&projectId=<?= $projectId ?>&teamId=<?= $CurrentTeamId ?>" class="btn btn-outline-success w-50 mt-5">Archiver le tableau</a>
+            <a href="<?= CONTROLLERS_URL ?>admin/map.php?action=archiveTeam&projectId=<?= $projectId ?>&teamId=<?= $teamId ?>" class="btn btn-outline-success w-50 mt-5">Archiver le tableau</a>
             <a id="cancel-archive" class="btn btn-outline-danger w-50 mt-3">Annuler</a>
         </div>
     </div>
@@ -74,14 +74,14 @@ require_once "layouts/entete.php";
         <div class="collapse show position-relative">
             <i id="close-details" class="btn btn-outline-dark bi bi-arrow-bar-right position-absolute end-0 top-0 w-auto collapse show"></i>
             <div id="columns-container" class="ms-3 overflow-x d-flex" style="height: 88vh;">
-                <?php foreach($CurrentTeam->getMapColumns() as $columnKey => $column) { ?>
+                <?php foreach($Team->getMapColumns() as $columnKey => $Column) { ?>
                     <div class="project-column">
-                        <input class="columnId-input" type="hidden" value="<?= $column->getRowid() ?>">
+                        <input class="columnId-input" type="hidden" value="<?= $Column->getRowid() ?>">
                         <div class="column-title text-center">
                             <div class="row">
                                 <div class="col-7 pt-3 ps-2 ms-3 pe-0 column-title-name">
                                     <div class="overflow-x">
-                                        <b class="column-title-text"><?= $column->getName() ?></b>
+                                        <b class="column-title-text"><?= $Column->getName() ?></b>
                                     </div>
                                 </div>
                                 <ul class="offset-1 col-3 pt-2 ps-0">
@@ -91,12 +91,19 @@ require_once "layouts/entete.php";
                             </div>
                         </div>
                         <div class="column-content">
-                            <?php foreach($column->getActiveTasks() as $taskKey => $task) { ?>
+                            <?php foreach($Column->getActiveTasks() as $taskKey => $Task) {
+                                $isAdmin = false;
+                                foreach($TeamUsers as $User) {
+                                    if($Task->getFk_user() == $User->getRowid() && $User->isAdmin()) {
+                                        $isAdmin = true;
+                                        break;
+                                    }
+                                } ?>
                                 <div class="task">
-                                    <input class="taskId-input" type="hidden" value="<?= $task->getRowid() ?>">
-                                    <button class='btn disabled btn-outline-<?= $task->getAdmin() == 1 ? 'danger' : 'classic' ?> task-author mt-2 ms-2 px-0 w-50 overflow-x'><?= $authors[$columnKey][$taskKey] ?></button>
+                                    <input class="taskId-input" type="hidden" value="<?= $Task->getRowid() ?>">
+                                    <button class='btn disabled btn-outline-<?= $isAdmin ? 'danger' : 'classic' ?> task-author mt-2 ms-2 px-0 w-50 overflow-x'><?= $authors[$columnKey][$taskKey] ?></button>
                                     <div class='task-bubble pt-2 mb-1 mt-1 mx-2'>
-                                        <textarea class='task-bubble-input text-center pt-1'><?= $task->getName() ?></textarea>
+                                        <textarea class='task-bubble-input text-center pt-1'><?= $Task->getName() ?></textarea>
                                     </div>
                                     <div class="d-flex justify-content-between pe-2 ps-2">
                                         <div class="collapse mx-auto task-buttons-container">
@@ -119,7 +126,11 @@ require_once "layouts/entete.php";
     <div id="details-section" class="col-2 pt-1 pe-4 text-center border position-relative collapse show" style="height: 100vh">
         <div class="row">
             <div class="col">
-                <i id="archive-btn" class="bi bi-archive-fill btn btn-outline-danger w-75 mb-2 collapse show" tabindex="0" data-bs-toggle="tooltip" title="Archiver le tableau" data-bs-placement="left"></i>
+                <?php if($Team->isActive()) { ?>
+                    <i id="archive-btn" class="bi bi-archive-fill btn btn-outline-danger w-75 mb-2 collapse show" tabindex="0" data-bs-toggle="tooltip" title="Archiver le tableau" data-bs-placement="left"></i>
+                <?php } else { ?>
+                    <a href="<?= CONTROLLERS_URL ?>admin/map.php?action=openTeam&projectId=<?= $Project->getRowid() ?>&teamId=<?= $teamId ?>"><i id="unarchive-btn" class="bi bi-archive-fill btn btn-outline-success w-75 mb-2 collapse show" tabindex="0" data-bs-toggle="tooltip" title="Désarchiver le tableau" data-bs-placement="left"></i></a>
+                <?php } ?>
             </div>
             <div class="col">
                 <button id="add-column-btn" class="btn btn-outline-dark collapse show">Nouvelle colonne</button>
@@ -159,10 +170,10 @@ require_once "layouts/entete.php";
                 </div>
                 <div id="team-members-container" class="overflow-y border collapse" style="height: 20vh;">
                     <?php
-                    foreach($CurrentTeam->getMembers() as $member) { ?>
+                    foreach($Team->getUsers() as $User) { ?>
                     <div class="team-member">
-                        <input type="hidden" class="team-member-id" value="<?= $member->getId() ?>">
-                        <input type="text" class="form-control sticker mx-auto mt-2 hover text-center w-90" readonly  value="<?= $member->getLastname() . " " . $member->getFirstname() ?>">
+                        <input type="hidden" class="team-member-id" value="<?= $User->getRowid() ?>">
+                        <input type="text" class="form-control sticker mx-auto mt-2 hover text-center w-90" readonly  value="<?= $User->getLastname() . " " . $User->getFirstname() ?>">
                     </div>
                     <?php } ?>
                 </div>

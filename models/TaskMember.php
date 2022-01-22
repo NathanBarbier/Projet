@@ -1,8 +1,9 @@
 <?php 
 Class TaskMember extends Modele 
 {
-    protected $User;
-    protected $Task;
+    protected $rowid;
+    protected $fk_user;
+    protected $fk_task;
 
     public function __construct($fk_task = null)
     {
@@ -19,14 +20,24 @@ Class TaskMember extends Modele
         $this->rowid = $rowid;
     }
 
-    public function setUser($User)
+    // public function setUser($User)
+    // {
+    //     $this->User = $User;
+    // }
+
+    // public function setTask($Task)
+    // {
+    //     $this->Task = $Task;
+    // }
+
+    public function setFk_user(int $fk_user)
     {
-        $this->User = $User;
+        $this->fk_user = $fk_user;
     }
 
-    public function setTask($Task)
+    public function setFk_task(int $fk_task)
     {
-        $this->Task = $Task;
+        $this->fk_task = $fk_task;
     }
 
     
@@ -37,27 +48,37 @@ Class TaskMember extends Modele
         return $this->rowid;
     }
 
-    public function getUser()
+    // public function getUser()
+    // {
+    //     return $this->User;
+    // }
+
+    // public function getTask()
+    // {
+    //     return $this->Task;
+    // }
+
+    public function getFk_user()
     {
-        return $this->User;
+        return $this->fk_user;
     }
 
-    public function getTask()
+    public function getFk_task()
     {
-        return $this->Task;
+        return $this->fk_task;
     }
 
 
     // CREATE
 
-    public function create($fk_user, $fk_task)
+    public function create()
     {
         $sql = "INSERT INTO tasks_members";
         $sql .= " (fk_user, fk_task)";
-        $sql .= " VALUES (?,?)";
+        $sql .= " VALUES (".$this->fk_user.",".$this->fk_task.")";
 
         $requete = $this->getBdd()->prepare($sql);
-        return $requete->execute([$fk_user, $fk_task]);
+        return $requete->execute([]);
     }
 
 
@@ -90,31 +111,20 @@ Class TaskMember extends Modele
 
     // DELETE
 
-    public function delete($rowid = null)
-    {
-        $rowid = $rowid == null ? $this->rowid : $rowid;
-
-        $sql = "DELETE FROM tasks_members";
-        $sql .= " WHERE rowid = ?";
-
-        $requete = $this->getBdd()->prepare($sql);
-        return $requete->execute([$rowid]);
-    }
-
-    public function deleteByTaskIdAndUserId($fk_task, $fk_user)
+    public function delete()
     {
         $sql = "DELETE FROM tasks_members";
-        $sql .= " WHERE fk_task = ? AND fk_user = ?";
+        $sql .= " WHERE fk_task = ".$this->fk_task." AND fk_user = ".$this->fk_user;
 
         $requete = $this->getBdd()->prepare($sql);
-        return $requete->execute([$fk_task, $fk_user]);
+        return $requete->execute();
     }
 
     // FETCH
 
     public function fetchByTaskId(int $fk_task)
     {
-        $sql = "SELECT t.fk_user";
+        $sql = "SELECT t.rowid,t.fk_user";
         $sql .= " FROM tasks_members";
         $sql .= " WHERE t.fk_user = ?";
 
@@ -124,7 +134,9 @@ Class TaskMember extends Modele
         $obj = $requete->fetch(PDO::FETCH_OBJ);
 
         $this->rowid = $obj->rowid;
-        $this->User = new User($obj->fk_user);
+        $this->fk_user = $obj->fk_user;
+        $this->fk_task = $fk_task;
+        // $this->User = new User($obj->fk_user);
         // $this->Task = new Task($obj->fk_task);
     }
 

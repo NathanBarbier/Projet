@@ -9,11 +9,6 @@ if($rights == 'admin')
 {
     $action = GETPOST('action');
     $projectId = GETPOST('projectId');
-    $columnName = GETPOST('columnName');
-    $columnId = GETPOST('columnId');
-    $taskId = GETPOST('taskId');
-    $taskName = GETPOST('taskName');
-    $taskDescription = GETPOST('taskDescription');
     $teamId = GETPOST('teamId');
 
     $tpl = "map.php";
@@ -22,24 +17,36 @@ if($rights == 'admin')
 
     if($teamId)
     {
-        $Project = new Project();
-        $MapColumn = new MapColumn();
-        $Task = new Task();  
+        $Organization = new Organization($idOrganization);
 
+        foreach($Organization->getProjects() as $Obj)
+        {
+            if($Obj->getRowid() == $projectId)
+            {
+                $Project = $Obj;
+                break;
+            }
+        }
+
+        foreach($Project->getTeams() as $Obj)
+        {
+            if($Obj->getRowid() == $teamId)
+            {
+                $Team = $Obj;
+                break;
+            }
+        }
 
         if($action == "archiveTeam")
         {
             if($projectId)
             {   
-                $Team = new Team();
-                $status = $Team->updateActive(0, $teamId);
-    
-                if($status)
-                {
+                try {
+                    $Team->setActive(0);
+                    $Team->update();
+
                     $success = "Le tableau a bien été archivé.";
-                }
-                else
-                {
+                } catch (\Throwable $th) {
                     $errors[] = "Une erreur innatendue est survenue.";
                 }
             }
@@ -53,15 +60,12 @@ if($rights == 'admin')
         {
             if($projectId)
             {   
-                $Team = new Team();
-                $status = $Team->updateActive(1, $teamId);
-    
-                if($status)
-                {
+                try {
+                    $Team->setActive(1);
+                    $Team->update();
                     $success = "Le tableau a bien été ré-ouvert.";
-                }
-                else
-                {
+                } catch (\Throwable $th) {
+                    //throw $th;
                     $errors[] = "Une erreur innatendue est survenue.";
                 }
             }
@@ -75,14 +79,12 @@ if($rights == 'admin')
         {
             if($projectId)
             {
-                $status = $Project->updateActive(true, $projectId);
-    
-                if($status)
-                {
+                try {
+                    $Project->setActive(1);
+                    $Project->update();
                     $success = "Le projet à bien été ré-ouvert.";
-                }
-                else
-                {
+                } catch (\Throwable $th) {
+                    //throw $th;
                     $errors[] = "Une erreur innatendue est survenue.";
                 }
             }
@@ -92,79 +94,70 @@ if($rights == 'admin')
             }
         }
 
-        $Organization = new Organization($idOrganization);
-    
+        // for JS
         $username = $Organization->getName();
-    
-        $Projects = $Organization->getProjects();
-    
-        foreach($Projects as $Project)
-        {
-            if($Project->getId() == $projectId)
-            {
-                $CurrentProject = $Project;
-                break;
-            }
-        }
-    
-        $CurrentTeamId = $teamId;
-    
-        foreach($CurrentProject->getTeams() as $team)
-        {
-            if($team->getid() == $CurrentTeamId)
-            {
-                $CurrentTeam = $team;
-                break;
-            }
-        }
 
         $authors = array();
         $usernames = array();
 
-        foreach($CurrentTeam->getMembers() as $member)
+        // Get tasks authors for JS
+        foreach($Team->getUsers() as $User)
         {
-            $usernames[$member->getId()] = $member->getLastname() . ' ' . $member->getFirstname();
+            $usernames[$User->getRowid()] = $User->getLastname() . ' ' . $User->getFirstname();
         }
 
-        foreach($CurrentTeam->getMapColumns() as $columnKey => $column)
+        foreach($Team->getMapColumns() as $columnKey => $Column)
         {
-            foreach($column->getTasks() as $taskKey => $task)
+            foreach($Column->getTasks() as $taskKey => $Task)
             {
-                if($task->getAdmin() == 1)
+                // all team users + current admin
+                $TeamUsers = $Team->getUsers();
+                
+                // get all organization admins
+                foreach($Organization->getUsers() as $User)
                 {
-                    $authors[$columnKey][$taskKey] = $Organization->getName();
+                    if($User->isAdmin())
+                    {
+                        $TeamUsers[] = $User;
+                    }
                 }
-                else
+
+                // verify that fk_author correspond to an admin user
+                foreach($TeamUsers as $User)
                 {
-                    $authors[$columnKey][$taskKey] = $usernames[$task->getFk_author()];
+                    if($User->getRowid() == $Task->getFk_user())
+                    {
+                        if($User->isAdmin())
+                        {
+                            $authors[$columnKey][$taskKey] = $Organization->getName();
+                        }
+                        else
+                        {
+                            $authors[$columnKey][$taskKey] = $usernames[$task->getFk_author()];
+                        }
+                        break;
+                    }
                 }
             }
         }
 
         // notification count
         $notificationCount = 0;
-        if($CurrentTeam->getActive() == 0) {
+        if($Team->isActive() == 0) {
             $notificationCount++;
         }
-        if($CurrentProject->getActive() == 0) {
+        if($Project->isActive() == 0) {
             $notificationCount++;
         }
 
-        ?><script>
-        const ROOT_URL = <?php echo json_encode(ROOT_URL); ?>;
-        const MODELS_URL = <?php echo json_encode(MODELS_URL); ?>;
-        const IMG_URL = <?php echo json_encode(IMG_URL); ?>;
-        const CONTROLLERS_URL = <?php echo json_encode(CONTROLLERS_URL); ?>;
-        const VIEWS_URL = <?php echo json_encode(VIEWS_URL); ?>;
-        const SERVICES_URL = <?php echo json_encode(SERVICES_URL); ?>;
-        const JS_URL = <?php echo json_encode(JS_URL); ?>;
-        const AJAX_URL = <?php echo json_encode(AJAX_URL); ?>;
-        var projectId = <?php echo json_encode($CurrentProject->getId()); ?>;
-        var teamId = <?php echo json_encode($CurrentTeam->getId()); ?>;
+        ?>
+        <script>
+        var teamId = <?php echo json_encode($Team->getRowid()); ?>;
         var notificationCount = <?php echo json_encode($notificationCount); ?>;
         const username = <?php echo json_encode($username); ?>;
         const idOrganization = <?php echo json_encode($idOrganization); ?>;
-        </script><?php
+        </script>
+        <?php
     
         require_once VIEWS_PATH."admin".DIRECTORY_SEPARATOR.$tpl;
     }

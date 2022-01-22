@@ -1,56 +1,53 @@
 <?php
 require_once 'layouts/entete.php';
 ?>
-
-<div class="col-10">
     <div class="row position-relative">
-        <?php if (!$Project->isActive()) { ?>
-            <div class="alert alert-info alert-visible mt-3 w-75 text-center position-absolute top-0 start-50 translate-middle-x">
-                <i class="bi bi-info-circle-fill"></i>    
-                Ce projet est archivé.
-                &nbsp;&nbsp;<a href="<?= CONTROLLERS_URL ?>admin/detailsProjet.php?action=openProject&idProject=<?= $Project->getRowid() ?>" class="btn btn-outline-secondary">Ré-ouvrir</a>
-                <button id="close-alert" type="button" class="btn-close position-absolute top-0 end-0 me-4 mt-3" aria-label="Close"></button>
-            </div>
-        <?php } ?>
-
         <?php if($errors) { ?>
-        <div class="alert alert-danger mt-3 w-50 text-center position-absolute top-0 start-50 translate-middle-x">
+        <div class="before alert alert-danger mt-3 w-50 text-center position-absolute top-0 start-50 translate-middle-x">
         <?php foreach($errors as $error) { ?>
             <i class="bi bi-exclamation-triangle-fill"></i>
             <?php echo $error . "<br>";
         } ?>
         </div>
         <?php } else if ($success) { ?>
-        <div class="alert alert-success mt-3 w-50 text-center position-absolute top-0 start-50 translate-middle-x">
+        <div class="before alert alert-success mt-3 w-50 text-center position-absolute top-0 start-50 translate-middle-x">
             <i class="bi bi-check-circle-fill"></i>
             <?= $success; ?>
         </div>
         <?php } ?>
-        
-        <div class="sticker col-3 mt-2 ms-3 me-3 text-center overflow-x" style="height: 60px; ">
-            <h3 class="mt-2"><?= $Project->getName() ?? "<b style='color:red'>No title</b>"; ?></h3>
-        </div>
-        
-        <div class="sticker col mt-2 me-4 text-center">
-            <h3 id="team-title" class="text-center mt-2">Modification des équipes</h3>
-        </div>
+
+        <?php if($idProject) { ?>
+            <?php if (!$Project->isActive()) { ?>
+                <div class="before alert alert-info alert-visible mt-3 w-75 text-center position-absolute top-0 start-50 translate-middle-x">
+                    <i class="bi bi-info-circle-fill"></i>    
+                    Ce projet est archivé.
+                    &nbsp;&nbsp;<a href="<?= CONTROLLERS_URL ?>admin/detailsProjet.php?action=openProject&idProject=<?= $Project->getRowid() ?>" class="btn btn-outline-secondary">Ré-ouvrir</a>
+                    <button id="close-alert" type="button" class="btn-close position-absolute top-0 end-0 me-4 mt-3" aria-label="Close"></button>
+                </div>
+            <?php } ?>
+        <?php } ?>
     </div>
 
-    <div class="row" style="height: 81vh;">
-        <div class="sticker col-3 mt-3 ms-3 me-3 pb-4 text-center" style="height: 98%;">
-            <div class="row position-relative" style="height: 100%;">
+    <div class="row">
+    <?php if($idProject) { ?>
+        <div class="col-sm-12 col-md-3 mx-sm-5 mx-md-3 px-sm-5 text-center" style="margin-left: unset; margin-right: unset">
+            <div class="row sticker overflow-x">
+                <h3><?= $Project->getName() ?? "<b style='color:red'>No title</b>"; ?></h3>
+            </div>
+
+            <div class="row sticker mt-2 position-relative" style="height: 95%;">
                 <form action="<?= CONTROLLERS_URL ?>admin/detailsProjet.php?action=updateProject&idProject=<?= $Project->getRowid() ?>" method="POST">
                     <h5 class="mt-5 border-bottom w-50 mx-auto">Titre</h5>
-                    <input class="sticker text-center mt-2 px-2" name="projectName" id="projectName" type="text" value="<?= $Project->getName() ?>">
+                    <input class="sticker text-center mt-2 px-2" style="max-width:inherit" name="projectName" id="projectName" type="text" value="<?= $Project->getName() ?>">
     
                     <h5 class="mt-3 border-bottom w-50 mx-auto">Description</h5>
-                    <textarea class="sticker text-center mt-2 pt-3 px-2" style="height: 150px;" name="description" id="description" type="text"><?= $Project->getDescription() ?></textarea>
+                    <textarea class="sticker text-center mt-2 pt-3 px-2" style="height: 150px;max-width:inherit" name="description" id="description" type="text"><?= $Project->getDescription() ?></textarea>
     
                     <h5 class="mt-3 border-bottom w-50 mx-auto">Type</h5>
-                    <input class="sticker text-center mt-2 px-2" name="type" id="type" type="text" value="<?= $Project->getType() ?>">
+                    <input class="sticker text-center mt-2 px-2" style="max-width:inherit" name="type" id="type" type="text" value="<?= $Project->getType() ?>">
     
-                    <div class="position-absolute translate-middle-x bottom-0 start-50 w-100">
-                        <div class="row mx-auto">
+                    <div class="w-100">
+                        <div class="row mx-auto mt-3">
                             <div class="col-6">
                                 <button class="btn btn-outline-primary w-100" type="submit" tabindex="0" data-bs-toggle="tooltip" title="Mettre à jour les informations du projet"><i class="bi bi-arrow-clockwise big-icon"></i></button>
                             </div>
@@ -61,6 +58,10 @@ require_once 'layouts/entete.php';
                                 <div id="archive-btn" class="col-3 collapse show">
                                     <a href="<?= CONTROLLERS_URL ?>admin/detailsProjet.php?action=archive&idProject=<?= $Project->getRowid() ?>" class="w-100 btn btn-outline-danger text-center collapse show" tabindex="0" data-bs-toggle="tooltip" title="Archiver le projet"><i class="bi bi-archive-fill big-icon"></i></a>
                                 </div>
+                            <?php } else { ?>
+                                <div id="unarchive-btn" class="col-3 collapse show">
+                                    <a href="<?= CONTROLLERS_URL ?>admin/detailsProjet.php?action=unarchive&idProject=<?= $Project->getRowid() ?>" class="w-100 btn btn-outline-success text-center collapse show" tabindex="0" data-bs-toggle="tooltip" title="Désarchiver le projet"><i class="bi bi-archive-fill big-icon"></i></a>
+                                </div>
                             <?php } ?>
                         </div>
                     </div>
@@ -68,8 +69,12 @@ require_once 'layouts/entete.php';
             </div>
         </div>
 
-        <div class="sticker col mt-3 me-4 text-center h-auto">
-            <div class="row">
+        <div class="col me-4 text-center">
+            <div class="row sticker">
+                <h3 id="team-title" class="text-center mt-2">Modification des équipes</h3>
+            </div>
+
+            <div class="row sticker mt-2" style="height: 95%;">
                 <div class="col-4 mt-3 position-relative">
                     <button id="create-switch-button" class="btn btn-secondary w-75 collapse show">Création des équipes</button>
                     <button id="update-switch-button" class="btn btn-secondary w-75 collapse">Modification des équipes</button>
@@ -90,8 +95,8 @@ require_once 'layouts/entete.php';
                     <form id="update-team-form" action="<?= CONTROLLERS_URL ?>admin/detailsProjet.php?action=updateTeam&idProject=<?= $Project->getRowid() ?>" method="POST">
                         <input type="hidden" value="" name="teamNameUpdate" id="teamName-hidden-update">
                         <input type="hidden" value="" name="teamId" id="team-id-update-input">
-                        <div class="position-absolute start-50 translate-middle-x bottom-0 w-100">
-                            <div class="row mx-auto">
+                        <div class="w-100">
+                            <div class="row mx-auto mt-3">
                                 <div class="col-6">
                                     <a id="update-team-button" class="w-100 btn btn-outline-primary text-center collapse show" tabindex="0" data-bs-toggle="tooltip" title="Mettre à jour les informations de l'équipe"><i class="bi bi-arrow-clockwise big-icon"></i></a>
                                 </div>
@@ -108,7 +113,7 @@ require_once 'layouts/entete.php';
 
                     <form id="add-team-form" action="<?= CONTROLLERS_URL ?>admin/detailsProjet.php?action=addTeam&idProject=<?= $Project->getRowid() ?>" method="POST">
                         <input type="hidden" value="" name="teamName" id="teamName-hidden-create">
-                        <a id="create-team-button" class="btn btn-outline-primary w-75 text-center collapse position-absolute bottom-0 translate-middle-x">Créer l'équipe</a>
+                        <a id="create-team-button" class="btn btn-outline-primary w-75 text-center collapse">Créer l'équipe</a>
                     </form>
                 </div>
                 
@@ -195,6 +200,7 @@ require_once 'layouts/entete.php';
         </div>
 
         <script type="text/javascript" src="<?= JS_URL ?>admin/detailsProjet.js"></script>
+    <?php } ?>
 <?php 
 require_once 'layouts/pied.php';
 ?>

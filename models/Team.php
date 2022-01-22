@@ -96,7 +96,7 @@ class Team extends Modele
 
     public function isActive()
     {
-        return $this->active;
+        return intval($this->active);
     }
 
     // FETCH
@@ -251,9 +251,9 @@ class Team extends Modele
 
     public function update()
     {
-        $sql = "UDPATE team";
+        $sql = "UPDATE team";
         $sql .= " SET";
-        $sql .= " name = $this->name";
+        $sql .= " name = '$this->name'";
         $sql .= " ,fk_project = $this->fk_project";
         $sql .= " ,active = $this->active";
         $sql .= " WHERE rowid = $this->rowid";

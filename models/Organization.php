@@ -89,6 +89,17 @@ class Organization extends Modele
         return $counter;
     }
 
+    public function removeUser(int $fk_user)
+    {
+        foreach($this->users as $key => $User)
+        {
+            if($User->getRowid() == $fk_user)
+            {
+                unset($this->users[$key]);
+            }
+        }
+    }
+
     // CREATE
 
     public function create(string $name)
@@ -229,6 +240,11 @@ class Organization extends Modele
         }
     }
 
+    /**
+     * Return the matching user in the Organization users property
+     * @param int $idUser 
+     * @return User $User the user matching id user
+     */
     public function fetchUser(int $idUser)
     {
         foreach($this->users as $User)

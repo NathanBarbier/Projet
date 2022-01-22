@@ -40,7 +40,7 @@ class User extends Modele
 
     public function setPassword($password)
     {
-        $this->password = hash($password, PASSWORD_BCRYPT);
+        $this->password = password_hash($password, PASSWORD_BCRYPT);
     }
 
     public function setEmail($email)
@@ -349,6 +349,36 @@ class User extends Modele
 
     // UPDATE
 
+    public function update()
+    {
+        $sql = "UPDATE user";
+        $sql .= " SET";
+        if(!empty($this->firstname))
+        {
+            $sql .= " firstname = '".$this->firstname."'";
+        }
+        if(!empty($this->lastname))
+        {
+            $sql .= " , lastname = '".$this->lastname."'";
+        }
+        if(!empty($this->email))
+        {
+            $sql .= " , email = '".$this->email."'";
+        }
+        if(!empty($this->password))
+        {
+            $sql .= " , password = '".$this->password."'";
+        }
+        if(!empty($this->birth))
+        {
+            $sql .= " , birth = '".$this->birth ."'";
+        }
+        $sql .= " WHERE rowid = ".$this->rowid;
+
+        $requete = $this->getBdd()->prepare($sql);
+        $requete->execute();
+    }
+
     public function updateInformations($firstname, $lastname, $email, $idUser = null)
     {
         $idUser = $this->id ?? $idUser;
@@ -434,8 +464,8 @@ class User extends Modele
     {
         $idUser = $this->rowid ? $this->rowid : $rowid;
 
-        $sql = "DELETE FROM tasks_members WHERE fk_user = ?;";
-        $sql .= "DELETE FROM tasks_comments WHERE fk_user = ?;";
+        $sql = "DELETE FROM task_member WHERE fk_user = ?;";
+        $sql .= "DELETE FROM task_comment WHERE fk_user = ?;";
         $sql .= "DELETE FROM belong_to WHERE fk_user = ?;";
         $sql .= "DELETE FROM user WHERE rowid = ?";
 

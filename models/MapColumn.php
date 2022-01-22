@@ -64,11 +64,11 @@ Class MapColumn extends Modele
     public function getActiveTasks()
     {
         $activeTasks = array();
-        foreach($this->tasks as $task)
+        foreach($this->tasks as $Task)
         {
-            if($task->getActive() == 1)
+            if($Task->isActive())
             {
-                $activeTasks[] = $task;
+                $activeTasks[] = $Task;
             }
         }
 
@@ -127,7 +127,7 @@ Class MapColumn extends Modele
     public function fetchTasks()
     {
         $sql = "SELECT t.rowid";
-        $sql .= " FROM tasks AS t";
+        $sql .= " FROM task AS t";
         $sql .= " WHERE fk_column = ?";
         $sql .= " ORDER BY t.rank DESC";
 
@@ -150,7 +150,7 @@ Class MapColumn extends Modele
         $requete = $this->getBdd()->prepare($sql);
         $requete->execute();
 
-        return $requete->fetch(PDO::FETCH_OBJ);
+        return $requete->fetch(PDO::FETCH_OBJ)->rowid;
     }
 
     public function fetchRank($rowid = null)
@@ -200,74 +200,72 @@ Class MapColumn extends Modele
 
     // CREATE
 
-    public function create(string $name, $fk_team)
+    public function create()
     {
         $sql = "SELECT MAX(rank) AS rank";
         $sql .= " FROM map_column";
-        $sql .= " WHERE fk_team = ?";
+        $sql .= " WHERE fk_team = ".$this->fk_team."";
 
         $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$fk_team]);
+        $requete->execute();
         $obj = $requete->fetch(PDO::FETCH_OBJ);
         $rank = $obj->rank + 1;
 
         $sql = "INSERT INTO map_column (name, fk_team, rank)";
-        $sql .= " VALUES (?,?,?)";
+        $sql .= " VALUES ('".$this->name."',".$this->fk_team.",".$rank.")";
         
         $requete = $this->getBdd()->prepare($sql);
-        return $requete->execute([$name, $fk_team, $rank]);
+        return $requete->execute();
     }
 
     // UPDATE
 
-    public function updateName($name, $rowid = null)
+    public function update()
     {
-        $rowid = $rowid == null ? $this->rowid : $rowid;
-
         $sql = "UPDATE map_column";
-        $sql .= " SET name = ?";
-        $sql .= " WHERE rowid = ?";
+        $sql .= " SET ";
+        $sql .= " name = '".$this->name."'";
+        $sql .= " , fk_team = ".$this->fk_team;
+        $sql .= " , rank = ".$this->rank;
+        $sql .= " WHERE rowid = ".$this->rowid;
 
         $requete = $this->getBdd()->prepare($sql);
-        return $requete->execute([$name, $rowid]);
+        $requete->execute();
     }
-
-    public function updatefk_team($fk_team, $rowid = null)
-    {
-        $rowid = $rowid == null ? $this->id : $rowid;
-
-        $sql = "UPDATE map_column";
-        $sql .= " SET fk_team = ?";
-        $sql .= " WHERE rowid = ?";
-
-        $requete = $this->getBdd()->prepare($sql);
-        return $requete->execute([$fk_team, $rowid]);
-    }
-
-    public function updateRank($rank, $rowid = null)
-    {
-        $rowid = $rowid == null ? $this->id : $rowid;
-
-        $sql = "UPDATE map_column";
-        $sql .= " SET rank = ?";
-        $sql .= " WHERE rowid = ?";
-
-        $requete = $this->getBdd()->prepare($sql);
-        return $requete->execute([$rank, $rowid]);
-    }
-
 
     // DELETE
 
-    public function delete($rowid = null)
+    public function delete()
     {
-        $rowid = $rowid == null ? $this->id : $rowid;
-
-        $sql = "DELETE FROM map_column";
-        $sql .= " WHERE rowid = ?";
+        $sql = "DELETE FROM task_comment";
+        $sql .= " WHERE fk_task IN";
+        $sql .= " (SELECT t.rowid";
+        $sql .= " FROM tasks AS t";
+        $sql .= " WHERE fk_column = ".$this->rowid.")";
 
         $requete = $this->getBdd()->prepare($sql);
-        return $requete->execute([$rowid]);
+        $requete->execute();
+
+        $sql = "DELETE FROM task_member";
+        $sql .= " WHERE fk_task IN";
+        $sql .= " (SELECT t.rowid";
+        $sql .= " FROM tasks AS t";
+        $sql .= " WHERE fk_column = ".$this->rowid.")";
+
+        $requete = $this->getBdd()->prepare($sql);
+        $requete->execute();
+
+        $sql = "DELETE FROM task";
+        $sql .= " WHERE fk_column = ".$this->rowid;
+
+        $requete = $this->getBdd()->prepare($sql);
+        $requete->execute();
+
+        $sql = "DELETE FROM map_column";
+        $sql .= " WHERE rowid = ".$this->rowid;
+
+        $requete = $this->getBdd()->prepare($sql);
+        $requete->execute();
     }
     
 
@@ -281,35 +279,27 @@ Class MapColumn extends Modele
      */
     public function switchRank($rowid, $fk_team, $direction = 'left')
     {
-        $status = array();
-
-        $status[] = $rank = $this->fetchRank($rowid);
+        $rank = $this->fetchRank($rowid);
         if($direction == 'right')
         {
             $obj = $this->fetchNextRank($rowid, $fk_team);
             $otherRank = $obj->nextRank;
-            $status[] = $obj;
         }
         else if($direction == 'left')
         {
             $obj = $this->fetchPrevRank($rowid, $fk_team);
             $otherRank = $obj->prevRank;
-            $status[] = $obj;
         }
 
         $otherRowid = $obj->rowid;
 
-        $status[] = $this->updateRank($otherRank, $rowid);
-        $status[] = $this->updateRank($rank, $otherRowid);
+        $MapColumn = new MapColumn($rowid);
+        $MapColumn->setRank($otherRank);
+        $MapColumn->update();
 
-        if(in_array(false, $status))
-        {
-            return false;
-        }
-        else
-        {
-            return true;
-        }
+        $MapColumn = new MapColumn($otherRowid);
+        $MapColumn->setRank($rank);
+        $MapColumn->update();
     }
 }
 

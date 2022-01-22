@@ -17,8 +17,8 @@ if($rights !== "admin")
     <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
 </head>
 
-<body style="overflow-x: hidden;">
-    <nav class="navbar navbar-dark navbar-expand-md bg-dark w-100" style="height: 60px; position: fixed; z-index : 999">
+<body>
+    <nav class="navbar navbar-dark navbar-expand-md bg-dark w-100" style="height: 60px; z-index : 999">
         <a class="navbar-brand mb-1" href="<?= ROOT_URL ?>index.php">
             <img src="<?= IMG_URL ?>logo.png" width="35" height="35" class="d-inline-block align-top ms-3 me-2" alt="">
             Stories Helper
@@ -36,59 +36,60 @@ if($rights !== "admin")
 
             </div>
         </div>
-
     </nav>
-    <div class="row" style="height: 60px;">
-    </div>
+    <!-- <div class="row" style="height: 60px;">
+    </div> -->
     <?php if($pageName != 'map.php') { ?>
     <!-- SIDE BAR -->
     <div class="row">
-        <div class="col-2">
+        <div id="sideBar" class="navbar-expand-lg col-md-0 col-lg-2 p-0 collapse show">
+            <div class="collapse navbar-collapse align-items-start text-center pt-2 bg-light overflow-y" style="height: 100vh; border: 1px solid rgba(0, 0, 0, 0.125);">
+                <nav class="w-100">
+                    <ul class="list-unstyled">
+                        <li><a href="<?= VIEWS_URL ?>admin/index.php" class="btn btn-outline-secondary w-75">Accueil</a></li>
+                        <!-- COLLABORATEURS -->
+                        <li>
+                            <button class="btn btn-outline-primary w-75 mt-4" data-bs-toggle="collapse" data-bs-target="#equipesCollapse" aria-expanded="false">Collaborateurs</button>
+
+                            <div id="equipesCollapse" class="collapse">
+                                <ul class="list-unstyled">
+                                    <li><a class="btn btn-outline-primary w-75 mt-2" href="<?= CONTROLLERS_URL ?>admin/collaborateurs.php">Vue d'ensemble</a></li>
+                                    <li><a class="btn btn-outline-secondary w-75 mt-2" href="<?= CONTROLLERS_URL ?>admin/inscriptionUtilisateur.php">Inscriptions</a></li>
+                                    <li><a class="btn btn-outline-secondary w-75 mt-2" href="<?= CONTROLLERS_URL ?>admin/listeMembres.php">Liste des membres</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                        <!-- ORGANISATION -->
+                        <li class="mt-2">
+                            <button class="btn btn-outline-primary w-75 mt-4" data-bs-toggle="collapse" data-bs-target="#organisationCollapse" aria-expanded="false">Organisation</button>
+
+                            <div id="organisationCollapse" class="collapse">
+                                <ul class="list-unstyled">
+                                    <li><a class="btn btn-outline-primary w-75 mt-2" href="<?= CONTROLLERS_URL ?>admin/organisation.php">Vue d'ensemble</a></li>
+                                    <li><a class="btn btn-outline-secondary w-75 mt-2" href="<?= CONTROLLERS_URL ?>admin/gestionOrganisation.php">Gestion organisation</a></li>
+                                </ul>
+                            </div>
+                        
+                        </li>
+                        <!-- PROJETS -->
+                        <li class="mt-2">
+                            <button class="btn btn-outline-primary w-75 mt-4" data-bs-toggle="collapse" data-bs-target="#projetsCollapse" aria-expanded="false">Projets</button>
+
+                            <div id="projetsCollapse" class="collapse">
+                                <ul class="list-unstyled">
+                                    <li><a class="btn btn-outline-primary w-75 mt-2" href="<?= CONTROLLERS_URL ?>admin/projets.php">Vue d'ensemble</a></li>
+                                    <li><a class="btn btn-outline-secondary w-75 mt-2" href="<?= CONTROLLERS_URL ?>admin/creationProjets.php">Création de projets</a></li>
+                                    <li><a class="btn btn-outline-secondary w-75 mt-2" href="<?= CONTROLLERS_URL ?>admin/listeProjets.php">Liste des projets</a></li>
+                                </ul>
+                            </div>
+                        
+                        </li>
+                    </ul>
+                </nav>
+            </div>
         </div>
-        <div class="text-center pt-2 bg-light col-2" style="height: 95vh; border: 1px solid rgba(0, 0, 0, 0.125); position: fixed">
-            <nav>
-                <ul class="list-unstyled">
-                    <li><a href="<?= VIEWS_URL ?>admin/index.php" class="btn btn-outline-secondary w-75">Accueil</a></li>
-                    <!-- COLLABORATEURS -->
-                    <li>
-                        <button class="btn btn-outline-primary w-75 mt-4" data-bs-toggle="collapse" data-bs-target="#equipesCollapse" aria-expanded="false">Collaborateurs</button>
-
-                        <div id="equipesCollapse" class="collapse">
-                            <ul class="list-unstyled">
-                                <li><a class="btn btn-outline-primary w-75 mt-2" href="<?=CONTROLLERS_URL ?>admin/collaborateurs.php">Vue d'ensemble</a></li>
-                                <li><a class="btn btn-outline-secondary w-75 mt-2" href="<?= CONTROLLERS_URL ?>admin/inscriptionUtilisateur.php">Inscriptions</a></li>
-                                <li><a class="btn btn-outline-secondary w-75 mt-2" href="<?= CONTROLLERS_URL ?>admin/listeMembres.php">Liste des membres</a></li>
-                            </ul>
-                        </div>
-                    </li>
-                    <!-- ORGANISATION -->
-                    <li class="mt-2">
-                        <button class="btn btn-outline-primary w-75 mt-4" data-bs-toggle="collapse" data-bs-target="#organisationCollapse" aria-expanded="false">Organisation</button>
-
-                        <div id="organisationCollapse" class="collapse">
-                            <ul class="list-unstyled">
-                                <li><a class="btn btn-outline-primary w-75 mt-2" href="<?= CONTROLLERS_URL ?>admin/organisation.php">Vue d'ensemble</a></li>
-                                <li><a class="btn btn-outline-secondary w-75 mt-2" href="<?= CONTROLLERS_URL ?>admin/gestionOrganisation.php">Gestion organisation</a></li>
-                            </ul>
-                        </div>
-                    
-                    </li>
-                    <!-- PROJETS -->
-                    <li class="mt-2">
-                        <button class="btn btn-outline-primary w-75 mt-4" data-bs-toggle="collapse" data-bs-target="#projetsCollapse" aria-expanded="false">Projets</button>
-
-                        <div id="projetsCollapse" class="collapse">
-                            <ul class="list-unstyled">
-                                <li><a class="btn btn-outline-primary w-75 mt-2" href="<?= CONTROLLERS_URL ?>admin/projets.php">Vue d'ensemble</a></li>
-                                <li><a class="btn btn-outline-secondary w-75 mt-2" href="<?= CONTROLLERS_URL ?>admin/creationProjets.php">Création de projets</a></li>
-                                <li><a class="btn btn-outline-secondary w-75 mt-2" href="<?= CONTROLLERS_URL ?>admin/listeProjets.php">Liste des projets</a></li>
-                            </ul>
-                        </div>
-                    
-                    </li>
-                </ul>
-            </nav>
-
-        </div>
+        <div id="main" class="col-md-12 col-lg-10 pt-3 px-3 position-relative">
+            <i id="close-sidebar" class="btn btn-outline-dark bi bi-arrow-bar-left position-absolute start-0 w-auto collapse show before"></i>
+            <i id="open-sidebar" class="btn btn-outline-dark bi bi-arrow-bar-right position-absolute start-0 w-auto collapse before"></i>
         <?php } ?>
     

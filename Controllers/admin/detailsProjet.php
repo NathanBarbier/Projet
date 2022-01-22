@@ -21,6 +21,15 @@ if($rights === "admin")
 
     $errors = GETPOST('errors');
 
+    if($errors)
+    {
+        $errors = unserialize($errors);
+    }
+    else
+    {
+        $errors = array();
+    }
+
     if($idProject)
     {
         $Organization = new Organization($idOrganization);
@@ -31,15 +40,6 @@ if($rights === "admin")
         $BelongsTo = new BelongsTo();
 
         $success = false;
-
-        if($errors)
-        {
-            $errors = unserialize($errors);
-        }
-        else
-        {
-            $errors = array();
-        }
 
         // Retrieve users who can join a new team
         $freeUsers = $Organization->getUsers();
@@ -82,12 +82,14 @@ if($rights === "admin")
         if($action == 'addTeam' || $action == "updateTeam")
         {
             $addingUsersIds = array();
+            $i = 0;
             foreach($freeUsers as $key => $user)
             {
-                if(GETPOST('addingUser'.$key))
+                if(GETPOST('addingUser'.$i))
                 {
-                    $addingUsersIds[] = intval(GETPOST('addingUser'.$key));
+                    $addingUsersIds[] = intval(GETPOST('addingUser'.$i));
                 }
+                $i++;
             }
         }
 
@@ -185,12 +187,29 @@ if($rights === "admin")
     
                         $Team->setRowid($teamId);
 
+                        $freeUsersToUnset = array();
                         foreach($addingUsersIds as $idUser)
                         {
-                            $UserToAdd = $freeUsers[array_search($idUser, array_column($freeUsers, 'rowid'))];
-                            $Team->addUser($UserToAdd);
+                            foreach($freeUsers as $key => $freeUser)
+                            {
+                                if($freeUser->getRowid() == $idUser)
+                                {
+                                    $UserToAdd = $freeUser;
+                                    $Team->addUser($UserToAdd);
+                                    $freeUsersToUnset[] = $key;
+                                    break;
+                                }
+                            }
+
+                            $key = array_search($idUser, $freeUsersIds);
+                            unset($freeUsersIds[$key]);
 
                             $BelongsTo->create($idUser, $teamId);
+                        }
+
+                        foreach($freeUsersToUnset as $key)
+                        {
+                            unset($freeUsers[$key]);
                         }
 
                         $Project->addTeam($Team);
@@ -238,6 +257,15 @@ if($rights === "admin")
                     $Team->delete($teamId);
 
                     $Project->removeTeam($teamId);
+
+                    // get team users to free them
+                    foreach($Team->getUsers() as $User)
+                    {
+                        $freeUsers[] = $User;
+                        $freeUsersIds[] = $User->getRowid();
+                    }
+
+
 
                     $success = "L'équipe a bien été supprimée.";
                 } catch (\Throwable $th) {
@@ -335,6 +363,25 @@ if($rights === "admin")
                 try {
                     $Project->setActive(0);
                     $Project->update();
+                } catch (\Throwable $th) {
+                    //throw $th;
+                    $errors[] = "Une erreur innatendue est survenue.";
+                }
+            }
+            else
+            {
+                $errors[] = "Aucun projet n'a été sélectionné.";
+            }
+        }
+
+        if($action == "unarchive")
+        {
+            if($idProject)
+            {  
+                try {
+                    $Project->setActive(1);
+                    $Project->update();
+                    $success = "Le projet a bien été désarchivé.";
                 } catch (\Throwable $th) {
                     //throw $th;
                     $errors[] = "Une erreur innatendue est survenue.";

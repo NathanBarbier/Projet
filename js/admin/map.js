@@ -170,10 +170,12 @@ function init()
             success: function (data) {
                 if(data != undefined)
                 {
+                    console.log(data)
                     comments = $.parseJSON(data);
                     l = comments.length;
                     for(i = 0; i < l; i++)
                     {
+                        console.log(comments);
                         note = comments[i].note;
                         note = note == null ? '' : note;
                         admin = comments[i].admin;
@@ -308,6 +310,7 @@ function init()
             async: true,
             url: AJAX_URL+"admin/map.php?action=addTaskNote&taskId="+taskId,
             success: function(data) {
+                console.log(taskId);
                 commentId = data;
                 commentId = commentId.replace("\"", ' ').replace("\"", ' ');
                 $("#task-comment-container").prepend("<div class='task-comment-div'><input type='hidden' class='comment-task-id' value='"+commentId+"'><input type='hidden' class='comment-author-id' value='"+idOrganization+"'><textarea class='mt-3 card task-comment px-2 pt-3 text-center' name='' cols='30' rows='3'></textarea><div class='d-flex justify-content-start mt-1'><button class='btn btn-outline-danger comment-author'>"+username+"</button></div></div>")

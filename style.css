@@ -9,6 +9,8 @@
 /* 5. DetailsProjet */
 /* 6. Button Classic */
 /* 7. Icons */
+/* 8. Gestion Organization */
+/* 9. sideBar */
 
 /* -------------- 1. ------------- */
 
@@ -17,10 +19,22 @@ html {
   width: 100%;
 }
 
+@media only screen and (max-width: 768px) {
+    body {
+      overflow-y: auto;
+    }
+}
+
+@media only screen and (min-width: 769px) {
+  body {
+    overflow-y: hidden;
+  }
+}
+
 body {
   height: 100%;
   width: 100%;
-  overflow-y: hidden;
+  overflow-x: hidden;
 }
 
 textarea {
@@ -430,4 +444,45 @@ input:read-only:hover {
 
 .big-icon {
   font-size: x-large;
+}
+
+/* -------------- 8. ------------- */
+
+@media only screen and (max-width: 820px) {
+  .double-button-responsive {
+    width: 90%;
+  }
+}
+
+@media (min-width: 820px) and (max-width: 991px) {
+  .double-button-responsive {
+    width: 75%;
+  }
+} 
+
+@media only screen and (min-width: 992px) {
+  .double-button-responsive {
+    width: 50%;
+  }
+} 
+
+/* -------------- 9. ------------- */
+
+#close-sidebar,#open-sidebar {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  border-left: none;
+  top: 2%;
+}
+
+@media only screen and (max-width: 991px) {
+  #close-sidebar,#open-sidebar {
+    visibility: collapse;
+  }
+}
+
+@media only screen and (min-width: 992px) {
+  #close-sidebar,#open-sidebar {
+    visibility: unset;
+  }
 }

@@ -35,28 +35,18 @@ if($rights === "admin")
             if($envoi)
             {
                 $User = $Organization->fetchUser($idUser);
-                $oldFirstname = $User->getFirstname();
-            
-                if($firstname != $oldFirstname)
+                if($firstname != $User->getFirstname())
                 {
                     try
                     {
-                        $status = $User->updateFirstname($firstname, $idUser);
+                        $User->setFirstname($firstname);
+                        $User->update();
+                        $success = "Le prénom a bien été modifié.";
                     } 
                     catch (exception $e)
                     {
                         $errors[] = "Le prénom n'a pas pu être modifié.";
                     }
-
-                    if($status)
-                    {
-                        $success = "Le prénom a bien été modifié.";
-                    }
-                    else
-                    {
-                        $errors[] = "Le prénom n'a pas pu être modifié.";
-                    }
-
                 } 
                 else 
                 {
@@ -81,19 +71,18 @@ if($rights === "admin")
             if($envoi)
             {
                 $User = $Organization->fetchUser($idUser);
-                $oldLastname = $User->getLastname();
-            
-                if($lastname != $oldLastname)
+                if($lastname != $User->getLastname())
                 {
                     try
                     {
-                        $User->updateLastname($lastname, $idUser);
+                        $User->setLastname($lastname);
+                        $User->update();
+                        $success = "Le nom a bien été modifié.";
                     } 
                     catch (exception $e)
                     {
                         $errors[] = "La modification de nom n'a pas pu aboutir.";
                     }
-                    $success = "Le nom a bien été modifié.";
                 } 
                 else 
                 {
@@ -116,14 +105,12 @@ if($rights === "admin")
         if($idUser)
         {
             $User = $Organization->fetchUser($idUser);
-            $status = $User->delete($idUser);
-
-            if($status)
-            {
+            try {
+                $Organization->removeUser($idUser);
+                $User->delete();
                 $success = "La suppression d'utilisateur a bien été effectuée.";
-            }
-            else
-            {
+            } catch (\Throwable $th) {
+                //throw $th;
                 $errors[] = "La suppression d'utilisateur n'a pas pu aboutir.";
             }
         } 
@@ -135,10 +122,10 @@ if($rights === "admin")
 
 
     // refresh datas if modifications in db
-    if($success)
-    {
-        $Organization = new Organization($idOrganization);
-    }
+    // if($success)
+    // {
+    //     $Organization = new Organization($idOrganization);
+    // }
 
     require_once VIEWS_PATH."admin/".$tpl;
 

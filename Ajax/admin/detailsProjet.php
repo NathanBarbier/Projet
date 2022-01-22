@@ -16,7 +16,7 @@ if($rights == 'admin')
             if($teamId)
             {
                 $Team = new Team($teamId);
-                $teamActive = $Team->getActive();
+                $teamActive = $Team->isActive();
                 echo json_encode($teamActive);
                 break;
             }

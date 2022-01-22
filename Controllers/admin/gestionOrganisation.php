@@ -3,11 +3,13 @@
 require_once "../../services/header.php";
 
 $idOrganization = $_SESSION["idOrganization"] ?? false;
+$idUser = $_SESSION["idUser"] ?? false;
 $rights = $_SESSION["rights"] ?? false;
 
 if($rights === "admin")
 {
     $Organization = new Organization($idOrganization);
+    $User = new User($idUser);
 
     $action = GETPOST('action');
     $envoi = GETPOST('envoi');
@@ -15,19 +17,50 @@ if($rights === "admin")
     $newPwd = GETPOST('newpwd');
     $newPwd2 = GETPOST('newpwd2');
     $email = GETPOST('email');
+    $firstname = GETPOST('firstname');
+    $lastname = GETPOST('lastname');
 
     $tpl = "gestionOrganisation.php";
-    $data = new stdClass;
 
-    $success = false;
+    $success = GETPOST('success');
     $errors = array();
     $invalidInput = array();
     $invalidForm = array();
 
     if($action == "deleteOrganization")
     {
-        $Organization->delete();
-        header("location:".ROOT_URL."index.php");
+        try {
+            $Organization->delete();
+            header("location:".ROOT_URL."index.php");
+            exit;
+        } catch (\Throwable $th) {
+            //throw $th;
+            $errors[] = "Une erreur est survenue.";
+        }
+    }
+
+    if($action == 'userUpdate')
+    {
+        if($firstname && $lastname && $email)
+        {
+            if(filter_var($email, FILTER_VALIDATE_EMAIL))
+            {
+                try {
+                    $User->setFirstname($firstname);
+                    $User->setLastname($lastname);
+                    $User->setEmail($email);
+                    $User->update();
+                    $success = "Vos informations ont bien été mises à jour.";
+                } catch (\Throwable $th) {
+                    //throw $th;
+                    $errors[] = "Une error est survenue.";
+                }
+            }
+            else
+            {
+                $errors[] = "L'adresse email n'est pas valide.";
+            }
+        }
     }
 
     if($action == "updatePassword")
@@ -38,45 +71,38 @@ if($rights === "admin")
             {
                 if($newPwd === $newPwd2)
                 {
-                    if (strlen($newPwd) < 8 || strlen($newPwd) > 100)
+                    if (strlen($newPwd) >= 8 && strlen($newPwd) <= 100)
                     {
-                        $errors[] = "Le mot de passe doit contenir entre 8 et 100 caractères, au moins un caractère spécial, une minuscule, une majuscule, un chiffre et ne doit pas contenir d'espace.";
-                    } 
-                    else
-                    {
-                        $newPwdStock = $newPwd;
-                        $newPwd = password_hash($newPwd, PASSWORD_BCRYPT);
-                        $oldPwdbdd = $Organization->getPassword();
-    
-                        if(!password_verify($oldPwd, $oldPwdbdd))
+                        if(password_verify($oldPwd, $User->getPassword()))
                         {
-                            $errors[] = "L'ancien mot de passe est incorrect.";
-                        } 
-                        else 
-                        {
-                            if($oldPwd == $newPwdStock)
+                            if($oldPwd != $newPwd)
                             {
-                                $errors[] = "Le mot de passe ne peut pas être le même qu'avant.";
-                            } 
-                            else 
-                            {
-                                $status = $Organization->updatePassword($newPwd);
-    
-                                if($status)
-                                {
+                                try {
+                                    $User->setPassword($newPwd);
+                                    $User->update();
                                     $success = "Le mot de passe a bien été modifié.";
-
                                     $oldPwd = "";
                                     $newPwd = "";
                                     $newPwd2 = "";
-                                }
-                                else
-                                {
+                                } catch (\Throwable $th) {
+                                    //throw $th;
                                     $errors[] = "Une erreur innatendu est survenue. Le mot de passe n'a pas pu être modifié.";
                                 }
                             }
+                            else
+                            {
+                                $errors[] = "Le mot de passe ne peut pas être le même qu'avant.";
+                            }
+                        }
+                        else
+                        {
+                            $errors[] = "L'ancien mot de passe est incorrect.";
                         }
                     }  
+                    else
+                    {
+                        $errors[] = "Le mot de passe doit contenir entre 8 et 100 caractères, au moins un caractère spécial, une minuscule, une majuscule, un chiffre et ne doit pas contenir d'espace.";
+                    }
                 } 
                 else 
                 {
@@ -92,6 +118,7 @@ if($rights === "admin")
         else 
         {
             header("location:".ROOT_PATH."index.php");
+            exit;
         }
     }
 
@@ -101,16 +128,13 @@ if($rights === "admin")
         {
             if(filter_var($email, FILTER_VALIDATE_EMAIL))
             {
-                $status = $Organization->updateEmail($email);
-
-                if($status)
-                {
+                try {
+                    $User->setEmail($email);
+                    $User->update();
                     $success = "L'adresse email a bien été modifiée.";
                     $email = '';
-                    $CurrentOrganization->email = $Organization->getEmail();
-                }
-                else
-                {
+                } catch (\Throwable $th) {
+                    //throw $th;
                     $errors[] = "Une erreur innatendue est survenue.";
                 }
             }

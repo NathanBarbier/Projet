@@ -1,4 +1,7 @@
 <?php if($pageName != 'map.php') { ?>
+	<!-- main section div -->
+	</div>
+<!-- side bar div -->
 </div>
 <?php } ?>
 

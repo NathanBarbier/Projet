@@ -1,8 +1,6 @@
 <?php 
 require_once "layouts/entete.php";
 ?>
-<div class="col-10">
-
     <div class="row mt-4">
         <div class="col pt-4 vignette-container">
             <a href="<?= CONTROLLERS_URL ?>admin/inscriptionUtilisateur.php" class="aVignette">

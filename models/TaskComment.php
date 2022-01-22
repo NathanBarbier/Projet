@@ -2,9 +2,9 @@
 class TaskComment extends Modele 
 {
     protected $rowid;
-    protected $Task;
+    protected $fk_task;
     protected $note;
-    protected $User;
+    protected $fk_user;
 
     public function __construct($rowid = null)
     {
@@ -22,21 +22,28 @@ class TaskComment extends Modele
         $this->rowid = $rowid;
     }
 
-    public function setTask(Task $Task)
+    // public function setTask(Task $Task)
+    // {
+    //     $this->Task = $Task;
+    // }
+    public function setFk_task(int $fk_task)
     {
-        $this->Task = $Task;
+        $this->fk_task = $fk_task;
     }
 
-    public function setNote($note)
+    public function setNote(string $note)
     {
         $this->note = $note;
     }
 
-    public function setUser(User $User)
+    // public function setUser(User $User)
+    // {
+    //     $this->User = $User;
+    // }
+    public function setFk_user(int $fk_user)
     {
-        $this->User = $User;
+        $this->fk_user = $fk_user;
     }
-
 
     // GETTER
 
@@ -45,9 +52,13 @@ class TaskComment extends Modele
         return $this->rowid;
     }
 
-    public function getTask()
+    // public function getTask()
+    // {
+    //     return $this->Task;
+    // }
+    public function getFk_task()
     {
-        return $this->Task;
+        return $this->fk_task;
     }
 
     public function getNote()
@@ -55,32 +66,26 @@ class TaskComment extends Modele
         return $this->note;
     }
 
-    public function getUser()
+    // public function getUser()
+    // {
+    //     return $this->User;
+    // }
+    public function getFk_user()
     {
-        return $this->User;
+        return $this->fk_user;
     }
 
 
     // CREATE
 
-    public function create($fk_task, $fk_user, $note = null, $admin = 0)
+    public function create()
     {
-        $sql = "INSERT INTO tasks_comments";
-        
-        if($note != null)
-        {
-            $sql .= " (fk_task, note, fk_user, admin)";
-            $sql .= " VALUES (?,?,?,?)";
-            $requete = $this->getBdd()->prepare($sql);
-            $requete->execute([$fk_task, $note, $fk_user, $admin]);
-        }
-        else
-        {
-            $sql .= " (fk_task, fk_user, admin)";
-            $sql .= " VALUES (?,?,?)";
-            $requete = $this->getBdd()->prepare($sql);
-            $requete->execute([$fk_task, $fk_user, $admin]);
-        }
+        $sql = "INSERT INTO task_comment";
+        $sql .= " (fk_task, note, fk_user)";
+        $sql .= " VALUES (".$this->fk_task.",'".$this->note."',".$this->fk_user.")";
+
+        $requete = $this->getBdd()->prepare($sql);
+        $requete->execute();
 
         return $this->fetch_last_insert_id();
     }
@@ -92,7 +97,7 @@ class TaskComment extends Modele
     {
         $rowid = $rowid == null ? $this->rowid : $rowid;
 
-        $sql = "UPDATE tasks_comments";
+        $sql = "UPDATE task_comment";
         $sql .= " SET note = ?";
         $sql .= " WHERE rowid = ?";
 
@@ -107,7 +112,7 @@ class TaskComment extends Modele
     {
         $rowid = $rowid == null ? $this->rowid : $rowid;
 
-        $sql = "DELETE FROM tasks_comments";
+        $sql = "DELETE FROM task_comment";
         $sql .= " WHERE rowid = ?";
 
         $requete = $this->getBdd()->prepare($sql);
@@ -116,7 +121,7 @@ class TaskComment extends Modele
 
     public function deleteByColumnId($fk_column)
     {
-        $sql = "DELETE FROM tasks_comments";
+        $sql = "DELETE FROM task_comment";
         $sql .= " WHERE fk_task IN";
         $sql .= " (SELECT t.rowid";
         $sql .= " FROM tasks AS t";
@@ -128,7 +133,7 @@ class TaskComment extends Modele
 
     public function deleteByTaskId($fk_task)
     {
-        $sql = "DELETE FROM tasks_comments";
+        $sql = "DELETE FROM task_comment";
         $sql .= " WHERE fk_task = ?";
 
         $requete = $this->getBdd()->prepare($sql);
@@ -143,7 +148,7 @@ class TaskComment extends Modele
         $rowid = $rowid == null ? $this->rowid : $rowid;
 
         $sql = "SELECT t.rowid, t.fk_task, t.note, t.fk_user";
-        $sql .= " FROM tasks_comments AS t";
+        $sql .= " FROM task_comment AS t";
         $sql .= " WHERE rowid = ?";
 
         $requete = $this->getBdd()->prepare($sql);
@@ -154,16 +159,18 @@ class TaskComment extends Modele
             $obj = $requete->fetch(PDO::FETCH_OBJ);
 
             $this->rowid = $rowid;
-            $this->Task = new Task($obj->fk_task);
+            // $this->Task = new Task($obj->fk_task);
+            $this->fk_task = $obj->fk_task;
             $this->note = $obj->note;
-            $this->User = new User($obj->fk_user);
+            // $this->User = new User($obj->fk_user);
+            $this->fk_user = $obj->fk_user;
         }
     }
 
     public function fetch_last_insert_id()
     {
         $sql = "SELECT MAX(rowid) AS rowid";
-        $sql .= " FROM tasks_comments";
+        $sql .= " FROM task_comment";
 
         $requete = $this->getBdd()->prepare($sql);
         $requete->execute();

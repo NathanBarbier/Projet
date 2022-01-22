@@ -2,8 +2,6 @@
 require_once "../../services/header.php";
 require_once "layouts/entete.php";
 ?>
-<div class="col-10">
-
     <div class="row mt-4">
         <div class="col pt-4" style="height:35vh">
             <a href="<?= CONTROLLERS_URL ?>admin/collaborateurs.php" class="aVignette">

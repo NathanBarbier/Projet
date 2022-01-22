@@ -4,15 +4,10 @@ require_once "../../services/header.php";
 
 $rights = $_SESSION["rights"] ?? false;
 $idOrganization = $_SESSION["idOrganization"] ?? null;
+$idUser = $_SESSION['idUser'] ?? null;
 
 if($rights == 'admin')
 {
-    $MapColumn = new MapColumn();
-    $Task = new Task();
-    $TaskComment = new TaskComment();
-    $TaskMember = new TaskMember();
-    $User = new User();
-
     $action = GETPOST('action');
     $teamId = GETPOST('teamId');
     $columnName = GETPOST('columnName');
@@ -23,12 +18,19 @@ if($rights == 'admin')
     $commentId = GETPOST('commentId');
     $memberId = GETPOST('memberId');
 
+    $MapColumn = new MapColumn($columnId);
+    $Task = new Task($taskId);
+    $TaskComment = new TaskComment($commentId);
+    $TaskMember = new TaskMember($memberId);
+    $User = new User();
+
     switch($action)
     {
         case 'updateTaskNote':
             if($commentId && $taskNote)
             {
-                $authorId = $TaskComment->fetch($commentId)->fk_user;
+                $TaskComment->fetch($commentId);
+                $authorId = $TaskComment->getRowid();
                 if($authorId == $idOrganization)
                 {
                     $status = $TaskComment->updateNote($taskNote, $commentId);
@@ -36,145 +38,170 @@ if($rights == 'admin')
             }               
             break;
         case 'addTaskNote':
-            if($taskId && $idOrganization)
+            if($taskId)
             {
-                $commentId = $TaskComment->create($taskId, $idOrganization, null, true);
+                $TaskComment->setFk_task($taskId);
+                $TaskComment->setFk_user($idUser);
+                $TaskComment->setNote('');
+
+                $commentId = $TaskComment->create();
+
                 echo json_encode($commentId);
             }
             break;
         case 'attributeMemberToTask':
             if($taskId && $memberId)
             {
-                $TaskMember->create($memberId, $taskId);
+                $TaskMember->setFk_user($memberId);
+                $TaskMember->setFk_task($taskId);
+                $TaskMember->create();
             }
             break;
         case 'desattributeMemberToTask':
             if($taskId && $memberId)
             {
-                $TaskMember->deleteByTaskIdAndUserId($taskId, $memberId);
+                $TaskMember->setFk_user($memberId);
+                $TaskMember->setFk_task($taskId);
+                $TaskMember->delete();
             }
             break;
         case 'addColumn':
-            if($teamId && $columnName) $status = $MapColumn->create($columnName, $teamId);
+            if($teamId && $columnName)
+            {
+                $MapColumn->setFk_team($teamId);
+                $MapColumn->setName($columnName);
+                $MapColumn->create();
+            }
             break;
         case 'renameColumn':
             if($columnId && $columnName)
+            {
+                $MapColumn->setName($columnName);
+                $MapColumn->update();
+            }
             break;
         case 'addTask':
-            if($columnId) $status = $Task->create($columnId, $idOrganization, 1);
+            if($columnId)
+            {
+                $Task->setActive(1);
+                $Task->setFk_user($idUser);
+                $Task->setfk_column($columnId);
+                $Task->create();
+
+                echo json_encode($Task);
+            }
             break;
         case 'updateTask':
-            $status = $Task->updateName($taskName, $taskId);
+            $Task->setName($taskName);
+            $Task->update();
             break;
         case 'taskColumnUpdate':
-            $status = $Task->updateFk_column($columnId, $taskId);
+            if($columnId && $taskId)
+            {
+                $Task->setFk_column($columnId);
+                $Task->update();
+            }
             break;
         case 'upTask':
             if($columnId && $taskId)
             {
-                $status = $Task->switchRank($taskId, $columnId, 'up'); 
+                $Task->switchRank($taskId, $columnId, 'up'); 
             }
             break;
         case 'downTask':
             if($columnId && $taskId)
             {
-                $status = $Task->switchRank($taskId, $columnId, 'down');
+                $Task->switchRank($taskId, $columnId, 'down');
             }
             break;
         case 'leftColumn':
             if($teamId && $columnId)
             {
-                $status = $MapColumn->switchRank($columnId, $teamId, 'left');
+                $MapColumn->switchRank($columnId, $teamId, 'left');
             }
             break;
         case 'rightColumn':
             if($teamId && $columnId)
             {
-                $status = $MapColumn->switchRank($columnId, $teamId, 'right');
+                $MapColumn->switchRank($columnId, $teamId, 'right');
             }
             break;
         case 'updateColumn':
             if($columnId && $columnName)
             {
-                $status = $MapColumn->updateName($columnName, $columnId);
+                $MapColumn->setName($columnName);
+
+                var_dump($MapColumn);
+
+                $MapColumn->update();
+                exit;
             }
             break;
         case 'deleteTaskNote':
             if($commentId)
             {
-                // check if is author
-                // fetch comment author id
-                $authorId = $TaskComment->fetch($commentId)->fk_user;
-                if($idOrganization)
-                {
-                    $TaskComment->delete($commentId);
-                }
+                $TaskComment->delete($commentId);
             }
             break;
         case 'deleteColumn':
             if($columnId)
             {
-                $TaskComment->deleteByColumnId($columnId);
-                $Task->deleteByColumnId($columnId);
-                $MapColumn->delete($columnId);
+                $MapColumn->delete();
             }
             break;
         case 'deleteTask':
             if($taskId)
             {
-                $TaskComment->deleteByTaskId($taskId);
-                $Task->delete($taskId);
+                $Task->delete();
             }
             break;
         case 'archiveTask':
             if($taskId)
             {
-                $Task->updateActive(0, $taskId);
+                $Task->setActive(0);
+                $Task->update();
             }
             break;
         case 'getLastColumnId':
-            $columnId = $MapColumn->fetch_last_insert_id()->rowid;
-            echo json_encode($columnId);
+            echo json_encode($MapColumn->fetch_last_insert_id());
             break;
         case 'getLastTaskId':
-            $taskId = $Task->fetch_last_insert_id()->rowid;
-            echo json_encode($taskId);
+            echo json_encode($Task->fetch_last_insert_id());
             break;
         case 'getTaskComments':
             if($taskId) 
             {
-                $comments = $TaskComment->fetchAll($taskId);
-                $Organization = new Organization();
-                $author = $Organization->fetch($idOrganization)->name;
+                $Organization = new Organization($idOrganization);
 
-                foreach($comments as $key => $comment)
-                {
-                    if($comment->admin == true)
-                    {
-                        $comments[$key]->author = $author;
-                    }
-                }
+                $Comments = $Task->getComments();
 
-                echo json_encode($comments);
+                // foreach($Comments as $key => $Comment)
+                // {
+                //     $User = new User($Comment->getFk_user());
+                //     if($User->isAdmin())
+                //     {
+                //         $Comments[$key]->author = $Organization->getName();
+                //     }
+                // }
+
+                echo json_encode($Comments);
             }
             break;
         case 'getTaskMembers':
             if($taskId)
             {
-                $taskMembers = $TaskMember->fetchAll($taskId);
+                // get users related to this task
+                $Task->fetchMembers();
+                $ids = array();
 
-                $membersIds = array();
-
-                foreach($taskMembers as $member)
+                foreach($Task->getMembers() as $TaskMember)
                 {
-                    $membersIds[] = $member->fk_user;
+                    $ids[] = $TaskMember->getFk_user();
                 }
-                // get lastname and firstname
-                
-                $membersInfos = $User->fetchByIds($membersIds);
-                
 
-                echo json_encode($membersInfos);
+                $TaskMembers = $User->fetchByIds($ids);
+                
+                echo json_encode($TaskMembers);
             }
             break;
     }

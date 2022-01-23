@@ -30,13 +30,13 @@ require_once 'layouts/entete.php';
 
     <div class="row">
     <?php if($idProject) { ?>
-        <div class="col-sm-12 col-md-3 mx-sm-5 mx-md-3 px-sm-5 text-center" style="margin-left: unset; margin-right: unset">
-            <div class="row sticker overflow-x">
-                <h3><?= $Project->getName() ?? "<b style='color:red'>No title</b>"; ?></h3>
+        <div class="col-sm-12 col-md-3 px-sm-4 px-md-2 ps-md-4 text-center">
+            <div class="row sticker overflow-x mx-sm-2 mx-md-0">
+                <h3 class="mt-2"><?= $Project->getName() ?? "<b style='color:red'>No title</b>"; ?></h3>
             </div>
 
-            <div class="row sticker mt-2 position-relative" style="height: 95%;">
-                <form action="<?= CONTROLLERS_URL ?>admin/detailsProjet.php?action=updateProject&idProject=<?= $Project->getRowid() ?>" method="POST">
+            <div class="row sticker mt-2 position-relative mx-sm-2 mx-md-0" style="height: 95%;">
+                <form action="<?= CONTROLLERS_URL ?>admin/detailsProjet.php?action=updateProject&idProject=<?= $Project->getRowid() ?>" method="POST" style="margin-bottom: 0;">
                     <h5 class="mt-5 border-bottom w-50 mx-auto">Titre</h5>
                     <input class="sticker text-center mt-2 px-2" style="max-width:inherit" name="projectName" id="projectName" type="text" value="<?= $Project->getName() ?>">
     
@@ -48,18 +48,18 @@ require_once 'layouts/entete.php';
     
                     <div class="w-100">
                         <div class="row mx-auto mt-3">
-                            <div class="col-6">
+                            <div class="col-5 p-md-1">
                                 <button class="btn btn-outline-primary w-100" type="submit" tabindex="0" data-bs-toggle="tooltip" title="Mettre à jour les informations du projet"><i class="bi bi-arrow-clockwise big-icon"></i></button>
                             </div>
-                            <div class="col-3">
+                            <div class="col p-md-1">
                                 <a id="map-btn" href="<?= CONTROLLERS_URL ?>admin/map.php?projectId=<?= $Project->getRowid() ?>" class="btn btn-outline-info w-100" tabindex="0" data-bs-toggle="tooltip" title="Tableau de l'équipe"><i class="bi bi-layout-three-columns big-icon"></i></a>
                             </div>
                             <?php if($Project->isActive()) { ?>
-                                <div id="archive-btn" class="col-3 collapse show">
+                                <div id="archive-btn" class="col collapse show p-md-1">
                                     <a href="<?= CONTROLLERS_URL ?>admin/detailsProjet.php?action=archive&idProject=<?= $Project->getRowid() ?>" class="w-100 btn btn-outline-danger text-center collapse show" tabindex="0" data-bs-toggle="tooltip" title="Archiver le projet"><i class="bi bi-archive-fill big-icon"></i></a>
                                 </div>
                             <?php } else { ?>
-                                <div id="unarchive-btn" class="col-3 collapse show">
+                                <div id="unarchive-btn" class="col collapse show p-md-1">
                                     <a href="<?= CONTROLLERS_URL ?>admin/detailsProjet.php?action=unarchive&idProject=<?= $Project->getRowid() ?>" class="w-100 btn btn-outline-success text-center collapse show" tabindex="0" data-bs-toggle="tooltip" title="Désarchiver le projet"><i class="bi bi-archive-fill big-icon"></i></a>
                                 </div>
                             <?php } ?>
@@ -69,12 +69,12 @@ require_once 'layouts/entete.php';
             </div>
         </div>
 
-        <div class="col me-4 text-center">
-            <div class="row sticker">
+        <div class="col px-sm-4 px-md-2 text-center pe-md-3 mt-sm-5 mt-md-0">
+            <div class="row sticker mx-sm-2 mx-md-0">
                 <h3 id="team-title" class="text-center mt-2">Modification des équipes</h3>
             </div>
 
-            <div class="row sticker mt-2" style="height: 95%;">
+            <div class="row sticker mt-2 mx-sm-2 mx-md-0" style="height: 95%;">
                 <div class="col-4 mt-3 position-relative">
                     <button id="create-switch-button" class="btn btn-secondary w-75 collapse show">Création des équipes</button>
                     <button id="update-switch-button" class="btn btn-secondary w-75 collapse">Modification des équipes</button>
@@ -84,7 +84,7 @@ require_once 'layouts/entete.php';
 
                     <!-- AFFICHER TOUTES LES EQUIPES EXISTANTES POUR CE PROJET -->
                     <h5 id="project-teams-title" class="mt-3 border-bottom w-50 mx-auto collapse show">Équipes existantes</h5>
-                    <div id="project-teams-div" class="sticker mt-3 overflow-y bg-white pt-2 collapse show" style="height: 45%;">
+                    <div id="project-teams-div" class="sticker mt-3 overflow-y bg-white pt-2 collapse show" style="height: 220px;">
                         <?php foreach($Project->getTeams() as $Team) { ?>
                             <div id="team-sticker-<?= $Team->getRowid() ?>" onclick="showTeamMembers(<?= $Team->getRowid() ?>, '<?= addslashes($Team->getName()) ?>')" class="<?= !$Team->isActive() ? 'archived-team ' : '' ?>sticker mx-2 mt-2 pt-3 hover">
                                 <p><?= $Team->getName() ?></p>
@@ -97,13 +97,13 @@ require_once 'layouts/entete.php';
                         <input type="hidden" value="" name="teamId" id="team-id-update-input">
                         <div class="w-100">
                             <div class="row mx-auto mt-3">
-                                <div class="col-6">
+                                <div class="col-sm-4 col-md-6 ps-0 pe-sm-0 pe-md-1 w-md-30" style="padding: 0;">
                                     <a id="update-team-button" class="w-100 btn btn-outline-primary text-center collapse show" tabindex="0" data-bs-toggle="tooltip" title="Mettre à jour les informations de l'équipe"><i class="bi bi-arrow-clockwise big-icon"></i></a>
                                 </div>
-                                <div class="col-3">
+                                <div class="col-sm-4 col-md-3 ps-1 pe-sm-0 pe-md-1 w-md-30" style="padding: 0;">
                                     <a href="<?= CONTROLLERS_URL ?>admin/detailsProjet.php?action=deleteTeam&idProject=<?= $Project->getRowid() ?>" id="delete-team-button" class="w-100 btn btn-outline-danger text-center collapse show" tabindex="0" data-bs-toggle="tooltip" title="Supprimer l'équipe"><i class="bi bi-trash-fill big-icon"></i></a>
                                 </div>
-                                <div class="col-3">
+                                <div class="col-sm-4 col-md-3 ps-1 px-0 w-md-30" style="padding: 0;">
                                     <a id="archive-team-button" class="w-100 btn btn-outline-danger text-center collapse" tabindex="0" data-bs-toggle="tooltip" title="Archiver l'équipe"><i class="bi bi-archive-fill big-icon"></i></a>
                                     <a id="open-team-button" class="w-100 btn btn-outline-success text-center collapse" tabindex="0" data-bs-toggle="tooltip" title="Désarchiver l'équipe"><i class="bi bi-archive-fill big-icon"></i></a>
                                 </div>

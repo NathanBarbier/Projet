@@ -76,6 +76,12 @@ input:read-only:hover {
   top: 25% !important;
 }
 
+@media only screen and (max-width: 768px) {
+  .w-md-30 {
+    width: 30%;
+  }
+}
+
 .w-90 {
   width: 90%;
 }
@@ -479,10 +485,16 @@ input:read-only:hover {
   #close-sidebar,#open-sidebar {
     visibility: collapse;
   }
+  .navbar-toggler {
+    display: block !important;
+  }
 }
 
 @media only screen and (min-width: 992px) {
   #close-sidebar,#open-sidebar {
     visibility: unset;
+  }
+  .navbar-toggler {
+    display: none !important;
   }
 }

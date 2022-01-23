@@ -20,17 +20,13 @@ if($rights === 'user')
     $oldmdp = GETPOST('oldmdp');
     $newmdp = GETPOST('newmdp');
     $newmdp2 = GETPOST('newmdp2');
-    
-    
+     
     $User = new User($idUser);
-    $Team = new Team();
     
     $tpl = "passwordUpdate.php";
     
     $errors = array();
     $success = false;
-    
-    $data = new stdClass;
     
     if($action == "passwordUpdate")
     {
@@ -46,35 +42,29 @@ if($rights === 'user')
                     } 
                     else
                     {
-                        $newmdpStock = $newmdp;
-                        $newmdp = password_hash($newmdp, PASSWORD_BCRYPT);
-                        $oldmdpbdd = $User->getPassword();
-    
-                        if(!password_verify($oldmdp, $oldmdpbdd))
+                        if(password_verify($oldmdp, $User->getPassword()))
                         {
-                            $errors[] = "L'ancien mot de passe est incorrect.";
-                        } 
-                        else 
-                        {
-                            if($oldmdp == $newmdpStock)
+                            if($oldmdp != $newmdp)
                             {
-                                $errors[] = "Le mot de passe ne peut pas être le même qu'avant.";
-                            } 
-                            else 
-                            {
-                                $status = $User->updatePassword($newmdp);
-    
-                                if($status)
-                                {
+                                try {
+                                    $User->setPassword($newmdp);
+                                    $User->update();
                                     $success = "Le mot de passe a bien été modifié.";
                                     header("location:".CONTROLLERS_URL."membres/tableauDeBord.php?success=".$success);
                                     exit;
-                                }
-                                else
-                                {
+                                } catch (\Throwable $th) {
+                                    //throw $th;
                                     $errors[] = "Une erreur innatendue est survenue.";
                                 }
                             }
+                            else
+                            {
+                                $errors[] = "Le mot de passe ne peut pas être le même qu'avant.";
+                            }
+                        }
+                        else
+                        {
+                            $errors[] = "L'ancien mot de passe est incorrect.";
                         }
                     }  
                 } 
@@ -95,7 +85,6 @@ if($rights === 'user')
         }
     }
 
-    
     require_once VIEWS_PATH."membres/".$tpl;
 }
 else

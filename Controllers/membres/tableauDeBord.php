@@ -16,45 +16,18 @@ if($rights === "user")
     $errors = GETPOST("errors");
 
     $User = new User($idUser);
-    
-    // All associated teams with the user
+    // $Organization = new Organization($idOrganization);
 
     $Projects = array();
-
+    // get all related projects to the user
     foreach($User->getBelongsTo() as $BelongsTo)
     {
-        $Team = new Team($BelongsTo->getFk_team());
-
-        if($Team->getActive() == true)
-        {
-            if($Team->getProject()->getActive() == true)
-            {
-                $TasksCount = 0;
-                foreach($Team->getMapColumns() as $mapColumn)
-                {
-                    $TasksCount += count($mapColumn->getTasks());
-                }
-
-                $Project = $Team->getProject();
-                $Project->membersCount = count($Team->getMembers());
-                $Project->tasksCount = $TasksCount;
-                $Project->teamName = $Team->getName();
-        
-                $Projects[] = $Project;
-            }
-        }
+        $Projects[] = new Project($BelongsTo->getFk_project());
     }
     
     $tpl = "tableauDeBord.php";
-    
-    if($errors)
-    {
-        $errors = unserialize($errors);
-    }
-    else
-    {
-        $errors = array();
-    }
+
+    $errors = !empty($errors) ? unserialize($errors) : array();
     
     if($action == 'userUpdate')
     {
@@ -62,14 +35,14 @@ if($rights === "user")
         {
             if(filter_var($email, FILTER_VALIDATE_EMAIL))
             {
-                $status = $User->updateInformations($firstname, $lastname, $email);
-
-                if($status)
-                {
+                try {          
+                    $User->setFirstname($firstname);
+                    $User->setLastname($lastname);
+                    $User->setEmail($email);
+                    $User->update();
                     $success = "Vos informations ont bien été mises à jour.";
-                }
-                else
-                {
+                } catch (\Throwable $th) {
+                    //throw $th;
                     $errors[] = "Une error est survenue.";
                 }
             }
@@ -84,32 +57,16 @@ if($rights === "user")
     {
         if($idUser)
         {
-            $status = $User->delete($idUser);
-
-            if($status)
-            {
+            try {
+                $User->delete($idUser);
                 header("location:".CONTROLLERS_URL."general/Deconnexion.php");
                 exit;
-            }
-            else
-            {
+            } catch (\Throwable $th) {
+                //throw $th;
                 $errors[] = "Une erreur innatendue est survenue.";
             }
         }
     }
-
-
-    if($success)
-    {
-        $User = new User($idUser);
-        $Team = new Team();
-        $Project = new Project($Team->getidProject());
-    }
-
-    $CurrentUser = new stdClass;
-    $CurrentUser->firstname = $User->getFirstname();
-    $CurrentUser->lastname = $User->getLastname();
-    $CurrentUser->email = $User->getEmail();
     
     require_once VIEWS_PATH."membres".DIRECTORY_SEPARATOR.$tpl;
 }

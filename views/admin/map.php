@@ -70,7 +70,7 @@ require_once "layouts/entete.php";
         </div>
     </div>
 
-    <div id="left-section" class="col-10 mt-2 ps-3">
+    <div id="left-section" class="col-sm-8 col-md-9 col-lg-10 mt-2 ps-3">
         <div class="collapse show position-relative">
             <i id="close-details" class="btn btn-outline-dark bi bi-arrow-bar-right position-absolute end-0 top-0 w-auto collapse show"></i>
             <div id="columns-container" class="ms-3 overflow-x d-flex" style="height: 88vh;">
@@ -123,7 +123,7 @@ require_once "layouts/entete.php";
         </div>
     </div>
 
-    <div id="details-section" class="col-2 pt-1 pe-4 text-center border position-relative collapse show" style="height: 100vh">
+    <div id="details-section" class="col-sm-4 col-md-3 col-lg-2 pt-1 pe-4 text-center border position-relative collapse show" style="height: 100vh">
         <div class="row">
             <div class="col">
                 <?php if($Team->isActive()) { ?>

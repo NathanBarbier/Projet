@@ -25,18 +25,15 @@ if($rights == 'user')
     {
         if($projectId)
         {
-            $Team = new Team();
-
-            $status = $Team->updateActive(0, $teamId);
-
-            if($status)
-            {
+            try {
+                $Team = new Team();
+                $Team->setActive(0);
+                $Team->update();
                 $message = "Le tableau a bien été archivé.";
                 header("location:".CONTROLLERS_URL."membres/tableauDeBord.php?success=".$message);
                 exit;
-            }
-            else
-            {
+            } catch (\Throwable $th) {
+                //throw $th;
                 $errors[] = "Une erreur innatendue est survenue.";
             }
         }

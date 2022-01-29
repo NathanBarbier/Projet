@@ -13,17 +13,17 @@ if($rights === "admin")
 
 if($rights === "user")
 {
-    header("location:".VIEWS_URL."membres/index.php");
+    header("location:".VIEWS_URL."membre/index.php");
 }
 
 if($rights === 'needConsent')
 {
-    header("location:".CONTROLLERS_URL."general/needConsent.php");
+    header("location:".CONTROLLERS_URL."visiteur/needConsent.php");
 }
 
 if(!$connected)
 {
-    // echo VIEWS_PATH."general/connexion.php";
-    header("Location:".CONTROLLERS_URL."general/connexion.php");
-    // header("Location:views/general/connexion.php");
+    // echo VIEWS_PATH."visiteur/connexion.php";
+    header("Location:".CONTROLLERS_URL."visiteur/connexion.php");
+    // header("Location:views/visiteur/connexion.php");
 }

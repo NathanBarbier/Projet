@@ -9,14 +9,14 @@ $idUser = $_SESSION['idUser'] ?? null;
 if($rights == 'admin')
 {
     $action = GETPOST('action');
-    $teamId = GETPOST('teamId');
+    $teamId = intval(GETPOST('teamId'));
     $columnName = GETPOST('columnName');
-    $columnId = GETPOST('columnId');
+    $columnId = intval(GETPOST('columnId'));
     $taskName = GETPOST('taskName');
-    $taskId = GETPOST('taskId');
+    $taskId = intval(GETPOST('taskId'));
     $taskNote = GETPOST('taskNote');
-    $commentId = GETPOST('commentId');
-    $memberId = GETPOST('memberId');
+    $commentId = intval(GETPOST('commentId'));
+    $memberId = intval(GETPOST('memberId'));
 
     $MapColumn = new MapColumn($columnId);
     $Task = new Task($taskId);
@@ -29,179 +29,276 @@ if($rights == 'admin')
         case 'updateTaskNote':
             if($commentId && $taskNote)
             {
-                $TaskComment->fetch($commentId);
-                $authorId = $TaskComment->getRowid();
-                if($authorId == $idOrganization)
-                {
-                    $status = $TaskComment->updateNote($taskNote, $commentId);
+                try {
+                    $authorId = $TaskComment->getFk_user();
+                    if($authorId == $idUser)
+                    {
+                        $TaskComment->setNote($taskNote);
+                        $TaskComment->update();
+                    }
+                } catch (\Throwable $th) {
+                    echo json_encode($th);
                 }
             }               
             break;
         case 'addTaskNote':
             if($taskId)
             {
-                $TaskComment->setFk_task($taskId);
-                $TaskComment->setFk_user($idUser);
-                $TaskComment->setNote('');
-
-                $commentId = $TaskComment->create();
-
-                echo json_encode($commentId);
+                try {
+                    $TaskComment->setFk_task($taskId);
+                    $TaskComment->setFk_user($idUser);
+                    $TaskComment->setNote('');
+    
+                    $commentId = $TaskComment->create();
+    
+                    echo json_encode($commentId);
+                } catch (\Throwable $th) {
+                    echo json_encode($th);
+                }
             }
             break;
         case 'attributeMemberToTask':
             if($taskId && $memberId)
             {
-                $TaskMember->setFk_user($memberId);
-                $TaskMember->setFk_task($taskId);
-                $TaskMember->create();
+                try {
+                    $TaskMember->setFk_user($memberId);
+                    $TaskMember->setFk_task($taskId);
+                    $TaskMember->create();
+                } catch (\Throwable $th) {
+                    echo json_encode($th);
+                }
             }
             break;
         case 'desattributeMemberToTask':
             if($taskId && $memberId)
             {
-                $TaskMember->setFk_user($memberId);
-                $TaskMember->setFk_task($taskId);
-                $TaskMember->delete();
+                try {
+                    $TaskMember->setFk_user($memberId);
+                    $TaskMember->setFk_task($taskId);
+                    $TaskMember->delete();
+                } catch (\Throwable $th) {
+                    echo json_encode($th);
+                }
             }
             break;
         case 'addColumn':
             if($teamId && $columnName)
             {
-                $MapColumn->setFk_team($teamId);
-                $MapColumn->setName($columnName);
-                $MapColumn->create();
+                try {
+                    $MapColumn->setFk_team($teamId);
+                    $MapColumn->setName($columnName);
+                    $MapColumn->create();
+                } catch (\Throwable $th) {
+                    echo json_encode($th);
+                }
             }
             break;
         case 'renameColumn':
             if($columnId && $columnName)
             {
-                $MapColumn->setName($columnName);
-                $MapColumn->update();
+                try {
+                    $MapColumn->setName($columnName);
+                    $MapColumn->update();
+                } catch (\Throwable $th) {
+                    echo json_encode($th);
+                }
             }
             break;
         case 'addTask':
             if($columnId)
             {
-                $Task->setActive(1);
-                $Task->setFk_user($idUser);
-                $Task->setfk_column($columnId);
-                $Task->create();
-
-                echo json_encode($Task);
+                try {
+                    $Task->setActive(1);
+                    $Task->setFk_user($idUser);
+                    $Task->setfk_column($columnId);
+                    $Task->create();
+    
+                    echo json_encode($Task);
+                } catch (\Throwable $th) {
+                    echo json_encode($th);
+                }
             }
             break;
         case 'updateTask':
-            $Task->setName($taskName);
-            $Task->update();
+            try {
+                $Task->setName($taskName);
+                $Task->update();
+            } catch (\Throwable $th) {
+                echo json_encode($th);
+            }
             break;
         case 'taskColumnUpdate':
             if($columnId && $taskId)
             {
-                $Task->setFk_column($columnId);
-                $Task->update();
+                try {
+                    $Task->setFk_column($columnId);
+                    $Task->update();
+                } catch (\Throwable $th) {
+                    echo json_encode($th);
+                }
             }
             break;
         case 'upTask':
             if($columnId && $taskId)
             {
-                $Task->switchRank($taskId, $columnId, 'up'); 
+                try {
+                    $Task->switchRank($taskId, $columnId, 'up'); 
+                } catch (\Throwable $th) {
+                    echo json_encode($th);
+                }
             }
             break;
         case 'downTask':
             if($columnId && $taskId)
             {
-                $Task->switchRank($taskId, $columnId, 'down');
+                try {
+                    $Task->switchRank($taskId, $columnId, 'down');
+                } catch (\Throwable $th) {
+                    echo json_encode($th);
+                }
             }
             break;
         case 'leftColumn':
             if($teamId && $columnId)
             {
-                $MapColumn->switchRank($columnId, $teamId, 'left');
+                try {
+                    $MapColumn->switchRank($columnId, $teamId, 'left');
+                } catch (\Throwable $th) {
+                    echo json_encode($th);
+                }
             }
             break;
         case 'rightColumn':
             if($teamId && $columnId)
             {
-                $MapColumn->switchRank($columnId, $teamId, 'right');
+                try {
+                    $MapColumn->switchRank($columnId, $teamId, 'right');
+                } catch (\Throwable $th) {
+                    echo json_encode($th);
+                }
             }
             break;
         case 'updateColumn':
             if($columnId && $columnName)
             {
-                $MapColumn->setName($columnName);
-
-                var_dump($MapColumn);
-
-                $MapColumn->update();
-                exit;
+                try {                    
+                    $MapColumn->setName($columnName);
+                    $MapColumn->update();
+                } catch (\Throwable $th) {
+                    echo json_encode($th);
+                }
             }
             break;
         case 'deleteTaskNote':
             if($commentId)
             {
-                $TaskComment->delete($commentId);
+                try {
+                    $TaskComment->delete();
+                } catch (\Throwable $th) {
+                    echo json_encode($th);
+                }
             }
             break;
         case 'deleteColumn':
             if($columnId)
             {
-                $MapColumn->delete();
+                try {
+                    $MapColumn->delete();
+                } catch (\Throwable $th) {
+                    echo json_encode($th);
+                }
             }
             break;
         case 'deleteTask':
             if($taskId)
             {
-                $Task->delete();
+                try {
+                    $Task->delete();
+                } catch (\Throwable $th) {
+                    echo json_encode($th);
+                }
             }
             break;
         case 'archiveTask':
             if($taskId)
             {
-                $Task->setActive(0);
-                $Task->update();
+                try {
+                    $Task->setActive(0);
+                    $Task->update();
+                } catch (\Throwable $th) {
+                    echo json_encode($th);
+                }
             }
             break;
         case 'getLastColumnId':
-            echo json_encode($MapColumn->fetch_last_insert_id());
+            try {
+                echo json_encode($MapColumn->fetch_last_insert_id());
+            } catch (\Throwable $th) {
+                echo json_encode($th);
+            }
             break;
         case 'getLastTaskId':
-            echo json_encode($Task->fetch_last_insert_id());
+            try {
+                echo json_encode($Task->fetch_last_insert_id());
+            } catch (\Throwable $th) {
+                echo json_encode($th);
+            }
             break;
         case 'getTaskComments':
             if($taskId) 
             {
-                $Organization = new Organization($idOrganization);
+                try {                    
+                    $Organization = new Organization($idOrganization);
+                    $Comments = $Task->getComments();
+    
+                    foreach($Comments as $key => $Comment)
+                    {
+                        $User = new User($Comment->getFk_user());
+                        if($User->isAdmin())
+                        {
+                            $Comments[$key]->author = $Organization->getName();
+                            $Comments[$key]->admin = true;
+                        }
+                        else
+                        {
+                            $Comments[$key]->author = $User->getLastname() . " " . $User->getFirstname();
+                            $Comments[$key]->admin = false;
+                        }
 
-                $Comments = $Task->getComments();
+                        if($Comment->getFk_user() == $idUser)
+                        {
+                            $Comments[$key]->isAuthor = true;
+                        }
+                        else
+                        {
+                            $Comments[$key]->isAuthor = false;
+                        }
+                    }
 
-                // foreach($Comments as $key => $Comment)
-                // {
-                //     $User = new User($Comment->getFk_user());
-                //     if($User->isAdmin())
-                //     {
-                //         $Comments[$key]->author = $Organization->getName();
-                //     }
-                // }
-
-                echo json_encode($Comments);
+                    $Comments = $Task->object_to_array($Task);
+    
+                    echo json_encode($Comments);
+                } catch (\Throwable $th) {
+                    echo json_encode($th);
+                }
             }
             break;
         case 'getTaskMembers':
             if($taskId)
             {
-                // get users related to this task
-                $Task->fetchMembers();
-                $ids = array();
+                try {                    
+                    // get users related to this task
+                    // $Task->fetchMembers();
+                    $ids = array();
 
-                foreach($Task->getMembers() as $TaskMember)
-                {
-                    $ids[] = $TaskMember->getFk_user();
+                    $Task = $Task->object_to_array($Task);
+    
+                    // $TaskMembers = $Task->getMembers();
+                    
+                    echo json_encode($Task);
+                } catch (\Throwable $th) {
+                    echo json_encode($th);
                 }
-
-                $TaskMembers = $User->fetchByIds($ids);
-                
-                echo json_encode($TaskMembers);
             }
             break;
     }

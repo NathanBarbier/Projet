@@ -4,18 +4,19 @@ require_once "../../services/header.php";
 
 $rights = $_SESSION["rights"] ?? false;
 $idOrganization = $_SESSION["idOrganization"] ?? null;
+$idUser = $_SESSION["idUser"] ?? null;
 
 if($rights == 'admin')
 {
     $action = GETPOST('action');
-    $projectId = GETPOST('projectId');
-    $teamId = GETPOST('teamId');
+    $projectId = intval(GETPOST('projectId'));
+    $teamId = intval(GETPOST('teamId'));
 
     $tpl = "map.php";
     $errors = array();
     $success = false;
 
-    if($teamId)
+    if($teamId && $projectId)
     {
         $Organization = new Organization($idOrganization);
 
@@ -156,6 +157,7 @@ if($rights == 'admin')
         var notificationCount = <?php echo json_encode($notificationCount); ?>;
         const username = <?php echo json_encode($username); ?>;
         const idOrganization = <?php echo json_encode($idOrganization); ?>;
+        const idUser = <?php echo json_encode($idUser); ?>;
         </script>
         <?php
     

@@ -157,7 +157,7 @@ function showTeamMembers(teamRowid, teamName)
         async: true,
         url: AJAX_URL+"admin/detailsProjet.php?action=getTeamActive&teamId="+teamRowid,
         success: function(data) {
-            console.log(data)
+            
             teamActive = data;
             teamActive = teamActive.replace("\"", '').replace("\"", '');
             teamActive = parseInt(teamActive)

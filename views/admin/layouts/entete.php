@@ -24,7 +24,7 @@ if($rights !== "admin")
             Stories Helper
         </a>
         <div class="me-4" style="margin-left:auto">
-            <a class="btn btn-danger" href="<?= CONTROLLERS_URL ?>general/Deconnexion.php">Déconnexion</a>
+            <a class="btn btn-danger" href="<?= CONTROLLERS_URL ?>visiteur/Deconnexion.php">Déconnexion</a>
         </div>
 
         <button class="navbar-toggler collapse" type="button" data-bs-toggle="collapse" data-bs-target="#sidebar-content" aria-controls="sidebar-content" aria-expanded="false" aria-label="Toggle navigation">

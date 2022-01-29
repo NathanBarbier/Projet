@@ -70,7 +70,7 @@ require_once "layouts/entete.php";
             
                 <div class="mt-4 pb-3 row">
                     <div class="col-6 text-end">
-                        <a href="<?= CONTROLLERS_URL ?>membres/tableauDeBord.php?action=accountDelete" class="btn btn-outline-danger double-button-responsive">Supprimer</a>
+                        <a href="<?= CONTROLLERS_URL ?>membre/tableauDeBord.php?action=accountDelete" class="btn btn-outline-danger double-button-responsive">Supprimer</a>
                     </div>
                     <div class="col-6 text-start">
                         <a id="cancel-account-deletion" class="btn btn-outline-warning double-button-responsive">Annuler</a>

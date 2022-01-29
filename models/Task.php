@@ -157,6 +157,7 @@
             $this->fk_user = $obj->fk_user;
             $this->active = $obj->active;
             $this->fetchComments();
+            $this->fetchMembers();
         }
     }
 
@@ -182,7 +183,7 @@
 
     public function fetchMembers()
     {
-        $sql = "SELECT tc.rowid, tc.fk_user";
+        $sql = "SELECT tm.fk_user";
         $sql .= " FROM task_member AS tm";
         $sql .= " WHERE tm.fk_task = ".$this->rowid;
 
@@ -195,11 +196,10 @@
 
             foreach($lines as $line)
             {
-                $TaskMember = new TaskMember();
-                $TaskMember->setRowid($line->rowid);
-                $TaskMember->setFk_task($this->rowid);
-                $TaskMember->setFk_user($line->fk_user);
-                $this->members[] = $TaskMember;
+                // $TaskMember = new TaskMember();
+                // $TaskMember->setFk_task($this->rowid);
+                // $TaskMember->setFk_user($line->fk_user);
+                $this->members[] = new User($line->fk_user);
             }
         }
     }
@@ -239,7 +239,11 @@
         $requete = $this->getBdd()->prepare($sql);
         $requete->execute([$fk_column, $rowid]);
 
-        return $requete->fetch(PDO::FETCH_OBJ);
+        if($requete->rowCount() > 0) {
+            return $requete->fetch(PDO::FETCH_OBJ);
+        } else {
+            return false;
+        }
     }
 
     public function fetchPrevRank($rowid, $fk_column)
@@ -254,7 +258,11 @@
         $requete = $this->getBdd()->prepare($sql);
         $requete->execute([$fk_column, $rowid]);
 
-        return $requete->fetch(PDO::FETCH_OBJ);
+        if($requete->rowCount() > 0) {
+            return $requete->fetch(PDO::FETCH_OBJ);
+        } else {
+            return false;
+        }
     }
 
 
@@ -264,15 +272,15 @@
     {
         $sql = "UPDATE task";
         $sql .= " SET";
-        $sql .= " name = '".$this->name."'";
-        $sql .= " , description = '".$this->description."'";
-        $sql .= " , fk_column = ".$this->fk_column;
-        $sql .= " , rank = ".$this->rank;
-        $sql .= " , active = ".$this->active;
-        $sql .= " WHERE rowid = ".$this->rowid;
+        $sql .= " name = ?";
+        $sql .= " , description = ?";
+        $sql .= " , fk_column = ?";
+        $sql .= " , rank = ?";
+        $sql .= " , active = ?";
+        $sql .= " WHERE rowid = ?";
 
         $requete = $this->getBdd()->prepare($sql);
-        $requete->execute();
+        $requete->execute([$this->name,$this->description,$this->fk_column,$this->rank,$this->active,$this->rowid]);
     }
 
     // DELETE
@@ -320,23 +328,30 @@
         if($direction == 'up')
         {
             $obj = $this->fetchNextRank($rowid, $fk_column);
-            $otherRank = $obj->nextRank;
+            if($obj) {
+                $otherRank = $obj->nextRank;
+            }
         }
         else if($direction == 'down')
         {
             $obj = $this->fetchPrevRank($rowid, $fk_column);
-            $otherRank = $obj->prevRank;
+            if($obj) {
+                $otherRank = $obj->prevRank;
+            }
         }
 
-        $otherRowid = $obj->rowid;
-
-        $Task = new Task($rowid);
-        $Task->setRank($otherRank);
-        $Task->update();
-
-        $Task = new Task($otherRowid);
-        $Task->setRank($rank);
-        $Task->update();
+        if(!empty($otherRank))
+        {
+            $otherRowid = $obj->rowid;
+    
+            $Task = new Task($rowid);
+            $Task->setRank($otherRank);
+            $Task->update();
+    
+            $Task = new Task($otherRowid);
+            $Task->setRank($rank);
+            $Task->update();
+        }
     }
 
 }

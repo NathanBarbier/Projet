@@ -129,16 +129,16 @@ Class Project extends Modele
     {
         $sql = "UPDATE project";
         $sql .= " SET";
-        $sql .= " name = '$this->name'";
-        $sql .= " ,type = '$this->type'";
-        $sql .= " ,open = '$this->open'";
-        $sql .= " ,fk_organization = $this->fk_organization";
-        $sql .= " ,description = '$this->description'";
-        $sql .= " ,active = $this->active";
-        $sql .= " WHERE rowid = $this->rowid";
+        $sql .= " name = ?";
+        $sql .= " ,type = ?";
+        $sql .= " ,open = ?";
+        $sql .= " ,fk_organization = ?";
+        $sql .= " ,description = ?";
+        $sql .= " ,active = ?";
+        $sql .= " WHERE rowid = ?";
 
         $requete = $this->getBdd()->prepare($sql);
-        return $requete->execute();
+        return $requete->execute([$this->name,$this->type,$this->open,$this->fk_organization,$this->description,$this->active,$this->rowid]);
     }
 
     public function updateName($name)

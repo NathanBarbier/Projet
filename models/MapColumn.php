@@ -179,7 +179,11 @@ Class MapColumn extends Modele
         $requete = $this->getBdd()->prepare($sql);
         $requete->execute([$fk_team, $rowid]);
 
-        return $requete->fetch(PDO::FETCH_OBJ);
+        if($requete->rowCount() > 0) {
+            return $requete->fetch(PDO::FETCH_OBJ);
+        } else {
+            return false;
+        }
     }
 
     public function fetchPrevRank($rowid, $fk_team)
@@ -194,7 +198,11 @@ Class MapColumn extends Modele
         $requete = $this->getBdd()->prepare($sql);
         $requete->execute([$fk_team, $rowid]);
 
-        return $requete->fetch(PDO::FETCH_OBJ);
+        if($requete->rowCount() > 0) {
+            return $requete->fetch(PDO::FETCH_OBJ);
+        } else {
+            return false;
+        }
     }
 
 
@@ -224,13 +232,13 @@ Class MapColumn extends Modele
     {
         $sql = "UPDATE map_column";
         $sql .= " SET ";
-        $sql .= " name = '".$this->name."'";
-        $sql .= " , fk_team = ".$this->fk_team;
-        $sql .= " , rank = ".$this->rank;
-        $sql .= " WHERE rowid = ".$this->rowid;
+        $sql .= " name = ?";
+        $sql .= " , fk_team = ?";
+        $sql .= " , rank = ?";
+        $sql .= " WHERE rowid = ?";
 
         $requete = $this->getBdd()->prepare($sql);
-        $requete->execute();
+        $requete->execute([$this->name,$this->fk_team,$this->rank,$this->rowid]);
     }
 
     // DELETE
@@ -283,23 +291,30 @@ Class MapColumn extends Modele
         if($direction == 'right')
         {
             $obj = $this->fetchNextRank($rowid, $fk_team);
-            $otherRank = $obj->nextRank;
+            if($obj) {
+                $otherRank = $obj->nextRank;
+            }
         }
         else if($direction == 'left')
         {
             $obj = $this->fetchPrevRank($rowid, $fk_team);
-            $otherRank = $obj->prevRank;
+            if($obj) {
+                $otherRank = $obj->prevRank;
+            }
         }
 
-        $otherRowid = $obj->rowid;
-
-        $MapColumn = new MapColumn($rowid);
-        $MapColumn->setRank($otherRank);
-        $MapColumn->update();
-
-        $MapColumn = new MapColumn($otherRowid);
-        $MapColumn->setRank($rank);
-        $MapColumn->update();
+        if(!empty($otherRank))
+        {
+            $otherRowid = $obj->rowid;
+    
+            $MapColumn = new MapColumn($rowid);
+            $MapColumn->setRank($otherRank);
+            $MapColumn->update();
+    
+            $MapColumn = new MapColumn($otherRowid);
+            $MapColumn->setRank($rank);
+            $MapColumn->update();
+        }
     }
 }
 

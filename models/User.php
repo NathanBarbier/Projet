@@ -353,30 +353,15 @@ class User extends Modele
     {
         $sql = "UPDATE user";
         $sql .= " SET";
-        if(!empty($this->firstname))
-        {
-            $sql .= " firstname = '".$this->firstname."'";
-        }
-        if(!empty($this->lastname))
-        {
-            $sql .= " , lastname = '".$this->lastname."'";
-        }
-        if(!empty($this->email))
-        {
-            $sql .= " , email = '".$this->email."'";
-        }
-        if(!empty($this->password))
-        {
-            $sql .= " , password = '".$this->password."'";
-        }
-        if(!empty($this->birth))
-        {
-            $sql .= " , birth = '".$this->birth ."'";
-        }
-        $sql .= " WHERE rowid = ".$this->rowid;
+        $sql .= " firstname = ?";
+        $sql .= " , lastname = ?";
+        $sql .= " , email = ?";
+        $sql .= " , password = ?";
+        $sql .= " , birth = ?";
+        $sql .= " WHERE rowid = ?";
 
         $requete = $this->getBdd()->prepare($sql);
-        $requete->execute();
+        $requete->execute([$this->firstname,$this->lastname,$this->email,$this->password,$this->birth,$this->rowid]);
     }
 
     public function updateInformations($firstname, $lastname, $email, $idUser = null)

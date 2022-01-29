@@ -73,12 +73,12 @@ Class TaskMember extends Modele
 
     public function create()
     {
-        $sql = "INSERT INTO tasks_members";
+        $sql = "INSERT INTO task_member";
         $sql .= " (fk_user, fk_task)";
-        $sql .= " VALUES (".$this->fk_user.",".$this->fk_task.")";
+        $sql .= " VALUES (?,?)";
 
         $requete = $this->getBdd()->prepare($sql);
-        return $requete->execute([]);
+        return $requete->execute([$this->fk_user,$this->fk_task]);
     }
 
 
@@ -113,7 +113,7 @@ Class TaskMember extends Modele
 
     public function delete()
     {
-        $sql = "DELETE FROM tasks_members";
+        $sql = "DELETE FROM task_member";
         $sql .= " WHERE fk_task = ".$this->fk_task." AND fk_user = ".$this->fk_user;
 
         $requete = $this->getBdd()->prepare($sql);
@@ -124,20 +124,24 @@ Class TaskMember extends Modele
 
     public function fetchByTaskId(int $fk_task)
     {
-        $sql = "SELECT t.rowid,t.fk_user";
-        $sql .= " FROM tasks_members";
-        $sql .= " WHERE t.fk_user = ?";
+        $sql = "SELECT t.fk_user";
+        $sql .= " FROM task_member AS t";
+        $sql .= " WHERE t.fk_task = ?";
+        echo json_encode($fk_task);
 
         $requete = $this->getBdd()->prepare($sql);
         $requete->execute([$fk_task]);
 
-        $obj = $requete->fetch(PDO::FETCH_OBJ);
-
-        $this->rowid = $obj->rowid;
-        $this->fk_user = $obj->fk_user;
-        $this->fk_task = $fk_task;
-        // $this->User = new User($obj->fk_user);
-        // $this->Task = new Task($obj->fk_task);
+        if($requete->rowCount() > 0)
+        {
+            $obj = $requete->fetch(PDO::FETCH_OBJ);
+    
+            $this->rowid = $obj->rowid;
+            $this->fk_user = $obj->fk_user;
+            $this->fk_task = $fk_task;
+            // $this->User = new User($obj->fk_user);
+            // $this->Task = new Task($obj->fk_task);
+        }
     }
 
     public function fetchAll($fk_task)

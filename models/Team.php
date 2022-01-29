@@ -253,13 +253,13 @@ class Team extends Modele
     {
         $sql = "UPDATE team";
         $sql .= " SET";
-        $sql .= " name = '$this->name'";
-        $sql .= " ,fk_project = $this->fk_project";
-        $sql .= " ,active = $this->active";
-        $sql .= " WHERE rowid = $this->rowid";
+        $sql .= " name = ?";
+        $sql .= " ,fk_project = ?";
+        $sql .= " ,active = ?";
+        $sql .= " WHERE rowid = ?";
 
         $requete = $this->getBdd()->prepare($sql);
-        return $requete->execute();
+        return $requete->execute([$this->name,$this->fk_project,$this->active,$this->rowid]);
     }
 
     public function updateName($name, $teamId = null)

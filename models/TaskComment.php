@@ -93,16 +93,14 @@ class TaskComment extends Modele
 
     // UPDATE
 
-    public function updateNote($note, $rowid = null)
+    public function update()
     {
-        $rowid = $rowid == null ? $this->rowid : $rowid;
-
         $sql = "UPDATE task_comment";
         $sql .= " SET note = ?";
         $sql .= " WHERE rowid = ?";
 
         $requete = $this->getBdd()->prepare($sql);
-        return $requete->execute([$note, $rowid]);
+        $requete->execute([$this->note,$this->rowid]);
     }
 
 
@@ -158,12 +156,12 @@ class TaskComment extends Modele
         {
             $obj = $requete->fetch(PDO::FETCH_OBJ);
 
-            $this->rowid = $rowid;
+            $this->rowid = intval($rowid);
             // $this->Task = new Task($obj->fk_task);
-            $this->fk_task = $obj->fk_task;
+            $this->fk_task = intval($obj->fk_task);
             $this->note = $obj->note;
             // $this->User = new User($obj->fk_user);
-            $this->fk_user = $obj->fk_user;
+            $this->fk_user = intval($obj->fk_user);
         }
     }
 

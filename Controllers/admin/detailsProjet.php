@@ -3,6 +3,7 @@
 require_once "../../services/header.php";
 
 $idOrganization = $_SESSION["idOrganization"] ?? false;
+$idUser = $_SESSION['idUser'] ?? false;
 $rights = $_SESSION["rights"] ?? false;
 
 if($rights === "admin")
@@ -14,11 +15,9 @@ if($rights === "admin")
     $projectName = GETPOST('projectName');
     $description = GETPOST('description');
     $type = GETPOST('type');
-
     $teamName = GETPOST('teamName');
     $teamNameUpdate = GETPOST('teamNameUpdate');
     $teamId = intval(GETPOST('teamId'));
-
     $errors = GETPOST('errors');
 
     if($errors)
@@ -33,11 +32,18 @@ if($rights === "admin")
     if($idProject)
     {
         $Organization = new Organization($idOrganization);
-        //todo : get the project from $Organization->projects
-        $Project = new Project($idProject);
         $User = new User();
         $Team = new Team($teamId);
         $BelongsTo = new BelongsTo();
+
+        // get Project
+        foreach($Organization->getProjects() as $Obj)
+        {
+            if($idProject == $Obj->getRowid())
+            {
+                $Project = $Obj;
+            }
+        }
 
         $success = false;
 
@@ -101,6 +107,7 @@ if($rights === "admin")
                 try {
                     $Team->setActive(0);
                     $Team->update();
+                    LogHistory::create($idUser, 'archive', 'team board', $Team->getName());
                     $success = "Le tableau de l'équipe à bien été archivé.";
                 } catch (\Throwable $th) {
                     //throw $th;
@@ -120,6 +127,7 @@ if($rights === "admin")
                 try {
                     $Team->setActive(1);
                     $Team->update();
+                    LogHistory::create($idUser, 'unarchive', 'team board', $Team->getName());
                     $success = "Le tableau de l'équipe à bien été ré-ouvert.";
                 } catch (\Throwable $th) {
                     $errors[] = "Une erreur innatendue est survenue.";
@@ -136,6 +144,7 @@ if($rights === "admin")
             try {
                 $Project->setActive(1);
                 $Project->update();
+                LogHistory::create($idUser, 'unarchive', 'project', $Project->getName());
                 $success = "Le projet à bien été ré-ouvert.";
             } catch (\Throwable $th) {
                 $errors[] = "Une erreur innatendue est survenue.";
@@ -152,9 +161,8 @@ if($rights === "admin")
                     $Project->setName($projectName);
                     $Project->setDescription($description);
                     $Project->setType($type);
-
                     $Project->update();
-
+                    LogHistory::create($idUser, 'update', 'project', $Project->getName());
                     $success = "Les informations du projet ont bien été mises à jour.";
                 } 
                 catch (\Throwable $th) 
@@ -180,8 +188,8 @@ if($rights === "admin")
                         $Team->setName($teamName);
                         $Team->setFk_project($idProject);
                         $Team->setActive(1);
-
                         $Team->create();
+                        LogHistory::create($idUser, 'create', 'team', $Team->getName());
 
                         $teamId = $Team->fetchMaxId()->rowid;
     
@@ -228,11 +236,11 @@ if($rights === "admin")
                         $Team->setName($teamName);
                         $Team->setFk_project($idProject);
                         $Team->setActive(1);
-
                         $Team->create();
 
                         $teamId = $Team->fetchMaxId()->rowid;
                         $Team->setRowid($teamId);
+                        LogHistory::create($idUser, 'create', 'team', $Team->getName());
 
                         $Project->addTeam($Team);
 
@@ -255,7 +263,7 @@ if($rights === "admin")
             {
                 try {
                     $Team->delete($teamId);
-
+                    LogHistory::create($idUser, 'delete', 'team', $Team->getName());
                     $Project->removeTeam($teamId);
 
                     // get team users to free them
@@ -264,8 +272,6 @@ if($rights === "admin")
                         $freeUsers[] = $User;
                         $freeUsersIds[] = $User->getRowid();
                     }
-
-
 
                     $success = "L'équipe a bien été supprimée.";
                 } catch (\Throwable $th) {
@@ -301,7 +307,6 @@ if($rights === "admin")
                             if($User->getRowid() == $userId)
                             {
                                 $BelongsTo->create($userId, $Team->getRowid());
-
                                 $Team->addUser($User);
 
                                 // removing user from freeUsers
@@ -340,7 +345,7 @@ if($rights === "admin")
                     $Project->addTeam($Team);
                     
                     $Team->update();
-
+                    LogHistory::create($idUser, 'update', 'team', $Team->getName());
                     $success = "L'équipe a bien été modifiée.";
                 } 
                 catch (\Throwable $th) 
@@ -363,6 +368,7 @@ if($rights === "admin")
                 try {
                     $Project->setActive(0);
                     $Project->update();
+                    LogHistory::create($idUser, $action, 'project', $Project->getName());
                 } catch (\Throwable $th) {
                     //throw $th;
                     $errors[] = "Une erreur innatendue est survenue.";
@@ -381,6 +387,7 @@ if($rights === "admin")
                 try {
                     $Project->setActive(1);
                     $Project->update();
+                    LogHistory::create($idUser, $action, 'project', $Project->getName());
                     $success = "Le projet a bien été désarchivé.";
                 } catch (\Throwable $th) {
                     //throw $th;

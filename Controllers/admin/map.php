@@ -45,7 +45,7 @@ if($rights == 'admin')
                 try {
                     $Team->setActive(0);
                     $Team->update();
-
+                    LogHistory::create($idUser, 'archive', 'team', $Team->getName());
                     $success = "Le tableau a bien été archivé.";
                 } catch (\Throwable $th) {
                     $errors[] = "Une erreur innatendue est survenue.";
@@ -64,6 +64,7 @@ if($rights == 'admin')
                 try {
                     $Team->setActive(1);
                     $Team->update();
+                    LogHistory::create($idUser, 'unarchive', 'team', $Team->getName());
                     $success = "Le tableau a bien été ré-ouvert.";
                 } catch (\Throwable $th) {
                     //throw $th;
@@ -83,6 +84,7 @@ if($rights == 'admin')
                 try {
                     $Project->setActive(1);
                     $Project->update();
+                    LogHistory::create($idUser, 'unarchive', 'project', $Project->getName());
                     $success = "Le projet à bien été ré-ouvert.";
                 } catch (\Throwable $th) {
                     //throw $th;

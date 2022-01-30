@@ -14,3 +14,4 @@ require_once MODELS_PATH.'Task.php';
 require_once MODELS_PATH.'MapColumn.php';
 require_once MODELS_PATH.'TaskComment.php';
 require_once MODELS_PATH.'TaskMember.php';
+require_once MODELS_PATH.'LogHistory.php';

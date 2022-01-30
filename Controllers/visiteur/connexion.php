@@ -70,10 +70,12 @@ if($envoi)
                     if($consent == true)
                     {
                         $_SESSION["rights"] = $User->isAdmin() == 1 ? "admin" : "user";
+                        LogHistory::create($User->getRowid(), 'connect', 'user', $User->getLastname().' '.$User->getFirstname());
                     }
                     else
                     {
                         $_SESSION["rights"] = "needConsent";
+                        LogHistory::create($User->getRowid(), 'connect', 'user', $User->getLastname().' '.$User->getFirstname());
                     }
                     
                     $success = true;

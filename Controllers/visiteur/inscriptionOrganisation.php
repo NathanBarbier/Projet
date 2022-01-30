@@ -41,11 +41,19 @@ if($action == "inscriptionOrg")
                         {
                             try
                             {
-                                $status = array();
-                                $pwd = password_hash($pwd, PASSWORD_BCRYPT);
-                                $status[] = $Organization->create($name);
-                                $fk_organization = $Organization->fetch_last_insert_id();
-                                $status[] = $User->create($email, $fk_organization, $pwd, true);
+                                $fk_organization = intval($Organization->fetch_last_insert_id()) + 1;
+                                $idUser = intval($User->fetch_last_insert_id()) + 1;
+
+                                $User->setEmail($email);
+                                $User->setPassword($pwd);
+                                $User->setFk_organization($fk_organization);
+                                $User->setAdmin(0);
+                                $User->create($email, $fk_organization, $pwd, true);
+                                LogHistory::create($idUser, 'signup', 'user', $User->getEmail());
+
+                                $Organization->setName($name);
+                                $Organization->create();
+                                LogHistory::create($idUser, 'create', 'Organization', $Organization->getName());
                             } 
                             catch (exception $e) 
                             {

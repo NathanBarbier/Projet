@@ -35,7 +35,7 @@ define('PHP_MAILER_PATH', $rootDir.'vendor'.DIRECTORY_SEPARATOR.'phpmailer'.DIRE
 
 // URL PATH
 define('ROOT_URL', $rootUrl);
-define('MODELS_URL', $rootUrl.'modeles/');
+define('MODELS_URL', $rootUrl.'models/');
 define('IMG_URL', $rootUrl.'images/');
 define('CONTROLLERS_URL', $rootUrl.'Controllers/');
 define('VIEWS_URL', $rootUrl.'views/');

@@ -31,6 +31,7 @@ if($rights === "admin")
     {
         try {
             $Organization->delete();
+            LogHistory::create($idUser, 'delete', 'organization', $Organization->getName());
             header("location:".ROOT_URL."index.php");
             exit;
         } catch (\Throwable $th) {
@@ -50,6 +51,7 @@ if($rights === "admin")
                     $User->setLastname($lastname);
                     $User->setEmail($email);
                     $User->update();
+                    LogHistory::create($idUser, 'update', 'user', $User->getLastname().' '.$User->getFirstname());
                     $success = "Vos informations ont bien été mises à jour.";
                 } catch (\Throwable $th) {
                     //throw $th;
@@ -80,6 +82,7 @@ if($rights === "admin")
                                 try {
                                     $User->setPassword($newPwd);
                                     $User->update();
+                                    LogHistory::create($idUser, 'update password', 'user', $User->getLastname().' '.$User->getFirstname());
                                     $success = "Le mot de passe a bien été modifié.";
                                     $oldPwd = "";
                                     $newPwd = "";
@@ -131,6 +134,7 @@ if($rights === "admin")
                 try {
                     $User->setEmail($email);
                     $User->update();
+                    LogHistory::create($idUser, 'update email', 'user', $User->getLastname().' '.$User->getFirstname(), $User->getEmail());
                     $success = "L'adresse email a bien été modifiée.";
                     $email = '';
                 } catch (\Throwable $th) {
@@ -154,7 +158,6 @@ if($rights === "admin")
             $invalidForm[] = 'email';
         }
     }
-
 
     require_once VIEWS_PATH."admin".DIRECTORY_SEPARATOR.$tpl;
 }

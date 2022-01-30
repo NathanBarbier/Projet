@@ -41,6 +41,7 @@ if($rights === "user")
                     $User->setLastname($lastname);
                     $User->setEmail($email);
                     $User->update();
+                    LogHistory::create($idUser, 'update', 'user', $User->getLastname().' '.$User->getFirstname());
                     $success = "Vos informations ont bien été mises à jour.";
                 } catch (\Throwable $th) {
                     //throw $th;
@@ -60,6 +61,7 @@ if($rights === "user")
         {
             try {
                 $User->delete();
+                LogHistory::create($idUser, 'delete', 'user', $User->getLastname().' '.$User->getFirstname());
                 header("location:".CONTROLLERS_URL."visiteur/Deconnexion.php");
                 exit;
             } catch (\Throwable $th) {

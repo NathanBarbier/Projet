@@ -102,75 +102,64 @@ class Organization extends Modele
 
     // CREATE
 
-    public function create(string $name)
+    public function create()
     {
         $sql = "INSERT INTO organization (name)";
         $sql .= " VALUES (?)";
 
         $requete = $this->getBdd()->prepare($sql);
-        return $requete->execute([$name]);
+        return $requete->execute([$this->name]);
     }
 
 
     // UPDATE
 
-    public function updateName($name)
+    public function update()
     {
         $sql = "UPDATE organization"; 
-        $sql .= " SET nom = ?";
+        $sql .= " SET name = ?";
         $sql .= " WHERE rowid = ?";
 
         $requete = $this->getBdd()->prepare($sql);
-        return $requete->execute([$name, $this->rowid]);
+        return $requete->execute([$this->name, $this->rowid]);
     }
 
     // DELETE 
 
     public function delete()
     {
-        $status = array();
-
         $sql = "DELETE FROM belong_to AS w";
         $sql .= " INNER JOIN team AS t ON w.fk_team = t.rowid";
         $sql .= " WHERE fk_organization = ?";
         
         $requete = $this->getBdd()->prepare($sql);
-        $status [] = $requete->execute([$this->rowid]);
+        $requete->execute([$this->rowid]);
     
         $sql = "DELETE FROM project"; 
         $sql .= " WHERE fk_organization = ?";
 
         $requete = $this->getBdd()->prepare($sql);
-        $status [] = $requete->execute([$this->rowid]);
+        $requete->execute([$this->rowid]);
     
         $sql = "DELETE FROM user"; 
         $sql .= " WHERE fk_organization = ?";
 
         $requete = $this->getBdd()->prepare($sql);
-        $status [] = $requete->execute([$this->rowid]);
+        $requete->execute([$this->rowid]);
         
         $sql = "DELETE FROM team";
         $sql .= " WHERE fk_organization = ?";
 
         $requete = $this->getBdd()->prepare($sql);
-        $status [] = $requete->execute([$this->rowid]);
+        $requete->execute([$this->rowid]);
         
         $sql = "DELETE FROM organization";
         $sql .= " WHERE rowid = ?";
         
         $requete = $this->getBdd()->prepare($sql);
-        $status [] = $requete->execute([$this->rowid]);
+        $requete->execute([$this->rowid]);
     
         session_destroy();
-
-        if(in_array(false, $status))
-        {
-            return false;
-        }
-        else 
-        {
-            return true;
-        }
     }
 
 
@@ -288,38 +277,6 @@ class Organization extends Modele
             return false;
         }
 
-    }
-            
-    //* outdated
-    public function checkToken($idUser, $token)
-    {
-        $sql = "SELECT *";
-        $sql .= " FROM organization";
-        $sql .= " WHERE rowid = ?";
-        $sql .= " AND token = ?";
-
-        $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$idUser, $token]);
-
-        if($requete->rowcount() > 0)
-        {
-            return true;
-        } 
-        else 
-        {
-            return false;
-        }
-    }
-        
-    //* outdated
-    public function addCookie($idUser, $token)
-    {
-        $sql = "UPDATE organization";
-        $sql .= " SET token = ?";
-        $sql .= " WHERE rowid = ?";
-
-        $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$token, $idUser]);
     }
 }
 ?>

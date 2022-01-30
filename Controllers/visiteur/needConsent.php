@@ -29,17 +29,14 @@ if($rights === 'needConsent' && $idUser)
 
     if($action == "giveConsent")
     {
-        $consent = true;
-        $status = $User->updateConsent($consent);
-
-        if($status)
-        {
-            $_SESSION["rights"] = $User->getAdmin() ? 'admin' : 'user';
+        try {
+            $consent = true;
+            $status = $User->updateConsent($consent);
+            $_SESSION["rights"] = $User->isAdmin() ? 'admin' : 'user';
             header('location:'.ROOT_URL.'index.php');
             exit;
-        }
-        else
-        {
+        } catch (\Throwable $th) {
+            //throw $th;
             $errors[] = "Une erreur innatendue est survenue.";
         }
     }

@@ -15,9 +15,13 @@ if($rights == 'admin')
         case 'getTeamActive':
             if($teamId)
             {
-                $Team = new Team($teamId);
-                $teamActive = $Team->isActive();
-                echo json_encode($teamActive);
+                try {
+                    $Team = new Team($teamId);
+                    $teamActive = $Team->isActive();
+                    echo json_encode($teamActive);
+                } catch (\Throwable $th) {
+                    echo json_encode($th);
+                }
                 break;
             }
     }

@@ -3,16 +3,15 @@
 require_once "../../services/header.php";
 
 $idOrganization = $_SESSION["idOrganization"] ?? false;
+$idUser = $_SESSION['idUser'] ?? false;
+$rights = $_SESSION["rights"] ?? false;
 
 $action = GETPOST('action');
-$idProject = GETPOST('idProject');
-
+$idProject = intval(GETPOST('idProject'));
 $name = GETPOST('name');
 $type = GETPOST('type');
 $description = GETPOST('description');
 $envoi = GETPOST('envoi');
-
-$rights = $_SESSION["rights"] ?? false;
 
 $success = false;
 $errors = array();
@@ -24,8 +23,6 @@ if($rights == 'admin')
     $errors = array();
     $success = false;
 
-    $data = new stdClass;
-
     $tpl = "creationProjets.php";
 
     if($action == "addProjet")
@@ -34,17 +31,18 @@ if($rights == 'admin')
         {
             if($name && $type)
             {
-                $status = $Project->create($name, $type, $description, $idOrganization);
-
-                if($status)
-                {
+                try {
+                    $Project->setName($name);
+                    $Project->setType($type);
+                    $Project->setDescription($description);
+                    $Project->setFk_organization($idOrganization);
+                    $Project->create();
+                    LogHistory::create($idUser, 'create', 'project', $name);
                     $success = "Le projet a été créé avec succès.";
-                }
-                else
-                {
+                } catch (\Throwable $th) {
+                    //throw $th;
                     $errors[] = "Une erreur est survenue.";
                 }
-
             } 
             else 
             {

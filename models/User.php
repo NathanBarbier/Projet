@@ -201,6 +201,20 @@ class User extends Modele
         }
     }
 
+    public function fetch_last_insert_id()
+    {
+        $sql = "SELECT MAX(rowid)";
+        $sql .= " FROM user";
+
+        $requete = $this->getBdd()->prepare($sql);
+        $requete->execute();
+
+        if($requete->rowCount() > 0)
+        {
+            return $requete->fetch(PDO::FETCH_OBJ)->rowid;
+        }
+    }
+
     /** Return users that are not related to a project
      * @param int $projectId The project for which we are looking for unrelated users
      * @param int $idOrganization The organization in which we will search for users.
@@ -309,41 +323,13 @@ class User extends Modele
 
     // INSERT
 
-    public function create(string $email, int $fk_organization, string $password, int $admin = 0, string $firstname = null, string $lastname = null, string $birth = null)
-    {
-        $status = array();
-                        
+    public function create()
+    {      
         $sql = "INSERT INTO user (lastname, firstname, birth, email, fk_organization, password, consent, admin) ";
         $sql .= "VALUES (?,?,?,?,?,?,?,?)";
         $requete = $this->getBdd()->prepare($sql);
 
-
-        $status[] = $requete->execute([$lastname, $firstname, $birth, $email, $fk_organization, $password, 0, $admin]);
-
-        $sql = "SELECT MAX(rowid) as rowid"; 
-        $sql .= " FROM user";
-
-        $requete = $this->getBdd()->prepare($sql);
-        $status[] = $requete->execute();
-
-        $User = $requete->fetch(PDO::FETCH_OBJ);
-        $maxIdUser = $User->rowid;
-
-        $sql = "SELECT *"; 
-        $sql .= " FROM user"; 
-        $sql .= " WHERE rowid = ?";
-
-        $requete = $this->getBdd()->prepare($sql);
-        $status[] = $requete->execute([$maxIdUser]);
-
-        if(in_array(false, $status))
-        {
-            return false;
-        }
-        else
-        {
-            return true;
-        }
+        $requete->execute([$this->lastname, $this->firstname, $this->birth, $this->email, $this->fk_organization, $this->password, 0, $this->admin]);
     }
 
 
@@ -361,72 +347,7 @@ class User extends Modele
         $sql .= " WHERE rowid = ?";
 
         $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$this->firstname,$this->lastname,$this->email,$this->password,$this->birth,$this->rowid]);
-    }
-
-    public function updateInformations($firstname, $lastname, $email, $idUser = null)
-    {
-        $idUser = $this->id ?? $idUser;
-
-        $sql = "UPDATE user";
-        $sql .= " SET firstname = ?, lastname = ?, email = ?";
-        $sql .= " WHERE rowid = ?";
-
-        $requete = $this->getBdd()->prepare($sql);
-
-        return $requete->execute([$firstname, $lastname, $email, $idUser]);
-    }
-
-    public function updateFirstname($firstname, $idUser)
-    {
-        $sql = "UPDATE user";
-        $sql .= " SET firstname = ?"; 
-        $sql .= " WHERE rowid = ?";
-
-        $requete = $this->getBdd()->prepare($sql);
-        return $requete->execute([$firstname, $idUser]);
-    }
-
-    public function updateLastname($lastname, $idUser)
-    {
-        $sql = "UPDATE user";
-        $sql .= " SET lastname = ?";
-        $sql .= " WHERE rowid = ?";
-        
-        $requete = $this->getBdd()->prepare($sql);
-        return $requete->execute([$lastname, $idUser]);
-    }
-
-    public function updatePassword($password, $idUser = null)
-    {
-        $idUser = $this->id ?? $idUser;
-
-        $sql = "UPDATE user"; 
-        $sql .= " SET password = ?"; 
-        $sql .= " WHERE rowid = ?";
-
-        $requete = $this->getBdd()->prepare($sql);
-        return $requete->execute([$password, $idUser]);
-    }
-
-    public function updateEmail($email, $idUser)
-    {
-        $sql = "UPDATE user"; 
-        $sql .= " SET email = ?";
-        $sql .= " WHERE rowid = ?";
-        
-        $requete = $this->getBdd()->prepare($sql);
-        return $requete->execute([$email, $idUser]);
-    }
-
-    public function updateBirth($birth, $idUser)
-    {
-        $sql = "UPDATE user"; 
-        $sql .= " SET birth = ?";
-        $sql .= " WHERE rowid = ?";
-        
-        $requete = $this->getBdd()->prepare($sql);
-        return $requete->execute([$birth, $idUser]);
+        return $requete->execute([$this->firstname,$this->lastname,$this->email,$this->password,$this->birth,$this->rowid]);
     }
 
     public function updateConsent($Consent, int $rowid = null)
@@ -445,17 +366,16 @@ class User extends Modele
 
     // DELETE
 
-    public function delete(int $rowid = null)
+    public function delete()
     {
-        $idUser = $this->rowid ? $this->rowid : $rowid;
-
-        $sql = "DELETE FROM task_member WHERE fk_user = ?;";
-        $sql .= "DELETE FROM task_comment WHERE fk_user = ?;";
-        $sql .= "DELETE FROM belong_to WHERE fk_user = ?;";
-        $sql .= "DELETE FROM user WHERE rowid = ?";
+        $sql = "DELETE FROM user WHERE rowid = ?";
+        //* on trigger
+        // $sql .= "DELETE FROM task_member WHERE fk_user = ?;";
+        // $sql .= "DELETE FROM task_comment WHERE fk_user = ?;";
+        // $sql .= "DELETE FROM belong_to WHERE fk_user = ?;";
 
         $requete = $this->getBdd()->prepare($sql);
-        return $requete->execute([$rowid, $rowid, $rowid, $rowid]);
+        return $requete->execute([$this->rowid, $this->rowid, $this->rowid, $this->rowid]);
     }
     
     public function addCookie($idUser, $token)

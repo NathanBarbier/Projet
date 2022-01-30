@@ -49,6 +49,7 @@ if($rights === 'user')
                                 try {
                                     $User->setPassword($newmdp);
                                     $User->update();
+                                    LogHistory::create($idUser, 'update password', 'user', $User->getLastname().' '.$User->getFirstname());
                                     $success = "Le mot de passe a bien été modifié.";
                                     header("location:".CONTROLLERS_URL."membre/tableauDeBord.php?success=".$success);
                                     exit;

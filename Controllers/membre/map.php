@@ -59,11 +59,21 @@ if($rights == 'user')
                 exit;
             }
 
+            // redirect user if the project is archived
+            if($Project->isActive() == 0)
+            {
+                $errors[] = "Le projet est archivé.";
+                $errors = serialize($errors);
+                header("location:".CONTROLLERS_URL."membre/tableauDeBord.php?errors=".$errors);
+                exit;
+            }
+
             if($action == "archiveTeam")
             {
                 try {
                     $Team->setActive(0);
                     $Team->update();
+                    LogHistory::create($idUser, 'archive', 'team', $Team);
                     $message = "Le tableau a bien été archivé.";
                     header("location:".CONTROLLERS_URL."membre/tableauDeBord.php?success=".$message);
                     exit;
@@ -71,15 +81,6 @@ if($rights == 'user')
                     //throw $th;
                     $errors[] = "Une erreur innatendue est survenue.";
                 }
-            }
-
-            
-            if($Project->isActive() == 0)
-            {
-                $errors[] = "Le projet est archivé.";
-                $errors = serialize($errors);
-                header("location:".CONTROLLERS_URL."membre/tableauDeBord.php?errors=".$errors);
-                exit;
             }
 
             // for JS
@@ -98,7 +99,7 @@ if($rights == 'user')
             {
                 foreach($Column->getTasks() as $taskKey => $Task)
                 {
-                    // all team users + current admin
+                    // all team users
                     $TeamUsers = $Team->getUsers();
                     
                     // get all organization admins

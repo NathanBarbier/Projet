@@ -24,14 +24,13 @@ $mail->Port = 587;                    // TCP port to connect to
 $mail->setFrom('storiesHelperSignUp@gmail.com', 'storiesHelper'); 
 $mail->addReplyTo('storiesHelperSignUp@gmail.com', 'storiesHelper'); 
 
-
 $rights = $_SESSION["rights"] ?? false;
 $idOrganization = $_SESSION["idOrganization"] ?? false;
 
 if($rights === "admin")
 {
     $action = GETPOST('action');
-    $idUser = GETPOST('idUser');
+    $idUser = intval(GETPOST('idUser'));
     $envoi = GETPOST('envoi');
     $firstname = GETPOST('firstname');
     $lastname = GETPOST('lastname');
@@ -67,8 +66,17 @@ if($rights === "admin")
                                     $temporaryPassword = generateRandomString(6);
                                     $password = password_hash($temporaryPassword, PASSWORD_BCRYPT);
                                     
-                                    if($User->create($email, $idOrganization, $password, 0, $firstname, $lastname, $birth))
-                                    {
+                                    try {
+                                        $User->setEmail($email);
+                                        $User->setFk_organization($idOrganization);
+                                        $User->setPassword($password);
+                                        $User->setAdmin(0);
+                                        $User->setFirstname($firstname);
+                                        $User->setLastname($lastname);
+                                        $User->setBirth($birth);
+                                        $User->create();
+                                        LogHistory::create($idUser, 'signup', 'user', $User->getLastname().' '.$User->getFirstname());
+                                    
                                         $Organization = new Organization($idOrganization);
 
                                         $subject = "New registration !";
@@ -98,9 +106,8 @@ if($rights === "admin")
                                         }
 
                                         $success = "Le collaborateur a bien été inscrit et reçu son mot de passe par email."; 
-                                    }
-                                    else 
-                                    {
+                                    } catch (\Throwable $th) {
+                                        //throw $th;
                                         $errors[] = "L'inscription n'a pas pu aboutir.";
                                     }
                                 } 

@@ -141,56 +141,6 @@ Class Project extends Modele
         return $requete->execute([$this->name,$this->type,$this->open,$this->fk_organization,$this->description,$this->active,$this->rowid]);
     }
 
-    public function updateName($name)
-    {
-        $sql = "UPDATE project";
-        $sql .= " SET name = ?"; 
-        $sql .= " WHERE rowid =  ?";
-
-        $requete = $this->getBdd()->prepare($sql);
-        return $requete->execute([$name, $this->rowid]);
-    }
-
-    public function updateType(string $type)
-    {
-        $sql = "UPDATE project";
-        $sql .= " SET type = ?";
-        $sql .= " WHERE rowid =  ?";
-
-        $requete = $this->getBdd()->prepare($sql);
-        return $requete->execute([$type, $this->rowid]);
-    }
-
-    public function updateDescription(string $description)
-    {
-        $sql = "UPDATE project";
-        $sql .= " SET description = ?";
-        $sql .= " WHERE rowid = ?";
-
-        $requete = $this->getBdd()->prepare($sql);
-        return $requete->execute([$description, $this->rowid]);
-    }
-
-    public function updateOpen($open)
-    {
-        $sql = "UPDATE project";
-        $sql .= " SET open = ?";
-        $sql .= " WHERE rowid = ?";
-
-        $requete = $this->getBdd()->prepare($sql);
-        return $requete->execute([$open, $this->rowid]);
-    }
-
-    public function updateActive($active)
-    {
-        $sql = "UPDATE project";
-        $sql .= " SET active = ?";
-        $sql .= " WHERE rowid = ?";
-
-        $requete = $this->getBdd()->prepare($sql);
-        return $requete->execute([$active, $this->rowid]);
-    }
-
 
     // FETCH
 
@@ -283,43 +233,19 @@ Class Project extends Modele
         return $requete->fetch(PDO::FETCH_OBJ);
     }
 
-    public function fetch_members_count($projectId = null)
-    {
-        $projectId = $this->id ?? $projectId;
-
-        $sql = "SELECT COUNT(u.rowid) as membersCount";
-        $sql .= " FROM project as p";
-        $sql .= " LEFT JOIN work_to as w ON p.rowid = w.fk_project";
-        $sql .= " LEFT JOIN belong_to as b ON b.fk_team = w.fk_team";
-        $sql .= " LEFT JOIN users as u ON b.fk_user = u.rowid";
-
-        $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$projectId]);
-
-        $membersCount = $requete->fetch(PDO::FETCH_OBJ);
-
-        if($membersCount == false)
-        {
-            $membersCount = new stdClass;
-            $membersCount->membersCount = 0;
-        }
-
-        return $membersCount->membersCount;
-    }
-
 
     // INSERT
     
     /** Create object in db
      * 
      */
-    public function create($name, $type, $description = "", int $fk_organization)
+    public function create()
     {
         $sql = "INSERT INTO project (name, type, open, description, fk_organization, active)";
         $sql .= " VALUES (?,?,NOW(),?,?,1)";
 
         $requete = $this->getBdd()->prepare($sql);
 
-        return $requete->execute([$name, $type, $description, $fk_organization]);
+        return $requete->execute([$this->name, $this->type, $this->description, $this->fk_organization]);
     }
 }

@@ -8,13 +8,13 @@ $idOrganization = $_SESSION["idOrganization"] ?? false;
 if($rights === "admin")
 {
     $action = GETPOST('action');
-    $idUser = GETPOST('idUser');
+    $idUser = intval(GETPOST('idUser'));
     $envoi = GETPOST('envoi');
 
     $firstname = GETPOST('firstname');
     $lastname = GETPOST('lastname');
     $email = GETPOST('email');
-    $idEquipe = GETPOST('idEquipe');
+    $idEquipe = intval(GETPOST('idEquipe'));
     $birth = GETPOST('birth');
 
     $oldmdp = GETPOST('oldmdp');
@@ -39,8 +39,10 @@ if($rights === "admin")
                 {
                     try
                     {
+                        $oldFirstname = $User->getFirstname(),
                         $User->setFirstname($firstname);
                         $User->update();
+                        LogHistory::create($idUser, 'update firstname', 'user', $User->getLastname().' '.$oldFirstname, $User->getFirstname());
                         $success = "Le prénom a bien été modifié.";
                     } 
                     catch (exception $e)
@@ -75,8 +77,10 @@ if($rights === "admin")
                 {
                     try
                     {
+                        $oldLastname = $User->getLastname();
                         $User->setLastname($lastname);
                         $User->update();
+                        LogHistory::create($idUser, 'update lastname', 'user', $oldLastname.' '.$User->getFirstname(), $User->getLastname());
                         $success = "Le nom a bien été modifié.";
                     } 
                     catch (exception $e)
@@ -108,6 +112,7 @@ if($rights === "admin")
             try {
                 $Organization->removeUser($idUser);
                 $User->delete();
+                LogHistory::create($idUser, 'delete', 'user', $User->getLastname().' '.$User->getFirstname());
                 $success = "La suppression d'utilisateur a bien été effectuée.";
             } catch (\Throwable $th) {
                 //throw $th;
@@ -119,13 +124,6 @@ if($rights === "admin")
             header("location:".ROOT_PATH."index.php");
         }
     }
-
-
-    // refresh datas if modifications in db
-    // if($success)
-    // {
-    //     $Organization = new Organization($idOrganization);
-    // }
 
     require_once VIEWS_PATH."admin/".$tpl;
 

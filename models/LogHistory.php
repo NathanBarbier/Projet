@@ -155,7 +155,7 @@ Class LogHistory extends Modele
     public static function create($fk_author, $action, $object_type, $object_name, $value = null)
     {
         $sql = "INSERT INTO log_history (fk_author, date_creation, action, object_type, object_name, value)";
-        $sql = " VALUES (?, NOW(),?,?,?,?,?)";
+        $sql .= " VALUES (?, NOW(),?,?,?,?)";
 
         $PDO = new PDO('mysql:host=localhost;dbname=storieshelper;charset=UTF8', 'root');
         $requete = $PDO->prepare($sql);

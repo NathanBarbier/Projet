@@ -146,7 +146,7 @@ Class LogHistory extends Modele
         $sql .= " WHERE fk_organization = ?";
 
         $requete = $this->getBdd()->prepare($sql);
-        $status = $requete->execute([$fk_organization]);
+        $requete->execute([$fk_organization]);
 
         return $requete->fetchAll(PDO::FETCH_OBJ);
     }

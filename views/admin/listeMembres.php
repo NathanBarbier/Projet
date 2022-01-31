@@ -31,6 +31,7 @@ require_once "layouts/entete.php";
                 <th>NOM</th>
                 <th>Prénom</th>
                 <th>Adresse email</th>
+                <th>Droits</th>
                 <th>Options</th>
             </tr>
 
@@ -82,6 +83,8 @@ require_once "layouts/entete.php";
                 </td>
 
                 <td class="align-middle"><?= $User->getEmail();?></td>
+
+                <td class="align-middle"><b><?= $User->isAdmin() == 1 ? '<span style="color:red">Administrateur</span>' : '<span style="color:grey">Utilisateur</span>' ?></b></td>
 
                 <td class="align-middle">
                     <div id="divDelUser<?= $User->getRowid() ?>" class="collapse show">

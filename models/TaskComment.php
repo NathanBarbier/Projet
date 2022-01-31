@@ -5,6 +5,7 @@ class TaskComment extends Modele
     protected $fk_task;
     protected $note;
     protected $fk_user;
+    protected $tms;
 
     public function __construct($rowid = null)
     {
@@ -80,12 +81,15 @@ class TaskComment extends Modele
 
     public function create()
     {
+        $date = new DateTime();
+        $tms = $date->getTimestamp();
+
         $sql = "INSERT INTO task_comment";
-        $sql .= " (fk_task, note, fk_user)";
-        $sql .= " VALUES (".$this->fk_task.",'".$this->note."',".$this->fk_user.")";
+        $sql .= " (fk_task, note, fk_user, tms)";
+        $sql .= " VALUES (?,?,?,?)";
 
         $requete = $this->getBdd()->prepare($sql);
-        $requete->execute();
+        $requete->execute([$this->fk_task,$this->note,$this->fk_user,$tms]);
 
         return $this->fetch_last_insert_id();
     }
@@ -145,7 +149,7 @@ class TaskComment extends Modele
     {
         $rowid = $rowid == null ? $this->rowid : $rowid;
 
-        $sql = "SELECT t.rowid, t.fk_task, t.note, t.fk_user";
+        $sql = "SELECT t.rowid, t.fk_task, t.note, t.fk_user, t.tms";
         $sql .= " FROM task_comment AS t";
         $sql .= " WHERE rowid = ?";
 
@@ -162,6 +166,13 @@ class TaskComment extends Modele
             $this->note = $obj->note;
             // $this->User = new User($obj->fk_user);
             $this->fk_user = intval($obj->fk_user);
+            if(!empty($obj->tms)) 
+            {
+                $date = new DateTime();
+                $date->setTimestamp($obj->tms);
+                $date->setTimezone(new DateTimeZone('Europe/Paris'));
+                $this->tms = $date->format('d/m/y H:i');
+            }
         }
     }
 

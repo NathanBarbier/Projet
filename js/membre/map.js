@@ -128,8 +128,8 @@ function init()
         $(this).parent().next().find(".task-buttons-container").first().addClass('show');
 
         columnId = $(this).parents('.project-column').first().find('.columnId-input').val();
-        task = $(this).parents('.task').first();
-        taskId = task.find(".taskId-input").val();
+        taskDiv = $(this).parents('.task').first();
+        taskId = taskDiv.find(".taskId-input").val();
         
         //up task
         $("#up-task-btn").off('click').click(function() {
@@ -138,8 +138,8 @@ function init()
                 async: true,
                 url: AJAX_URL+"membre/map.php?action=upTask&taskId="+taskId+"&columnId="+columnId,
                 success: function (data) {
-                    prevTask = task.prevAll('.task').first();
-                    task.insertBefore(prevTask);
+                    prevTask = taskDiv.prevAll('.task').first();
+                    taskDiv.insertBefore(prevTask);
                     $("#loading-modal").modal('hide');
                 }
             });
@@ -152,8 +152,8 @@ function init()
                 async: true,
                 url: AJAX_URL+"membre/map.php?action=downTask&taskId="+taskId+"&columnId="+columnId,
                 success: function (data) {
-                    nextTask = task.nextAll('.task').first(); 
-                    task.insertAfter(nextTask);
+                    nextTask = taskDiv.nextAll('.task').first(); 
+                    taskDiv.insertAfter(nextTask);
                     $("#loading-modal").modal('hide');
                 }
             });
@@ -177,6 +177,7 @@ function init()
                         admin = comments[i].admin;
                         author = comments[i].author;
                         authorId = comments[i].fk_user;
+                        tms = comments[i].tms;
 
                         prepend = "<div class='task-comment-div'><input type='hidden' class='comment-task-id' value='"+comments[i].rowid+"'><input type='hidden' class='comment-author-id' value='"+authorId+"'><textarea ";
                         
@@ -185,7 +186,7 @@ function init()
                             prepend += "readonly ";
                         }
 
-                        prepend += "class='mt-3 card task-comment px-2 pt-3 text-center' name='' cols='30' rows='3'>"+note+"</textarea><div class='d-flex justify-content-start mt-1'><button class='btn ";
+                        prepend += "class='mt-3 card task-comment px-2 pt-3 text-center' name='' cols='30' rows='3'>"+note+"</textarea><div class='mt-1'><button class='btn w-100 ";
                         
                         if(admin == 1)
                         { 
@@ -196,7 +197,8 @@ function init()
                             prepend += 'btn-outline-classic'; 
                         } 
                         
-                        prepend+= " comment-author'>"+author+"</button></div></div>"
+                        prepend+= " comment-author'>"+author+"</button></div>"
+                        prepend += "<div class='col-5 pe-0'><span class='w-100' style='color:grey;font-size:small'>"+tms+"</span></div></div></div>"
 
                         $("#task-comment-container").prepend(prepend);
                     }

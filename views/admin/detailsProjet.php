@@ -17,7 +17,7 @@ require_once 'layouts/entete.php';
         <?php } ?>
 
         <?php if($idProject) { ?>
-            <?php if (!$Project->isActive()) { ?>
+            <?php if ($Project->isActive() == 0) { ?>
                 <div class="before alert alert-info alert-visible mt-3 w-75 text-center position-absolute top-0 start-50 translate-middle-x">
                     <i class="bi bi-info-circle-fill"></i>    
                     Ce projet est archivé.

@@ -203,7 +203,7 @@ class User extends Modele
 
     public function fetch_last_insert_id()
     {
-        $sql = "SELECT MAX(rowid)";
+        $sql = "SELECT MAX(rowid) as rowid";
         $sql .= " FROM user";
 
         $requete = $this->getBdd()->prepare($sql);
@@ -329,7 +329,7 @@ class User extends Modele
         $sql .= "VALUES (?,?,?,?,?,?,?,?)";
         $requete = $this->getBdd()->prepare($sql);
 
-        $requete->execute([$this->lastname, $this->firstname, $this->birth, $this->email, $this->fk_organization, $this->password, 0, $this->admin]);
+        $requete->execute([$this->lastname, $this->firstname, $this->birth, $this->email, $this->fk_organization, $this->password, $this->consent, $this->admin]);
     }
 
 

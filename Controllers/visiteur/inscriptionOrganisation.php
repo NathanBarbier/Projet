@@ -39,6 +39,9 @@ if($action == "inscriptionOrg")
                     {
                         if($pwd === $pwd2)
                         {
+                            // $speciaux = "/[.!@#$%^&*()_+=]/";
+                            // $nombres = "/[0-9]/";
+                            // if(preg_match($nombres, $pwd) && !preg_match($speciaux, $pwd) && strlen($pwd) >= 8 && strlen($pwd) <= 100)
                             try
                             {
                                 $fk_organization = intval($Organization->fetch_last_insert_id()) + 1;
@@ -47,8 +50,9 @@ if($action == "inscriptionOrg")
                                 $User->setEmail($email);
                                 $User->setPassword($pwd);
                                 $User->setFk_organization($fk_organization);
-                                $User->setAdmin(0);
-                                $User->create($email, $fk_organization, $pwd, true);
+                                $User->setAdmin(1);
+                                $User->setConsent(1);
+                                $User->create();
                                 LogHistory::create($idUser, 'signup', 'user', $User->getEmail());
 
                                 $Organization->setName($name);

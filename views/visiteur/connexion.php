@@ -24,34 +24,36 @@ require_once "layouts/entete.php";
     
     <h1 class="text-center w-50 mx-auto border-bottom">Connexion</h1>
 
-    <form class="w-50 mx-auto" method="post" action="<?= CONTROLLERS_URL ?>visiteur/connexion.php">
-
-        <div class="form-floating mt-5">
-            <input type="email" class="form-control" name="email" placeholder="Saisissez votre identifiant" value="<?= $email ?? '' ?>" maxlength="50" required>
-            <label for="email" class="mb-1">Addresse email</label>
-        </div>
-
-        <div class="form-floating mt-3">
-            <input type="password" class="form-control" name="password" placeholder="Saisissez votre mot de passe" required>
-            <label for="password" class="mb-1">Mot de passe</label>
-        </div>
-        
-        <div class="mt-3 text-center">
-            <input type="checkbox" id="rememberMe" name="rememberMe">
-            <label for="rememberMe" class="mb-1">Se souvenir de moi ?</label>
-        </div>
-        
-        <div class="form-group text-center mt-3">
-            <button type="submit" class="btn btn-primary w-50 mt-3" name="envoi" value="1">Se connecter</button>
-        </div>
-        <div class="form-group text-center mt-2">
-            <div class="mt-5">
-                Vous n'avez pas de compte ?
+    <div class="row">
+        <form class="col-md-12 col-lg-6 mx-auto" method="post" action="<?= CONTROLLERS_URL ?>visiteur/connexion.php">
+    
+            <div class="form-floating mt-5">
+                <input type="email" class="form-control" name="email" placeholder="Saisissez votre identifiant" value="<?= $email ?? '' ?>" maxlength="50" required>
+                <label for="email" class="mb-1">Addresse email</label>
             </div>
-            <a href="inscriptionOrganisation.php" class="btn btn-info mt-3">Inscrivez-vous</a>
-        </div>
+    
+            <div class="form-floating mt-3">
+                <input type="password" class="form-control" name="password" placeholder="Saisissez votre mot de passe" required>
+                <label for="password" class="mb-1">Mot de passe</label>
+            </div>
+            
+            <div class="form-check mt-3">
+                <input class="form-check-input" name="rememberMe" value="1" type="checkbox" id="rememberMe">
+                <label class="form-check-label" for="rememberMe">Se souvenir de moi</label>
+            </div>
+            
+            <div class="form-group text-center mt-3">
+                <button type="submit" class="btn btn-primary mt-3 w-100" name="envoi" value="1">Se connecter</button>
+            </div>
 
-    </form>
+            <div class="form-group text-center mt-2">
+                <div class="mt-5">
+                    Vous n'avez pas de compte ?
+                </div>
+                <a href="inscriptionOrganisation.php" class="btn btn-info mt-3">Inscrivez-vous</a>
+            </div>
+        </form>
+    </div>
 </div>
 
 <?php

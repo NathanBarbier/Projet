@@ -49,11 +49,11 @@ a {
   text-decoration: none !important;
 }
 
-input:read-only {
+input:read-only:not(.form-check-input) {
   background-color: #f8f9fa !important;
 }
 
-input:read-only:hover {
+input:read-only:hover:not(.form-check-input) {
   background-color: #eeeff0 !important;
 }
 

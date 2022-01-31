@@ -35,6 +35,7 @@ if($rights === "admin")
         $User = new User();
         $Team = new Team($teamId);
         $BelongsTo = new BelongsTo();
+        $Project = new Project();
 
         // get Project
         foreach($Organization->getProjects() as $Obj)
@@ -65,9 +66,9 @@ if($rights === "admin")
         }
 
         // Remove users belonging to a team
-        foreach($Organization->getProjects() as $Project)
+        foreach($Organization->getProjects() as $Obj)
         {
-            foreach($Project->getTeams() as $Team)
+            foreach($Obj->getTeams() as $Team)
             {
                 foreach($Team->getUsers() as $User)
                 {

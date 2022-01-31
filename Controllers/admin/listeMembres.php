@@ -39,7 +39,7 @@ if($rights === "admin")
                 {
                     try
                     {
-                        $oldFirstname = $User->getFirstname(),
+                        $oldFirstname = $User->getFirstname();
                         $User->setFirstname($firstname);
                         $User->update();
                         LogHistory::create($idUser, 'update firstname', 'user', $User->getLastname().' '.$oldFirstname, $User->getFirstname());

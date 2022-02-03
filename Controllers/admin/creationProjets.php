@@ -6,11 +6,11 @@ $idOrganization = $_SESSION["idOrganization"] ?? false;
 $idUser = $_SESSION['idUser'] ?? false;
 $rights = $_SESSION["rights"] ?? false;
 
-$action = GETPOST('action');
+$action = htmlentities(GETPOST('action'));
 $idProject = intval(GETPOST('idProject'));
-$name = GETPOST('name');
-$type = GETPOST('type');
-$description = GETPOST('description');
+$name = htmlentities(GETPOST('name'));
+$type = htmlentities(GETPOST('type'));
+$description = htmlentities(GETPOST('description'));
 $envoi = GETPOST('envoi');
 
 $success = false;

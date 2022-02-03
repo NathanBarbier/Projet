@@ -66,11 +66,11 @@ $("#add-column-form").find('#create-column').click(function() {
     // insert in bdd
     $.ajax({
         async: true,
-        url: AJAX_URL+"admin/map.php?action=addColumn&columnName="+columnName+"&teamId="+teamId,
+        url: AJAX_URL+"admin/map.php?action=addColumn&columnName="+columnName+"&teamId="+teamId+"&projectId="+projectId,
         success: function(result) {
             $.ajax({
                 async: true,
-                url: AJAX_URL+"admin/map.php?action=getLastColumnId",
+                url: AJAX_URL+"admin/map.php?action=getLastColumnId"+"&teamId="+teamId+"&projectId="+projectId,
                 success: function(data) {
                     
                     columnId = data;    
@@ -141,7 +141,7 @@ function init()
             $("#loading-modal").modal('show');
             $.ajax({
                 async: true,
-                url: AJAX_URL+"admin/map.php?action=upTask&taskId="+taskId+"&columnId="+columnId,
+                url: AJAX_URL+"admin/map.php?action=upTask&taskId="+taskId+"&columnId="+columnId+"&teamId="+teamId+"&projectId="+projectId,
                 success: function (data) {
                     
                     if(taskDiv.prevAll('.task').first().length > 0)
@@ -159,7 +159,7 @@ function init()
             $("#loading-modal").modal('show');
             $.ajax({
                 async: true,
-                url: AJAX_URL+"admin/map.php?action=downTask&taskId="+taskId+"&columnId="+columnId,
+                url: AJAX_URL+"admin/map.php?action=downTask&taskId="+taskId+"&columnId="+columnId+"&teamId="+teamId+"&projectId="+projectId,
                 success: function (data) {
                     if (taskDiv.nextAll('.task').first().length > 0)
                     {
@@ -174,7 +174,7 @@ function init()
         // load task comments
         $.ajax({
             async: true,
-            url: AJAX_URL+"admin/map.php?action=getTaskComments&taskId="+taskId,
+            url: AJAX_URL+"admin/map.php?action=getTaskComments&taskId="+taskId+"&teamId="+teamId+"&projectId="+projectId,
             success: function (data) {
                 if(data != undefined)
                 {
@@ -220,11 +220,11 @@ function init()
                 // load task members
                 $.ajax({
                     async: true,
-                    url: AJAX_URL+"admin/map.php?action=getTaskMembers&taskId="+taskId,
+                    url: AJAX_URL+"admin/map.php?action=getTaskMembers&taskId="+taskId+"&teamId="+teamId+"&projectId="+projectId,
                     success: function (data) {
                         task = $.parseJSON(data);
                         members = task.members;
-
+                        
                         l = members.length;
                         for(i = 0; i < l; i++)
                         {
@@ -274,7 +274,7 @@ function init()
                             {
                                 $.ajax({
                                     async: true,
-                                    url: AJAX_URL+"admin/map.php?action=attributeMemberToTask&taskId="+taskId+"&memberId="+memberId,
+                                    url: AJAX_URL+"admin/map.php?action=attributeMemberToTask&taskId="+taskId+"&memberId="+memberId+"&teamId="+teamId+"&projectId="+projectId,
                                     success: function(data) {
                                         
                                         btn.removeClass('show');
@@ -296,7 +296,7 @@ function init()
                             btn= $(this);
                             $.ajax({
                                 async: true,
-                                url: AJAX_URL+"admin/map.php?action=desattributeMemberToTask&taskId="+taskId+"&memberId="+memberId,
+                                url: AJAX_URL+"admin/map.php?action=desattributeMemberToTask&taskId="+taskId+"&memberId="+memberId+"&teamId="+teamId+"&projectId="+projectId,
                                 success: function(data) {
                                     
                                     btn.removeClass('show');
@@ -318,7 +318,7 @@ function init()
         // INSERT INTO tasks_comments with empty note
         $.ajax({
             async: true,
-            url: AJAX_URL+"admin/map.php?action=addTaskNote&taskId="+taskId,
+            url: AJAX_URL+"admin/map.php?action=addTaskComment&taskId="+taskId+"&teamId="+teamId+"&projectId="+projectId,
             success: function(data) {
                 
                 commentId = data;
@@ -346,12 +346,12 @@ function initTask()
         $("#loading-modal").modal('show');
         $.ajax({
             async: true,
-            url: AJAX_URL+"admin/map.php?action=addTask&columnId="+columnId,
+            url: AJAX_URL+"admin/map.php?action=addTask&columnId="+columnId+"&teamId="+teamId+"&projectId="+projectId,
             success: function(data) {
                 
                 $.ajax({
                     async: true,
-                    url: AJAX_URL+"admin/map.php?action=getLastTaskId",
+                    url: AJAX_URL+"admin/map.php?action=getLastTaskId"+"&teamId="+teamId+"&projectId="+projectId,
                     success: function(data) {
                         data = $.parseJSON(data);
                         
@@ -378,10 +378,9 @@ function initTask()
         taskId = $(this).parents(".task").find(".taskId-input").first().val();
 
         $("#loading-modal").modal('show');
-        // INSERT INTO BDD
         $.ajax({
             async: true,
-            url: AJAX_URL+"admin/map.php?action=updateTask&taskId="+taskId+"&taskName="+taskName,
+            url: AJAX_URL+"admin/map.php?action=updateTask&taskId="+taskId+"&taskName="+taskName+"&teamId="+teamId+"&projectId="+projectId,
             success: function(data) {
                 
                 $("#loading-modal").modal('hide');
@@ -395,10 +394,9 @@ function initTask()
 
         taskId = $(this).parents(".task").first().find(".taskId-input").val();
         $("#loading-modal").modal('show');
-        // DELETE FROM BDD
         $.ajax({
             async: true,
-            url: AJAX_URL+"admin/map.php?action=deleteTask&taskId="+taskId,
+            url: AJAX_URL+"admin/map.php?action=deleteTask&taskId="+taskId+"&teamId="+teamId+"&projectId="+projectId,
             success: function(data) {
                 
                 $("#loading-modal").modal('hide');
@@ -439,7 +437,7 @@ function initTask()
 
         $.ajax({
             async: true,
-            url: AJAX_URL+"admin/map.php?action=archiveTask&taskId="+taskId,
+            url: AJAX_URL+"admin/map.php?action=archiveTask&taskId="+taskId+"&teamId="+teamId+"&projectId="+projectId,
             success: function(data) {
                 ;
                 // remove task html
@@ -479,7 +477,7 @@ function initCol()
         // DELETE COLUMN IN BDD
         $.ajax({
             async: true,
-            url: AJAX_URL+"admin/map.php?action=deleteColumn&columnId="+columnId,
+            url: AJAX_URL+"admin/map.php?action=deleteColumn&columnId="+columnId+"&teamId="+teamId+"&projectId="+projectId,
             success: function(data) {
                 ;
                 $("#column-details").removeClass('show');
@@ -492,7 +490,7 @@ function initCol()
         $("#loading-modal").modal('show');
         $.ajax({
             async: true,
-            url: AJAX_URL+"admin/map.php?action=leftColumn&columnId="+columnId+"&teamId="+teamId,
+            url: AJAX_URL+"admin/map.php?action=leftColumn&columnId="+columnId+"&teamId="+teamId+"&teamId="+teamId+"&projectId="+projectId,
             success: function(data) {
                 
                 column = $(".columnId-input[value='"+columnId+"']").parents('.project-column').first()
@@ -506,7 +504,7 @@ function initCol()
         $("#loading-modal").modal('show');
         $.ajax({
             async: true,
-            url: AJAX_URL+"admin/map.php?action=rightColumn&columnId="+columnId+"&teamId="+teamId,
+            url: AJAX_URL+"admin/map.php?action=rightColumn&columnId="+columnId+"&teamId="+teamId+"&teamId="+teamId+"&projectId="+projectId,
             success: function(data) {
                 
                 column = $(".columnId-input[value='"+columnId+"']").parents('.project-column').first();
@@ -520,7 +518,7 @@ function initCol()
         $("#loading-modal").modal('show');
         $.ajax({
             async: true,
-            url: AJAX_URL+"admin/map.php?action=deleteColumn&columnId="+columnId,
+            url: AJAX_URL+"admin/map.php?action=deleteColumn&columnId="+columnId+"&teamId="+teamId+"&projectId="+projectId,
             success: function(data) {
                 
                 $(".columnId-input[value='"+columnId+"']").parents('.project-column').first().remove();
@@ -536,7 +534,7 @@ function initCol()
         columnName = $("#column-title").val();
         $.ajax({
             async: true,
-            url: AJAX_URL+"admin/map.php?action=updateColumn&columnId="+columnId+"&columnName="+columnName,
+            url: AJAX_URL+"admin/map.php?action=updateColumn&columnId="+columnId+"&columnName="+columnName+"&teamId="+teamId+"&projectId="+projectId,
             success: function(data) {
                 
                 $("#column-details-check-btn").removeClass('show');
@@ -585,7 +583,7 @@ function initComment()
         $("#loading-modal").modal('show');
         $.ajax({
             async: true,
-            url: AJAX_URL+"admin/map.php?action=updateTaskNote&commentId="+commentId+"&taskNote="+taskNote,
+            url: AJAX_URL+"admin/map.php?action=updateTaskNote&commentId="+commentId+"&taskNote="+taskNote+"&teamId="+teamId+"&projectId="+projectId,
             success: function(data) {  
                 $("#check-comment-btn").removeClass('show');
                 $("#delete-comment-btn").removeClass('show');
@@ -599,9 +597,8 @@ function initComment()
         $("#loading-modal").modal('show');
         $.ajax({
             async: true,
-            url: AJAX_URL+"admin/map.php?action=deleteTaskNote&commentId="+commentId,
+            url: AJAX_URL+"admin/map.php?action=deleteTaskNote&commentId="+commentId+"&teamId="+teamId+"&projectId="+projectId,
             success: function(data) {
-                
                 $("#check-comment-btn").removeClass('show');
                 $("#delete-comment-btn").removeClass('show');
                 $("#add-comment-btn").addClass('show');
@@ -623,10 +620,10 @@ function updateTaskColumn(task, taskId, newColumn)
         $("#loading-modal").modal('show');
         $.ajax({
             async: true,
-            url: AJAX_URL+"admin/map.php?action=taskColumnUpdate&taskId="+taskId+"&columnId="+newColumnId,
+            url: AJAX_URL+"admin/map.php?action=taskColumnUpdate&taskId="+taskId+"&columnId="+newColumnId+"&teamId="+teamId+"&projectId="+projectId,
             success: function(data)
             {
-                
+                console.log(data);
                 // prepend html from column a to column b
                 task.prependTo(newColumn.find(".column-content").first());
                 $("#loading-modal").modal('hide');

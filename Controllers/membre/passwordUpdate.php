@@ -8,18 +8,18 @@ $idOrganization = $_SESSION["idOrganization"] ?? false;
 
 if($rights === 'user')
 {
-    $action = GETPOST('action');
+    $action = htmlentities(GETPOST('action'));
     $envoi = GETPOST('envoi');
     
-    $firstname = GETPOST('prenom');
-    $lastname = GETPOST('nom');
-    $email = GETPOST('email');
+    $firstname = htmlentities(GETPOST('prenom'));
+    $lastname = htmlentities(GETPOST('nom'));
+    $email = htmlentities(GETPOST('email'));
     $idTeam = GETPOST('idTeam');
-    $birth = GETPOST('birth');
+    $birth = htmlentities(GETPOST('birth'));
     
-    $oldmdp = GETPOST('oldmdp');
-    $newmdp = GETPOST('newmdp');
-    $newmdp2 = GETPOST('newmdp2');
+    $oldmdp = htmlentities(GETPOST('oldmdp'));
+    $newmdp = htmlentities(GETPOST('newmdp'));
+    $newmdp2 = htmlentities(GETPOST('newmdp2'));
      
     $User = new User($idUser);
     

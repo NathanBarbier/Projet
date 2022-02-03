@@ -9,7 +9,7 @@ class BelongsTo extends Modele
         if($fk_user != null && $fk_team != null)
         {
             $sql = "SELECT *";
-            $sql .= " FROM belong_to";
+            $sql .= " FROM storieshelper_belong_to";
             $sql .= " WHERE fk_user = ? AND fk_team = ?";
 
             $requete = $this->getBdd()->prepare($sql);
@@ -53,7 +53,7 @@ class BelongsTo extends Modele
 
     public function create($fk_user, $fk_team)
     {
-        $sql = "INSERT INTO belong_to (fk_user, fk_team)"; 
+        $sql = "INSERT INTO storieshelper_belong_to (fk_user, fk_team)"; 
         $sql.= " VALUES (?, ?)";
 
         $requete = $this->getBdd()->prepare($sql);
@@ -64,7 +64,7 @@ class BelongsTo extends Modele
 
     public function delete($fk_user, $fk_team)
     {
-        $sql = "DELETE FROM belong_to";
+        $sql = "DELETE FROM storieshelper_belong_to";
         $sql .= " WHERE fk_user = ? AND fk_team = ?";
 
         $requete = $this->getBdd()->prepare($sql);
@@ -80,7 +80,7 @@ class BelongsTo extends Modele
     public function fetchAll(int $fk_user)
     {
         $sql = "SELECT fk_user, fk_team";
-        $sql .= " FROM belong_to";
+        $sql .= " FROM storieshelper_belong_to";
         $sql .= " WHERE fk_user = ?";
 
         $requete = $this->getBdd()->prepare($sql);
@@ -96,18 +96,6 @@ class BelongsTo extends Modele
         }
 
         return $BelongsTos;
-    }
-
-    public function fetchTeamIds(int $fk_user)
-    {
-        $sql = "SELECT fk_team";
-        $sql .= " FROM belong_to";
-        $sql .= " WHERE fk_user = ?";
-
-        $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$fk_user]);
-
-        return $requete->fetchAll(PDO::FETCH_OBJ);
     }
 }
 

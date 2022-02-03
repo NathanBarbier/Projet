@@ -147,7 +147,7 @@ Class Project extends Modele
     public function fetch(int $rowid)
     {
         $sql = "SELECT p.rowid, p.name, p.type, p.open, p.fk_organization, p.description, p.active";
-        $sql .= " FROM project AS p";
+        $sql .= " FROM storieshelper_project AS p";
         $sql .= " WHERE p.rowid = ?";
 
         $requete = $this->getBdd()->prepare($sql);
@@ -170,26 +170,10 @@ Class Project extends Modele
         }
     }
 
-    public function fetchByTeam($fk_team)
-    {
-        $sql = "SELECT fk_project";
-        $sql .= " FROM team";
-        $sql .= " WHERE rowid = ?";
-
-        $requete = $this->getBdd()->prepare($sql);
-        $status = $requete->execute([$fk_team]);
-
-        if($status)
-        {
-            $obj = $requete->fetch(PDO::FETCH_OBJ);
-            $this->fetch($obj->fk_project);
-        }
-    }
-
     public function fetchTeams()
     {
         $sql = "SELECT t.rowid"; 
-        $sql .= " FROM team as t"; 
+        $sql .= " FROM storieshelper_team as t"; 
         $sql .= " WHERE fk_project = ?";
         
         $requete = $this->getBdd()->prepare($sql);
@@ -206,33 +190,6 @@ Class Project extends Modele
         }
     }
 
-    public function fetchOrganization()
-    {
-        $sql = "SELECT p.fk_organization";
-        $sql .= " FROM project AS p";
-        $sql .= " WHERE p.rowid = ?";
-
-        $requete = $this->getBdd()->prepare($sql);
-        $status = $requete->execute([$this->rowid]);
-
-        if($status)
-        {
-            $obj = $requete->fetch(PDO::FETCH_OBJ);
-            $this->Organization = new Organization($obj->fk_organization);
-        }
-    }
-
-    public function fetchMaxId()
-    {
-        $sql = "SELECT max(rowid) AS maxId";
-        $sql .=" FROM project";
-
-        $requete = $this->getBdd()->prepare($sql);
-        $requete->execute();
-
-        return $requete->fetch(PDO::FETCH_OBJ);
-    }
-
 
     // INSERT
     
@@ -241,7 +198,7 @@ Class Project extends Modele
      */
     public function create()
     {
-        $sql = "INSERT INTO project (name, type, open, description, fk_organization, active)";
+        $sql = "INSERT INTO storieshelper_project (name, type, open, description, fk_organization, active)";
         $sql .= " VALUES (?,?,NOW(),?,?,1)";
 
         $requete = $this->getBdd()->prepare($sql);
@@ -254,25 +211,25 @@ Class Project extends Modele
     public function delete()
     {
         // delete task comments
-        $sql = "DELETE FROM task_comment WHERE fk_task IN(SELECT rowid FROM task WHERE fk_column IN(SELECT rowid FROM map_column WHERE fk_team IN(SELECT rowid FROM team WHERE fk_project = ?)))";
+        $sql = "DELETE FROM storieshelper_task_comment WHERE fk_task IN(SELECT rowid FROM storieshelper_task WHERE fk_column IN(SELECT rowid FROM storieshelper_map_column WHERE fk_team IN(SELECT rowid FROM storieshelper_team WHERE fk_project = ?)))";
 
         // delete task member
-        $sql .= "DELETE FROM task_member WHERE fk_task IN(SELECT rowid FROM task WHERE fk_column IN(SELECT rowid FROM map_column WHERE fk_team IN(SELECT rowid FROM team WHERE fk_project = ?)))";
+        $sql .= "DELETE FROM storieshelper_task_member WHERE fk_task IN(SELECT rowid FROM storieshelper_task WHERE fk_column IN(SELECT rowid FROM storieshelper_map_column WHERE fk_team IN(SELECT rowid FROM storieshelper_team WHERE fk_project = ?)))";
 
         // delete tasks
-        $sql .= "DELETE FROM task WHERE fk_column IN(SELECT rowid FROM map_column WHERE fk_team IN(SELECT rowid FROM team WHERE fk_project = ?))";
+        $sql .= "DELETE FROM storieshelper_task WHERE fk_column IN(SELECT rowid FROM storieshelper_map_column WHERE fk_team IN(SELECT rowid FROM storieshelper_team WHERE fk_project = ?))";
 
         // delete all map columns
-        $sql .= "DELETE FROM map_column WHERE fk_team IN(SELECT rowid FROM team WHERE fk_project = ?)";
+        $sql .= "DELETE FROM storieshelper_map_column WHERE fk_team IN(SELECT rowid FROM storieshelper_team WHERE fk_project = ?)";
 
         // delete all belongs_to
-        $sql .= "DELETE FROM belong_to WHERE fk_team IN (SELECT rowid FROM team WHERE fk_project = ?)";
+        $sql .= "DELETE FROM storieshelper_belong_to WHERE fk_team IN (SELECT rowid FROM storieshelper_team WHERE fk_project = ?)";
 
         // delete all teams
-        $sql .= "DELETE FROM team WHERE fk_project = ?";
+        $sql .= "DELETE FROM storieshelper_team WHERE fk_project = ?";
 
         // delete project
-        $sql .= "DELETE FROM project WHERE rowid = ?";
+        $sql .= "DELETE FROM storieshelper_project WHERE rowid = ?";
         $requete = $this->getBdd()->prepare($sql);
         $requete->execute([$this->rowid,$this->rowid,$this->rowid,$this->rowid,$this->rowid,$this->rowid,$this->rowid]);
     }

@@ -104,7 +104,7 @@ class Team extends Modele
     public function fetch(int $rowid)
     {
         $sql = "SELECT *"; 
-        $sql .= " FROM team";
+        $sql .= " FROM storieshelper_team";
         $sql .= " WHERE rowid = ?";
         
         $requete = $this->getBdd()->prepare($sql);
@@ -120,8 +120,8 @@ class Team extends Modele
 
         // fetch team users
         $sql = "SELECT u.rowid";
-        $sql .= " FROM user AS u";
-        $sql .= " LEFT JOIN belong_to AS b ON u.rowid = b.fk_user";
+        $sql .= " FROM storieshelper_user AS u";
+        $sql .= " LEFT JOIN storieshelper_belong_to AS b ON u.rowid = b.fk_user";
         $sql .= " WHERE b.fk_team = ?";
 
         $requete = $this->getBdd()->prepare($sql);
@@ -139,7 +139,7 @@ class Team extends Modele
 
         // fetch team / board columns
         $sql = "SELECT m.rowid";
-        $sql .= " FROM map_column AS m";
+        $sql .= " FROM storieshelper_map_column AS m";
         $sql .= " WHERE m.fk_team = ?";
         $sql .= " ORDER BY m.rank ASC";
 
@@ -157,89 +157,35 @@ class Team extends Modele
         }
     }
 
-    public function fetchByTeamIds(Array $teamIds)
-    {
-        $teamIds = implode("', '", $teamIds);
-
-        $sql = "SELECT t.rowid, t.name, t.fk_organization, t.fk_project, t.active";
-        $sql .= " FROM team AS t";
-        $sql .= " WHERE rowid IN ('$teamIds')";
-
-        $requete = $this->getBdd()->prepare($sql);
-        $requete->execute();
-
-        return $requete->fetchAll(PDO::FETCH_OBJ);
-    }
-
-    //* outdated, only used in detailsProjet, use instead $Project->getTeams()
-    public function fetchByProjectId($fk_project)
-    {
-        $sql = "SELECT t.rowid, t.name, t.fk_organization, t.fk_project, t.active";
-        $sql .= " FROM team AS t";
-        $sql .= " WHERE t.fk_project = ?";
-
-        $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$fk_project]);
-
-        return $requete->fetchAll(PDO::FETCH_OBJ);
-    }
-
     public function fetchMaxId()
     {
         $sql = "SELECT MAX(rowid) AS rowid";
-        $sql .= " FROM team";
+        $sql .= " FROM storieshelper_team";
 
         $requete = $this->getBdd()->prepare($sql);
         $requete->execute();
 
         return $requete->fetch(PDO::FETCH_OBJ);
     }
-    
-    public function countTasksTodo()
-    {
-        $counter = 0;
-        foreach($this->mapColumns as $MapColumn)
-        {
-            if($MapColumn->getName() == 'Ready')
-            {
-                $counter++;
-            }
-        }
-    }
-
-    public function countTasksInprogress()
-    {
-        $counter = 0;
-        foreach($this->mapColumns as $MapColumn)
-        {
-            if($MapColumn->getName() == 'In progress')
-            {
-                $counter++;
-            }
-        }
-    }
 
 
     // INSERT
 
-    public function create(string $name = null, int $fk_project = null)
+    public function create()
     {
-        $name = $name == null ? $this->name : $name; 
-        $fk_project = $fk_project == null ? $this->fk_project : $fk_project; 
-
-        $sql = "INSERT INTO team (name, fk_project, active)";
+        $sql = "INSERT INTO storieshelper_team (name, fk_project, active)";
         $sql .= " VALUES (?,?,?)";
 
         $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$name, $fk_project, 1]);
+        $requete->execute([$this->name, $this->fk_project, 1]);
         
         // get fk_team
-        $sql = "SELECT MAX(rowid) AS rowid FROM team";
+        $sql = "SELECT MAX(rowid) AS rowid FROM storieshelper_team";
         $requete = $this->getBdd()->prepare($sql);
         $requete->execute();
         $fk_team = $requete->fetch(PDO::FETCH_OBJ)->rowid;
 
-        $sql = "INSERT INTO map_column (name, fk_team, rank)";
+        $sql = "INSERT INTO storieshelper_map_column (name, fk_team, rank)";
         $sql .= " VALUES ('Open', ?, 0),('Ready', ?, 1),('In progress', ?, 2),('Closed', ?, 3)";
 
         $requete = $this->getBdd()->prepare($sql);
@@ -251,7 +197,7 @@ class Team extends Modele
 
     public function update()
     {
-        $sql = "UPDATE team";
+        $sql = "UPDATE storieshelper_team";
         $sql .= " SET";
         $sql .= " name = ?";
         $sql .= " ,fk_project = ?";
@@ -262,55 +208,97 @@ class Team extends Modele
         return $requete->execute([$this->name,$this->fk_project,$this->active,$this->rowid]);
     }
 
-    public function updateName($name, $teamId = null)
-    {
-        $teamId == null ? $teamId = $this->rowid : $teamId;
-
-        $sql = "UPDATE team";
-        $sql .= " SET name = ?";
-        $sql .= " WHERE rowid = ?";
-
-        $requete = $this->getBdd()->prepare($sql);
-        return $requete->execute([$name, $teamId]);
-    }
-
-    public function updateIdProject($idProject)
-    {
-        $sql = "UPDATE team"; 
-        $sql .= " SET fk_project = ?"; 
-        $sql .= " WHERE rowid = ?";
-
-        $requete = $this->getBdd()->prepare($sql);
-        return $requete->execute([$idProject, $this->rowid]);
-    }
-
-    public function updateActive($active, $teamId = null)
-    {
-        $teamId == null ? $teamId = $this->rowid : $teamId;
-
-        $sql = "UPDATE team";
-        $sql .= " SET active = ?"; 
-        $sql .= " WHERE rowid = ?";
-
-        $requete = $this->getBdd()->prepare($sql);
-        return $requete->execute([$active, $teamId]);
-    }
-
-
     // DELETE
 
-    public function delete($teamId = null)
+    public function delete()
     {
-        $teamId = $teamId == null ? $this->rowid : $teamId;
-
-        $sql = "DELETE FROM team WHERE rowid = ?;";
-        $sql .= "DELETE FROM belong_to WHERE fk_team = ?;";
-        $sql .= "DELETE FROM task_comment WHERE fk_task IN (SELECT rowid FROM tasks WHERE fk_column IN (SELECT rowid FROM map_column WHERE fk_team = ?));";
-        $sql .= "DELETE FROM task_member WHERE fk_task IN (SELECT rowid FROM tasks WHERE fk_column IN (SELECT rowid FROM map_column WHERE fk_team = ?));";
-        $sql .= "DELETE FROM tasks WHERE fk_column IN (SELECT rowid FROM map_column WHERE fk_team = ?);";
-        $sql .= "DELETE FROM map_column WHERE fk_team = ?;";
+        $sql = "DELETE FROM storieshelper_team WHERE rowid = ?;";
+        $sql .= "DELETE FROM storieshelper_belong_to WHERE fk_team = ?;";
+        $sql .= "DELETE FROM storieshelper_task_comment WHERE fk_task IN (SELECT rowid FROM storieshelper_task WHERE fk_column IN (SELECT rowid FROM storieshelper_map_column WHERE fk_team = ?));";
+        $sql .= "DELETE FROM storieshelper_task_member WHERE fk_task IN (SELECT rowid FROM storieshelper_task WHERE fk_column IN (SELECT rowid FROM storieshelper_map_column WHERE fk_team = ?));";
+        $sql .= "DELETE FROM storieshelper_tasks WHERE fk_column IN (SELECT rowid FROM storieshelper_map_column WHERE fk_team = ?);";
+        $sql .= "DELETE FROM storieshelper_map_column WHERE fk_team = ?;";
         
         $requete = $this->getBdd()->prepare($sql);
-        return $requete->execute([$teamId,$teamId,$teamId,$teamId,$teamId,$teamId]);
+        return $requete->execute([$this->rowid,$this->rowid,$this->rowid,$this->rowid,$this->rowid,$this->rowid]);
+    }
+
+    // METHODS
+
+    /**
+     * Check if the task belongs to this Team
+     * @param int fk_task the task to check
+     * @return bool true OK, false KO
+     */
+    public function checkTask(int $fk_task)
+    {
+        foreach($this->mapColumns as $MapColumn)
+        {
+            foreach($MapColumn->getTasks() as $Task)
+            {
+                if($Task->getRowid() == $fk_task)
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Check if the taskComment belongs to this Team
+     * @param int fk_comment the comment to check
+     * @return bool true OK, false KO
+     */
+    public function checkTaskComment(int $fk_comment)
+    {
+        foreach($this->mapColumns as $MapColumn)
+        {
+            foreach($MapColumn->getTasks() as $Task)
+            {
+                foreach($Task->getComments() as $Comment)
+                {
+                    if($Comment->getRowid() == $fk_comment)
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Check if the user belongs to this Team
+     * @param int fk_user the user to check
+     * @return bool true OK, false KO
+     */
+    public function checkUser(int $fk_user)
+    {
+        foreach($this->users as $User)
+        {
+            if($User->getRowid() == $fk_user)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Check if the column belongs to this Team
+     * @param int fk_column the column to check
+     * @return bool true OK, false KO
+     */
+    public function checkColumn(int $fk_column)
+    {
+       foreach($this->mapColumns as $Column)
+       {
+           if($Column->getRowid() == $fk_column)
+           {
+               return true;
+           }
+       }
+        return false;
     }
 }

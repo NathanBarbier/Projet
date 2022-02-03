@@ -8,10 +8,10 @@ $idOrganization = $_SESSION["idOrganization"] ?? false;
 
 if($rights === "user")
 {    
-    $action = GETPOST('action');
-    $firstname = GETPOST('firstname');
-    $lastname = GETPOST('lastname');
-    $email = GETPOST('email');
+    $action = htmlentities(GETPOST('action'));
+    $firstname = htmlentities(GETPOST('firstname'));
+    $lastname = htmlentities(GETPOST('lastname'));
+    $email = htmlentities(GETPOST('email'));
     $success = GETPOST('success');
     $errors = GETPOST("errors");
 

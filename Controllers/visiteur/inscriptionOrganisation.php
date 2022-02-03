@@ -5,13 +5,14 @@ require_once "../../services/header.php";
 $rights = $_SESSION["rights"] ?? false;
 $idUser = $_SESSION["idUser"] ?? false;
 
-$action = GETPOST('action');
+$action = htmlentities(GETPOST('action'));
 $envoi = GETPOST('envoi');
-$email = GETPOST('email');
-$name = GETPOST('name');
-$pwd = GETPOST('pwd');
-$pwd2 = GETPOST('pwd2');
-$consent = GETPOST('consent');
+$email = htmlentities(GETPOST('email'));
+$name = htmlentities(GETPOST('name'));
+$pwd = htmlentities(GETPOST('pwd'));
+$pwd2 = htmlentities(GETPOST('pwd2'));
+$consent = htmlentities(GETPOST('consent'));
+
 if ($consent == "on")
 {
     $consent = true;

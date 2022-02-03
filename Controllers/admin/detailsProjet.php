@@ -10,13 +10,13 @@ if($rights === "admin")
 {
     $tpl = "detailsProjet.php";
 
-    $action = GETPOST('action');
+    $action = htmlentities(GETPOST('action'));
     $idProject = intval(GETPOST('idProject'));
-    $projectName = GETPOST('projectName');
-    $description = GETPOST('description');
-    $type = GETPOST('type');
-    $teamName = GETPOST('teamName');
-    $teamNameUpdate = GETPOST('teamNameUpdate');
+    $projectName = htmlentities(GETPOST('projectName'));
+    $description = htmlentities(GETPOST('description'));
+    $type = htmlentities(GETPOST('type'));
+    $teamName = htmlentities(GETPOST('teamName'));
+    $teamNameUpdate = htmlentities(GETPOST('teamNameUpdate'));
     $teamId = intval(GETPOST('teamId'));
     $errors = GETPOST('errors');
 

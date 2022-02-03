@@ -13,7 +13,7 @@ Class LogHistory extends Modele
         if($rowid != null)
         {
             $sql = "SELECT rowid, fk_author, date_creation, action, object_type, object_name, admin, fk_organization";
-            $sql .= " FROM log_history";
+            $sql .= " FROM storieshelper_log_history";
             $sql .= " WHERE rowid = ?";
 
             $requete = $this->getBdd()->prepare($sql);
@@ -120,7 +120,7 @@ Class LogHistory extends Modele
         $rowid = $rowid == null ? $this->rowid : $rowid;
 
         $sql = "SELECT rowid, fk_author, date_creation, action, object_type, object_name, admin, fk_organisation";
-        $sql .= " FROM log_history";
+        $sql .= " FROM storieshelper_log_history";
         $sql .= " WHERE rowid = ?";
 
         $requete = $this->getBdd()->prepare($sql);
@@ -142,7 +142,7 @@ Class LogHistory extends Modele
         $fk_organization = $fk_organization == null ? $this->fk_organization : $fk_organization;
 
         $sql = "SELECT rowid, fk_author, date_creation, action, object_type, object_name, admin, fk_organisation";
-        $sql .= " FROM log_history";
+        $sql .= " FROM storieshelper_log_history";
         $sql .= " WHERE fk_organization = ?";
 
         $requete = $this->getBdd()->prepare($sql);
@@ -154,7 +154,7 @@ Class LogHistory extends Modele
 
     public static function create($fk_author, $action, $object_type, $object_name, $value = null)
     {
-        $sql = "INSERT INTO log_history (fk_author, date_creation, action, object_type, object_name, value)";
+        $sql = "INSERT INTO storieshelper_log_history (fk_author, date_creation, action, object_type, object_name, value)";
         $sql .= " VALUES (?, NOW(),?,?,?,?)";
 
         $PDO = new PDO('mysql:host=localhost;dbname=storieshelper;charset=UTF8', 'root');
@@ -164,7 +164,7 @@ Class LogHistory extends Modele
 
     public function delete($rowid)
     {
-        $sql = "DELETE FROM log_history";
+        $sql = "DELETE FROM storieshelper_log_history";
         $sql .= " WHERE rowid = ?";
 
         $requete = $this->getBdd()->prepare($sql);

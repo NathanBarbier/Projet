@@ -49,46 +49,6 @@ class Organization extends Modele
         return $this->projects;
     }
 
-    public function getMaxIdUser()
-    {
-        return max(array_map(function($user) {
-            return $user->rowid;
-        }, $this->users));
-    }
-
-    public function getMaxIdProject()
-    {
-        return max(array_map(function($project) {
-            return $project->rowid;
-        }, $this->projects));
-    }
-
-    public function countActiveProjects()
-    {
-        $counter = 0;
-        foreach(array_column($this->projects, 'active') as $value)
-        {
-            if($value == 1)
-            {
-                $counter++;
-            }
-        }
-        return $counter;
-    }
-
-    public function countArchivedProjects()
-    {
-        $counter = 0;
-        foreach(array_column($this->projects, 'active') as $value)
-        {
-            if($value == 0)
-            {
-                $counter++;
-            }
-        }
-        return $counter;
-    }
-
     public function removeUser(int $fk_user)
     {
         foreach($this->users as $key => $User)
@@ -104,7 +64,7 @@ class Organization extends Modele
 
     public function create()
     {
-        $sql = "INSERT INTO organization (name)";
+        $sql = "INSERT INTO storieshelper_organization (name)";
         $sql .= " VALUES (?)";
 
         $requete = $this->getBdd()->prepare($sql);
@@ -129,31 +89,31 @@ class Organization extends Modele
     public function delete()
     {
         // delete task comments
-        $sql = "DELETE FROM task_comment tc INNER JOIN task tk ON tk.rowid = tc.fk_task INNER JOIN map_column mc ON mc.rowid = tk.fk_column INNER JOIN team tm ON tm.rowid = mc.fk_team INNER JOIN project p ON p.rowid = tm.fk_project INNER JOIN organization o ON o.rowid = p.fk_organization WHERE o.rowid = ?;";
+        $sql = "DELETE FROM storieshelper_task_comment tc INNER JOIN storieshelper_task tk ON tk.rowid = tc.fk_task INNER JOIN storieshelper_map_column mc ON mc.rowid = tk.fk_column INNER JOIN storieshelper_team tm ON tm.rowid = mc.fk_team INNER JOIN storieshelper_project p ON p.rowid = tm.fk_project INNER JOIN storieshelper_organization o ON o.rowid = p.fk_organization WHERE o.rowid = ?;";
         
         // delete task member
-        $sql .= "DELETE FROM task_member tm INNER JOIN task tk ON tk.rowid = tm.fk_task INNER JOIN map_column mc ON mc.rowid = tk.fk_column INNER JOIN team tm ON tm.rowid = mc.fk_team INNER JOIN project p ON p.rowid = tm.fk_project INNER JOIN organization o ON o.rowid = p.fk_organization WHERE o.rowid = ?;";
+        $sql .= "DELETE FROM storieshelper_task_member tm INNER JOIN storieshelper_task tk ON tk.rowid = tm.fk_task INNER JOIN storieshelper_map_column mc ON mc.rowid = tk.fk_column INNER JOIN storieshelper_team tm ON tm.rowid = mc.fk_team INNER JOIN storieshelper_project p ON p.rowid = tm.fk_project INNER JOIN storieshelper_organization o ON o.rowid = p.fk_organization WHERE o.rowid = ?;";
 
         // delete tasks
-        $sql .= "DELETE FROM task tk ON INNER JOIN map_column mc ON mc.rowid = tk.fk_column INNER JOIN team tm ON tm.rowid = mc.fk_team INNER JOIN project p ON p.rowid = tm.fk_project INNER JOIN organization o ON o.rowid = p.fk_organization WHERE o.rowid = ?;";
+        $sql .= "DELETE FROM storieshelper_task tk ON INNER JOIN storieshelper_map_column mc ON mc.rowid = tk.fk_column INNER JOIN storieshelper_team tm ON tm.rowid = mc.fk_team INNER JOIN storieshelper_project p ON p.rowid = tm.fk_project INNER JOIN storieshelper_organization o ON o.rowid = p.fk_organization WHERE o.rowid = ?;";
 
         // delete all map columns
-        $sql .= "DELETE FROM map_column mc INNER JOIN team tm ON tm.rowid = mc.fk_team INNER JOIN project p ON p.rowid = tm.fk_project INNER JOIN organization o ON o.rowid = p.fk_organization WHERE o.rowid = ?;";
+        $sql .= "DELETE FROM storieshelper_map_column mc INNER JOIN storieshelper_team tm ON tm.rowid = mc.fk_team INNER JOIN storieshelper_project p ON p.rowid = tm.fk_project INNER JOIN storieshelper_organization o ON o.rowid = p.fk_organization WHERE o.rowid = ?;";
 
         // delete all belongs_to
-        $sql .= "DELETE FROM belong_to bt INNER JOIN team tm ON tm.rowid = bt.fk_team INNER JOIN project p ON p.rowid = tm.fk_project INNER JOIN organization o ON o.rowid = p.fk_organization WHERE o.rowid = ?;";
+        $sql .= "DELETE FROM storieshelper_belong_to bt INNER JOIN storieshelper_team tm ON tm.rowid = bt.fk_team INNER JOIN storieshelper_project p ON p.rowid = tm.fk_project INNER JOIN storieshelper_organization o ON o.rowid = p.fk_organization WHERE o.rowid = ?;";
 
         // delete all teams
-        $sql .= "DELETE FROM team tm INNER JOIN project p ON p.rowid = tm.fk_project INNER JOIN organization o ON o.rowid = p.fk_organization WHERE o.rowid = ?;";
+        $sql .= "DELETE FROM storieshelper_team tm INNER JOIN storieshelper_project p ON p.rowid = tm.fk_project INNER JOIN storieshelper_organization o ON o.rowid = p.fk_organization WHERE o.rowid = ?;";
 
         // delete projects
-        $sql .= "DELETE FROM project p INNER JOIN organization o ON o.rowid = p.fk_organization WHERE o.rowid = ?;";
+        $sql .= "DELETE FROM storieshelper_project p INNER JOIN storieshelper_organization o ON o.rowid = p.fk_organization WHERE o.rowid = ?;";
 
         // delete all users
-        $sql .= "DELETE FROM user WHERE fk_organization = ?;";
+        $sql .= "DELETE FROM storieshelper_user WHERE fk_organization = ?;";
         
         // delete organization
-        $sql .= "DELETE FROM organization WHERE rowid = ?;";
+        $sql .= "DELETE FROM storieshelper_organization WHERE rowid = ?;";
 
         $requete = $this->getBdd()->prepare($sql);
         $requete->execute([$this->rowid,$this->rowid,$this->rowid,$this->rowid,$this->rowid,$this->rowid,$this->rowid,$this->rowid,$this->rowid]);
@@ -169,7 +129,7 @@ class Organization extends Modele
         $rowid = $rowid == null ? $this->rowid : $rowid;
 
         $sql = "SELECT *";
-        $sql .= " FROM organization";
+        $sql .= " FROM storieshelper_organization";
         $sql .= " WHERE rowid = ?";
 
         $requete = $this->getBdd()->prepare($sql);
@@ -197,7 +157,7 @@ class Organization extends Modele
     public function fetchUsers()
     {
         $sql = "SELECT rowid";
-        $sql .= " FROM user";
+        $sql .= " FROM storieshelper_user";
         $sql .= " WHERE fk_organization = ?";
 
         $requete = $this->getBdd()->prepare($sql);
@@ -214,7 +174,7 @@ class Organization extends Modele
     public function fetchProjects()
     {
         $sql = "SELECT p.rowid";
-        $sql .= " FROM project AS p";
+        $sql .= " FROM storieshelper_project AS p";
         $sql .= " WHERE p.fk_organization = ?";
 
         $requete = $this->getBdd()->prepare($sql);
@@ -247,7 +207,7 @@ class Organization extends Modele
     public function fetch_last_insert_id()
     {
         $sql = "SELECT MAX(rowid) as rowid";
-        $sql .= " FROM organization";
+        $sql .= " FROM storieshelper_organization";
 
         $requete = $this->getBdd()->prepare($sql);
         $requete->execute();
@@ -261,7 +221,7 @@ class Organization extends Modele
     public function checkByName($name)
     {
         $sql = "SELECT *";
-        $sql .= " FROM organization";
+        $sql .= " FROM storieshelper_organization";
         $sql .= " WHERE name = ?";
 
         $requete = $this->getBdd()->prepare($sql);

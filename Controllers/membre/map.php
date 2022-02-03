@@ -8,7 +8,7 @@ $idUser = $_SESSION["idUser"] ?? null;
 
 if($rights == 'user')
 {
-    $action = GETPOST('action');
+    $action = htmlentities(GETPOST('action'));
     $projectId = intval(GETPOST('projectId'));
     $teamId = intval(GETPOST('teamId'));
 

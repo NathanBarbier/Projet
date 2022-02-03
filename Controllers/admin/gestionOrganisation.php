@@ -11,14 +11,14 @@ if($rights === "admin")
     $Organization = new Organization($idOrganization);
     $User = new User($idUser);
 
-    $action = GETPOST('action');
+    $action = htmlentities(GETPOST('action'));
     $envoi = GETPOST('envoi');
-    $oldPwd = GETPOST('oldpwd');
-    $newPwd = GETPOST('newpwd');
-    $newPwd2 = GETPOST('newpwd2');
-    $email = GETPOST('email');
-    $firstname = GETPOST('firstname');
-    $lastname = GETPOST('lastname');
+    $oldPwd = htmlentities(GETPOST('oldpwd'));
+    $newPwd = htmlentities(GETPOST('newpwd'));
+    $newPwd2 = htmlentities(GETPOST('newpwd2'));
+    $email = htmlentities(GETPOST('email'));
+    $firstname = htmlentities(GETPOST('firstname'));
+    $lastname = htmlentities(GETPOST('lastname'));
 
     $tpl = "gestionOrganisation.php";
 

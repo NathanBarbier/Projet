@@ -12,6 +12,7 @@ class User extends Modele
     protected $BelongsTo;
     protected $consent;
     protected $admin;
+    protected $token;
 
     public function __construct($rowid = null)
     {
@@ -23,12 +24,17 @@ class User extends Modele
 
     // SETTER
 
-    public function setFirstname($firstname)
+    public function setRowid(int $rowid)
+    {
+        $this->rowid = $rowid;
+    }
+
+    public function setFirstname(string $firstname)
     {
         $this->firstname = $firstname;
     }
 
-    public function setLastname($lastname)
+    public function setLastname(string $lastname)
     {
         $this->lastname = $lastname;
     }
@@ -67,6 +73,10 @@ class User extends Modele
         $this->admin = $admin;
     }
 
+    public function setToken(string $token)
+    {
+        $this->token = $token;
+    }
 
     // GETTER
 
@@ -133,7 +143,7 @@ class User extends Modele
     public function checkByEmail(string $email)
     {
         $sql = "SELECT u.email";
-        $sql .= " FROM user AS u"; 
+        $sql .= " FROM storieshelper_user AS u"; 
         $sql .= " WHERE u.email = ?";
 
         $requete = $this->getBdd()->prepare($sql);
@@ -152,7 +162,7 @@ class User extends Modele
     public function checkToken($idUser, $token)
     {
         $sql = "SELECT *";
-        $sql .= " FROM user";
+        $sql .= " FROM storieshelper_user";
         $sql .= " WHERE rowid = ?";
         $sql .= " AND token = ?";
 
@@ -174,7 +184,7 @@ class User extends Modele
     public function fetch(int $rowid)
     {
         $sql = "SELECT *"; 
-        $sql .= " FROM user"; 
+        $sql .= " FROM storieshelper_user"; 
         $sql .= " WHERE rowid = ?";
 
         $requete = $this->getBdd()->prepare($sql);
@@ -204,7 +214,7 @@ class User extends Modele
     public function fetch_last_insert_id()
     {
         $sql = "SELECT MAX(rowid) as rowid";
-        $sql .= " FROM user";
+        $sql .= " FROM storieshelper_user";
 
         $requete = $this->getBdd()->prepare($sql);
         $requete->execute();
@@ -223,9 +233,9 @@ class User extends Modele
     public function fetchFreeUsersByProjectId(int $projectId, int $idOrganization)
     {
         $sql = "SELECT u.rowid";
-        $sql .= " FROM user AS u";
-        $sql .= " LEFT JOIN belong_to AS b ON u.rowid = b.fk_user";
-        $sql .= " LEFT JOIN teams AS t ON b.fk_team = t.rowid";
+        $sql .= " FROM storieshelper_user AS u";
+        $sql .= " LEFT JOIN storieshelper_belong_to AS b ON u.rowid = b.fk_user";
+        $sql .= " LEFT JOIN storieshelper_team AS t ON b.fk_team = t.rowid";
         $sql .= " WHERE t.fk_project = ?";
 
         $requete = $this->getBdd()->prepare($sql);
@@ -242,10 +252,10 @@ class User extends Modele
         $notFreeUsers = implode("', '", $notFreeUsers);
         
         $sql = "SELECT u.rowid, u.lastname, u.firstname, u.birth, u.password, u.email, u.fk_organization";
-        $sql .= " FROM user AS u";
+        $sql .= " FROM storieshelper_user AS u";
         $sql .= " WHERE u.rowid NOT IN(";
         $sql .= " SELECT rowid";
-        $sql .= " FROM user";
+        $sql .= " FROM storieshelper_user";
 
         $sql .= " WHERE rowid IN ('".$notFreeUsers."') )"; 
         $sql .= " AND u.fk_organization = ?";
@@ -256,24 +266,10 @@ class User extends Modele
         return $requete->fetchAll(PDO::FETCH_OBJ);
     }
 
-    //* outdated, use instead $Project->getTeams()->getUsers()
-    public function fetchByTeam($idTeam)
-    {
-        $sql = "SELECT u.rowid, u.lastname, u.firstname, u.birth, u.password, u.email, u.fk_organization"; 
-        $sql .= " FROM user AS u";
-        $sql .= " LEFT JOIN belong_to AS b ON u.rowid = b.fk_user" ;
-        $sql .= " WHERE b.fk_team = ?";
-        
-        $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$idTeam]);
-
-        return $requete->fetchAll(PDO::FETCH_OBJ);
-    }
-
     public function fetchByEmail($email)
     {
         $sql = "SELECT *"; 
-        $sql .= " FROM user"; 
+        $sql .= " FROM storieshelper_user"; 
         $sql .= " WHERE email = ?";
 
         $requete = $this->getBdd()->prepare($sql);
@@ -307,25 +303,11 @@ class User extends Modele
         }
     }
 
-    public function fetchByIds(array $usersIds)
-    {
-        $usersIds = implode("', '", $usersIds);
-
-        $sql = "SELECT *";
-        $sql .= " FROM user";
-        $sql .= " WHERE rowid IN ('".$usersIds."')";
-
-        $requete = $this->getBdd()->prepare($sql);
-        $requete->execute();
-
-        return $requete->fetchAll(PDO::FETCH_OBJ);
-    }
-
     // INSERT
 
     public function create()
     {      
-        $sql = "INSERT INTO user (lastname, firstname, birth, email, fk_organization, password, consent, admin) ";
+        $sql = "INSERT INTO storieshelper_user (lastname, firstname, birth, email, fk_organization, password, consent, admin) ";
         $sql .= "VALUES (?,?,?,?,?,?,?,?)";
         $requete = $this->getBdd()->prepare($sql);
 
@@ -337,7 +319,7 @@ class User extends Modele
 
     public function update()
     {
-        $sql = "UPDATE user";
+        $sql = "UPDATE storieshelper_user";
         $sql .= " SET";
         $sql .= " firstname = ?";
         $sql .= " , lastname = ?";
@@ -350,17 +332,15 @@ class User extends Modele
         return $requete->execute([$this->firstname,$this->lastname,$this->email,$this->password,$this->birth,$this->rowid]);
     }
 
-    public function updateConsent($Consent, int $rowid = null)
+    public function updateConsent()
     {
-        $idUser = $this->rowid ? $this->rowid : $rowid;
-
-        $sql = "UPDATE user";
+        $sql = "UPDATE storieshelper_user";
         $sql .= " SET consent = ?,";
         $sql .= " consent_date = NOW()";
         $sql .= " WHERE rowid = ?";
 
         $requete = $this->getBdd()->prepare($sql);
-        return $requete->execute([$Consent, $rowid]);
+        return $requete->execute([$this->consent, $this->rowid]);
     }
 
 
@@ -368,7 +348,7 @@ class User extends Modele
 
     public function delete()
     {
-        $sql = "DELETE FROM user WHERE rowid = ?";
+        $sql = "DELETE FROM storieshelper_user WHERE rowid = ?";
         //* on trigger
         // $sql .= "DELETE FROM task_member WHERE fk_user = ?;";
         // $sql .= "DELETE FROM task_comment WHERE fk_user = ?;";
@@ -378,13 +358,13 @@ class User extends Modele
         return $requete->execute([$this->rowid, $this->rowid, $this->rowid, $this->rowid]);
     }
     
-    public function addCookie($idUser, $token)
+    public function updateToken()
     {
-        $sql = "UPDATE user";
+        $sql = "UPDATE storieshelper_user";
         $sql .= " SET token = ?";
         $sql .= " WHERE rowid = ?";
 
         $requete = $this->getBdd()->prepare($sql);
-        return $requete->execute([$token, $idUser]);
+        return $requete->execute([$this->token, $this->rowid]);
     }
 }

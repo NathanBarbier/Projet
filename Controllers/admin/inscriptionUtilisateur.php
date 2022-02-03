@@ -2,43 +2,43 @@
 //import all models
 require_once "../../services/header.php";
 
-// Import PHPMailer classes into the global namespace 
-use PHPMailer\PHPMailer\PHPMailer; 
-use PHPMailer\PHPMailer\Exception; 
- 
 require_once PHP_MAILER_PATH.'Exception.php'; 
 require_once PHP_MAILER_PATH.'PHPMailer.php'; 
 require_once PHP_MAILER_PATH.'SMTP.php';
 
-$mail = new PHPMailer; 
- 
-$mail->isSMTP();                      // Set mailer to use SMTP 
-$mail->Host = 'smtp.gmail.com';       // Specify main and backup SMTP servers 
-$mail->SMTPAuth = true;               // Enable SMTP authentication 
-$mail->Username = 'storiesHelperSignUp@gmail.com';   // SMTP username 
-$mail->Password = 'unsecurepassword';   // SMTP password 
-$mail->SMTPSecure = 'tls';            // Enable TLS encryption, `ssl` also accepted 
-$mail->Port = 587;                    // TCP port to connect to 
-
-// Sender info 
-$mail->setFrom('storiesHelperSignUp@gmail.com', 'storiesHelper'); 
-$mail->addReplyTo('storiesHelperSignUp@gmail.com', 'storiesHelper'); 
+// Import PHPMailer classes into the global namespace 
+use PHPMailer\PHPMailer\PHPMailer; 
+use PHPMailer\PHPMailer\Exception; 
 
 $rights = $_SESSION["rights"] ?? false;
 $idOrganization = $_SESSION["idOrganization"] ?? false;
 
 if($rights === "admin")
 {
-    $action = GETPOST('action');
+    $mail = new PHPMailer; 
+    
+    $mail->isSMTP();                      // Set mailer to use SMTP 
+    $mail->Host = 'smtp.gmail.com';       // Specify main and backup SMTP servers 
+    $mail->SMTPAuth = true;               // Enable SMTP authentication 
+    $mail->Username = 'storiesHelperSignUp@gmail.com';   // SMTP username 
+    $mail->Password = 'unsecurepassword';   // SMTP password 
+    $mail->SMTPSecure = 'tls';            // Enable TLS encryption, `ssl` also accepted 
+    $mail->Port = 587;                    // TCP port to connect to 
+
+    // Sender info 
+    $mail->setFrom('storiesHelperSignUp@gmail.com', 'storiesHelper'); 
+    $mail->addReplyTo('storiesHelperSignUp@gmail.com', 'storiesHelper'); 
+
+    $action = htmlentities(GETPOST('action'));
     $idUser = intval(GETPOST('idUser'));
     $envoi = GETPOST('envoi');
-    $firstname = GETPOST('firstname');
-    $lastname = GETPOST('lastname');
-    $email = GETPOST('email');
-    $birth = GETPOST('birth');
-    $oldpwd = GETPOST('oldpassword');
-    $newpwd = GETPOST('newpassword');
-    $newpwd = GETPOST('newpassword2');
+    $firstname = htmlentities(GETPOST('firstname'));
+    $lastname = htmlentities(GETPOST('lastname'));
+    $email = htmlentities(GETPOST('email'));
+    $birth = htmlentities(GETPOST('birth'));
+    $oldpwd = htmlentities(GETPOST('oldpassword'));
+    $newpwd = htmlentities(GETPOST('newpassword'));
+    $newpwd = htmlentities(GETPOST('newpassword2'));
 
     $User = new User();
 

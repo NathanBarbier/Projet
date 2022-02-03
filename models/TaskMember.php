@@ -73,7 +73,7 @@ Class TaskMember extends Modele
 
     public function create()
     {
-        $sql = "INSERT INTO task_member";
+        $sql = "INSERT INTO storieshelper_task_member";
         $sql .= " (fk_user, fk_task)";
         $sql .= " VALUES (?,?)";
 
@@ -81,39 +81,11 @@ Class TaskMember extends Modele
         return $requete->execute([$this->fk_user,$this->fk_task]);
     }
 
-
-    // UPDATE
-
-    public function updateFk_user($fk_user, $rowid = null)
-    {
-        $rowid = $rowid == null ? $this->rowid : $rowid;
-
-        $sql = "UPDATE tasks_members";
-        $sql .= " SET fk_user = ?";
-        $sql .= " WHERE rowid = ?";
-
-        $requete = $this->getBdd()->prepare($sql);
-        return $requete->execute([$fk_user, $rowid]);
-    }
-
-    public function updateFk_task($fk_task, $rowid = null)
-    {
-        $rowid = $rowid == null ? $this->rowid : $rowid;
-
-        $sql = "UPDATE tasks_members";
-        $sql .= " SET fk_task = ?";
-        $sql .= " WHERE rowid = ?";
-
-        $requete = $this->getBdd()->prepare($sql);
-        return $requete->execute([$fk_task, $rowid]);
-    }
-
-
     // DELETE
 
     public function delete()
     {
-        $sql = "DELETE FROM task_member";
+        $sql = "DELETE FROM storieshelper_task_member";
         $sql .= " WHERE fk_task = ".$this->fk_task." AND fk_user = ".$this->fk_user;
 
         $requete = $this->getBdd()->prepare($sql);
@@ -125,7 +97,7 @@ Class TaskMember extends Modele
     public function fetchByTaskId(int $fk_task)
     {
         $sql = "SELECT t.fk_user";
-        $sql .= " FROM task_member AS t";
+        $sql .= " FROM storieshelper_task_member AS t";
         $sql .= " WHERE t.fk_task = ?";
         echo json_encode($fk_task);
 
@@ -142,18 +114,6 @@ Class TaskMember extends Modele
             // $this->User = new User($obj->fk_user);
             // $this->Task = new Task($obj->fk_task);
         }
-    }
-
-    public function fetchAll($fk_task)
-    {
-        $sql = "SELECT t.rowid, t.fk_user, t.fk_task";
-        $sql .= " FROM tasks_members AS t";
-        $sql .= " WHERE fk_task = ?";
-
-        $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$fk_task]);
-
-        return $requete->fetchAll(PDO::FETCH_OBJ);
     }
 }
 ?>

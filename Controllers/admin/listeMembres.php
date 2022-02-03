@@ -7,19 +7,18 @@ $idOrganization = $_SESSION["idOrganization"] ?? false;
 
 if($rights === "admin")
 {
-    $action = GETPOST('action');
+    $action = htmlentities(GETPOST('action'));
     $idUser = intval(GETPOST('idUser'));
     $envoi = GETPOST('envoi');
 
-    $firstname = GETPOST('firstname');
-    $lastname = GETPOST('lastname');
-    $email = GETPOST('email');
-    $idEquipe = intval(GETPOST('idEquipe'));
-    $birth = GETPOST('birth');
+    $firstname = htmlentities(GETPOST('firstname'));
+    $lastname = htmlentities(GETPOST('lastname'));
+    $email = htmlentities(GETPOST('email'));
+    $birth = htmlentities(GETPOST('birth'));
 
-    $oldmdp = GETPOST('oldmdp');
-    $newmdp = GETPOST('newmdp');
-    $newmdp2 = GETPOST('newmdp2');
+    $oldmdp = htmlentities(GETPOST('oldmdp'));
+    $newmdp = htmlentities(GETPOST('newmdp'));
+    $newmdp2 = htmlentities(GETPOST('newmdp2'));
 
     $Organization = new Organization($idOrganization);
 

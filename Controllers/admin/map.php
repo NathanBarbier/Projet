@@ -8,7 +8,7 @@ $idUser = $_SESSION["idUser"] ?? null;
 
 if($rights == 'admin')
 {
-    $action = GETPOST('action');
+    $action = htmlentities(GETPOST('action'));
     $projectId = intval(GETPOST('projectId'));
     $teamId = intval(GETPOST('teamId'));
 
@@ -156,6 +156,7 @@ if($rights == 'admin')
         ?>
         <script>
         var teamId = <?php echo json_encode($Team->getRowid()); ?>;
+        var projectId = <?php echo json_encode($Project->getRowid()); ?>;
         var notificationCount = <?php echo json_encode($notificationCount); ?>;
         const username = <?php echo json_encode($username); ?>;
         const idOrganization = <?php echo json_encode($idOrganization); ?>;

@@ -30,8 +30,8 @@ if($rights === 'needConsent' && $idUser)
     if($action == "giveConsent")
     {
         try {
-            $consent = true;
-            $status = $User->updateConsent($consent);
+            $User->setConsent(true);
+            $User->updateConsent();
             $_SESSION["rights"] = $User->isAdmin() ? 'admin' : 'user';
             header('location:'.ROOT_URL.'index.php');
             exit;

@@ -49,9 +49,7 @@ if($envoi)
                 $User->fetchByEmail($email);
 
                 if(password_verify($password, $User->getPassword()))
-                {
-                    $consent = $User->getConsent();
-                    
+                {                    
                     $_SESSION["idUser"] = intval($User->getRowid());
                     $_SESSION["idOrganization"] = intval($User->getFk_organization());
 
@@ -65,8 +63,10 @@ if($envoi)
                         );
                     }
 
-                    $User->addCookie($User->getRowid(), $token);
-                    
+                    $User->setToken($token);
+                    $User->updateToken();
+
+                    $consent = $User->getConsent();
                     if($consent == true)
                     {
                         $_SESSION["rights"] = $User->isAdmin() == 1 ? "admin" : "user";

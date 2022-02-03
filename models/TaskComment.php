@@ -84,7 +84,7 @@ class TaskComment extends Modele
         $date = new DateTime();
         $tms = $date->getTimestamp();
 
-        $sql = "INSERT INTO task_comment";
+        $sql = "INSERT INTO storieshelper_task_comment";
         $sql .= " (fk_task, note, fk_user, tms)";
         $sql .= " VALUES (?,?,?,?)";
 
@@ -99,7 +99,7 @@ class TaskComment extends Modele
 
     public function update()
     {
-        $sql = "UPDATE task_comment";
+        $sql = "UPDATE storieshelper_task_comment";
         $sql .= " SET note = ?";
         $sql .= " WHERE rowid = ?";
 
@@ -114,32 +114,11 @@ class TaskComment extends Modele
     {
         $rowid = $rowid == null ? $this->rowid : $rowid;
 
-        $sql = "DELETE FROM task_comment";
+        $sql = "DELETE FROM storieshelper_task_comment";
         $sql .= " WHERE rowid = ?";
 
         $requete = $this->getBdd()->prepare($sql);
         return $requete->execute([$rowid]);
-    }
-
-    public function deleteByColumnId($fk_column)
-    {
-        $sql = "DELETE FROM task_comment";
-        $sql .= " WHERE fk_task IN";
-        $sql .= " (SELECT t.rowid";
-        $sql .= " FROM tasks AS t";
-        $sql .= " WHERE fk_column = ?)";
-
-        $requete = $this->getBdd()->prepare($sql);
-        return $requete->execute([$fk_column]);
-    }
-
-    public function deleteByTaskId($fk_task)
-    {
-        $sql = "DELETE FROM task_comment";
-        $sql .= " WHERE fk_task = ?";
-
-        $requete = $this->getBdd()->prepare($sql);
-        return $requete->execute([$fk_task]);
     }
 
 
@@ -150,7 +129,7 @@ class TaskComment extends Modele
         $rowid = $rowid == null ? $this->rowid : $rowid;
 
         $sql = "SELECT t.rowid, t.fk_task, t.note, t.fk_user, t.tms";
-        $sql .= " FROM task_comment AS t";
+        $sql .= " FROM storieshelper_task_comment AS t";
         $sql .= " WHERE rowid = ?";
 
         $requete = $this->getBdd()->prepare($sql);
@@ -179,7 +158,7 @@ class TaskComment extends Modele
     public function fetch_last_insert_id()
     {
         $sql = "SELECT MAX(rowid) AS rowid";
-        $sql .= " FROM task_comment";
+        $sql .= " FROM storieshelper_task_comment";
 
         $requete = $this->getBdd()->prepare($sql);
         $requete->execute();

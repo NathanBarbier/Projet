@@ -4,11 +4,12 @@ require_once "../../services/header.php";
 
 $rights = $_SESSION["rights"] ?? false;
 $idOrganization = $_SESSION["idOrganization"] ?? null;
+$idUser = $_SESSION["idUser"] ?? null;
 
-if($rights == 'admin')
+if($rights == 'admin' && $idUser > 0 && $idOrganization > 0)
 {
-    $action = GETPOST('action');
-    $teamId = GETPOST('teamId');
+    $action = htmlentities(GETPOST('action'));
+    $teamId = intval(GETPOST('teamId'));
 
     switch($action)
     {
@@ -17,15 +18,13 @@ if($rights == 'admin')
             {
                 try {
                     $Team = new Team($teamId);
-                    $teamActive = $Team->isActive();
-                    echo json_encode($teamActive);
+                    echo json_encode($Team->isActive());
                 } catch (\Throwable $th) {
-                    echo json_encode($th);
+                    // echo json_encode($th);
                 }
                 break;
             }
     }
-
 }
 else
 {

@@ -306,7 +306,7 @@ function init()
         // INSERT INTO tasks_comments with empty note
         $.ajax({
             async: true,
-            url: AJAX_URL+"membre/map.php?action=addTaskNote&taskId="+taskId,
+            url: AJAX_URL+"membre/map.php?action=addTaskComment&taskId="+taskId,
             success: function(data) {
                 commentId = data;
                 commentId = commentId.replace("\"", ' ').replace("\"", ' ');
@@ -380,7 +380,6 @@ function initTask()
 
         taskId = $(this).parents(".task").first().find(".taskId-input").val();
         $("#loading-modal").modal('show');
-        // DELETE FROM BDD
         $.ajax({
             async: true,
             url: AJAX_URL+"membre/map.php?action=deleteTask&taskId="+taskId,

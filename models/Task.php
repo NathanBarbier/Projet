@@ -117,7 +117,7 @@
     public function create()
     {
         $sql = "SELECT MAX(rank) AS rank";
-        $sql .= " FROM task";
+        $sql .= " FROM storieshelper_task";
         $sql .= " WHERE fk_column = ?";
 
         $requete = $this->getBdd()->prepare($sql);
@@ -125,11 +125,11 @@
         $obj = $requete->fetch(PDO::FETCH_OBJ);
         $rank = $obj->rank + 1;
 
-        $sql = "INSERT INTO task (fk_column, rank, fk_user, active)";
-        $sql .= " VALUES (".$this->fk_column.",".$rank.",".$this->fk_user.",".$this->active.")";
+        $sql = "INSERT INTO storieshelper_task (fk_column, rank, fk_user, active)";
+        $sql .= " VALUES (?,?,?,?)";
 
         $requete = $this->getBdd()->prepare($sql);
-        return $requete->execute();
+        return $requete->execute([$this->fk_column,$rank,$this->fk_user,$this->active]);
     }
 
     // FETCH
@@ -137,7 +137,7 @@
     public function fetch($rowid)
     {
         $sql = "SELECT t.rowid, t.name, t.description, t.fk_column, t.rank, t.fk_user, t.active";
-        $sql .= " FROM task AS t";
+        $sql .= " FROM storieshelper_task AS t";
         $sql .= " WHERE t.rowid = ?";
 
         $requete = $this->getBdd()->prepare($sql);
@@ -164,7 +164,7 @@
     public function fetchComments()
     {
         $sql = "SELECT tc.rowid";
-        $sql .= " FROM task_comment AS tc";
+        $sql .= " FROM storieshelper_task_comment AS tc";
         $sql .= " WHERE tc.fk_task = ?";
 
         $requete = $this->getBdd()->prepare($sql);
@@ -183,31 +183,62 @@
 
     public function fetchMembers()
     {
-        $sql = "SELECT tm.fk_user";
-        $sql .= " FROM task_member AS tm";
-        $sql .= " WHERE tm.fk_task = ".$this->rowid;
+        $sql = "SELECT fk_user";
+        $sql .= " FROM storieshelper_task_member";
+        $sql .= " WHERE fk_task = ?";
 
         $requete = $this->getBdd()->prepare($sql);
         $requete->execute([$this->rowid]);
 
         if($requete->rowCount() > 0)
         {
+            $memberIds = array();
             $lines = $requete->fetchAll(PDO::FETCH_OBJ);
 
             foreach($lines as $line)
             {
-                // $TaskMember = new TaskMember();
-                // $TaskMember->setFk_task($this->rowid);
-                // $TaskMember->setFk_user($line->fk_user);
-                $this->members[] = new User($line->fk_user);
+                $memberIds[] = $line->fk_user;
             }
+
+            $this->members = $this->fetchUsersByIds($memberIds);
+        }
+    }
+
+    public function fetchUsersByIds(array $usersIds)
+    {
+        $usersIds = implode("', '", $usersIds);
+
+        $sql = "SELECT rowid, lastname, firstname, admin, fk_organization"; 
+        $sql .= " FROM storieshelper_user";
+        $sql .= " WHERE rowid IN(?)";
+
+        $requete = $this->getBdd()->prepare($sql);
+        $requete->execute([$usersIds]);
+
+        if($requete->rowCount() > 0)
+        {
+            $lines = $requete->fetchAll(PDO::FETCH_OBJ);
+            $users = array();
+
+            foreach($lines as $line)
+            {
+                $User = new User();
+                $User->setRowid($line->rowid);
+                $User->setLastname($line->lastname);
+                $User->setFirstname($line->firstname);
+                $User->setAdmin($line->admin);
+                $User->setFk_organization($line->fk_organization);
+
+                $users[] = $User;
+            }
+            return $users;
         }
     }
 
     public function fetch_last_insert_id()
     {
         $sql = "SELECT MAX(rowid) AS rowid";
-        $sql .= " FROM task";
+        $sql .= " FROM storieshelper_task";
 
         $requete = $this->getBdd()->prepare($sql);
         $requete->execute();
@@ -218,7 +249,7 @@
     public function fetchRank($rowid)
     {
         $sql = "SELECT rank";
-        $sql .= " FROM task";
+        $sql .= " FROM storieshelper_task";
         $sql .= " WHERE rowid = ?";
 
         $requete = $this->getBdd()->prepare($sql);
@@ -230,9 +261,9 @@
     public function fetchNextRank($rowid, $fk_column)
     {
         $sql = "SELECT t.rank AS nextRank, t.rowid AS rowid";
-        $sql .= " FROM task AS t";
+        $sql .= " FROM storieshelper_task AS t";
         $sql .= " WHERE t.fk_column = ?";
-        $sql .= " AND t.rank > (SELECT rank FROM task WHERE rowid = ?)";
+        $sql .= " AND t.rank > (SELECT rank FROM storieshelper_task WHERE rowid = ?)";
         $sql .= " ORDER BY t.rank ASC";
         $sql .= " LIMIT 1";
 
@@ -249,9 +280,9 @@
     public function fetchPrevRank($rowid, $fk_column)
     {
         $sql = "SELECT t.rank AS prevRank, t.rowid AS rowid";
-        $sql .= " FROM task AS t";
+        $sql .= " FROM storieshelper_task AS t";
         $sql .= " WHERE t.fk_column = ?";
-        $sql .= " AND t.rank < (SELECT rank FROM task WHERE rowid = ?)";
+        $sql .= " AND t.rank < (SELECT rank FROM storieshelper_task WHERE rowid = ?)";
         $sql .= " ORDER BY t.rank DESC";
         $sql .= " LIMIT 1";
 
@@ -270,7 +301,7 @@
 
     public function update()
     {
-        $sql = "UPDATE task";
+        $sql = "UPDATE storieshelper_task";
         $sql .= " SET";
         $sql .= " name = ?";
         $sql .= " , description = ?";
@@ -287,34 +318,24 @@
 
     public function delete()
     {
-        $sql = "DELETE FROM task_comment";
-        $sql .= " WHERE fk_task = ".$this->rowid;
+        $sql = "DELETE FROM storieshelper_task_comment";
+        $sql .= " WHERE fk_task = ?";
 
         $requete = $this->getBdd()->prepare($sql);
         $requete->execute();
 
-        $sql = "DELETE FROM task_member";
-        $sql .= " WHERE fk_task = ".$this->rowid;
+        $sql = "DELETE FROM storieshelper_task_member";
+        $sql .= " WHERE fk_task = ?";
 
         $requete = $this->getBdd()->prepare($sql);
         $requete->execute();
 
-        $sql = "DELETE FROM task";
-        $sql .= " WHERE rowid = ".$this->rowid;
+        $sql = "DELETE FROM storieshelper_task";
+        $sql .= " WHERE rowid = ?";
 
         $requete = $this->getBdd()->prepare($sql);
-        $requete->execute();
+        $requete->execute([$this->rowid,$this->rowid,$this->rowid]);
     }
-
-    public function deleteByColumnId($fk_column)
-    {
-        $sql = "DELETE FROM task";
-        $sql .= " WHERE fk_column = ?";
-
-        $requete = $this->getBdd()->prepare($sql);
-        return $requete->execute([$fk_column]);
-    }
-
     
     // METHODS
 

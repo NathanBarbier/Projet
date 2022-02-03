@@ -85,7 +85,7 @@ Class MapColumn extends Modele
     public function fetch(int $rowid)
     {
         $sql = "SELECT m.rowid, m.name, m.fk_team, m.rank";
-        $sql .= " FROM map_column AS m";
+        $sql .= " FROM storieshelper_map_column AS m";
         $sql .= " WHERE m.rowid = ?";
 
         $requete = $this->getBdd()->prepare($sql);
@@ -101,33 +101,10 @@ Class MapColumn extends Modele
         $this->fetchTasks();
     }
 
-    //* outdated
-    public function fetchAll($fk_team)
-    {
-        $sql = "SELECT m.rowid, m.name, m.fk_team, m.rank";
-        $sql .= " FROM map_column AS m";
-        $sql .= " WHERE m.fk_team = ?";
-        $sql .= " ORDER BY m.rank ASC";
-
-        $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$fk_team]);
-
-        $lines = $requete->fetchAll(PDO::FETCH_OBJ);
-
-        $MapColumns = array();
-
-        foreach($lines as $line)
-        {
-            $MapColumns[] = new MapColumn($line->rowid);        
-        }
-
-        return $MapColumns;
-    }
-
     public function fetchTasks()
     {
         $sql = "SELECT t.rowid";
-        $sql .= " FROM task AS t";
+        $sql .= " FROM storieshelper_task AS t";
         $sql .= " WHERE fk_column = ?";
         $sql .= " ORDER BY t.rank DESC";
 
@@ -145,7 +122,7 @@ Class MapColumn extends Modele
     public function fetch_last_insert_id()
     {
         $sql = "SELECT MAX(rowid) AS rowid";
-        $sql .= " FROM map_column";
+        $sql .= " FROM storieshelper_map_column";
 
         $requete = $this->getBdd()->prepare($sql);
         $requete->execute();
@@ -158,7 +135,7 @@ Class MapColumn extends Modele
         $rowid = $rowid == null ? $this->rowid : $rowid;
 
         $sql = "SELECT rank";
-        $sql .= " FROM map_column";
+        $sql .= " FROM storieshelper_map_column";
         $sql .= " WHERE rowid = ?";
 
         $requete = $this->getBdd()->prepare($sql);
@@ -170,9 +147,9 @@ Class MapColumn extends Modele
     public function fetchNextRank($rowid, $fk_team)
     {
         $sql = "SELECT m.rank AS nextRank, rowid";
-        $sql .= " FROM map_column AS m";
+        $sql .= " FROM storieshelper_map_column AS m";
         $sql .= " WHERE fk_team = ?";
-        $sql .= " AND m.rank > (SELECT rank FROM map_column WHERE rowid = ?)";
+        $sql .= " AND m.rank > (SELECT rank FROM storieshelper_map_column WHERE rowid = ?)";
         $sql .= " ORDER BY m.rank ASC";
         $sql .= " LIMIT 1";
 
@@ -189,9 +166,9 @@ Class MapColumn extends Modele
     public function fetchPrevRank($rowid, $fk_team)
     {
         $sql = "SELECT m.rank AS prevRank, rowid";
-        $sql .= " FROM map_column AS m";
+        $sql .= " FROM storieshelper_map_column AS m";
         $sql .= " WHERE fk_team = ?";
-        $sql .= " AND m.rank < (SELECT rank FROM map_column WHERE rowid = ?)";
+        $sql .= " AND m.rank < (SELECT rank FROM storieshelper_map_column WHERE rowid = ?)";
         $sql .= " ORDER BY m.rank DESC";
         $sql .= " LIMIT 1";
 
@@ -211,26 +188,26 @@ Class MapColumn extends Modele
     public function create()
     {
         $sql = "SELECT MAX(rank) AS rank";
-        $sql .= " FROM map_column";
-        $sql .= " WHERE fk_team = ".$this->fk_team."";
+        $sql .= " FROM storieshelper_map_column";
+        $sql .= " WHERE fk_team = ?";
 
         $requete = $this->getBdd()->prepare($sql);
-        $requete->execute();
+        $requete->execute([$this->fk_team]);
         $obj = $requete->fetch(PDO::FETCH_OBJ);
         $rank = $obj->rank + 1;
 
-        $sql = "INSERT INTO map_column (name, fk_team, rank)";
-        $sql .= " VALUES ('".$this->name."',".$this->fk_team.",".$rank.")";
+        $sql = "INSERT INTO storieshelper_map_column (name, fk_team, rank)";
+        $sql .= " VALUES ('?',?,?)";
         
         $requete = $this->getBdd()->prepare($sql);
-        return $requete->execute();
+        return $requete->execute([$this->name, $this->fk_team, $rank]);
     }
 
     // UPDATE
 
     public function update()
     {
-        $sql = "UPDATE map_column";
+        $sql = "UPDATE storieshelper_map_column";
         $sql .= " SET ";
         $sql .= " name = ?";
         $sql .= " , fk_team = ?";
@@ -245,35 +222,35 @@ Class MapColumn extends Modele
 
     public function delete()
     {
-        $sql = "DELETE FROM task_comment";
+        $sql = "DELETE FROM storieshelper_task_comment";
         $sql .= " WHERE fk_task IN";
         $sql .= " (SELECT t.rowid";
-        $sql .= " FROM tasks AS t";
-        $sql .= " WHERE fk_column = ".$this->rowid.")";
+        $sql .= " FROM storieshelper_task AS t";
+        $sql .= " WHERE fk_column = ?)";
 
         $requete = $this->getBdd()->prepare($sql);
         $requete->execute();
 
-        $sql = "DELETE FROM task_member";
+        $sql = "DELETE FROM storieshelper_task_member";
         $sql .= " WHERE fk_task IN";
         $sql .= " (SELECT t.rowid";
-        $sql .= " FROM tasks AS t";
-        $sql .= " WHERE fk_column = ".$this->rowid.")";
+        $sql .= " FROM storieshelper_task AS t";
+        $sql .= " WHERE fk_column = ?)";
 
         $requete = $this->getBdd()->prepare($sql);
         $requete->execute();
 
-        $sql = "DELETE FROM task";
-        $sql .= " WHERE fk_column = ".$this->rowid;
+        $sql = "DELETE FROM storieshelper_task";
+        $sql .= " WHERE fk_column = ?";
 
         $requete = $this->getBdd()->prepare($sql);
         $requete->execute();
 
-        $sql = "DELETE FROM map_column";
-        $sql .= " WHERE rowid = ".$this->rowid;
+        $sql = "DELETE FROM storieshelper_map_column";
+        $sql .= " WHERE rowid = ?";
 
         $requete = $this->getBdd()->prepare($sql);
-        $requete->execute();
+        $requete->execute([$this->rowid,$this->rowid,$this->rowid,$this->rowid]);
     }
     
 

@@ -39,40 +39,39 @@ if($action == "inscriptionOrg")
                     {
                         if($pwd === $pwd2)
                         {
-                            // $speciaux = "/[.!@#$%^&*()_+=]/";
-                            // $nombres = "/[0-9]/";
-                            // if(preg_match($nombres, $pwd) && !preg_match($speciaux, $pwd) && strlen($pwd) >= 8 && strlen($pwd) <= 100)
-                            try
+                            $speciaux = "/[.!@#$%^&*()_+=]/";
+                            $nombres = "/[0-9]/";
+                            if(preg_match($nombres, $pwd) && preg_match($speciaux, $pwd) && strlen($pwd) >= 8 && strlen($pwd) <= 100 && strtolower($pwd) !== $pwd && strtoupper($pwd) !== $pwd)
                             {
-                                $fk_organization = intval($Organization->fetch_last_insert_id()) + 1;
-                                $idUser = intval($User->fetch_last_insert_id()) + 1;
-
-                                $User->setEmail($email);
-                                $User->setPassword($pwd);
-                                $User->setFk_organization($fk_organization);
-                                $User->setAdmin(1);
-                                $User->setConsent(1);
-                                $User->create();
-                                LogHistory::create($idUser, 'signup', 'user', $User->getEmail());
-
-                                $Organization->setName($name);
-                                $Organization->create();
-                                LogHistory::create($idUser, 'create', 'Organization', $Organization->getName());
-                            } 
-                            catch (exception $e) 
-                            {
-                                $errors[] = "Erreur : l'inscription n'a pas pu aboutir.";
-                            }
-
-                            if(!in_array(false, $status))
-                            {
-                                $message = "L'inscription a bien été prise en compte";
-                                header("location:".CONTROLLERS_URL.'visiteur/connexion.php?message='.$message);
-                                exit;
+                                try
+                                {
+                                    $fk_organization = intval($Organization->fetch_last_insert_id()) + 1;
+                                    $idUser = intval($User->fetch_last_insert_id()) + 1;
+    
+                                    $User->setEmail($email);
+                                    $User->setPassword($pwd);
+                                    $User->setFk_organization($fk_organization);
+                                    $User->setAdmin(1);
+                                    $User->setConsent(1);
+                                    $User->create();
+                                    LogHistory::create($idUser, 'signup', 'user', $User->getEmail());
+    
+                                    $Organization->setName($name);
+                                    $Organization->create();
+                                    LogHistory::create($idUser, 'create', 'Organization', $Organization->getName());
+    
+                                    $message = "L'inscription a bien été prise en compte";
+                                    header("location:".CONTROLLERS_URL.'visiteur/connexion.php?message='.$message);
+                                    exit;
+                                } 
+                                catch (exception $e) 
+                                {
+                                    $errors[] = "Erreur : l'inscription n'a pas pu aboutir.";
+                                }
                             }
                             else
                             {
-                                $errors[] = "Une erreur inconnue est survenue.";
+                                $errors[] = "Le mot de passe doit : contenir entre 8 et 100 caractères, au moins un caractère spécial \"[.!@#$%^&*()_+=]\", un chiffre, une lettre minuscule et une lettre majuscule.";
                             }
                         } 
                         else 

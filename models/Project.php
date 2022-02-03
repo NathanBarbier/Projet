@@ -248,4 +248,32 @@ Class Project extends Modele
 
         return $requete->execute([$this->name, $this->type, $this->description, $this->fk_organization]);
     }
+
+    // delete
+
+    public function delete()
+    {
+        // delete task comments
+        $sql = "DELETE FROM task_comment WHERE fk_task IN(SELECT rowid FROM task WHERE fk_column IN(SELECT rowid FROM map_column WHERE fk_team IN(SELECT rowid FROM team WHERE fk_project = ?)))";
+
+        // delete task member
+        $sql .= "DELETE FROM task_member WHERE fk_task IN(SELECT rowid FROM task WHERE fk_column IN(SELECT rowid FROM map_column WHERE fk_team IN(SELECT rowid FROM team WHERE fk_project = ?)))";
+
+        // delete tasks
+        $sql .= "DELETE FROM task WHERE fk_column IN(SELECT rowid FROM map_column WHERE fk_team IN(SELECT rowid FROM team WHERE fk_project = ?))";
+
+        // delete all map columns
+        $sql .= "DELETE FROM map_column WHERE fk_team IN(SELECT rowid FROM team WHERE fk_project = ?)";
+
+        // delete all belongs_to
+        $sql .= "DELETE FROM belong_to WHERE fk_team IN (SELECT rowid FROM team WHERE fk_project = ?)";
+
+        // delete all teams
+        $sql .= "DELETE FROM team WHERE fk_project = ?";
+
+        // delete project
+        $sql .= "DELETE FROM project WHERE rowid = ?";
+        $requete = $this->getBdd()->prepare($sql);
+        $requete->execute([$this->rowid,$this->rowid,$this->rowid,$this->rowid,$this->rowid,$this->rowid,$this->rowid]);
+    }
 }

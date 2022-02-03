@@ -3,7 +3,7 @@ require_once "layouts/entete.php";
 
 if(!empty($errors)) { ?>
     <div class="position-relative mx-auto">
-        <div class="alert alert-danger w-50 text-center position-absolute top-0 start-50 translate-middle-x">
+        <div class="alert alert-danger w-50 text-center position-absolute top-0 start-50 translate-middle-x before">
         <?php foreach($errors as $error) { ?>
             <i class="bi bi-exclamation-triangle-fill"></i>
             <?php echo $error . "<br>";

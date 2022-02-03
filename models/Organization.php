@@ -128,37 +128,36 @@ class Organization extends Modele
 
     public function delete()
     {
-        $sql = "DELETE FROM belong_to AS w";
-        $sql .= " INNER JOIN team AS t ON w.fk_team = t.rowid";
-        $sql .= " WHERE fk_organization = ?";
+        // delete task comments
+        $sql = "DELETE FROM task_comment tc INNER JOIN task tk ON tk.rowid = tc.fk_task INNER JOIN map_column mc ON mc.rowid = tk.fk_column INNER JOIN team tm ON tm.rowid = mc.fk_team INNER JOIN project p ON p.rowid = tm.fk_project INNER JOIN organization o ON o.rowid = p.fk_organization WHERE o.rowid = ?;";
         
-        $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$this->rowid]);
-    
-        $sql = "DELETE FROM project"; 
-        $sql .= " WHERE fk_organization = ?";
+        // delete task member
+        $sql .= "DELETE FROM task_member tm INNER JOIN task tk ON tk.rowid = tm.fk_task INNER JOIN map_column mc ON mc.rowid = tk.fk_column INNER JOIN team tm ON tm.rowid = mc.fk_team INNER JOIN project p ON p.rowid = tm.fk_project INNER JOIN organization o ON o.rowid = p.fk_organization WHERE o.rowid = ?;";
+
+        // delete tasks
+        $sql .= "DELETE FROM task tk ON INNER JOIN map_column mc ON mc.rowid = tk.fk_column INNER JOIN team tm ON tm.rowid = mc.fk_team INNER JOIN project p ON p.rowid = tm.fk_project INNER JOIN organization o ON o.rowid = p.fk_organization WHERE o.rowid = ?;";
+
+        // delete all map columns
+        $sql .= "DELETE FROM map_column mc INNER JOIN team tm ON tm.rowid = mc.fk_team INNER JOIN project p ON p.rowid = tm.fk_project INNER JOIN organization o ON o.rowid = p.fk_organization WHERE o.rowid = ?;";
+
+        // delete all belongs_to
+        $sql .= "DELETE FROM belong_to bt INNER JOIN team tm ON tm.rowid = bt.fk_team INNER JOIN project p ON p.rowid = tm.fk_project INNER JOIN organization o ON o.rowid = p.fk_organization WHERE o.rowid = ?;";
+
+        // delete all teams
+        $sql .= "DELETE FROM team tm INNER JOIN project p ON p.rowid = tm.fk_project INNER JOIN organization o ON o.rowid = p.fk_organization WHERE o.rowid = ?;";
+
+        // delete projects
+        $sql .= "DELETE FROM project p INNER JOIN organization o ON o.rowid = p.fk_organization WHERE o.rowid = ?;";
+
+        // delete all users
+        $sql .= "DELETE FROM user WHERE fk_organization = ?;";
+        
+        // delete organization
+        $sql .= "DELETE FROM organization WHERE rowid = ?;";
 
         $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$this->rowid]);
-    
-        $sql = "DELETE FROM user"; 
-        $sql .= " WHERE fk_organization = ?";
+        $requete->execute([$this->rowid,$this->rowid,$this->rowid,$this->rowid,$this->rowid,$this->rowid,$this->rowid,$this->rowid,$this->rowid]);
 
-        $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$this->rowid]);
-        
-        $sql = "DELETE FROM team";
-        $sql .= " WHERE fk_organization = ?";
-
-        $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$this->rowid]);
-        
-        $sql = "DELETE FROM organization";
-        $sql .= " WHERE rowid = ?";
-        
-        $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$this->rowid]);
-    
         session_destroy();
     }
 

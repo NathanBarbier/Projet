@@ -1,5 +1,6 @@
 <?php 
 require_once "../../services/header.php";
+require "layouts/head.php";
 
 $tpl = "projets.php";
 

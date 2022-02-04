@@ -119,7 +119,7 @@ class Team extends Modele
         $this->active = $obj->active;
 
         // fetch team users
-        $sql = "SELECT u.rowid";
+        $sql = "SELECT *";
         $sql .= " FROM storieshelper_user AS u";
         $sql .= " LEFT JOIN storieshelper_belong_to AS b ON u.rowid = b.fk_user";
         $sql .= " WHERE b.fk_team = ?";
@@ -133,12 +133,14 @@ class Team extends Modele
 
             foreach($lines as $line)
             {
-                $this->users[] = new User($line->rowid);
+                $User = new User();
+                $User->initialize($line);
+                $this->users[] = $User;
             }
         }
 
         // fetch team / board columns
-        $sql = "SELECT m.rowid";
+        $sql = "SELECT *";
         $sql .= " FROM storieshelper_map_column AS m";
         $sql .= " WHERE m.fk_team = ?";
         $sql .= " ORDER BY m.rank ASC";
@@ -152,7 +154,59 @@ class Team extends Modele
 
             foreach($lines as $line)
             {
-                $this->mapColumns[] = new MapColumn($line->rowid);        
+                $MapColumn = new MapColumn();
+                $MapColumn->initialize($line);
+                $this->mapColumns[] = $MapColumn;  
+            }
+        }
+    }
+
+    public function initialize(object $Obj)
+    {
+        $this->rowid = $Obj->rowid;
+        $this->name = $Obj->name;
+        $this->fk_project = $Obj->fk_project;
+        $this->active = $Obj->active;
+
+        // fetch team users
+        $sql = "SELECT *";
+        $sql .= " FROM storieshelper_user AS u";
+        $sql .= " LEFT JOIN storieshelper_belong_to AS b ON u.rowid = b.fk_user";
+        $sql .= " WHERE b.fk_team = ?";
+
+        $requete = $this->getBdd()->prepare($sql);
+        $requete->execute([$this->rowid]);
+
+        if($requete->rowCount() > 0)
+        {
+            $lines = $requete->fetchAll(PDO::FETCH_OBJ);
+
+            foreach($lines as $line)
+            {
+                $User = new User();
+                $User->initialize($line);
+                $this->users[] = $User;
+            }
+        }
+
+        // fetch team / board columns
+        $sql = "SELECT *";
+        $sql .= " FROM storieshelper_map_column AS m";
+        $sql .= " WHERE m.fk_team = ?";
+        $sql .= " ORDER BY m.rank ASC";
+
+        $requete = $this->getBdd()->prepare($sql);
+        $requete->execute([$this->rowid]);
+
+        if($requete->rowCount() > 0)
+        {
+            $lines = $requete->fetchAll(PDO::FETCH_OBJ);
+
+            foreach($lines as $line)
+            {
+                $MapColumn = new MapColumn();
+                $MapColumn->initialize($line);
+                $this->mapColumns[] = $MapColumn;  
             }
         }
     }

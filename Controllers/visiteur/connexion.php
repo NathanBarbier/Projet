@@ -1,9 +1,7 @@
 <?php
 //import all models
 require_once "../../services/header.php";
-
-$rights = $_SESSION["rights"] ?? false;
-$idUser = $_SESSION["idUser"] ?? false;
+require "layouts/head.php";
 
 $envoi = GETPOST('envoi');
 
@@ -34,6 +32,7 @@ if(isset($_COOKIE["remember_me"]))
         $_SESSION["idUser"] = intval($User->getRowid());
         $_SESSION["idOrganization"] = intval($User->getFk_organization());
 
+        LogHistory::create($User->getRowid(), 'connect', 'user', $User->getLastname().' '.$User->getFirstname());
         $success = true;
     }
 }
@@ -53,6 +52,7 @@ if($envoi)
                     $_SESSION["idUser"] = intval($User->getRowid());
                     $_SESSION["idOrganization"] = intval($User->getFk_organization());
 
+                    $token = '';
                     if($rememberMe)
                     {
                         $token = bin2hex(random_bytes(15));

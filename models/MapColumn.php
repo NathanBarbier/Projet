@@ -101,9 +101,19 @@ Class MapColumn extends Modele
         $this->fetchTasks();
     }
 
+    public function initialize(object $Obj)
+    {
+        $this->rowid = $Obj->rowid;
+        $this->name = $Obj->name;
+        $this->fk_team = $Obj->fk_team;
+        $this->rank = $Obj->rank;
+
+        $this->fetchTasks();
+    }
+
     public function fetchTasks()
     {
-        $sql = "SELECT t.rowid";
+        $sql = "SELECT *";
         $sql .= " FROM storieshelper_task AS t";
         $sql .= " WHERE fk_column = ?";
         $sql .= " ORDER BY t.rank DESC";
@@ -111,11 +121,17 @@ Class MapColumn extends Modele
         $requete = $this->getBdd()->prepare($sql);
         $requete->execute([$this->rowid]);
 
-        $lines = $requete->fetchAll(PDO::FETCH_OBJ);
-
-        foreach($lines as $line)
+        if($requete->rowCount() > 0)
         {
-            $this->tasks[] = new Task($line->rowid);
+            $lines = $requete->fetchAll(PDO::FETCH_OBJ);
+    
+            foreach($lines as $line)
+            {
+                // $this->tasks[] = new Task($line->rowid);
+                $Task = new Task();
+                $Task->initialize($line);
+                $this->tasks[] = $Task;
+            }
         }
     }
 

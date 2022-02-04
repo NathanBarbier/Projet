@@ -1,25 +1,23 @@
 <?php 
 // import all models
 require_once "../../services/header.php";
+require "layouts/head.php";
 
-$rights = $_SESSION["rights"] ?? false;
-$idOrganization = $_SESSION["idOrganization"] ?? null;
-$idUser = $_SESSION["idUser"] ?? null;
+$action = htmlentities(GETPOST('action'));
+$projectId = intval(GETPOST('projectId'));
+$teamId = intval(GETPOST('teamId'));
 
-if($rights == 'admin')
+$tpl = "map.php";
+$errors = array();
+$success = false;
+
+if($teamId)
 {
-    $action = htmlentities(GETPOST('action'));
-    $projectId = intval(GETPOST('projectId'));
-    $teamId = intval(GETPOST('teamId'));
-
-    $tpl = "map.php";
-    $errors = array();
-    $success = false;
-
-    if($teamId && $projectId)
+    if($projectId)
     {
         $Organization = new Organization($idOrganization);
 
+        // fetching project & team
         foreach($Organization->getProjects() as $Obj)
         {
             if($Obj->getRowid() == $projectId)
@@ -29,152 +27,168 @@ if($rights == 'admin')
             }
         }
 
-        foreach($Project->getTeams() as $Obj)
+        // check if the Team & Project exists
+        if(!empty($Project))
         {
-            if($Obj->getRowid() == $teamId)
+            foreach($Project->getTeams() as $Obj)
             {
-                $Team = $Obj;
-                break;
-            }
-        }
-
-        if($action == "archiveTeam")
-        {
-            if($projectId)
-            {   
-                try {
-                    $Team->setActive(0);
-                    $Team->update();
-                    LogHistory::create($idUser, 'archive', 'team', $Team->getName());
-                    $success = "Le tableau a bien été archivé.";
-                } catch (\Throwable $th) {
-                    $errors[] = "Une erreur innatendue est survenue.";
-                }
-            }
-            else
-            {
-                $errors[] = "Aucun projet n'a été sélectionné.";
-            }
-        }
-
-        if($action == "openTeam")
-        {
-            if($projectId)
-            {   
-                try {
-                    $Team->setActive(1);
-                    $Team->update();
-                    LogHistory::create($idUser, 'unarchive', 'team', $Team->getName());
-                    $success = "Le tableau a bien été ré-ouvert.";
-                } catch (\Throwable $th) {
-                    //throw $th;
-                    $errors[] = "Une erreur innatendue est survenue.";
-                }
-            }
-            else
-            {
-                $errors[] = "Aucun projet n'a été sélectionné.";
-            }
-        }
-    
-        if($action == "openProject")
-        {
-            if($projectId)
-            {
-                try {
-                    $Project->setActive(1);
-                    $Project->update();
-                    LogHistory::create($idUser, 'unarchive', 'project', $Project->getName());
-                    $success = "Le projet à bien été ré-ouvert.";
-                } catch (\Throwable $th) {
-                    //throw $th;
-                    $errors[] = "Une erreur innatendue est survenue.";
-                }
-            }
-            else
-            {
-                $errors[] = "Aucun projet n'a été sélectionné.";
-            }
-        }
-
-        // for JS
-        $username = $Organization->getName();
-
-        $authors = array();
-        $usernames = array();
-
-        // Get tasks authors for JS
-        foreach($Team->getUsers() as $User)
-        {
-            $usernames[$User->getRowid()] = $User->getLastname() . ' ' . $User->getFirstname();
-        }
-
-        foreach($Team->getMapColumns() as $columnKey => $Column)
-        {
-            foreach($Column->getTasks() as $taskKey => $Task)
-            {
-                // all team users + current admin
-                $TeamUsers = $Team->getUsers();
-                
-                // get all organization admins
-                foreach($Organization->getUsers() as $User)
+                // check if the team belongs to this project
+                if($Obj->getRowid() == $teamId)
                 {
-                    if($User->isAdmin())
+                    $Team = $Obj;
+                    break;
+                }
+            }
+
+            if(!empty($Team))
+            {
+                if($action == "archiveTeam")
+                {
+                    if($projectId)
+                    {   
+                        try {
+                            $Team->setActive(0);
+                            $Team->update();
+                            LogHistory::create($idUser, 'archive', 'team', $Team->getName());
+                            $success = "Le tableau a bien été archivé.";
+                        } catch (\Throwable $th) {
+                            $errors[] = "Une erreur innatendue est survenue.";
+                        }
+                    }
+                    else
                     {
-                        $TeamUsers[] = $User;
+                        $errors[] = "Aucun projet n'a été sélectionné.";
                     }
                 }
-
-                // verify that fk_author correspond to an admin user
-                foreach($TeamUsers as $User)
+    
+                if($action == "openTeam")
                 {
-                    if($User->getRowid() == $Task->getFk_user())
+                    if($projectId)
+                    {   
+                        try {
+                            $Team->setActive(1);
+                            $Team->update();
+                            LogHistory::create($idUser, 'unarchive', 'team', $Team->getName());
+                            $success = "Le tableau a bien été ré-ouvert.";
+                        } catch (\Throwable $th) {
+                            //throw $th;
+                            $errors[] = "Une erreur innatendue est survenue.";
+                        }
+                    }
+                    else
                     {
-                        if($User->isAdmin())
-                        {
-                            $authors[$columnKey][$taskKey] = $Organization->getName();
-                        }
-                        else
-                        {
-                            $authors[$columnKey][$taskKey] = $usernames[$task->getFk_author()];
-                        }
-                        break;
+                        $errors[] = "Aucun projet n'a été sélectionné.";
                     }
                 }
+            
+                if($action == "openProject")
+                {
+                    if($projectId)
+                    {
+                        try {
+                            $Project->setActive(1);
+                            $Project->update();
+                            LogHistory::create($idUser, 'unarchive', 'project', $Project->getName());
+                            $success = "Le projet à bien été ré-ouvert.";
+                        } catch (\Throwable $th) {
+                            //throw $th;
+                            $errors[] = "Une erreur innatendue est survenue.";
+                        }
+                    }
+                    else
+                    {
+                        $errors[] = "Aucun projet n'a été sélectionné.";
+                    }
+                }
+    
+                // for JS
+                $username = $Organization->getName();
+    
+                $authors = array();
+                $usernames = array();
+    
+                // Get tasks authors for JS
+                foreach($Team->getUsers() as $User)
+                {
+                    $usernames[$User->getRowid()] = $User->getLastname() . ' ' . $User->getFirstname();
+                }
+    
+                foreach($Team->getMapColumns() as $columnKey => $Column)
+                {
+                    foreach($Column->getTasks() as $taskKey => $Task)
+                    {
+                        // all team users + current admin
+                        $TeamUsers = $Team->getUsers();
+                        
+                        // get all organization admins
+                        foreach($Organization->getUsers() as $User)
+                        {
+                            if($User->isAdmin())
+                            {
+                                $TeamUsers[] = $User;
+                            }
+                        }
+    
+                        // verify that fk_author correspond to an admin user
+                        foreach($TeamUsers as $User)
+                        {
+                            if($User->getRowid() == $Task->getFk_user())
+                            {
+                                if($User->isAdmin())
+                                {
+                                    $authors[$columnKey][$taskKey] = $Organization->getName();
+                                }
+                                else
+                                {
+                                    $authors[$columnKey][$taskKey] = $usernames[$task->getFk_author()];
+                                }
+                                break;
+                            }
+                        }
+                    }
+                }
+    
+                // notification count
+                $notificationCount = 0;
+                if($Team->isActive() == 0) {
+                    $notificationCount++;
+                }
+                if($Project->isActive() == 0) {
+                    $notificationCount++;
+                }
+    
+                ?>
+                <script>
+                var teamId = <?php echo json_encode($Team->getRowid()); ?>;
+                var projectId = <?php echo json_encode($Project->getRowid()); ?>;
+                var notificationCount = <?php echo json_encode($notificationCount); ?>;
+                const username = <?php echo json_encode($username); ?>;
+                const idOrganization = <?php echo json_encode($idOrganization); ?>;
+                const idUser = <?php echo json_encode($idUser); ?>;
+                </script>
+                <?php
+            
+                require_once VIEWS_PATH."admin".DIRECTORY_SEPARATOR.$tpl;
+            }
+            else
+            {
+                header("location:".ROOT_URL."index.php"); 
             }
         }
-
-        // notification count
-        $notificationCount = 0;
-        if($Team->isActive() == 0) {
-            $notificationCount++;
+        else
+        {
+            header("location:".ROOT_URL."index.php");
         }
-        if($Project->isActive() == 0) {
-            $notificationCount++;
-        }
-
-        ?>
-        <script>
-        var teamId = <?php echo json_encode($Team->getRowid()); ?>;
-        var projectId = <?php echo json_encode($Project->getRowid()); ?>;
-        var notificationCount = <?php echo json_encode($notificationCount); ?>;
-        const username = <?php echo json_encode($username); ?>;
-        const idOrganization = <?php echo json_encode($idOrganization); ?>;
-        const idUser = <?php echo json_encode($idUser); ?>;
-        </script>
-        <?php
-    
-        require_once VIEWS_PATH."admin".DIRECTORY_SEPARATOR.$tpl;
     }
     else
     {
-        $errors[] = "Aucune équipe n'a été sélectionnée.";
-        $errors = serialize($errors);
-        header("location:".CONTROLLERS_URL.'admin/detailsProjet.php?idProject='.$projectId.'&errors='.$errors);
+        header("location:".ROOT_URL."index.php");
     }
 }
 else
 {
-    header("location:".ROOT_URL."index.php");
+    $errors[] = "Aucune équipe n'a été sélectionnée.";
+    $errors = serialize($errors);
+    header("location:".CONTROLLERS_URL.'admin/detailsProjet.php?idProject='.$projectId.'&errors='.$errors);
 }
 ?>

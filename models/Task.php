@@ -161,9 +161,23 @@
         }
     }
 
+    public function initialize(object $Obj)
+    {
+        $this->rowid = $Obj->rowid;
+        $this->name = $Obj->name;
+        $this->description = $Obj->description;
+        $this->fk_column = $Obj->fk_column;
+        $this->rank = $Obj->rank;
+        $this->fk_user = $Obj->fk_user;
+        $this->active = $Obj->active;
+
+        $this->fetchComments();
+        $this->fetchMembers();
+    }
+
     public function fetchComments()
     {
-        $sql = "SELECT tc.rowid";
+        $sql = "SELECT *";
         $sql .= " FROM storieshelper_task_comment AS tc";
         $sql .= " WHERE tc.fk_task = ?";
 
@@ -176,7 +190,9 @@
 
             foreach($lines as $line)
             {
-                $this->comments[] = new TaskComment($line->rowid);
+                $TaskComment = new TaskComment();
+                $TaskComment->initialize($line);
+                $this->comments[] = $TaskComment;
             }
         }
     }
@@ -208,7 +224,7 @@
     {
         $usersIds = implode("', '", $usersIds);
 
-        $sql = "SELECT rowid, lastname, firstname, admin, fk_organization"; 
+        $sql = "SELECT *"; 
         $sql .= " FROM storieshelper_user";
         $sql .= " WHERE rowid IN(?)";
 
@@ -223,12 +239,7 @@
             foreach($lines as $line)
             {
                 $User = new User();
-                $User->setRowid($line->rowid);
-                $User->setLastname($line->lastname);
-                $User->setFirstname($line->firstname);
-                $User->setAdmin($line->admin);
-                $User->setFk_organization($line->fk_organization);
-
+                $User->initialize($line);
                 $users[] = $User;
             }
             return $users;

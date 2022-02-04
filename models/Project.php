@@ -127,7 +127,7 @@ Class Project extends Modele
 
     public function update()
     {
-        $sql = "UPDATE project";
+        $sql = "UPDATE storieshelper_project";
         $sql .= " SET";
         $sql .= " name = ?";
         $sql .= " ,type = ?";
@@ -170,9 +170,22 @@ Class Project extends Modele
         }
     }
 
+    public function initialize(object $Obj)
+    {
+        $this->rowid = $Obj->rowid;
+        $this->name = $Obj->name;
+        $this->type = $Obj->type;
+        $this->open = $Obj->open;
+        $this->description = $Obj->description;
+        $this->active = $Obj->active;
+        $this->fk_organization = $Obj->fk_organization;
+        
+        $this->fetchTeams();
+    }
+
     public function fetchTeams()
     {
-        $sql = "SELECT t.rowid"; 
+        $sql = "SELECT *"; 
         $sql .= " FROM storieshelper_team as t"; 
         $sql .= " WHERE fk_project = ?";
         
@@ -185,7 +198,9 @@ Class Project extends Modele
             
             foreach($lines as $line)
             {
-                $this->teams[] = new Team($line->rowid);
+                $Team = new Team();
+                $Team->initialize($line);
+                $this->teams[] = $Team;
             }
         }
     }
@@ -232,5 +247,24 @@ Class Project extends Modele
         $sql .= "DELETE FROM storieshelper_project WHERE rowid = ?";
         $requete = $this->getBdd()->prepare($sql);
         $requete->execute([$this->rowid,$this->rowid,$this->rowid,$this->rowid,$this->rowid,$this->rowid,$this->rowid]);
+    }
+
+    // methods
+
+    /**
+     * Check if the team belongs to this Project
+     * @param int fk_team the team to check
+     * @return bool true OK, false KO
+     */
+    public function checkTeam(int $fk_team)
+    {
+        foreach($this->teams as $Team)
+        {
+            if($Team->getRowid() == $fk_team)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }

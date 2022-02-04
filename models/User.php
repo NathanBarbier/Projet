@@ -206,9 +206,25 @@ class User extends Modele
             $this->admin = $obj->admin;
 
             $BelongsTo = new BelongsTo();
-
             $this->BelongsTo = $BelongsTo->fetchAll($obj->rowid);
         }
+    }
+
+    public function initialize(object $Obj)
+    {
+        $this->rowid = $Obj->rowid;
+        $this->firstname = $Obj->firstname;
+        $this->lastname = $Obj->lastname;
+        $this->birth = $Obj->birth;
+        $this->password = $Obj->password;
+        $this->email = $Obj->email;
+        $this->fk_organization = $Obj->fk_organization;
+        $this->consent = $Obj->consent;
+        $this->admin = $Obj->admin;
+        $this->token = $Obj->token;
+
+        $BelongsTo = new BelongsTo();
+        $this->BelongsTo = $BelongsTo->fetchAll($Obj->rowid);
     }
 
     public function fetch_last_insert_id()

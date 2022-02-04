@@ -1,38 +1,36 @@
 <?php 
 // import all models
 require_once "../../services/header.php";
+require "layouts/head.php";
 
-$rights = $_SESSION["rights"] ?? false;
-$idOrganization = $_SESSION["idOrganization"] ?? null;
-$idUser = $_SESSION["idUser"] ?? null;
+$action = htmlentities(GETPOST('action'));
+$projectId = intval(GETPOST('projectId'));
+$teamId = intval(GETPOST('teamId'));
 
-if($rights == 'user')
+$tpl = "map.php";
+$errors = array();
+$success = false;
+
+if($teamId) 
 {
-    $action = htmlentities(GETPOST('action'));
-    $projectId = intval(GETPOST('projectId'));
-    $teamId = intval(GETPOST('teamId'));
-
-    $tpl = "map.php";
-    $errors = array();
-    $success = false;
-
-    if($teamId) 
+    if($projectId)
     {
-        if($projectId)
+        $Organization = new Organization($idOrganization);
+        $User = new User($idUser);
+
+        // fetching project & team
+        foreach($Organization->getProjects() as $Obj)
         {
-            $Organization = new Organization($idOrganization);
-            $User = new User($idUser);
-
-            // fetching project & team
-            foreach($Organization->getProjects() as $Obj)
+            if($Obj->getRowid() == $projectId)
             {
-                if($Obj->getRowid() == $projectId)
-                {
-                    $Project = $Obj;
-                    break;
-                }
+                $Project = $Obj;
+                break;
             }
+        }
 
+        // check if the Team & Project exists
+        if(!empty($Project))
+        {
             foreach($Project->getTeams() as $Obj)
             {
                 if($Obj->getRowid() == $teamId)
@@ -42,121 +40,124 @@ if($rights == 'user')
                 }
             }
 
-            // check if the user belongs to the team
-            $UserBelongsToTeam = false;
-            foreach($Team->getUsers() as $User)
+            if(!empty($Team))
             {
-                if($User->getRowid() == $idUser)
+                // check if the user belongs to the team
+                $UserBelongsToTeam = false;
+                foreach($Team->getUsers() as $User)
                 {
-                    $UserBelongsToTeam = true;
-                    break;
-                }
-            }
-
-            if(!$UserBelongsToTeam)
-            {
-                header("location:".ROOT_URL."index.php");
-                exit;
-            }
-
-            // redirect user if the project is archived
-            if($Project->isActive() == 0)
-            {
-                $errors[] = "Le projet est archivé.";
-                $errors = serialize($errors);
-                header("location:".CONTROLLERS_URL."membre/tableauDeBord.php?errors=".$errors);
-                exit;
-            }
-
-            if($action == "archiveTeam")
-            {
-                try {
-                    $Team->setActive(0);
-                    $Team->update();
-                    LogHistory::create($idUser, 'archive', 'team', $Team);
-                    $message = "Le tableau a bien été archivé.";
-                    header("location:".CONTROLLERS_URL."membre/tableauDeBord.php?success=".$message);
-                    exit;
-                } catch (\Throwable $th) {
-                    //throw $th;
-                    $errors[] = "Une erreur innatendue est survenue.";
-                }
-            }
-
-            // for JS
-            $username = $User->getLastname() . " " . $User->getFirstname();
-
-            $authors = array();
-            $usernames = array();
-
-            // Get tasks authors for JS
-            foreach($Team->getUsers() as $User)
-            {
-                $usernames[$User->getRowid()] = $User->getLastname() . ' ' . $User->getFirstname();
-            }
-
-            foreach($Team->getMapColumns() as $columnKey => $Column)
-            {
-                foreach($Column->getTasks() as $taskKey => $Task)
-                {
-                    // all team users
-                    $TeamUsers = $Team->getUsers();
-                    
-                    // get all organization admins
-                    foreach($Organization->getUsers() as $User)
+                    if($User->getRowid() == $idUser)
                     {
-                        if($User->isAdmin())
-                        {
-                            $TeamUsers[] = $User;
-                        }
+                        $UserBelongsToTeam = true;
+                        break;
                     }
+                }
 
-                    // verify that fk_author correspond to an admin user
-                    foreach($TeamUsers as $User)
+                if(!$UserBelongsToTeam)
+                {
+                    header("location:".ROOT_URL."index.php");
+                    exit;
+                }
+
+                // redirect user if the project is archived
+                if($Project->isActive() == 0)
+                {
+                    $errors[] = "Le projet est archivé.";
+                    $errors = serialize($errors);
+                    header("location:".CONTROLLERS_URL."membre/tableauDeBord.php?errors=".$errors);
+                    exit;
+                }
+
+                if($action == "archiveTeam")
+                {
+                    try {
+                        $Team->setActive(0);
+                        $Team->update();
+                        LogHistory::create($idUser, 'archive', 'team', $Team);
+                        $message = "Le tableau a bien été archivé.";
+                        header("location:".CONTROLLERS_URL."membre/tableauDeBord.php?success=".$message);
+                        exit;
+                    } catch (\Throwable $th) {
+                        //throw $th;
+                        $errors[] = "Une erreur innatendue est survenue.";
+                    }
+                }
+
+                // for JS
+                $username = $User->getLastname() . " " . $User->getFirstname();
+
+                $authors = array();
+                $usernames = array();
+
+                // Get tasks authors for JS
+                foreach($Team->getUsers() as $User)
+                {
+                    $usernames[$User->getRowid()] = $User->getLastname() . ' ' . $User->getFirstname();
+                }
+
+                foreach($Team->getMapColumns() as $columnKey => $Column)
+                {
+                    foreach($Column->getTasks() as $taskKey => $Task)
                     {
-                        if($User->getRowid() == $Task->getFk_user())
+                        // all team users
+                        $TeamUsers = $Team->getUsers();
+                        
+                        // get all organization admins
+                        foreach($Organization->getUsers() as $User)
                         {
                             if($User->isAdmin())
                             {
-                                $authors[$columnKey][$taskKey] = $Organization->getName();
+                                $TeamUsers[] = $User;
                             }
-                            else
+                        }
+
+                        // verify that fk_author correspond to an admin user
+                        foreach($TeamUsers as $User)
+                        {
+                            if($User->getRowid() == $Task->getFk_user())
                             {
-                                $authors[$columnKey][$taskKey] = $usernames[$task->getFk_author()];
+                                if($User->isAdmin())
+                                {
+                                    $authors[$columnKey][$taskKey] = $Organization->getName();
+                                }
+                                else
+                                {
+                                    $authors[$columnKey][$taskKey] = $usernames[$task->getFk_author()];
+                                }
+                                break;
                             }
-                            break;
                         }
                     }
                 }
+
+                ?>
+                <script>
+                var teamId = <?php echo json_encode($Team->getRowid()); ?>;
+                const username = <?php echo json_encode($username); ?>;
+                const idOrganization = <?php echo json_encode($idOrganization); ?>;
+                const idUser = <?php echo json_encode($idUser); ?>;
+                </script>
+                <?php
+
+                require_once VIEWS_PATH."membre/".$tpl;
             }
-
-            ?>
-            <script>
-            var teamId = <?php echo json_encode($Team->getRowid()); ?>;
-            const username = <?php echo json_encode($username); ?>;
-            const idOrganization = <?php echo json_encode($idOrganization); ?>;
-            const idUser = <?php echo json_encode($idUser); ?>;
-            </script>
-            <?php
-
-            require_once VIEWS_PATH."membre/".$tpl;
         }
         else
         {
-            $errors[] = "Aucune projet n'a été sélectionné.";
-            $errors = serialize($errors);
-            header("location:".CONTROLLERS_URL.'membre/tableauDeBord.php?errors='.$errors);
+            header("location:".ROOT_URL."index.php");
         }
     }
     else
     {
-        $errors[] = "Aucune équipe n'a été sélectionnée.";
+        $errors[] = "Aucune projet n'a été sélectionné.";
         $errors = serialize($errors);
         header("location:".CONTROLLERS_URL.'membre/tableauDeBord.php?errors='.$errors);
     }
 }
 else
 {
-    header("location:".ROOT_URL."index.php");
+    $errors[] = "Aucune équipe n'a été sélectionnée.";
+    $errors = serialize($errors);
+    header("location:".CONTROLLERS_URL.'membre/tableauDeBord.php?errors='.$errors);
 }
 ?>

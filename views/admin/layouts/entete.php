@@ -1,11 +1,3 @@
-<?php
-$rights = $_SESSION["rights"] ?? false;
-
-if($rights !== "admin")
-{
-    header("location:".ROOT_URL."index.php");
-} ?>
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>

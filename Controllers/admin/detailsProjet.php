@@ -1,37 +1,32 @@
 <?php
 //import all models
 require_once "../../services/header.php";
+require "layouts/head.php";
 
-$idOrganization = $_SESSION["idOrganization"] ?? false;
-$idUser = $_SESSION['idUser'] ?? false;
-$rights = $_SESSION["rights"] ?? false;
+$tpl = "detailsProjet.php";
 
-if($rights === "admin")
+$action = htmlentities(GETPOST('action'));
+$idProject = intval(GETPOST('idProject'));
+$projectName = htmlentities(GETPOST('projectName'));
+$description = htmlentities(GETPOST('description'));
+$type = htmlentities(GETPOST('type'));
+$teamName = htmlentities(GETPOST('teamName'));
+$teamNameUpdate = htmlentities(GETPOST('teamNameUpdate'));
+$teamId = intval(GETPOST('teamId'));
+$errors = GETPOST('errors');
+
+if($errors) {
+    $errors = unserialize($errors);
+} else {
+    $errors = array();
+}
+
+if($idProject)
 {
-    $tpl = "detailsProjet.php";
+    $Organization = new Organization($idOrganization);
 
-    $action = htmlentities(GETPOST('action'));
-    $idProject = intval(GETPOST('idProject'));
-    $projectName = htmlentities(GETPOST('projectName'));
-    $description = htmlentities(GETPOST('description'));
-    $type = htmlentities(GETPOST('type'));
-    $teamName = htmlentities(GETPOST('teamName'));
-    $teamNameUpdate = htmlentities(GETPOST('teamNameUpdate'));
-    $teamId = intval(GETPOST('teamId'));
-    $errors = GETPOST('errors');
-
-    if($errors)
+    if(!empty($Organization) && $Organization->checkProject($idProject))
     {
-        $errors = unserialize($errors);
-    }
-    else
-    {
-        $errors = array();
-    }
-
-    if($idProject)
-    {
-        $Organization = new Organization($idOrganization);
         $User = new User();
         $Team = new Team($teamId);
         $BelongsTo = new BelongsTo();
@@ -103,7 +98,7 @@ if($rights === "admin")
         // actions
         if($action == "archiveTeam")
         {
-            if($teamId)
+            if($teamId && $Project->checkTeam($teamId))
             {
                 try {
                     $Team->setActive(0);
@@ -123,7 +118,7 @@ if($rights === "admin")
 
         if($action == "openTeam")
         {
-            if($teamId)
+            if($teamId && $Project->checkTeam($teamId))
             {
                 try {
                     $Team->setActive(1);
@@ -197,6 +192,7 @@ if($rights === "admin")
                         $Team->setRowid($teamId);
 
                         $freeUsersToUnset = array();
+                        // check if the users are free before adding them
                         foreach($addingUsersIds as $idUser)
                         {
                             foreach($freeUsers as $key => $freeUser)
@@ -260,7 +256,7 @@ if($rights === "admin")
 
         if($action == "deleteTeam")
         {
-            if($teamId)
+            if($teamId && $Project->checkTeam($teamId))
             {
                 try {
                     $Team->delete($teamId);
@@ -288,44 +284,43 @@ if($rights === "admin")
 
         if($action == "updateTeam")
         {
-            if($teamId)
+            if($teamId && $Project->checkTeam($teamId))
             {
                 try 
                 {
-                    // changement de nom d'équipe
+                    // Team name update
                     if($teamNameUpdate)
                     {
                         $Team->setName($teamNameUpdate);
                     }
 
-                    // ajout des users dans la team
-                    foreach($addingUsersIds as $userId)
+                    $freeUsersToUnset = array();
+                    // check if the users are free before adding them
+                    foreach($addingUsersIds as $idUser)
                     {
-                        $UserToAdd = false;
-                        // get the user to add
-                        foreach($Organization->getUsers() as $User)
+                        foreach($freeUsers as $key => $freeUser)
                         {
-                            if($User->getRowid() == $userId)
+                            if($freeUser->getRowid() == $idUser)
                             {
-                                $BelongsTo->create($userId, $Team->getRowid());
-                                $Team->addUser($User);
-
-                                // removing user from freeUsers
-                                unset($freeUsersIds[array_search($User->getRowid(), $freeUsersIds)]);
-                                foreach($freeUsers as $key => $freeUser)
-                                {
-                                    if($freeUser->getRowid() == $User->getRowid())
-                                    {
-                                        unset($freeUsers[$key]);
-                                        break;
-                                    }
-                                }
+                                $BelongsTo->create($idUser, $Team->getRowid());
+                                $Team->addUser($freeUser);
+                                $freeUsersToUnset[] = $key;
                                 break;
                             }
                         }
+
+                        $key = array_search($idUser, $freeUsersIds);
+                        unset($freeUsersIds[$key]);
+
+                        $BelongsTo->create($idUser, $teamId);
                     }
 
-                    // suppression des users dans la team
+                    foreach($freeUsersToUnset as $key)
+                    {
+                        unset($freeUsers[$key]);
+                    }
+
+                    // remove team users
                     foreach($Team->getUsers() as $key => $User)
                     {
                         if(GETPOST('removingUser'.$key))
@@ -422,15 +417,13 @@ if($rights === "admin")
     }
     else
     {
-        $errors[] = "Aucun projet n'a été sélectionné.";
+        header("location:".ROOT_URL."index.php");
     }
-
-    require_once VIEWS_PATH."admin/".$tpl;
 }
 else
 {
-    header("location:".ROOT_URL."index.php");
+    $errors[] = "Aucun projet n'a été sélectionné.";
 }
 
-
+require_once VIEWS_PATH."admin/".$tpl;
 ?>

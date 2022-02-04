@@ -1,39 +1,39 @@
 <?php
 //import all models
 require_once "../../services/header.php";
+require "layouts/head.php";
 
-$rights = $_SESSION["rights"] ?? false;
-$idOrganization = $_SESSION["idOrganization"] ?? false;
+$action = htmlentities(GETPOST('action'));
+//override $idUser
+$idUser = intval(GETPOST('idUser'));
+$envoi = GETPOST('envoi');
 
-if($rights === "admin")
+$firstname = htmlentities(GETPOST('firstname'));
+$lastname = htmlentities(GETPOST('lastname'));
+$email = htmlentities(GETPOST('email'));
+$birth = htmlentities(GETPOST('birth'));
+
+$oldmdp = htmlentities(GETPOST('oldmdp'));
+$newmdp = htmlentities(GETPOST('newmdp'));
+$newmdp2 = htmlentities(GETPOST('newmdp2'));
+
+$Organization = new Organization($idOrganization);
+
+$errors = array();
+$success = false;
+
+$tpl = "listeMembres.php";
+
+if($action == "updateFirstname")
 {
-    $action = htmlentities(GETPOST('action'));
-    $idUser = intval(GETPOST('idUser'));
-    $envoi = GETPOST('envoi');
-
-    $firstname = htmlentities(GETPOST('firstname'));
-    $lastname = htmlentities(GETPOST('lastname'));
-    $email = htmlentities(GETPOST('email'));
-    $birth = htmlentities(GETPOST('birth'));
-
-    $oldmdp = htmlentities(GETPOST('oldmdp'));
-    $newmdp = htmlentities(GETPOST('newmdp'));
-    $newmdp2 = htmlentities(GETPOST('newmdp2'));
-
-    $Organization = new Organization($idOrganization);
-
-    $errors = array();
-    $success = false;
-
-    $tpl = "listeMembres.php";
-
-    if($action == "updateFirstname")
+    if($idUser && $firstname)
     {
-        if($idUser && $firstname)
+        if($envoi)
         {
-            if($envoi)
+            $User = $Organization->fetchUser($idUser);
+            // check if the user belongs to the Organization
+            if($User)
             {
-                $User = $Organization->fetchUser($idUser);
                 if($firstname != $User->getFirstname())
                 {
                     try
@@ -53,25 +53,28 @@ if($rights === "admin")
                 {
                     $errors[] = "Le nom est le même qu'avant.";
                 }
-            } 
-            else 
-            {
-                header("location:".ROOT_URL."/index.php");
             }
         } 
         else 
         {
             header("location:".ROOT_URL."/index.php");
         }
-    }
-    
-    if($action == "updateLastname")
+    } 
+    else 
     {
-        if($idUser && $lastname)
+        header("location:".ROOT_URL."/index.php");
+    }
+}
+
+if($action == "updateLastname")
+{
+    if($idUser && $lastname)
+    {
+        if($envoi)
         {
-            if($envoi)
+            $User = $Organization->fetchUser($idUser);
+            if($User)
             {
-                $User = $Organization->fetchUser($idUser);
                 if($lastname != $User->getLastname())
                 {
                     try
@@ -91,23 +94,26 @@ if($rights === "admin")
                 {
                     $errors[] = "Le nom n'a pas été modifié.";
                 }
-            } 
-            else
-            {
-                header("location:".ROOT_URL."index.php");
             }
-        }
+        } 
         else
         {
             header("location:".ROOT_URL."index.php");
         }
     }
-
-    if($action == "deleteUser")
+    else
     {
-        if($idUser)
+        header("location:".ROOT_URL."index.php");
+    }
+}
+
+if($action == "deleteUser")
+{
+    if($idUser)
+    {
+        $User = $Organization->fetchUser($idUser);
+        if($User)
         {
-            $User = $Organization->fetchUser($idUser);
             try {
                 $Organization->removeUser($idUser);
                 $User->delete();
@@ -117,18 +123,12 @@ if($rights === "admin")
                 //throw $th;
                 $errors[] = "La suppression d'utilisateur n'a pas pu aboutir.";
             }
-        } 
-        else
-        {
-            header("location:".ROOT_PATH."index.php");
         }
+    } 
+    else
+    {
+        header("location:".ROOT_PATH."index.php");
     }
-
-    require_once VIEWS_PATH."admin/".$tpl;
-
-}
-else
-{
-    header("location:".ROOT_URL."index.php");
 }
 
+require_once VIEWS_PATH."admin/".$tpl;

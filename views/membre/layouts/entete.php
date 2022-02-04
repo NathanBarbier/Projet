@@ -1,15 +1,3 @@
-<?php
-$rights = $_SESSION["rights"] ?? false;
-
-if($rights == 'admin')
-{
-    header("location:".ROOT_URL."index.php");
-}
-
-if($rights == "user")
-{
-?>
- 
 <!DOCTYPE html>
 <html lang="fr">
     <head>
@@ -31,10 +19,3 @@ if($rights == "user")
             <a class="btn btn-danger" href="<?= CONTROLLERS_URL ?>visiteur/Deconnexion.php" >Déconnexion</a>
         </div>
     </nav>
-<?php 
-} 
-else 
-{
-    header("location:".ROOT_URL."index.php");
-}
-?>

@@ -135,7 +135,6 @@ class Organization extends Modele
         $requete = $this->getBdd()->prepare($sql);
         $requete->execute([$rowid]);
 
-    
         if($requete->rowCount() > 0)
         {
             $obj = $requete->fetch(PDO::FETCH_OBJ);
@@ -156,35 +155,45 @@ class Organization extends Modele
 
     public function fetchUsers()
     {
-        $sql = "SELECT rowid";
+        $sql = "SELECT *";
         $sql .= " FROM storieshelper_user";
         $sql .= " WHERE fk_organization = ?";
 
         $requete = $this->getBdd()->prepare($sql);
         $requete->execute([$this->rowid]);
         
-        $lines = $requete->fetchAll(PDO::FETCH_OBJ);
-
-        foreach($lines as $line)
+        if($requete->rowCount() > 0)
         {
-            $this->users[] = new User($line->rowid);
+            $lines = $requete->fetchAll(PDO::FETCH_OBJ);
+            
+            foreach($lines as $line)
+            {
+                $User = new User();
+                $User->initialize($line);
+                $this->users[] = $User;
+            }
         }
     }
 
     public function fetchProjects()
     {
-        $sql = "SELECT p.rowid";
-        $sql .= " FROM storieshelper_project AS p";
-        $sql .= " WHERE p.fk_organization = ?";
+        $sql = "SELECT *";
+        $sql .= " FROM storieshelper_project";
+        $sql .= " WHERE fk_organization = ?";
 
         $requete = $this->getBdd()->prepare($sql);
         $requete->execute([$this->rowid]);
 
-        $lines = $requete->fetchAll(PDO::FETCH_OBJ);
-    
-        foreach($lines as $line)
+        if($requete->rowCount() > 0)
         {
-            $this->projects[] = new Project($line->rowid);
+            $lines = $requete->fetchAll(PDO::FETCH_OBJ);
+        
+            foreach($lines as $line)
+            {
+                $Project = new Project();
+                $Project->initialize($line);
+                $this->projects[] = $Project;
+            }
         }
     }
 
@@ -202,6 +211,7 @@ class Organization extends Modele
                 return $User;
             }
         }
+        return false;
     }
 
     public function fetch_last_insert_id()
@@ -236,6 +246,23 @@ class Organization extends Modele
             return false;
         }
 
+    }
+
+    /**
+     * Check if the project belongs to this Organization
+     * @param int fk_project the project to check
+     * @return bool true OK, false KO
+     */
+    public function checkProject(int $fk_project)
+    {
+        foreach($this->projects as $Project)
+        {
+            if($Project->getRowid() == $fk_project)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }
 ?>

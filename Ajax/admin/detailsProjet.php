@@ -1,33 +1,38 @@
 <?php 
 // import all models
 require_once "../../services/header.php";
-
-$rights = $_SESSION["rights"] ?? false;
-$idOrganization = $_SESSION["idOrganization"] ?? null;
-$idUser = $_SESSION["idUser"] ?? null;
-
-if($rights == 'admin' && $idUser > 0 && $idOrganization > 0)
+// only allow access to ajax request
+if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest' ) )
 {
-    $action = htmlentities(GETPOST('action'));
-    $teamId = intval(GETPOST('teamId'));
+    $rights = $_SESSION["rights"] ?? false;
+    $idOrganization = $_SESSION["idOrganization"] ?? null;
+    $idUser = $_SESSION["idUser"] ?? null;
 
-    switch($action)
+    if($rights == 'admin' && $idUser > 0 && $idOrganization > 0)
     {
-        case 'getTeamActive':
-            if($teamId)
-            {
-                try {
-                    $Team = new Team($teamId);
-                    echo json_encode($Team->isActive());
-                } catch (\Throwable $th) {
-                    // echo json_encode($th);
+        $action = htmlentities(GETPOST('action'));
+        $teamId = intval(GETPOST('teamId'));
+
+        switch($action)
+        {
+            case 'getTeamActive':
+                if($teamId)
+                {
+                    try {
+                        $Team = new Team($teamId);
+                        echo json_encode($Team->isActive());
+                    } catch (\Throwable $th) {
+                        // echo json_encode($th);
+                    }
+                    break;
                 }
-                break;
-            }
+        }
     }
-}
-else
-{
+    else
+    {
+        header("location:".ROOT_URL."index.php");
+    }
+} else {
     header("location:".ROOT_URL."index.php");
-}
+} 
 ?>

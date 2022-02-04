@@ -99,7 +99,6 @@ Class TaskMember extends Modele
         $sql = "SELECT t.fk_user";
         $sql .= " FROM storieshelper_task_member AS t";
         $sql .= " WHERE t.fk_task = ?";
-        echo json_encode($fk_task);
 
         $requete = $this->getBdd()->prepare($sql);
         $requete->execute([$fk_task]);

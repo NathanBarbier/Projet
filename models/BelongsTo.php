@@ -92,7 +92,11 @@ class BelongsTo extends Modele
 
         foreach($lines as $line)
         {
-            $BelongsTos[] = new BelongsTo($line->fk_user, $line->fk_team);
+            // $BelongsTos[] = new BelongsTo($line->fk_user, $line->fk_team);
+            $BelongsTo = new BelongsTo();
+            $BelongsTo->fk_team = $line->fk_team;
+            $BelongsTo->fk_user = $line->fk_user;
+            $BelongsTos[] = $BelongsTo;
         }
 
         return $BelongsTos;

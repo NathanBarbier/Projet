@@ -111,12 +111,32 @@ require_once "layouts/entete.php";
 
                     <h6 class="mt-2 text-center mx-auto w-50 border-bottom">Projets en cours</h6>
                     <div class="d-flex justify-content-center">
-                        <button type="text" class="btn btn-outline-classic form-control w-75 mx-auto text-center"><?= count($Organization->getProjects()) ?></button>
+                        <button type="text" class="btn btn-outline-classic form-control w-75 mx-auto text-center">
+                            <?php 
+                            $counter = 0; 
+                            foreach($Organization->getProjects() as $Project) {
+                                if($Project->isActive()) {
+                                    $counter++;
+                                }
+                            } 
+                            echo $counter;
+                            ?>
+                        </button>
                     </div>
 
                     <h6 class="mt-2 text-center mx-auto w-50 border-bottom">Projets terminés</h6>
                     <div class="d-flex justify-content-center">
-                        <button type="text" class="btn btn-outline-classic form-control w-75 mx-auto text-center"><?= $Organization->countArchivedProjects() ?></button>
+                        <button type="text" class="btn btn-outline-classic form-control w-75 mx-auto text-center">
+                            <?php 
+                            $counter = 0; 
+                            foreach($Organization->getProjects() as $Project) {
+                                if(!$Project->isActive()) {
+                                    $counter++;
+                                }
+                            } 
+                            echo $counter;
+                            ?>
+                        </button>
                     </div>
 
                     <div class="w-100 mt-3 mb-3 mx-auto text-center">

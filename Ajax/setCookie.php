@@ -1,7 +1,9 @@
 <?php 
 // import all models
 require_once "../services/header.php";
-
+// only allow access to ajax request
+if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest' ) )
+{
     $action = GETPOST('action');
 
     switch($action) {
@@ -21,4 +23,9 @@ require_once "../services/header.php";
                 echo json_encode(false);
             }
     }
+}
+else
+{
+    header("location:".ROOT_URL."index.php");
+}
 ?>

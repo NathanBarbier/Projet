@@ -1,6 +1,7 @@
 <?php
 //import all models
 require_once "../../services/header.php";
+require "layouts/head.php";
 
 $rights = $_SESSION["rights"] ?? false;
 $idUser = $_SESSION["idUser"] ?? false;

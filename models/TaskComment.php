@@ -155,6 +155,21 @@ class TaskComment extends Modele
         }
     }
 
+    public function initialize(object $Obj)
+    {
+        $this->rowid = intval($Obj->rowid);
+        $this->fk_task = intval($Obj->fk_task);
+        $this->note = $Obj->note;
+        $this->fk_user = intval($Obj->fk_user);
+        if(!empty($Obj->tms)) 
+        {
+            $date = new DateTime();
+            $date->setTimestamp($Obj->tms);
+            $date->setTimezone(new DateTimeZone('Europe/Paris'));
+            $this->tms = $date->format('d/m/y H:i');
+        }
+    }
+
     public function fetch_last_insert_id()
     {
         $sql = "SELECT MAX(rowid) AS rowid";

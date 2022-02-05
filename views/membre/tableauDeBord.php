@@ -130,6 +130,6 @@ require_once "layouts/entete.php";
         </div>
     </div>
 
-    <script src="<?= JS_URL ?>membre/tableauDeBord.js" type="text/Javascript"></script>
+    <script src="<?= JS_URL ?>membre/tableauDeBord.min.js" type="text/Javascript" defer></script>
 <?php
 require_once "layouts/pied.php" ?>

@@ -180,7 +180,7 @@ require_once "layouts/entete.php";
         </div>
     </div>
 
-<script type="text/Javascript" src="<?= JS_URL ?>admin/gestionOrganisation.js"></script>
+<script type="text/Javascript" src="<?= JS_URL ?>admin/gestionOrganisation.min.js" defer></script>
 
 <?php
 require_once "layouts/pied.php";

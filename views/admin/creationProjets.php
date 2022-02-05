@@ -40,6 +40,6 @@ require_once "layouts/entete.php";
     </div>
 </div>
 
-<script type="text/Javascript" src="<?= JS_URL ?>admin/creationProjets.js"></script>
+<script type="text/Javascript" src="<?= JS_URL ?>admin/creationProjets.min.js" defer></script>
 
 <?php require_once "layouts/pied.php"; ?>

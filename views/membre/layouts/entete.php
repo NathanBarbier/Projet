@@ -6,8 +6,9 @@
 
         <link rel="icon" href="<?= IMG_URL ?>logo.png">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-        <link rel="stylesheet" href="<?= ROOT_URL ?>style.css">
-        <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css">
+        <link rel="stylesheet" href="<?= ROOT_URL ?>style.min.css">
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous" defer></script>
     </head>
     <body>
     <nav class="navbar navbar-dark bg-dark">
@@ -16,6 +17,6 @@
             Stories Helper
         </a>
         <div class="me-4" style="margin-left:auto">
-            <a class="btn btn-danger" href="<?= CONTROLLERS_URL ?>visiteur/Deconnexion.php" >Déconnexion</a>
+            <a class="btn btn-danger" href="<?= CONTROLLERS_URL ?>visiteur/deconnexion.php" >Déconnexion</a>
         </div>
     </nav>

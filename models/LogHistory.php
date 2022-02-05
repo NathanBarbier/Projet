@@ -157,7 +157,11 @@ Class LogHistory extends Modele
         $sql = "INSERT INTO storieshelper_log_history (fk_author, date_creation, action, object_type, object_name, value)";
         $sql .= " VALUES (?, NOW(),?,?,?,?)";
 
+        // development environment
         $PDO = new PDO('mysql:host=localhost;dbname=storieshelper;charset=UTF8', 'root');
+        // production environment
+        // $PDO = new PDO('mysql:host=ipssisqstorieshe.mysql.db;dbname=ipssisqstorieshe;charset=UTF8', 'ipssisqstorieshe', 'Ipssi2022storieshelper');
+        
         $requete = $PDO->prepare($sql);
         $requete->execute([$fk_author, $action, $object_type, $object_name, $value]);
     }

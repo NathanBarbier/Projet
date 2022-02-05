@@ -110,7 +110,7 @@ require_once "layouts/entete.php";
 
     </table>
 
-<script src="<?= JS_URL ?>admin/listeMembres.js"></script>
+<script src="<?= JS_URL ?>admin/listeMembres.min.js" defer></script>
 
 <?php
 require_once "layouts/pied.php";

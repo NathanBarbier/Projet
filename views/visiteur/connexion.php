@@ -28,12 +28,12 @@ require_once "layouts/entete.php";
         <form class="col-md-12 col-lg-6 mx-auto" method="post" action="<?= CONTROLLERS_URL ?>visiteur/connexion.php">
     
             <div class="form-floating mt-5">
-                <input type="email" class="form-control" name="email" placeholder="Saisissez votre identifiant" value="<?= $email ?? '' ?>" maxlength="50" required>
+                <input id="email" type="email" class="form-control" name="email" placeholder="Saisissez votre identifiant" value="<?= $email ?? '' ?>" maxlength="50" required>
                 <label for="email" class="mb-1">Addresse email</label>
             </div>
     
             <div class="form-floating mt-3">
-                <input type="password" class="form-control" name="password" placeholder="Saisissez votre mot de passe" required>
+                <input id="password" type="password" class="form-control" name="password" placeholder="Saisissez votre mot de passe" required>
                 <label for="password" class="mb-1">Mot de passe</label>
             </div>
             

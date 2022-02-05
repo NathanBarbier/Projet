@@ -1,11 +1,14 @@
 <?php
 //import all models
 require_once "../../services/header.php";
-require "layouts/head.php";
 setcookie(
     'remember_me',
     "",
     time() - 604800,
+    '',
+    '',
+    false, //todo true when the website support https
+    true
 );
 $idUser = $_SESSION['idUser'] ?? false;
 if($idUser) {

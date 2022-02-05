@@ -11,7 +11,8 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
             setcookie("consentCookie", 1, [
                 'expires' => time()+86400,
                  'samesite' => 'None',
-                 'secure' => true,
+                 'secure' => false, //todo true when the website support https
+                 'httpOnly' => true
              ]);
         case 'checkCookieConsent':
             if(isset($_COOKIE['consentCookie']) && $_COOKIE['consentCookie'] == 1)

@@ -13,11 +13,11 @@
 			</div>
 		</div>
 	</div>
-	<div class="modal fade position-absolute top-25" id="cookiedetailsmodal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+	<div class="modal fade position-absolute top-25" id="cookiedetailsmodal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel2" aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-body">
-					<h5 class="modal-title" id="staticBackdropLabel">Détails sur les cookies</h5>
+					<h5 class="modal-title" id="staticBackdropLabel2">Détails sur les cookies</h5>
 					<div class="accordion mt-3" id="accordionExample">
 						<div class="accordion-item">
 							<h2 class="accordion-header" id="headingOne">
@@ -44,10 +44,10 @@
     <script>
 		const AJAX_URL = <?php echo json_encode(AJAX_URL); ?>;
 	</script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
-    <script src="<?= ROOT_URL ?>script.js"></script>
-	<script src="<?= JS_URL ?>visiteur/cookies.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous" defer></script>
+	<script src="<?= ROOT_URL; ?>script.min.js" defer></script>
+	<script src="<?= JS_URL ?>visiteur/cookies.min.js" defer></script>
 
     <!-- Tooltip activation -->
     <script>

@@ -59,7 +59,11 @@ if($envoi)
                         setcookie(
                             'remember_me',
                             $User->getRowid() . "-" . $token,
-                            time() + 604800
+                            time() + 604800,
+                            '',
+                            '',
+                            false, //todo true when the website support https
+                            true
                         );
                     }
 

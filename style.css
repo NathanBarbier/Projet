@@ -1,5 +1,3 @@
-@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.6.0/font/bootstrap-icons.css");
-
 /* SUMMARY */
 
 /* 1. General classes */
@@ -69,11 +67,11 @@ input:read-only:hover:not(.form-check-input) {
 }
 
 .top-15 {
-  top: 15% !important;
+  top: 15%;
 }
 
 .top-25 {
-  top: 25% !important;
+  top: 25%;
 }
 
 @media only screen and (max-width: 768px) {
@@ -164,8 +162,7 @@ input:read-only:hover:not(.form-check-input) {
 .vignette {
   height: 85%;
   width: 85%;
-  box-shadow: grey;
-  box-shadow: 19px 19px 38px #727272, -19px -19px 38px #ffffff !important;
+  box-shadow: 19px 19px 38px #727272, -19px -19px 38px #ffffff;
   border-radius: 45px !important;
 }
 
@@ -274,7 +271,6 @@ input:read-only:hover:not(.form-check-input) {
 }
 
 .column-title {
-  height: 50px;
   width: 100%;
   border-bottom: 1px rgb(216, 214, 214) solid;
   height: max-content;
@@ -397,7 +393,7 @@ input:read-only:hover:not(.form-check-input) {
 }
 
 .archived-team:hover {
-  background-color: #eeeff09f !important;
+  background-color: #eeeff09f;
 }
 
 /* -------------- 6. ------------- */
@@ -441,7 +437,7 @@ input:read-only:hover:not(.form-check-input) {
 /* -------------- 7. ------------- */
 
 .bi-archive-fill {
-  width: max-content !important;
+  width: max-content;
 }
 
 .bi-building {

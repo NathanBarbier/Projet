@@ -19,7 +19,7 @@ require_once "layouts/entete.php";
                 </div>
             <?php } ?>
             
-            <div id="current-projects-col" class="row mx-3 collapse show mb-3">
+            <div id="current-projects-col" class="bg-white border row mx-3 collapse show mb-3" style="border-radius: 15px;">
                 <h3 class="mx-auto text-center border-bottom w-50">Tableaux Actifs</h3>
                 <div style="height: 90%; overflow: auto">
                     <?php 
@@ -106,7 +106,7 @@ require_once "layouts/entete.php";
         </div> 
 
         <!-- user properties -->
-        <div class="col-sm-12 col-md-5 col-lg-4 profile-section mt-3 position-relative" style="height:87%">
+        <div class="col-sm-12 col-md-5 bg-white col-lg-4 profile-section mt-3 position-relative" style="height:87%">
 
             <h3 class="mx-auto mt-3 text-center" style="border-bottom: black solid 1px; border-color: rgb(216, 214, 214); width: 80%">Profil</h3>
 

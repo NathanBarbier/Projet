@@ -8,12 +8,22 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
 
     switch($action) {
         case 'consentCookie':
-            setcookie("consentCookie", 1, [
-                'expires' => time()+86400,
-                 'samesite' => 'None',
-                 'secure' => false, //todo true when the website support https
-                 'httpOnly' => true
-             ]);
+            try {
+                setcookie(
+                    'consentCookie',
+                    1,
+                    time()+86400,
+                    '',
+                    '',
+                    false, //todo true when the website support https
+                    true
+                );
+                echo json_encode($_COOKIE);
+            } catch (\Throwable $th) {
+                //throw $th;
+                echo json_encode('YOOOO');
+            }
+            break;
         case 'checkCookieConsent':
             if(isset($_COOKIE['consentCookie']) && $_COOKIE['consentCookie'] == 1)
             {
@@ -23,6 +33,7 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
             {
                 echo json_encode(false);
             }
+            break;
     }
 }
 else

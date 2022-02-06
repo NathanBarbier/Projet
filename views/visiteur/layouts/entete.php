@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="<?= ROOT_URL ?>style.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous" defer></script>
 </head>
-<body>
+<body style="overflow-y: auto;">
     <nav class="navbar navbar-dark bg-dark w-100" style="height: 60px; z-index : 999">
         <a class="navbar-brand mb-1" href="<?= ROOT_URL ?>index.php">
             <img src="<?= IMG_URL ?>logo.png" width="35" height="35" class="d-inline-block align-top ms-3 me-2" alt="">

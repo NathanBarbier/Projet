@@ -76,9 +76,9 @@
     </div> -->
     <?php if($pageName != 'map.php') { ?>
     <!-- SIDE BAR -->
-    <div class="row">
+    <div class="row" style="height: 100%;">
         <div id="sideBar" class="navbar-expand-lg col-md-0 col-lg-2 p-0 collapse show">
-            <div class="collapse navbar-collapse align-items-start text-center pt-2 bg-light overflow-y" style="height: 100vh; border: 1px solid rgba(0, 0, 0, 0.125);">
+            <div class="collapse navbar-collapse align-items-start text-center pt-2 bg-light overflow-y" style="height: 100%; border: 1px solid rgba(0, 0, 0, 0.125);">
                 <nav class="w-100">
                     <ul class="list-unstyled">
                         <li><a href="<?= VIEWS_URL ?>admin/index.php" class="btn btn-outline-secondary w-75">Accueil</a></li>

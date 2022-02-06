@@ -15,8 +15,8 @@ require_once "layouts/entete.php";
     </div>
     <?php } ?>
 
-    <table class="table mt-4">
-        <thead>
+    <table class="table table-radius mt-4">
+        <thead class="bg-white">
             <tr>
                 <th colspan="7">
                     <div style="float : left"><strong>Liste des membres</strong></div>
@@ -26,7 +26,7 @@ require_once "layouts/entete.php";
                 </th>
             </tr>
         </thead>
-        <tbody>
+        <tbody class="bg-white">
             <tr class="text-center">
                 <th>NOM</th>
                 <th>Prénom</th>

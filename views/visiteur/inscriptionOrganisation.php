@@ -1,8 +1,9 @@
 <?php
 require_once "layouts/entete.php";
-
-if(!empty($errors)) { ?>
-    <div class="position-relative mx-auto">
+?>
+<div class="container">
+    <?php if(!empty($errors)) { ?>
+        <div class="position-relative mx-auto">
         <div class="alert alert-danger w-50 text-center position-absolute top-0 start-50 translate-middle-x before">
         <?php foreach($errors as $error) { ?>
             <i class="bi bi-exclamation-triangle-fill"></i>
@@ -13,11 +14,11 @@ if(!empty($errors)) { ?>
     <?php } ?>
 
     <div class="row">
-        <form class="col-md-12 col-lg-6 mx-auto border-lg bg-white p-4" method="POST" action="<?= CONTROLLERS_URL?>visiteur/inscriptionOrganisation.php">
+        <form class="col-md-12 col-lg-6 mx-auto border-lg bg-white px-4 pb-3" method="POST" action="<?= CONTROLLERS_URL?>visiteur/inscriptionOrganisation.php">
             <input type="hidden" name="action" value="inscriptionOrg">
-            <h1 class="mx-auto text-center mt-3" style="border-bottom: rgb(216, 214, 214) 1px solid;">Inscription </h1>
+            <h1 class="mx-auto text-center mt-2" style="border-bottom: rgb(216, 214, 214) 1px solid;">Inscription </h1>
         
-            <div class="form-floating mt-5">
+            <div class="form-floating mt-4">
                 <input type="text" class="form-control" placeholder="Entrez le nom de votre organisation" id='name' name="name" value="<?= isset($name) ? $name : ''?>" required>
                 <label for="name">Nom organisation</label>
             </div>
@@ -45,7 +46,7 @@ if(!empty($errors)) { ?>
             <div class="text-center mt-3">
                 <button type="submit" class="btn btn-outline-classic mt-3 w-100" name="envoi" value="1">S'inscrire</button>
             </div>
-        
+            
             <div class="form-group text-center mt-2">
                 <div class="mt-4">
                     Vous possédez un compte ?
@@ -54,6 +55,7 @@ if(!empty($errors)) { ?>
             </div>
         </form>
     </div>
+</div>
 
 <?php
 require_once 'layouts/pied.php';

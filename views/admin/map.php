@@ -1,7 +1,7 @@
 <?php 
 require_once "layouts/entete.php";
 ?>
-<div class="row position-relative" style="height: 100%;">
+<div class="row position-relative bg-white" style="height: 100%;">
 
     <?php if (!$Project->isActive()) { ?>
         <div class="alert alert-info alert-visible mt-3 w-50 text-center position-absolute top-0 start-50 translate-middle-x collapse show" style="z-index: 1;">

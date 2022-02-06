@@ -2,7 +2,7 @@
 require_once "layouts/entete.php";
 ?>
     <div class="container">
-        <form class="w-50 mx-auto position-relative" method="post" action="<?= CONTROLLERS_URL ?>admin/inscriptionUtilisateur.php?action=signup">
+        <form class="mx-auto position-relative col-md-12 col-lg-6 mx-auto border-lg bg-white px-4 pb-3" method="post" action="<?= CONTROLLERS_URL ?>admin/inscriptionUtilisateur.php?action=signup">
             <?php if($success) { ?>
             <div class="alert alert-success w-100 text-center position-absolute top-0 start-50 translate-middle-x before">
                 <i class="bi bi-check-circle-fill"></i>
@@ -39,7 +39,7 @@ require_once "layouts/entete.php";
             </div>
 
             <div class="text-center mt-5">
-                <button type="submit" class="btn btn-primary w-50" name="envoi" value="1">Inscrire</button>
+                <button type="submit" class="btn btn-outline-classic w-50" name="envoi" value="1">Inscrire</button>
             </div>
 
         </form>

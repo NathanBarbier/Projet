@@ -36,3 +36,7 @@ $("#cancel-account-deletion").click(function() {
 
     $("#account-delete-confirmation").removeClass('show');
 });
+
+$("#update-profile-submit").click(function() {
+    $("#profile-form").submit();
+}); 

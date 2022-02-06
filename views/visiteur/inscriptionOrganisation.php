@@ -13,7 +13,7 @@ if(!empty($errors)) { ?>
     <?php } ?>
 
     <div class="row">
-        <form class="col-md-12 col-lg-6 mx-auto" method="POST" action="<?= CONTROLLERS_URL?>visiteur/inscriptionOrganisation.php">
+        <form class="col-md-12 col-lg-6 mx-auto border-lg bg-white p-4" method="POST" action="<?= CONTROLLERS_URL?>visiteur/inscriptionOrganisation.php">
             <input type="hidden" name="action" value="inscriptionOrg">
             <h1 class="mx-auto text-center mt-3" style="border-bottom: rgb(216, 214, 214) 1px solid;">Inscription </h1>
         
@@ -43,14 +43,14 @@ if(!empty($errors)) { ?>
             </div>
 
             <div class="text-center mt-3">
-                <button type="submit" class="btn btn-primary mt-3 w-100" name="envoi" value="1">S'inscrire</button>
+                <button type="submit" class="btn btn-outline-classic mt-3 w-100" name="envoi" value="1">S'inscrire</button>
             </div>
         
             <div class="form-group text-center mt-2">
                 <div class="mt-4">
                     Vous possédez un compte ?
                 </div>
-                <a href="<?= CONTROLLERS_URL ?>visiteur/connexion.php" class="btn btn-info mt-3">Connectez-vous</a>
+                <a href="<?= CONTROLLERS_URL ?>visiteur/connexion.php" class="btn btn-outline-classic w-md-100 w-lg-50 mt-3">Connectez-vous</a>
             </div>
         </form>
     </div>

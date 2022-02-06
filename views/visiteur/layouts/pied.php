@@ -42,7 +42,9 @@
 	</div>
 </div>
 
+<footer class="w-100 bg-dark" style="position: fixed;bottom: 0;width: 100%; height:75px;">
 
+</footer>
 
 <script>
 	const AJAX_URL = <?php echo json_encode(AJAX_URL); ?>;

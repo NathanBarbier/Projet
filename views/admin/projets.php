@@ -2,7 +2,7 @@
 require_once "layouts/entete.php";
 ?>
     <div class="row mt-4">
-        <div class="col pt-4" style="height:35vh">
+        <div class="col-xs-12 col-md-6 pt-4" style="height:35vh">
             <a href="<?= CONTROLLERS_URL ?>admin/creationProjets.php" class="aVignette">
                 <div id="vignette0" class="bg-info mx-auto rounded vignette">
                     <div class="row">
@@ -18,7 +18,7 @@ require_once "layouts/entete.php";
                 </div>
             </a>
         </div>
-        <div class="col pt-4" style="height:35vh">
+        <div class="col-xs-12 col-md-6 pt-4" style="height:35vh">
             <a href="<?= CONTROLLERS_URL ?>admin/listeProjets.php" class="aVignette">
                 <div id="vignette1" class="bg-info mx-auto rounded vignette">
                     <div class="row">
@@ -36,7 +36,7 @@ require_once "layouts/entete.php";
         </div>
     </div>
     <div class="row">
-        <div class="col pt-4" style="height:35vh">
+        <div class="col-xs-12 col-md-6 pt-4" style="height:35vh">
             <a href="#" class="aVignette">
                 <div id="vignette2" class="bg-info mx-auto rounded vignette">
                     <div class="row">
@@ -52,7 +52,7 @@ require_once "layouts/entete.php";
                 </div>
             </a>
         </div>
-        <div class="col pt-4" style="height:35vh">
+        <div class="col-xs-12 col-md-6 pt-4" style="height:35vh">
             <div id="vignette3" class=" bg-info mx-auto rounded vignette">
             
             </div>

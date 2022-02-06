@@ -2,7 +2,7 @@
 require_once "layouts/entete.php";
 ?>
     <div class="row mt-4">
-        <div class="col pt-4 vignette-container">
+        <div class="col-xs-12 col-md-6 pt-4 vignette-container">
             <a href="<?= CONTROLLERS_URL ?>admin/inscriptionUtilisateur.php" class="aVignette">
                 <div id="vignette0" class="bg-info mx-auto rounded vignette">
                     <div class="row">
@@ -18,7 +18,7 @@ require_once "layouts/entete.php";
                 </div>
             </a>
         </div>
-        <div class="col pt-4 vignette-container">
+        <div class="col-xs-12 col-md-6 pt-4 vignette-container">
             <a href="<?= CONTROLLERS_URL ?>admin/listeMembres.php" class="aVignette">
                 <div id="vignette1" class="bg-info mx-auto rounded vignette">
                     <div class="row">

@@ -36,7 +36,7 @@ body {
   width: 100%;
   overflow-x: hidden;
   font-family: 'Zilla Slab', serif;
-  font-size: 1.2rem !important;
+  /* font-size: 1.2rem !important; */
 }
 
 .btn {
@@ -301,6 +301,7 @@ input:read-only:hover:not(.form-check-input) {
   border-radius: 5px;
   float: right;
   line-height: 80%;
+  font-size: 1rem !important;
 }
 
 #add-column-btn {
@@ -314,6 +315,7 @@ input:read-only:hover:not(.form-check-input) {
   border-radius: 5px;
   float: right;
   line-height: 80%;
+  font-size: 1rem !important;
 }
 
 #attributed-member-button,

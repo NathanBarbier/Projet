@@ -43,5 +43,4 @@ define('SERVICES_URL', $rootUrl.'services/');
 define('JS_URL', $rootUrl.'js/');
 define('AJAX_URL', $rootUrl.'Ajax/');
 define('PHP_MAILER_URL', $rootUrl.'vendor/phpmailer/phpmailer/src/');
-
 ?>

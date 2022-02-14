@@ -25,7 +25,7 @@ require_once "layouts/entete.php";
     
     <div class="row">
         <form class="col-md-12 col-lg-6 mx-auto border-lg bg-white px-4 pb-3" method="post" action="<?= CONTROLLERS_URL ?>visiteur/connexion.php">
-            <h1 class="text-center w-100 mx-auto border-bottom mt-2">Connexion</h1>
+            <h1 class="text-center w-100 mx-auto border-bottom mt-2 underline">Connexion</h1>
     
             <div class="form-floating mt-5">
                 <input id="email" type="email" class="form-control" name="email" placeholder="Saisissez votre identifiant" value="<?= $email ?? '' ?>" maxlength="50" required>

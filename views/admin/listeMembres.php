@@ -19,9 +19,13 @@ require_once "layouts/entete.php";
         <thead class="bg-white">
             <tr>
                 <th colspan="7">
-                    <div style="float : left"><strong>Liste des membres</strong></div>
+                    <div style="float : left">
+                        <h5 class="underline">Liste des membres</h5>
+                    </div>
                     <div class="me-5" style="float : right">
-                        <div>Nombres de membres : <?= count($Organization->getUsers()); ?></div> 
+                        <div>
+                            <h5 class="underline">Nombres de membres : <?= count($Organization->getUsers()); ?></h5>
+                        </div> 
                     </div>
                 </th>
             </tr>

@@ -1,7 +1,8 @@
 <?php
 require_once "layouts/entete.php";
 ?>
-    <h1 class="text-center mx-auto w-50 mb-4 border-bottom">Liste des projets</h1>
+
+    <h1 class="text-center mx-auto w-50 mb-3 pb-2 bg-white underline sticker">Liste des projets</h1>
 
     <div class="sticker mx-3" style="height:75vh; overflow:auto">
     <?php

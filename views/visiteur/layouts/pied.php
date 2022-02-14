@@ -42,8 +42,8 @@
 	</div>
 </div>
 
-<footer class="w-100 bg-dark" style="position: fixed;bottom: 0;width: 100%; height:75px;">
-
+<footer class="w-100 bg-dark text-center pt-3 footer">
+	<a href="<?= CONTROLLERS_URL ?>visiteur/cgu.php">Condition générales d'utilisation</a>
 </footer>
 
 <script>

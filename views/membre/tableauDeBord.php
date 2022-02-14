@@ -20,7 +20,7 @@ require_once "layouts/entete.php";
             <?php } ?>
             
             <div id="current-projects-col" class="bg-white border row mx-3 collapse show mb-3" style="border-radius: 15px;">
-                <h3 class="mx-auto text-center border-bottom w-50">Tableaux Actifs</h3>
+                <h3 class="mx-auto text-center w-50 py-2 underline">Tableaux Actifs</h3>
                 <div style="height: 90%; overflow: auto">
                     <?php 
                     if(count($Projects) > 0) {
@@ -108,7 +108,8 @@ require_once "layouts/entete.php";
         <!-- user properties -->
         <div class="col-sm-12 col-md-5 bg-white col-lg-4 profile-section mt-3 position-relative" style="height:87%">
 
-            <h3 class="mx-auto mt-3 text-center" style="border-bottom: black solid 1px; border-color: rgb(216, 214, 214); width: 80%">Profil</h3>
+            <h3 class="mx-auto mt-3 text-center underline" style="width: 80%">Profil</h3>
+            <hr class="w-75 mx-auto">
 
             <div class="d-flex justify-content-center mt-4">
                 <div class="text-center w-75">

@@ -16,7 +16,8 @@ require_once "layouts/entete.php";
             } ?>
             </div>
             <?php } ?>
-            <h1 class="text-center mx-auto w-100 mb-4 border-bottom">Inscription d'un collaborateur</h1>
+            <h1 class="text-center mx-auto w-100 underline">Inscription d'un collaborateur</h1>
+            <hr>
                 
             <div class="form-floating mt-3 mb-3">
                 <input class="form-control" type="email" name="email" id="email" placeholder="adresse email" value="<?= $email ?? ""?>"  required>

@@ -16,7 +16,7 @@ require_once "layouts/entete.php";
     <div class="row">
         <form class="col-md-12 col-lg-6 mx-auto border-lg bg-white px-4 pb-3" method="POST" action="<?= CONTROLLERS_URL?>visiteur/inscriptionOrganisation.php">
             <input type="hidden" name="action" value="inscriptionOrg">
-            <h1 class="mx-auto text-center mt-2" style="border-bottom: rgb(216, 214, 214) 1px solid;">Inscription </h1>
+            <h1 class="mx-auto text-center mt-2 underline" style="border-bottom: rgb(216, 214, 214) 1px solid;">Inscription </h1>
         
             <div class="form-floating mt-4">
                 <input type="text" class="form-control" placeholder="Entrez le nom de votre organisation" id='name' name="name" value="<?= isset($name) ? $name : ''?>" required>
@@ -40,7 +40,7 @@ require_once "layouts/entete.php";
         
             <div class="form-check mt-3">
                 <input class="form-check-input" name="consent" value="1" type="checkbox" id="consent-check" required>
-                <label class="form-check-label" for="consent-check">En cochant cette case vous confirmez accepter le traitement de vos données</label>
+                <label class="form-check-label" for="consent-check">En cochant cette case vous acceptez nos <a href="<?= CONTROLLERS_URL ?>visiteur/cgu.php" target="_blank">Conditions générales</a> et confirmez accepter le traitement de vos données</label>
             </div>
 
             <div class="text-center mt-3">

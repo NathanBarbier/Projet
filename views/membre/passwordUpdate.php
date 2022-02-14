@@ -15,8 +15,9 @@ require_once "layouts/entete.php";
 
     <div class="row px-3">
         <div class="col-md-9 col-lg-6 mx-auto border-lg bg-white px-4 pb-3">
-            <h1 class="text-center mt-4 w-75 mx-auto" style="border-bottom: rgb(216, 214, 214) solid 1px;">Modification du mot de passe</h1>
-            <form class="mt-5" method="post" action="<?= CONTROLLERS_URL ?>membre/passwordUpdate.php?action=passwordUpdate">
+            <h1 class="text-center mt-4 w-75 mx-auto underline pb-3">Modification du mot de passe</h1>
+            <hr class="w-75 mx-auto">
+            <form class="mt-4" method="post" action="<?= CONTROLLERS_URL ?>membre/passwordUpdate.php?action=passwordUpdate">
                 <div class="form-floating w-100 mx-auto">
                     <input class="form-control" type="password" required id="oldmdp" name="oldmdp" placeholder="Ancien mot de passe">
                     <label for="oldmdp">Ancien mot de passe</label>

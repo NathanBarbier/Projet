@@ -16,7 +16,8 @@ require_once "layouts/entete.php";
     <?php } ?>
     <div class="row mt-4 px-3">
         <div class="col-md-10 col-lg-6 mx-auto border-lg bg-white px-4 pb-3">
-            <h2 class="mx-auto text-center mt-2 border-bottom w-50">Création de projet</h2>
+            <h2 class="mx-auto text-center mt-2 w-50 underline">Création de projet</h2>
+            <hr class="w-75 mx-auto">
             <form method="POST" action="<?= CONTROLLERS_URL ?>admin/creationProjets.php?action=addProjet&idProject=<?= $idProject ?? '' ?>">
                 <div class="form-floating mb-3 mt-5 w-75 mx-auto">
                     <input required class="form-control" type="text" name="name" id="name-id" placeholder="Titre du projet" value="<?= $name ?? '' ?>">

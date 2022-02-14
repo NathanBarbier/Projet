@@ -39,6 +39,24 @@ body {
   /* font-size: 1.2rem !important; */
 }
 
+.footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  height:75px;
+}
+
+::selection {
+  color: #f0f0f0;
+  background: #9abeff;
+}
+
+.underline {
+  text-decoration: underline;
+  text-decoration-color: 	#00abb6;
+  text-decoration-thickness: 3px;
+}
+
 .btn {
   font-size: 1.2rem !important;
 }
@@ -201,17 +219,26 @@ input:read-only:hover:not(.form-check-input) {
 #vignette1:hover {
   background: linear-gradient(40deg, #f0f0f0, #ff0202);
 }
+#vignette1:active {
+  background: linear-gradient(40deg, #ff0202, #f0f0f0);
+}
 #vignette2 {
   background: linear-gradient(145deg, #f0f0f0, #0099ff);
 }
 #vignette2:hover {
   background: linear-gradient(40deg, #f0f0f0, #0099ff);
 }
+#vignette2:active {
+  background: linear-gradient(40deg, #0099ff, #f0f0f0);
+}
 #vignette3 {
   background: linear-gradient(145deg, #f0f0f0, #d400ff);
 }
 #vignette3:hover {
   background: linear-gradient(40deg, #f0f0f0, #d400ff);
+}
+#vignette3:active {
+  background: linear-gradient(40deg, #d400ff, #f0f0f0);
 }
 
 .aVignette {

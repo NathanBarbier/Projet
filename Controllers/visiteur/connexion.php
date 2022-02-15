@@ -22,6 +22,7 @@ $data = array();
 
 $tpl = "connexion.php";
 
+// enregistre le cookie
 if(isset($_COOKIE["remember_me"]))
 {
     $cookie = explode("-", $_COOKIE["remember_me"]);
@@ -37,6 +38,14 @@ if(isset($_COOKIE["remember_me"]))
         $success = true;
     }
 }
+
+if(isset($_POST['captcha'])) {
+    if($_POST['captcha'] == $_SESSION['captcha']) {
+       echo "Captcha valide !";
+    } else {
+       echo "Captcha invalide...";
+    }
+ }
 
 if($envoi)
 {
@@ -82,12 +91,12 @@ if($envoi)
                 } 
                 else 
                 {
-                    $errors[] = "Le mot de passe est incorrect.";
+                    $errors[] = "Au moins l'une des informations rentrées est incorrecte.";
                 }
             }
             else
             {
-                $errors[] = "Cette adresse email n'est associée à aucun compte.";
+                $errors[] = "Au moins l'une des informations rentrées est incorrecte.";
             }
         } 
         else 

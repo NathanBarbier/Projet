@@ -36,14 +36,19 @@ require_once "layouts/entete.php";
                 <input type="password" class="form-control" name="password" placeholder="Saisissez votre mot de passe" required>
                 <label for="password" class="mb-1">Mot de passe</label>
             </div>
-            
-            <div class="form-check mt-3">
-                <input class="form-check-input" name="rememberMe" value="1" type="checkbox" id="rememberMe">
+
+            <div class="form-check mt-3 text-center">
+                <input class="form-check-input" name="rememberMe" value="1" type="checkbox" id="rememberMe" style="float:none">
                 <label class="form-check-label" for="rememberMe">Se souvenir de moi</label>
             </div>
             
             <div class="form-group text-center mt-3">
                 <button type="submit" class="btn btn-primary mt-3 w-100" name="envoi" value="1">Se connecter</button>
+            </div>
+
+            <div class="mx-auto mt-3 w-50">
+                <div class="g-recaptcha" data-sitekey="6LcqZ1YeAAAAAMI2_eMURjrDs6oSh3CKh4ChLlaO"></div>
+                <br/>
             </div>
 
             <div class="form-group text-center mt-2">

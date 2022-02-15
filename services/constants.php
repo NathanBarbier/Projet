@@ -28,7 +28,7 @@ foreach($splittedUrl as $urlPiece)
 define('ROOT_PATH', $rootDir);
 define('MODELS_PATH', $rootDir.'models'.DIRECTORY_SEPARATOR);
 define('IMG_PATH', $rootDir.'images'.DIRECTORY_SEPARATOR);
-define('CONTROLLERS_PATH', $rootDir.'Controllers'.DIRECTORY_SEPARATOR);
+define('CONTROLLERS_PATH', $rootDir.'controllers'.DIRECTORY_SEPARATOR);
 define('SERVICES_PATH', $rootDir.'services'.DIRECTORY_SEPARATOR);
 define('VIEWS_PATH', $rootDir.'views'.DIRECTORY_SEPARATOR);
 define('PHP_MAILER_PATH', $rootDir.'vendor'.DIRECTORY_SEPARATOR.'phpmailer'.DIRECTORY_SEPARATOR.'phpmailer'.DIRECTORY_SEPARATOR.'src'.DIRECTORY_SEPARATOR);
@@ -37,10 +37,10 @@ define('PHP_MAILER_PATH', $rootDir.'vendor'.DIRECTORY_SEPARATOR.'phpmailer'.DIRE
 define('ROOT_URL', $rootUrl);
 define('MODELS_URL', $rootUrl.'models/');
 define('IMG_URL', $rootUrl.'images/');
-define('CONTROLLERS_URL', $rootUrl.'Controllers/');
+define('CONTROLLERS_URL', $rootUrl.'controllers/');
 define('VIEWS_URL', $rootUrl.'views/');
 define('SERVICES_URL', $rootUrl.'services/');
 define('JS_URL', $rootUrl.'js/');
-define('AJAX_URL', $rootUrl.'Ajax/');
+define('AJAX_URL', $rootUrl.'ajax/');
 define('PHP_MAILER_URL', $rootUrl.'vendor/phpmailer/phpmailer/src/');
 ?>

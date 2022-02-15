@@ -40,7 +40,7 @@ require_once "layouts/entete.php";
         
             <div class="form-check mt-3">
                 <input class="form-check-input" name="consent" value="1" type="checkbox" id="consent-check" required>
-                <label class="form-check-label" for="consent-check">En cochant cette case vous acceptez nos <a href="<?= CONTROLLERS_URL ?>visiteur/cgu.php" target="_blank">Conditions générales</a> et confirmez accepter le traitement de vos données</label>
+                <label class="form-check-label" for="consent-check">En cochant cette case vous acceptez nos <a href="<?= VIEWS_URL ?>visiteur/cgu.php" target="_blank">Conditions générales</a> et confirmez accepter le traitement de vos données</label>
             </div>
 
             <div class="text-center mt-3">

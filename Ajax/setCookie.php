@@ -15,7 +15,7 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
                     time()+86400,
                     '',
                     '',
-                    false, //todo true when the website support https
+                    false, //true on production otherwise false
                     true
                 );
                 echo json_encode($_COOKIE);

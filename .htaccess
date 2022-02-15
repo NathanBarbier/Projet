@@ -1,3 +1,12 @@
+# force redirection to https
+<IfModule mod_rewrite.c>
+    # RewriteEngine On
+    # RewriteCond %{ENV:HTTPS} !on [OR]
+    # RewriteCond %{ENV:HTTP_HOST} ^www\. [NC]
+    # uncomment for production
+    # RewriteRule ^ https://storieshelper.ipssi-sio.fr%{ENV:REQUEST_URI} [R=302,L,NE]
+</IfModule>
+
 # Prevent user to visualize file tree
 Options -Indexes
 
@@ -11,8 +20,8 @@ ErrorDocument 403 http://127.0.0.1/school/storieshelper/errors/403
     Header append Vary: Accept-Encoding
   </FilesMatch>
 
-  # To prevent from clickjacking / display the site in <iframe> ...
-  Header always set X-Frame-Options "DENY"
+  # To prevent from clickjacking / display the site in iframe ...
+  Header set X-Frame-Options "DENY"
   #Content-Security-Policy "frame-ancestors 'none'"
 
   # To prevent from MIME sniffing

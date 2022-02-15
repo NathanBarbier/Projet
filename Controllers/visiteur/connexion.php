@@ -62,7 +62,7 @@ if($envoi)
                             time() + 604800,
                             '',
                             '',
-                            false, //todo true when the website support https
+                            false, //true on production otherwise false
                             true
                         );
                     }

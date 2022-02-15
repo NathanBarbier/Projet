@@ -43,7 +43,7 @@
 </div>
 
 <footer class="w-100 bg-dark text-center pt-3 footer">
-	<a href="<?= CONTROLLERS_URL ?>visiteur/cgu.php">Condition générales d'utilisation</a>
+	<a href="<?= VIEWS_URL ?>visiteur/cgu.php">Conditions générales d'utilisation</a>
 </footer>
 
 <script>

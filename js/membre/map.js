@@ -135,7 +135,12 @@ function init()
     });
 
     $(".task-bubble-input").off('focus').focus(function() {
-        $(".task-bubble-input").prop('disabled', true);
+        // disable all task click during loading except the clicked task
+        $(this).addClass("not");
+        $(".task-bubble-input:not(.not)").prop('disabled', true);
+        $(this).removeClass("not");
+
+        // show the right details column and content
         $("#column-details").removeClass('show');
 
         $("#add-column-btn").addClass('show');
@@ -198,8 +203,7 @@ function init()
             success: function (data) {
                 if(data != undefined)
                 {
-                    data = $.parseJSON(data);
-                    comments = data.comments;
+                    comments = $.parseJSON(data).comments;
                     l = comments.length;
                     for(i = 0; i < l; i++)
                     {

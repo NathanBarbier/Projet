@@ -8,6 +8,7 @@
     protected $fk_user;
     protected $active;
     protected $created_at;
+    protected $finished_at;
     protected $members = array();
     protected $comments = array();
 
@@ -84,11 +85,6 @@
         return $this->fk_column;
     }
 
-    // public function getFk_author()
-    // {
-    //     return $this->Author;
-    // }
-
     public function getFk_user()
     {
         return $this->fk_user;
@@ -107,6 +103,16 @@
     public function getMembers()
     {
         return $this->members;
+    }
+
+    public function getCreated_at()
+    {
+        return $this->created_at;
+    }
+
+    public function getFinished_at()
+    {
+        return $this->finished_at;
     }
 
 
@@ -134,9 +140,9 @@
 
     public function fetch($rowid)
     {
-        $sql = "SELECT t.rowid, t.name, t.description, t.fk_column, t.rank, t.fk_user, t.active, t.created_at";
-        $sql .= " FROM storieshelper_task AS t";
-        $sql .= " WHERE t.rowid = ?";
+        $sql = "SELECT *";
+        $sql .= " FROM storieshelper_task";
+        $sql .= " WHERE rowid = ?";
 
         $requete = $this->getBdd()->prepare($sql);
         $requete->execute([$rowid]);
@@ -153,6 +159,7 @@
             $this->fk_user          = $obj->fk_user;
             $this->active           = $obj->active;
             $this->created_at       = $obj->created_at;
+            $this->finished_at      = $obj->finished_at;
             $this->fetchComments();
             $this->fetchMembers();
         }
@@ -168,6 +175,7 @@
         $this->fk_user      = $Obj->fk_user;
         $this->active       = $Obj->active;
         $this->created_at   = $Obj->created_at;
+        $this->finished_at  = $Obj->finished_at;
 
         $this->fetchComments();
         $this->fetchMembers();
@@ -176,8 +184,8 @@
     public function fetchComments()
     {
         $sql = "SELECT *";
-        $sql .= " FROM storieshelper_task_comment AS tc";
-        $sql .= " WHERE tc.fk_task = ?";
+        $sql .= " FROM storieshelper_task_comment";
+        $sql .= " WHERE fk_task = ?";
 
         $requete = $this->getBdd()->prepare($sql);
         $requete->execute([$this->rowid]);
@@ -197,8 +205,9 @@
 
     public function fetchMembers()
     {
-        $sql = "SELECT fk_user";
-        $sql .= " FROM storieshelper_task_member";
+        $sql = "SELECT u.rowid, u.firstname, u.lastname, u.birth, u.password, u.email, u.fk_organization, u.consent, u.admin, u.token";
+        $sql .= " FROM storieshelper_task_member AS tm";
+        $sql .= " INNER JOIN storieshelper_user AS u ON u.rowid = tm.fk_user";
         $sql .= " WHERE fk_task = ?";
 
         $requete = $this->getBdd()->prepare($sql);
@@ -206,41 +215,14 @@
 
         if($requete->rowCount() > 0)
         {
-            $memberIds = array();
             $lines = $requete->fetchAll(PDO::FETCH_OBJ);
-
-            foreach($lines as $line)
-            {
-                $memberIds[] = $line->fk_user;
-            }
-
-            $this->members = $this->fetchUsersByIds($memberIds);
-        }
-    }
-
-    public function fetchUsersByIds(array $usersIds)
-    {
-        $usersIds = implode("', '", $usersIds);
-
-        $sql = "SELECT *"; 
-        $sql .= " FROM storieshelper_user";
-        $sql .= " WHERE rowid IN(?)";
-
-        $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$usersIds]);
-
-        if($requete->rowCount() > 0)
-        {
-            $lines = $requete->fetchAll(PDO::FETCH_OBJ);
-            $users = array();
 
             foreach($lines as $line)
             {
                 $User = new User();
                 $User->initialize($line);
-                $users[] = $User;
+                $this->members[] = $User;
             }
-            return $users;
         }
     }
 
@@ -328,19 +310,13 @@
     public function delete()
     {
         $sql = "DELETE FROM storieshelper_task_comment";
-        $sql .= " WHERE fk_task = ?";
+        $sql .= " WHERE fk_task = ?;";
 
-        $requete = $this->getBdd()->prepare($sql);
-        $requete->execute();
+        $sql .= "DELETE FROM storieshelper_task_member";
+        $sql .= " WHERE fk_task = ?;";
 
-        $sql = "DELETE FROM storieshelper_task_member";
-        $sql .= " WHERE fk_task = ?";
-
-        $requete = $this->getBdd()->prepare($sql);
-        $requete->execute();
-
-        $sql = "DELETE FROM storieshelper_task";
-        $sql .= " WHERE rowid = ?";
+        $sql .= "DELETE FROM storieshelper_task";
+        $sql .= " WHERE rowid = ?;";
 
         $requete = $this->getBdd()->prepare($sql);
         $requete->execute([$this->rowid,$this->rowid,$this->rowid]);

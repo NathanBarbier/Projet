@@ -101,7 +101,7 @@ Class MapColumn extends Modele
         $this->fetchTasks();
     }
 
-    public function initialize(object $Obj)
+    public function initialize($Obj)
     {
         $this->rowid        = $Obj->rowid;
         $this->name         = $Obj->name;
@@ -114,12 +114,14 @@ Class MapColumn extends Modele
     public function fetchTasks()
     {
         $sql = "SELECT *";
-        $sql .= " FROM storieshelper_task AS t";
+        $sql .= " FROM storieshelper_task";
         $sql .= " WHERE fk_column = ?";
-        $sql .= " ORDER BY t.rank DESC";
+        $sql .= " ORDER BY rank DESC";
 
         $requete = $this->getBdd()->prepare($sql);
         $requete->execute([$this->rowid]);
+
+        // var_dump($sql, $this->rowid);
 
         if($requete->rowCount() > 0)
         {
@@ -127,6 +129,7 @@ Class MapColumn extends Modele
     
             foreach($lines as $line)
             {
+                // var_dump($line);
                 // $this->tasks[] = new Task($line->rowid);
                 $Task = new Task();
                 $Task->initialize($line);
@@ -213,7 +216,7 @@ Class MapColumn extends Modele
         $rank = $obj->rank + 1;
 
         $sql = "INSERT INTO storieshelper_map_column (name, fk_team, rank)";
-        $sql .= " VALUES ('?',?,?)";
+        $sql .= " VALUES (?,?,?)";
         
         $requete = $this->getBdd()->prepare($sql);
         return $requete->execute([$this->name, $this->fk_team, $rank]);
@@ -244,25 +247,16 @@ Class MapColumn extends Modele
         $sql .= " FROM storieshelper_task AS t";
         $sql .= " WHERE fk_column = ?)";
 
-        $requete = $this->getBdd()->prepare($sql);
-        $requete->execute();
-
-        $sql = "DELETE FROM storieshelper_task_member";
+        $sql .= "DELETE FROM storieshelper_task_member";
         $sql .= " WHERE fk_task IN";
         $sql .= " (SELECT t.rowid";
         $sql .= " FROM storieshelper_task AS t";
         $sql .= " WHERE fk_column = ?)";
 
-        $requete = $this->getBdd()->prepare($sql);
-        $requete->execute();
-
-        $sql = "DELETE FROM storieshelper_task";
+        $sql .= "DELETE FROM storieshelper_task";
         $sql .= " WHERE fk_column = ?";
 
-        $requete = $this->getBdd()->prepare($sql);
-        $requete->execute();
-
-        $sql = "DELETE FROM storieshelper_map_column";
+        $sql .= "DELETE FROM storieshelper_map_column";
         $sql .= " WHERE rowid = ?";
 
         $requete = $this->getBdd()->prepare($sql);

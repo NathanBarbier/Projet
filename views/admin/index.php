@@ -60,11 +60,5 @@ require_once "layouts/entete.php";
         </div>
     </div>
 <?php
-require_once "layouts/pied.php"; ?>
-
-
-
-
-<?php
-require_once "layouts/pied.php" 
+require_once "layouts/pied.php"; 
 ?>

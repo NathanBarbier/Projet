@@ -86,17 +86,20 @@ class BelongsTo extends Modele
         $requete = $this->getBdd()->prepare($sql);
         $requete->execute([$fk_user]);
 
-        $lines = $requete->fetchAll(PDO::FETCH_OBJ);
-
         $BelongsTos = array();
 
-        foreach($lines as $line)
+        if($requete->rowCount() > 0)
         {
-            // $BelongsTos[] = new BelongsTo($line->fk_user, $line->fk_team);
-            $BelongsTo = new BelongsTo();
-            $BelongsTo->fk_team = $line->fk_team;
-            $BelongsTo->fk_user = $line->fk_user;
-            $BelongsTos[] = $BelongsTo;
+            $lines = $requete->fetchAll(PDO::FETCH_OBJ);
+    
+            foreach($lines as $line)
+            {
+                // $BelongsTos[] = new BelongsTo($line->fk_user, $line->fk_team);
+                $BelongsTo = new BelongsTo();
+                $BelongsTo->fk_team = $line->fk_team;
+                $BelongsTo->fk_user = $line->fk_user;
+                $BelongsTos[] = $BelongsTo;
+            }
         }
 
         return $BelongsTos;

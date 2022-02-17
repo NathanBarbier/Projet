@@ -361,7 +361,7 @@ class User extends Modele
         // $sql .= "DELETE FROM belong_to WHERE fk_user = ?;";
 
         $requete = $this->getBdd()->prepare($sql);
-        return $requete->execute([$this->rowid, $this->rowid, $this->rowid, $this->rowid]);
+        return $requete->execute([$this->rowid]);
     }
     
     public function updateToken()

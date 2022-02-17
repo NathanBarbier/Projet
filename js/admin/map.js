@@ -140,9 +140,13 @@ function init()
     });
 
     $(".task-bubble-input").off('focus').focus(function() {
-        $(".task-bubble-input").prop('disabled', true);
-        $("#column-details").removeClass('show');
+        // disable all task click during loading except the clicked task
+        $(this).addClass("not");
+        $(".task-bubble-input:not(.not)").prop('disabled', true);
+        $(this).removeClass("not");
 
+        // show the right details column and content
+        $("#column-details").removeClass('show');
         $("#add-column-btn").addClass('show');
         $("#archive-btn").addClass('show');
 

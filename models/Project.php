@@ -170,7 +170,7 @@ Class Project extends Modele
         }
     }
 
-    public function initialize(object $Obj)
+    public function initialize($Obj)
     {
         $this->rowid            = intval($Obj->rowid);
         $this->name             = $Obj->name;
@@ -186,7 +186,7 @@ Class Project extends Modele
     public function fetchTeams()
     {
         $sql = "SELECT *"; 
-        $sql .= " FROM storieshelper_team as t"; 
+        $sql .= " FROM storieshelper_team"; 
         $sql .= " WHERE fk_project = ?";
         
         $requete = $this->getBdd()->prepare($sql);

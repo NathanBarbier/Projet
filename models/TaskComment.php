@@ -110,15 +110,13 @@ class TaskComment extends Modele
 
     // DELETE
 
-    public function delete($rowid = null)
+    public function delete()
     {
-        $rowid = $rowid == null ? $this->rowid : $rowid;
-
         $sql = "DELETE FROM storieshelper_task_comment";
         $sql .= " WHERE rowid = ?";
 
         $requete = $this->getBdd()->prepare($sql);
-        return $requete->execute([$rowid]);
+        return $requete->execute([$this->rowid]);
     }
 
 

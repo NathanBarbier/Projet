@@ -11,12 +11,13 @@ Class LogHistory extends Modele
     protected $value;
     protected $identification;
     protected $fk_organization;
+    protected $exception;
 
     public function __construct($rowid = null)
     {
         if($rowid != null)
         {
-            $sql = "SELECT rowid, fk_author, date_creation, status, action, object_type, object_name, value, identification, fk_organization";
+            $sql = "SELECT *";
             $sql .= " FROM storieshelper_log_history";
             $sql .= " WHERE rowid = ?";
 
@@ -40,6 +41,7 @@ Class LogHistory extends Modele
                 $this->identification   = $obj->identification;
                 $this->fk_organization  = $obj->fk_organization;
                 $this->status           = $obj->status;
+                $this->exception        = $obj->exception;
             }
         }
     }
@@ -56,6 +58,7 @@ Class LogHistory extends Modele
         $this->identification   = $Obj->identification;
         $this->fk_organization  = $Obj->fk_organization;
         $this->status           = $Obj->status;
+        $this->exception        = $obj->exception;
     }
 
     public function setRowid($rowid)
@@ -180,18 +183,18 @@ Class LogHistory extends Modele
     }
     
 
-    public static function create(int $fk_organization, int $fk_author, string $status, string $action, string $object_type, string $object_name, string $value = null, string $identification = null, $exception = null)
+    public static function create($fk_organization, $fk_author, $status, $action, $object_type, $object_name, $value = null, $identification = null, $exception = null)
     {
-        $sql = "INSERT INTO storieshelper_log_history (fk_organization, fk_author, date_creation, status, action, object_type, object_name, value, identification)";
-        $sql .= " VALUES (?,?, NOW(),?,?,?,?,?,?)";
+        $sql = "INSERT INTO storieshelper_log_history (fk_organization, fk_author, date_creation, status, action, object_type, object_name, value, identification, exception)";
+        $sql .= " VALUES (?,?, NOW(),?,?,?,?,?,?,?)";
 
         // development environment
         $PDO = new PDO('mysql:host=localhost;dbname=storieshelper;charset=UTF8', 'root');
         // production environment
         // $PDO = new PDO('mysql:host=ipssisqstorieshe.mysql.db;dbname=ipssisqstorieshe;charset=UTF8', 'ipssisqstorieshe', 'Ipssi2022storieshelper');
-        
+
         $requete = $PDO->prepare($sql);
-        $requete->execute([$fk_organization, $fk_author, $status, $action, $object_type, $object_name, $value, $identification]);
+        $requete->execute([$fk_organization, $fk_author, $status, $action, $object_type, $object_name, $value, $identification, $exception]);
     }
 
     public function delete($rowid)

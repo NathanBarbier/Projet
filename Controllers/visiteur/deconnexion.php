@@ -11,7 +11,8 @@ setcookie(
     true
 );
 $idUser = $_SESSION['idUser'] ?? false;
-if($idUser) {
+$idOrganization = $_SESSION['idOrganization'] ?? false;
+if($idUser && $idOrganization) {
     $User = new User($idUser);
     LogHistory::create($idOrganization, $idUser, "INFO", 'disconnect', 'user',$User->getLastname().' '.$User->getFirstname());
 }

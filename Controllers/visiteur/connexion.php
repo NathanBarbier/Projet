@@ -30,7 +30,7 @@ if(isset($_COOKIE["remember_me"]))
 
         $_SESSION["rights"] = $User->isAdmin() == 1 ? "admin" : "user";
         $_SESSION["idUser"] = intval($User->getRowid());
-        $_SESSION["idOrganization"] = intval($User->getFk_organization());
+        $_SESSION["idOrganization"] = $idOrganization = intval($User->getFk_organization());
 
         LogHistory::create($idOrganization, $User->getRowid(), 'INFO', 'connect', 'user', $User->getLastname().' '.$User->getFirstname());
         $success = true;
@@ -74,12 +74,12 @@ if($envoi)
                     if($consent == true)
                     {
                         $_SESSION["rights"] = $User->isAdmin() == 1 ? "admin" : "user";
-                        LogHistory::create($idOrganization, $User->getRowid(), "INFO", 'connect', 'user', $User->getLastname().' '.$User->getFirstname());
+                        LogHistory::create($User->getFk_organization(), $User->getRowid(), "INFO", 'connect', 'user', $User->getLastname().' '.$User->getFirstname());
                     }
                     else
                     {
                         $_SESSION["rights"] = "needConsent";
-                        LogHistory::create($idOrganization, $User->getRowid(), "INFO", 'connect', 'user', $User->getLastname().' '.$User->getFirstname());
+                        LogHistory::create($User->getFk_organization(), $User->getRowid(), "INFO", 'connect', 'user', $User->getLastname().' '.$User->getFirstname());
                     }
                     
                     $success = true;

@@ -118,7 +118,7 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
                         }
                         break;
                     case 'addColumn':
-                        if($columnName && $columnName != "Open" && $columnName != "Closed")
+                        if($columnName && isset($columnName) && !empty($columnName) && $columnName != " " && $columnName != "Open" && $columnName != "Closed")
                         {
                             try {
                                 $MapColumn->setFk_team($teamId);
@@ -128,9 +128,12 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
                             } catch (\Throwable $th) {
                                 LogHistory::create($idOrganization, $idUser, "ERROR", 'create', 'column', $MapColumn->getName(), '', 'column id : '.$MapColumn->fetch_last_insert_id(), $th);
                             }
+                            $return['success'] = true;
                         } else {
-                            return json_encode("le nom saisis pour la colonne est invalide");
+                            $return['success'] = false;
+                            $return['message'] = "le nom saisis pour la colonne est incorrect";
                         }
+                        print json_encode($return);
                         break;
                     case 'renameColumn':
                         // check if the column belong to the team

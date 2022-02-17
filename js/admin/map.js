@@ -84,6 +84,7 @@ $("#add-column-form").find('#create-column').click(function() {
                 async: true,
                 url: AJAX_URL+"admin/map.php?action=getLastColumnId"+"&teamId="+teamId+"&projectId="+projectId,
                 success: function(data) {
+<<<<<<< HEAD
                     columnId = data;    
                     columnId = columnId.replace("\"", '').replace("\"", '');
 
@@ -102,34 +103,55 @@ $("#add-column-form").find('#create-column').click(function() {
                                             "<b class='column-title-text'>",
                                                 columnName,
                                             "</b>",
+=======
+                    result = $.parseJSON(result);
+                    if(result.success)
+                    {
+                        columnId = data;    
+                        columnId = columnId.replace("\"", '').replace("\"", '');
+
+                        columnNameInput.val("");
+                        btnColumnForm.addClass('show');
+
+                        var append = [
+                            "<div class='project-column'>",
+                                "<input class='columnId-input' type='hidden' value='"+columnId+"'>",
+                                "<div class='column-title text-center'>",
+                                    "<div class='row'>",
+                                        "<div class='col-7 pt-3 ps-2 ms-3 pe-0 column-title-name'>",
+                                            "<div class='overflow-x'>",
+                                                "<b class='column-title-text'>",
+                                                    columnName,
+                                                "</b>",
+                                            "</div>",
+>>>>>>> 9b9c026 (WIP)
                                         "</div>",
+                                        "<ul class='offset-1 col-3 pt-2 ps-0'>",
+                                            "<li class='me-2'>",
+                                                "<button class='btn btn-outline-dark add-task-btn'>",
+                                                    "New",
+                                                "</button>",
+                                            "</li>",
+                                            "<li class='mt-2 me-2'>",
+                                                "<button class='btn btn-outline-danger delete-col-btn'>",
+                                                    "Delete",
+                                                "</button>",
+                                            "</li>",
+                                        "</ul>",
                                     "</div>",
-                                    "<ul class='offset-1 col-3 pt-2 ps-0'>",
-                                        "<li class='me-2'>",
-                                            "<button class='btn btn-outline-dark add-task-btn'>",
-                                                "New",
-                                            "</button>",
-                                        "</li>",
-                                        "<li class='mt-2 me-2'>",
-                                            "<button class='btn btn-outline-danger delete-col-btn'>",
-                                                "Delete",
-                                            "</button>",
-                                        "</li>",
-                                    "</ul>",
+                                "</div>",
+                                "<div class='column-content'>",
                                 "</div>",
                             "</div>",
-                            "<div class='column-content'>",
-                            "</div>",
-                        "</div>",
-                    ].join("");
-                
-                    $("#columns-container").append(append);
-                    $("#add-column-btn").toggleClass('show');
-            
-                    $("#loading-modal").modal('hide');
-            
-                    initTask();
-                    initCol();
+                        ].join("");
+                    
+                        $("#columns-container").append(append);
+                        $("#add-column-btn").toggleClass('show'); 
+                        initTask();
+                        initCol();
+                    }
+                    
+                    $("#loading-modal").modal('hide');                                            
                 }
             });
         }
@@ -640,6 +662,10 @@ function initCol()
             async: true,
             url: AJAX_URL+"admin/map.php?action=deleteColumn&columnId="+columnId+"&teamId="+teamId+"&projectId="+projectId,
             success: function(data) {
+<<<<<<< HEAD
+=======
+                console.log(data);
+>>>>>>> 9b9c026 (WIP)
                 $("#column-details").removeClass('show');
                 $("#loading-modal").modal('hide');
             }

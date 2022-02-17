@@ -86,7 +86,9 @@ $("#add-column-form").find('#create-column').click(function() {
                 success: function(data) {
                     columnId = data;    
                     columnId = columnId.replace("\"", '').replace("\"", '');
-                    
+
+                    console.log(result);
+
                     columnNameInput.val("");
                     btnColumnForm.addClass('show');
 

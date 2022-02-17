@@ -11,7 +11,7 @@ $Organization = new Organization($idOrganization);
 $tpl = "listeProjets.php";
 
 $errors = array();
-
+$success = false;
 if($action == 'deleteProject')
 {
     if(is_int($projectId)) 

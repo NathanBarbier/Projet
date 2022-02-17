@@ -16,21 +16,22 @@ if($action == 'deleteProject')
 {
     if(is_int($projectId)) 
     {
+        $Project = new Project();
+        foreach($Organization->getProjects() as $Obj)
+        {
+            if($Obj->getRowid() === $projectId)
+            {
+                $Project->setRowid($projectId);
+                break;
+            }
+        }
         try {
-                $Project = new Project();
-                foreach($Organization->getProjects() as $Obj)
-                {
-                    if($Obj->getRowid() === $projectId)
-                    {
-                        $Project->setRowid($projectId);
-                        break;
-                    }
-                }
                 $Project->delete();
                 $success = "Le projet a bien été supprimmé.";
-                LogHistory::create($idUser, 'delete', 'project', $Project->getName());
+                LogHistory::create($idOrganization, $idUser, "IMPORTANT", 'delete', 'project', $Project->getName(), '', 'project id : '.$Project->getRowid());
         } catch (\Throwable $th) {
             $errors[] = $th;
+            LogHistory::create($idOrganization, $idUser, "ERROR", 'delete', 'project', $Project->getName(), '', 'project id : '.$Project->getRowid(), $th);
         }
     }
     else

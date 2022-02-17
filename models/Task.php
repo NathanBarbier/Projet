@@ -3,13 +3,11 @@
     protected $rowid;
     protected $name;
     protected $description;
-    // protected $MapColumn;
     protected $fk_column;
     protected $rank;
-    // private $options = array();
-    // protected $Author; // task author - User()
     protected $fk_user;
     protected $active;
+    protected $created_at;
     protected $members = array();
     protected $comments = array();
 
@@ -125,8 +123,8 @@
         $obj = $requete->fetch(PDO::FETCH_OBJ);
         $rank = $obj->rank + 1;
 
-        $sql = "INSERT INTO storieshelper_task (fk_column, rank, fk_user, active)";
-        $sql .= " VALUES (?,?,?,?)";
+        $sql = "INSERT INTO storieshelper_task (fk_column, rank, fk_user, active, created_at)";
+        $sql .= " VALUES (?,?,?,?,NOW())";
 
         $requete = $this->getBdd()->prepare($sql);
         return $requete->execute([$this->fk_column,$rank,$this->fk_user,$this->active]);
@@ -136,7 +134,7 @@
 
     public function fetch($rowid)
     {
-        $sql = "SELECT t.rowid, t.name, t.description, t.fk_column, t.rank, t.fk_user, t.active";
+        $sql = "SELECT t.rowid, t.name, t.description, t.fk_column, t.rank, t.fk_user, t.active, t.created_at";
         $sql .= " FROM storieshelper_task AS t";
         $sql .= " WHERE t.rowid = ?";
 
@@ -147,15 +145,14 @@
         {
             $obj = $requete->fetch(PDO::FETCH_OBJ);
 
-            $this->rowid = $obj->rowid;
-            $this->name = $obj->name;
-            $this->description = $obj->description;
-            // $this->MapColumn = new MapColumn($obj->fk_column);
-            $this->fk_column = $obj->fk_column;
-            $this->rank = $obj->rank;
-            // $this->Author = new User($obj->fk_author);
-            $this->fk_user = $obj->fk_user;
-            $this->active = $obj->active;
+            $this->rowid            = $obj->rowid;
+            $this->name             = $obj->name;
+            $this->description      = $obj->description;
+            $this->fk_column        = $obj->fk_column;
+            $this->rank             = $obj->rank;
+            $this->fk_user          = $obj->fk_user;
+            $this->active           = $obj->active;
+            $this->created_at       = $obj->created_at;
             $this->fetchComments();
             $this->fetchMembers();
         }
@@ -163,13 +160,14 @@
 
     public function initialize(object $Obj)
     {
-        $this->rowid = $Obj->rowid;
-        $this->name = $Obj->name;
-        $this->description = $Obj->description;
-        $this->fk_column = $Obj->fk_column;
-        $this->rank = $Obj->rank;
-        $this->fk_user = $Obj->fk_user;
-        $this->active = $Obj->active;
+        $this->rowid        = $Obj->rowid;
+        $this->name         = $Obj->name;
+        $this->description  = $Obj->description;
+        $this->fk_column    = $Obj->fk_column;
+        $this->rank         = $Obj->rank;
+        $this->fk_user      = $Obj->fk_user;
+        $this->active       = $Obj->active;
+        $this->created_at   = $Obj->created_at;
 
         $this->fetchComments();
         $this->fetchMembers();

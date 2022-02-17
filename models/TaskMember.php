@@ -107,11 +107,9 @@ Class TaskMember extends Modele
         {
             $obj = $requete->fetch(PDO::FETCH_OBJ);
     
-            $this->rowid = $obj->rowid;
-            $this->fk_user = $obj->fk_user;
-            $this->fk_task = $fk_task;
-            // $this->User = new User($obj->fk_user);
-            // $this->Task = new Task($obj->fk_task);
+            $this->rowid    = $obj->rowid;
+            $this->fk_user  = $obj->fk_user;
+            $this->fk_task  = $fk_task;
         }
     }
 }

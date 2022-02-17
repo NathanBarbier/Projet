@@ -3,8 +3,6 @@ class Team extends Modele
 {
     protected $rowid;
     protected $name;
-    // private $Organization;
-    // private $Project;
     protected $fk_project;
     protected $users = array();
     protected $mapColumns = array();
@@ -163,10 +161,10 @@ class Team extends Modele
 
     public function initialize(object $Obj)
     {
-        $this->rowid = $Obj->rowid;
-        $this->name = $Obj->name;
-        $this->fk_project = $Obj->fk_project;
-        $this->active = $Obj->active;
+        $this->rowid        = $Obj->rowid;
+        $this->name         = $Obj->name;
+        $this->fk_project   = $Obj->fk_project;
+        $this->active       = $Obj->active;
 
         // fetch team users
         $sql = "SELECT *";

@@ -73,13 +73,13 @@ if($teamId)
                     try {
                         $Team->setActive(0);
                         $Team->update();
-                        LogHistory::create($idUser, 'archive', 'team', $Team);
+                        LogHistory::create($idOrganization, $idUser, "WARNING", 'archive', 'team', $Team, '', 'team id : '.$Team->getRowid());
                         $message = "Le tableau a bien été archivé.";
                         header("location:".CONTROLLERS_URL."membre/tableauDeBord.php?success=".$message);
                         exit;
                     } catch (\Throwable $th) {
-                        //throw $th;
                         $errors[] = "Une erreur innatendue est survenue.";
+                        LogHistory::create($idOrganization, $idUser, "ERROR", 'archive', 'team', $Team, '', 'team id : '.$Team->getRowid(), $th);
                     }
                 }
 

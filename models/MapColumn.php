@@ -93,20 +93,20 @@ Class MapColumn extends Modele
 
         $obj = $requete->fetch(PDO::FETCH_OBJ);
 
-        $this->rowid = $obj->rowid;
-        $this->name = $obj->name;
-        $this->fk_team = $obj->fk_team;
-        $this->rank = $obj->rank;
+        $this->rowid        = $obj->rowid;
+        $this->name         = $obj->name;
+        $this->fk_team      = $obj->fk_team;
+        $this->rank         = $obj->rank;
 
         $this->fetchTasks();
     }
 
     public function initialize(object $Obj)
     {
-        $this->rowid = $Obj->rowid;
-        $this->name = $Obj->name;
-        $this->fk_team = $Obj->fk_team;
-        $this->rank = $Obj->rank;
+        $this->rowid        = $Obj->rowid;
+        $this->name         = $Obj->name;
+        $this->fk_team      = $Obj->fk_team;
+        $this->rank         = $Obj->rank;
 
         $this->fetchTasks();
     }

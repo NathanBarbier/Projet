@@ -5,6 +5,7 @@ class Organization extends Modele
     protected $name;
     protected $users = [];
     protected $projects = [];
+    protected $logs = [];
 
     public function __construct($rowid = null)
     {
@@ -47,6 +48,11 @@ class Organization extends Modele
     public function getProjects()
     {
         return $this->projects;
+    }
+
+    public function getLogs()
+    {
+        return $this->logs;
     }
 
     public function removeUser(int $fk_user)
@@ -139,11 +145,12 @@ class Organization extends Modele
         {
             $obj = $requete->fetch(PDO::FETCH_OBJ);
             
-            $this->rowid = $rowid;
-            $this->name = $obj->name;
+            $this->rowid    = $rowid;
+            $this->name     = $obj->name;
 
             $this->fetchUsers();
             $this->fetchProjects();
+            $this->fetchLogs();
             
             return true;
         }
@@ -193,6 +200,28 @@ class Organization extends Modele
                 $Project = new Project();
                 $Project->initialize($line);
                 $this->projects[] = $Project;
+            }
+        }
+    }
+
+    public function fetchLogs()
+    {
+        $sql = "SELECT *";
+        $sql .= " FROM storieshelper_log_history";
+        $sql .= " WHERE fk_organization = ?";
+
+        $requete = $this->getBdd()->prepare($sql);
+        $requete->execute([$this->rowid]);
+
+        if($requete->rowCount() > 0)
+        {
+            $lines = $requete->fetchAll(PDO::FETCH_OBJ);
+
+            foreach($lines as $line)
+            {
+                $LogHistory = new LogHistory();
+                $LogHistory->initialize($line);
+                $this->logs[] = $LogHistory;
             }
         }
     }

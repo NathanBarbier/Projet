@@ -21,8 +21,8 @@ ErrorDocument 403 http://127.0.0.1/school/storieshelper/errors/403
   </FilesMatch>
 
   # To prevent from clickjacking / display the site in iframe ...
-  Header set X-Frame-Options "DENY"
   #Content-Security-Policy "frame-ancestors 'none'"
+  #Header set X-Frame-Options "DENY"
 
   # To prevent from MIME sniffing
   Header set X-Content-Type-Options "nosniff"

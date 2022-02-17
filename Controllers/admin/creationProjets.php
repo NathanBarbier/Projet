@@ -32,11 +32,12 @@ if($action == "addProjet")
                 $Project->setDescription($description);
                 $Project->setFk_organization($idOrganization);
                 $Project->create();
-                LogHistory::create($idUser, 'create', 'project', $name);
+                LogHistory::create($idOrganization, $idUser, "INFO", 'create', 'project', $name);
                 $success = "Le projet a été créé avec succès.";
             } catch (\Throwable $th) {
                 //throw $th;
                 $errors[] = "Une erreur est survenue.";
+                LogHistory::create($idOrganization, $idUser, "ERROR", 'create', 'project', $name, '', '', $th);
             }
         } 
         else 

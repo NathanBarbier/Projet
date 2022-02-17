@@ -139,12 +139,11 @@ class TaskComment extends Modele
         {
             $obj = $requete->fetch(PDO::FETCH_OBJ);
 
-            $this->rowid = intval($rowid);
-            // $this->Task = new Task($obj->fk_task);
-            $this->fk_task = intval($obj->fk_task);
-            $this->note = $obj->note;
-            // $this->User = new User($obj->fk_user);
-            $this->fk_user = intval($obj->fk_user);
+            $this->rowid    = intval($rowid);
+            $this->fk_task  = intval($obj->fk_task);
+            $this->note     = $obj->note;
+            $this->fk_user  = intval($obj->fk_user);
+
             if(!empty($obj->tms)) 
             {
                 $date = new DateTime();
@@ -157,10 +156,11 @@ class TaskComment extends Modele
 
     public function initialize(object $Obj)
     {
-        $this->rowid = intval($Obj->rowid);
-        $this->fk_task = intval($Obj->fk_task);
-        $this->note = $Obj->note;
-        $this->fk_user = intval($Obj->fk_user);
+        $this->rowid    = intval($Obj->rowid);
+        $this->fk_task  = intval($Obj->fk_task);
+        $this->note     = $Obj->note;
+        $this->fk_user  = intval($Obj->fk_user);
+        
         if(!empty($Obj->tms)) 
         {
             $date = new DateTime();

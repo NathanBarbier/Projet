@@ -1,35 +1,61 @@
 <?php 
 Class LogHistory extends Modele
 {
-    private $rowid;
-    private $fk_author;
-    private $date_creation;
-    private $action;
-    private $object_type;
-    private $object_name;
+    protected $rowid;
+    protected $fk_author;
+    protected $date_creation;
+    protected $status;
+    protected $action;
+    protected $object_type;
+    protected $object_name;
+    protected $value;
+    protected $identification;
+    protected $fk_organization;
 
     public function __construct($rowid = null)
     {
         if($rowid != null)
         {
-            $sql = "SELECT rowid, fk_author, date_creation, action, object_type, object_name, admin, fk_organization";
+            $sql = "SELECT rowid, fk_author, date_creation, status, action, object_type, object_name, value, identification, fk_organization";
             $sql .= " FROM storieshelper_log_history";
             $sql .= " WHERE rowid = ?";
 
             $requete = $this->getBdd()->prepare($sql);
-            $status = $requete->execute([$rowid]);
+            $requete->execute([$rowid]);
 
-            $obj = $requete->fetch(PDO::FETCH_OBJ);
-
-            $this->rowid = $obj->rowid;
-            $this->fk_author = $obj->fk_author;
-            $this->date_creation = $obj->date_creation;
-            $this->action = $obj->action;
-            $this->object_type = $obj->object_type;
-            $this->object_name = $obj->object_name;
-            $this->admin = $obj->admin;
-            $this->fk_organization = $obj->fk_organization;
+            if($requete->rowCount() > 0)
+            {
+                $obj = $requete->fetch(PDO::FETCH_OBJ);
+                
+                $this->rowid            = $obj->rowid;
+                $this->fk_author        = $obj->fk_author;
+                $this->date_creation    = $obj->date_creation;
+                $this->status           = $obj->status;
+                $this->action           = $obj->action;
+                $this->object_type      = $obj->object_type;
+                $this->object_name      = $obj->object_name;
+                $this->admin            = $obj->admin;
+                $this->fk_organization  = $obj->fk_organization;
+                $this->value            = $obj->value;
+                $this->identification   = $obj->identification;
+                $this->fk_organization  = $obj->fk_organization;
+                $this->status           = $obj->status;
+            }
         }
+    }
+
+    public function initialize($Obj)
+    {
+        $this->rowid            = $Obj->rowid;
+        $this->fk_author        = $Obj->fk_author;
+        $this->date_creation    = $Obj->date_creation;
+        $this->action           = $Obj->action;
+        $this->object_type      = $Obj->object_type;
+        $this->object_name      = $Obj->object_name;
+        $this->value            = $Obj->value;
+        $this->identification   = $Obj->identification;
+        $this->fk_organization  = $Obj->fk_organization;
+        $this->status           = $Obj->status;
     }
 
     public function setRowid($rowid)
@@ -128,13 +154,15 @@ Class LogHistory extends Modele
 
         $obj = $requete->fetch(PDO::FETCH_OBJ);
 
-        $this->rowid = $obj->rowid;
-        $this->fk_author = $obj->fk_author;
-        $this->date_creation = $obj->date_creation;
-        $this->action = $obj->action;
-        $this->object_type = $obj->object_type;
-        $this->object_name = $obj->object_name;
-        $this->admin = $obj->admin;
+        $this->rowid            = $obj->rowid;
+        $this->fk_author        = $obj->fk_author;
+        $this->date_creation    = $obj->date_creation;
+        $this->action           = $obj->action;
+        $this->object_type      = $obj->object_type;
+        $this->object_name      = $obj->object_name;
+        $this->admin            = $obj->admin;
+        $this->value            = $obj->value;
+        $this->identification   = $obj->identification;
     }
 
     public function fetchAll($fk_organization = null)
@@ -152,10 +180,10 @@ Class LogHistory extends Modele
     }
     
 
-    public static function create($fk_author, $action, $object_type, $object_name, $value = null)
+    public static function create(int $fk_organization, int $fk_author, string $status, string $action, string $object_type, string $object_name, string $value = null, string $identification = null, $exception = null)
     {
-        $sql = "INSERT INTO storieshelper_log_history (fk_author, date_creation, action, object_type, object_name, value)";
-        $sql .= " VALUES (?, NOW(),?,?,?,?)";
+        $sql = "INSERT INTO storieshelper_log_history (fk_organization, fk_author, date_creation, status, action, object_type, object_name, value, identification)";
+        $sql .= " VALUES (?,?, NOW(),?,?,?,?,?,?)";
 
         // development environment
         $PDO = new PDO('mysql:host=localhost;dbname=storieshelper;charset=UTF8', 'root');
@@ -163,7 +191,7 @@ Class LogHistory extends Modele
         // $PDO = new PDO('mysql:host=ipssisqstorieshe.mysql.db;dbname=ipssisqstorieshe;charset=UTF8', 'ipssisqstorieshe', 'Ipssi2022storieshelper');
         
         $requete = $PDO->prepare($sql);
-        $requete->execute([$fk_author, $action, $object_type, $object_name, $value]);
+        $requete->execute([$fk_organization, $fk_author, $status, $action, $object_type, $object_name, $value, $identification]);
     }
 
     public function delete($rowid)

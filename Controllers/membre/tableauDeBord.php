@@ -36,11 +36,11 @@ if($action == 'userUpdate')
                 $User->setLastname($lastname);
                 $User->setEmail($email);
                 $User->update();
-                LogHistory::create($idUser, 'update', 'user', $User->getLastname().' '.$User->getFirstname());
+                LogHistory::create($idOrganization, $idUser, "INFO", 'update', 'user', $User->getLastname().' '.$User->getFirstname(), '', 'user id : '.$User->getRowid());
                 $success = "Vos informations ont bien été mises à jour.";
             } catch (\Throwable $th) {
-                //throw $th;
                 $errors[] = "Une error est survenue.";
+                LogHistory::create($idOrganization, $idUser, "ERROR", 'update', 'user', $User->getLastname().' '.$User->getFirstname(), '', 'user id : '.$User->getRowid(), $th);
             }
         }
         else
@@ -54,12 +54,13 @@ if($action == 'accountDelete')
 {
     try {
         $User->delete();
-        LogHistory::create($idUser, 'delete', 'user', $User->getLastname().' '.$User->getFirstname());
+        LogHistory::create($idOrganization, $idUser, "WARNING", 'delete', 'user', $User->getLastname().' '.$User->getFirstname(), '', 'user id : '.$User->getRowid());
         header("location:".CONTROLLERS_URL."visiteur/Deconnexion.php");
         exit;
     } catch (\Throwable $th) {
         //throw $th;
         $errors[] = "Une erreur innatendue est survenue.";
+        LogHistory::create($idOrganization, $idUser, "ERROR", 'delete', 'user', $User->getLastname().' '.$User->getFirstname(), '', 'user id : '.$User->getRowid(), $th);
     }
 }
 

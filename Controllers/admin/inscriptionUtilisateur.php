@@ -70,7 +70,7 @@ if($action == "signup")
                                 $User->setLastname($lastname);
                                 $User->setBirth($birth);
                                 $User->create();
-                                LogHistory::create($idUser, 'signup', 'user', $User->getLastname().' '.$User->getFirstname());
+                                LogHistory::create($idOrganization, $idUser, "INFO", 'signup', 'user', $User->getLastname().' '.$User->getFirstname());
                             
                                 $Organization = new Organization($idOrganization);
 
@@ -102,8 +102,8 @@ if($action == "signup")
 
                                 $success = "Le collaborateur a bien été inscrit et reçu son mot de passe par email."; 
                             } catch (\Throwable $th) {
-                                //throw $th;
                                 $errors[] = "L'inscription n'a pas pu aboutir.";
+                                LogHistory::create($idOrganization, $idUser, "ERROR", 'signup', 'user', $User->getLastname().' '.$User->getFirstname(), '', '', $th);
                             }
                         } 
                         else 

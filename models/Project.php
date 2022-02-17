@@ -157,13 +157,13 @@ Class Project extends Modele
         {
             $obj = $requete->fetch(PDO::FETCH_OBJ);
 
-            $this->rowid = $rowid;
-            $this->name = $obj->name;
-            $this->type = $obj->type;
-            $this->open = $obj->open;
-            $this->description = $obj->description;
-            $this->active = $obj->active;
-            $this->fk_organization = $obj->fk_organization;
+            $this->rowid            = $rowid;
+            $this->name             = $obj->name;
+            $this->type             = $obj->type;
+            $this->open             = $obj->open;
+            $this->description      = $obj->description;
+            $this->active           = $obj->active;
+            $this->fk_organization  = $obj->fk_organization;
             
             $this->fetchTeams();
             // $this->fetchOrganization();
@@ -172,13 +172,13 @@ Class Project extends Modele
 
     public function initialize(object $Obj)
     {
-        $this->rowid = intval($Obj->rowid);
-        $this->name = $Obj->name;
-        $this->type = $Obj->type;
-        $this->open = $Obj->open;
-        $this->description = $Obj->description;
-        $this->active = $Obj->active;
-        $this->fk_organization = intval($Obj->fk_organization);
+        $this->rowid            = intval($Obj->rowid);
+        $this->name             = $Obj->name;
+        $this->type             = $Obj->type;
+        $this->open             = $Obj->open;
+        $this->description      = $Obj->description;
+        $this->active           = $Obj->active;
+        $this->fk_organization  = intval($Obj->fk_organization);
         
         $this->fetchTeams();
     }

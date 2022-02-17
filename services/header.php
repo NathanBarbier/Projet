@@ -2,6 +2,7 @@
 // print_r($_COOKIE);
 session_start();
 
+
 require_once 'constants.php';
 require_once 'globalFunctions.php';
 require_once MODELS_PATH.'Modele.php';

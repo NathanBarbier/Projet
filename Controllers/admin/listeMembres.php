@@ -41,12 +41,13 @@ if($action == "updateFirstname")
                         $oldFirstname = $User->getFirstname();
                         $User->setFirstname($firstname);
                         $User->update();
-                        LogHistory::create($idUser, 'update firstname', 'user', $User->getLastname().' '.$oldFirstname, $User->getFirstname());
+                        LogHistory::create($idOrganization, $idUser, "INFO", 'update firstname', 'user', $User->getLastname().' '.$oldFirstname, $User->getFirstname(), 'user id : '.$User->getRowid());
                         $success = "Le prénom a bien été modifié.";
                     } 
                     catch (exception $e)
                     {
                         $errors[] = "Le prénom n'a pas pu être modifié.";
+                        LogHistory::create($idOrganization, $idUser, "ERROR", 'update firstname', 'user', $User->getLastname().' '.$oldFirstname, $User->getFirstname(), 'user id : '.$User->getRowid(), $th);
                     }
                 } 
                 else 
@@ -82,12 +83,13 @@ if($action == "updateLastname")
                         $oldLastname = $User->getLastname();
                         $User->setLastname($lastname);
                         $User->update();
-                        LogHistory::create($idUser, 'update lastname', 'user', $oldLastname.' '.$User->getFirstname(), $User->getLastname());
+                        LogHistory::create($idOrganization, $idUser, "INFO", 'update lastname', 'user', $oldLastname.' '.$User->getFirstname(), $User->getLastname(), 'user id : '.$User->getRowid());
                         $success = "Le nom a bien été modifié.";
                     } 
                     catch (exception $e)
                     {
                         $errors[] = "La modification de nom n'a pas pu aboutir.";
+                        LogHistory::create($idOrganization, $idUser, "ERROR", 'update lastname', 'user', $oldLastname.' '.$User->getFirstname(), $User->getLastname(), 'user id : '.$User->getRowid(), $th);
                     }
                 } 
                 else 
@@ -117,11 +119,11 @@ if($action == "deleteUser")
             try {
                 $Organization->removeUser($idUser);
                 $User->delete();
-                LogHistory::create($idUser, 'delete', 'user', $User->getLastname().' '.$User->getFirstname());
+                LogHistory::create($idOrganization, $idUser, "WARNING", 'delete', 'user', $User->getLastname().' '.$User->getFirstname(), '', 'user id : '.$User->getRowid());
                 $success = "La suppression d'utilisateur a bien été effectuée.";
             } catch (\Throwable $th) {
-                //throw $th;
                 $errors[] = "La suppression d'utilisateur n'a pas pu aboutir.";
+                LogHistory::create($idOrganization, $idUser, "ERROR", 'delete', 'user', $User->getLastname().' '.$User->getFirstname(), '', 'user id : '.$User->getRowid(), $th);
             }
         }
     } 

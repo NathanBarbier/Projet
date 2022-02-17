@@ -7,7 +7,6 @@ class User extends Modele
     protected $birth;
     protected $password;
     protected $email;
-    // private $Organization;
     protected $fk_organization;
     protected $BelongsTo;
     protected $consent;
@@ -194,16 +193,15 @@ class User extends Modele
         {
             $obj = $requete->fetch(PDO::FETCH_OBJ);
 
-            $this->rowid = intval($rowid);
-            $this->lastname = $obj->lastname;
-            $this->firstname = $obj->firstname;
-            $this->birth = $obj->birth;
-            $this->password = $obj->password;
-            $this->email = $obj->email;
-            // $this->Organization = new Organization($obj->fk_organization);
-            $this->fk_organization;
-            $this->consent = $obj->consent;
-            $this->admin = $obj->admin;
+            $this->rowid            = intval($rowid);
+            $this->lastname         = $obj->lastname;
+            $this->firstname        = $obj->firstname;
+            $this->birth            = $obj->birth;
+            $this->password         = $obj->password;
+            $this->email            = $obj->email;
+            $this->fk_organization  = $obj->fk_organization;
+            $this->consent          = $obj->consent;
+            $this->admin            = $obj->admin;
 
             $BelongsTo = new BelongsTo();
             $this->BelongsTo = $BelongsTo->fetchAll($obj->rowid);
@@ -212,16 +210,16 @@ class User extends Modele
 
     public function initialize(object $Obj)
     {
-        $this->rowid = $Obj->rowid;
-        $this->firstname = $Obj->firstname;
-        $this->lastname = $Obj->lastname;
-        $this->birth = $Obj->birth;
-        $this->password = $Obj->password;
-        $this->email = $Obj->email;
-        $this->fk_organization = $Obj->fk_organization;
-        $this->consent = $Obj->consent;
-        $this->admin = $Obj->admin;
-        $this->token = $Obj->token;
+        $this->rowid            = $Obj->rowid;
+        $this->firstname        = $Obj->firstname;
+        $this->lastname         = $Obj->lastname;
+        $this->birth            = $Obj->birth;
+        $this->password         = $Obj->password;
+        $this->email            = $Obj->email;
+        $this->fk_organization  = $Obj->fk_organization;
+        $this->consent          = $Obj->consent;
+        $this->admin            = $Obj->admin;
+        $this->token            = $Obj->token;
 
         $BelongsTo = new BelongsTo();
         $this->BelongsTo = $BelongsTo->fetchAll($Obj->rowid);
@@ -295,27 +293,19 @@ class User extends Modele
         {
             $obj = $requete->fetch(PDO::FETCH_OBJ);
 
-            $this->rowid = $obj->rowid;
-            $this->lastname = $obj->lastname;
-            $this->firstname = $obj->firstname;
-            $this->birth = $obj->birth;
-            $this->password = $obj->password;
-            $this->email = $obj->email;
-            // $this->Organization = new Organization($obj->fk_organization);
-            $this->fk_organization = $obj->fk_organization;
-            $this->consent = $obj->consent;
-            $this->admin = $obj->admin;
+            $this->rowid            = $obj->rowid;
+            $this->lastname         = $obj->lastname;
+            $this->firstname        = $obj->firstname;
+            $this->birth            = $obj->birth;
+            $this->password         = $obj->password;
+            $this->email            = $obj->email;
+            $this->fk_organization  = $obj->fk_organization;
+            $this->consent          = $obj->consent;
+            $this->admin            = $obj->admin;
 
             $BelongsTo = new BelongsTo();
 
             $this->BelongsTo = $BelongsTo->fetchAll($obj->rowid);
-            
-            // $BelongsTo = new BelongsTo();
-            // $teamIds = $BelongsTo->fetchTeamIds($obj->rowid);
-            // foreach($teamIds as $teamId)
-            // {
-            //     $this->teams[] = new Team($teamId->fk_team);
-            // }
         }
     }
 

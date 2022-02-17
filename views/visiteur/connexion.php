@@ -47,7 +47,8 @@ require_once "layouts/entete.php";
             </div>
 
             <div class="mx-auto mt-3 w-50">
-                <div class="g-recaptcha" data-sitekey="6LcqZ1YeAAAAAMI2_eMURjrDs6oSh3CKh4ChLlaO"></div>
+                <div class="g-recaptcha" data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"></div>
+                <div class="g-recaptcha" data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"></div>
                 <br/>
             </div>
 

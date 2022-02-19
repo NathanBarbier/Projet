@@ -1,3 +1,8 @@
+var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+  return new bootstrap.Tooltip(tooltipTriggerEl)
+})
+
 // hide body overflow
 $("body").css('overflow-y', 'hidden');
 
@@ -84,26 +89,6 @@ $("#add-column-form").find('#create-column').click(function() {
                 async: true,
                 url: AJAX_URL+"admin/map.php?action=getLastColumnId"+"&teamId="+teamId+"&projectId="+projectId,
                 success: function(data) {
-<<<<<<< HEAD
-                    columnId = data;    
-                    columnId = columnId.replace("\"", '').replace("\"", '');
-
-                    console.log(result);
-
-                    columnNameInput.val("");
-                    btnColumnForm.addClass('show');
-
-                    var append = [
-                        "<div class='project-column'>",
-                            "<input class='columnId-input' type='hidden' value='"+columnId+"'>",
-                            "<div class='column-title text-center'>",
-                                "<div class='row'>",
-                                    "<div class='col-7 pt-3 ps-2 ms-3 pe-0 column-title-name'>",
-                                        "<div class='overflow-x'>",
-                                            "<b class='column-title-text'>",
-                                                columnName,
-                                            "</b>",
-=======
                     result = $.parseJSON(result);
                     if(result.success)
                     {
@@ -124,7 +109,6 @@ $("#add-column-form").find('#create-column').click(function() {
                                                     columnName,
                                                 "</b>",
                                             "</div>",
->>>>>>> 9b9c026 (WIP)
                                         "</div>",
                                         "<ul class='offset-1 col-3 pt-2 ps-0'>",
                                             "<li class='me-2'>",
@@ -671,13 +655,6 @@ function initCol()
             async: true,
             url: AJAX_URL+"admin/map.php?action=deleteColumn&columnId="+columnId+"&teamId="+teamId+"&projectId="+projectId,
             success: function(data) {
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-                console.log(data);
->>>>>>> 9b9c026 (WIP)
-=======
->>>>>>> d631bab (Wip Merge Main)
                 $("#column-details").removeClass('show');
                 $("#loading-modal").modal('hide');
             }
@@ -706,16 +683,11 @@ function initCol()
             async: true,
             url: AJAX_URL+"admin/map.php?action=rightColumn&columnId="+columnId+"&teamId="+teamId+"&teamId="+teamId+"&projectId="+projectId,
             success: function(data) {
-<<<<<<< HEAD
-                column = $(".columnId-input[value='"+columnId+"']").parents('.project-column').first();
-                column.insertAfter(column.nextAll(".project-column").first());
-=======
                 data = $.parseJSON(data);
                 if(data) {
                     column = $(".columnId-input[value='"+columnId+"']").parents('.project-column').first();
                     column.insertAfter(column.nextAll(".project-column").first());
                 }
->>>>>>> d631bab (Wip Merge Main)
                 $("#loading-modal").modal('hide');
             }
         })

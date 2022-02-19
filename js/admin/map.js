@@ -644,6 +644,15 @@ function initCol()
         $("#archive-btn").addClass('show');
         $("#column-details").addClass('show');
         $("#column-title").val($(this).find(".column-title-text").first().text());
+        if($("#column-title").val() === "Open" || $("#column-title").val() === "Closed" ) {
+            $("#left-column-btn").addClass('collapse');
+            $("#right-column-btn").addClass('collapse');
+            $("#column-title").prop("disabled" ,true);
+        } else {
+            $("#left-column-btn").removeClass('collapse');
+            $("#right-column-btn").removeClass('collapse');
+            $("#column-title").prop("disabled" ,false);
+        }
 
         columnId = $(this).parents('.column-title').first().prevAll('.columnId-input').first().val();
     });
@@ -663,9 +672,12 @@ function initCol()
             url: AJAX_URL+"admin/map.php?action=deleteColumn&columnId="+columnId+"&teamId="+teamId+"&projectId="+projectId,
             success: function(data) {
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
                 console.log(data);
 >>>>>>> 9b9c026 (WIP)
+=======
+>>>>>>> d631bab (Wip Merge Main)
                 $("#column-details").removeClass('show');
                 $("#loading-modal").modal('hide');
             }
@@ -678,10 +690,12 @@ function initCol()
             async: true,
             url: AJAX_URL+"admin/map.php?action=leftColumn&columnId="+columnId+"&teamId="+teamId+"&teamId="+teamId+"&projectId="+projectId,
             success: function(data) {
-                
-                column = $(".columnId-input[value='"+columnId+"']").parents('.project-column').first()
-                column.insertBefore(column.prevAll('.project-column').first());
-                $("#loading-modal").modal('hide');
+                data = $.parseJSON(data);
+                if(data) {
+                    column = $(".columnId-input[value='"+columnId+"']").parents('.project-column').first()
+                    column.insertBefore(column.prevAll('.project-column').first());
+                }
+                $("#loading-modal").modal('hide'); 
             }
         })
     });
@@ -692,8 +706,16 @@ function initCol()
             async: true,
             url: AJAX_URL+"admin/map.php?action=rightColumn&columnId="+columnId+"&teamId="+teamId+"&teamId="+teamId+"&projectId="+projectId,
             success: function(data) {
+<<<<<<< HEAD
                 column = $(".columnId-input[value='"+columnId+"']").parents('.project-column').first();
                 column.insertAfter(column.nextAll(".project-column").first());
+=======
+                data = $.parseJSON(data);
+                if(data) {
+                    column = $(".columnId-input[value='"+columnId+"']").parents('.project-column').first();
+                    column.insertAfter(column.nextAll(".project-column").first());
+                }
+>>>>>>> d631bab (Wip Merge Main)
                 $("#loading-modal").modal('hide');
             }
         })

@@ -219,22 +219,24 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
                         if($teamId && $columnId && $Team->checkColumn($columnId))
                         {
                             try {
-                                $MapColumn->switchRank($columnId, $teamId, 'left');
+                                $status = $MapColumn->switchRank($columnId, $teamId, 'left');
                                 LogHistory::create($idOrganization, $idUser, "INFO", 'move to left', 'column', $MapColumn->getName(), '', 'column id : '.$MapColumn->getRowid());
                             } catch (\Throwable $th) {
                                 LogHistory::create($idOrganization, $idUser, "ERROR", 'move to left', 'column', $MapColumn->getName(), '', 'column id : '.$MapColumn->getRowid(), $th);
                             }
+                            echo json_encode($status);
                         }
                         break;
                     case 'rightColumn':
                         if($teamId && $columnId && $Team->checkColumn($columnId))
                         {
                             try {
-                                $MapColumn->switchRank($columnId, $teamId, 'right');
+                                $status = $MapColumn->switchRank($columnId, $teamId, 'right');
                                 LogHistory::create($idOrganization, $idUser, "INFO", 'move to right', 'column', $MapColumn->getName(), '', 'column id : '.$MapColumn->getRowid());
                             } catch (\Throwable $th) {
                                 LogHistory::create($idOrganization, $idUser, "ERROR", 'move to right', 'column', $MapColumn->getName(), '', 'column id : '.$MapColumn->getRowid(), $th);
                             }
+                            echo json_encode($status);
                         }
                         break;
                     case 'updateColumn':

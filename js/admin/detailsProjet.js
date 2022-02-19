@@ -27,11 +27,8 @@ $("#close-alert").click(function() {
 });
 
 $("#update-team-button").click(function() {
-    $("#teamName-hidden-update").val($("#teamName").val());
-
     // update team name
     $("#teamName-hidden-update").val($("#teamName").val());
-    
     Obj = Project["teams"];
     ProjectTeams = [];
     

@@ -47,13 +47,13 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
                 $action = htmlentities(GETPOST('action'));
                 $teamId = intval(GETPOST('teamId'));
                 $columnName = htmlentities(GETPOST('columnName'));
-                $columnId = intval(GETPOST('columnId'));
+                $columnId = htmlentities(intval(GETPOST('columnId')));
                 $taskName = htmlentities(GETPOST('taskName'));
-                $taskId = intval(GETPOST('taskId'));
+                $taskId = htmlentities(intval(GETPOST('taskId')));
                 $taskNote = htmlentities(GETPOST('taskNote'));
-                $commentId = intval(GETPOST('commentId'));
-                $memberId = intval(GETPOST('memberId'));
-
+                $commentId = htmlentities(intval(GETPOST('commentId')));
+                $memberId = htmlentities(intval(GETPOST('memberId')));
+            
                 $MapColumn = new MapColumn($columnId);
                 $Task = new Task($taskId);
                 $TaskComment = new TaskComment($commentId);
@@ -353,6 +353,10 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
                             } catch (\Throwable $th) {
                                 // echo json_encode($th);
                             }
+                        }
+                        else
+                        {
+                            echo json_encode(false);
                         }
                         break;
                     case 'getTaskMembers':

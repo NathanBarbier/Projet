@@ -108,13 +108,17 @@ class Team extends Modele
         $requete = $this->getBdd()->prepare($sql);
         $requete->execute([$rowid]);
 
-        $obj = $requete->fetch(PDO::FETCH_OBJ);
+        if($requete->rowCount() > 0)
+        {
+            $obj = $requete->fetch(PDO::FETCH_OBJ);
+    
+            $this->rowid = $rowid;
+            $this->name = $obj->name;
+            // $this->Project = new Project($obj->fk_project);
+            $this->fk_project = $obj->fk_project;
+            $this->active = $obj->active;
+        }
 
-        $this->rowid = $rowid;
-        $this->name = $obj->name;
-        // $this->Project = new Project($obj->fk_project);
-        $this->fk_project = $obj->fk_project;
-        $this->active = $obj->active;
 
         // fetch team users
         $sql = "SELECT *";

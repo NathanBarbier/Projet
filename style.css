@@ -571,6 +571,20 @@ input:read-only:hover:not(.form-check-input) {
   }
 }
 
+.sidebar-btn {
+  color: rgba(156,163,175,1);
+  transition: unset;
+}
+
+.sidebar-btn:hover {
+  background-color: rgba(55,65,81, 1);
+  color: rgba(229,231,235, 1)
+}
+
+.sidebar-btn:active {
+  color: rgb(250, 250, 250)
+}
+
 /* -------------- 10. ------------- */
 
 .table-radius {

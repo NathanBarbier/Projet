@@ -214,9 +214,10 @@ function init()
             async: true,
             url: AJAX_URL+"membre/map.php?action=getTaskComments&taskId="+taskId+"&teamId="+teamId+"&projectId="+projectId,
             success: function (data) {
-                if(data != undefined)
+                data = $.parseJSON(data)
+                if(data)
                 {
-                    comments = $.parseJSON(data).comments;
+                    comments = data.comments;
                     l = comments.length;
                     for(i = 0; i < l; i++)
                     {

@@ -226,9 +226,10 @@ function init()
             async: true,
             url: AJAX_URL+"admin/map.php?action=getTaskComments&taskId="+taskId+"&teamId="+teamId+"&projectId="+projectId,
             success: function (data) {
-                if(data != undefined)
+                data = $.parseJSON(data)
+                if(data)
                 {
-                    comments = $.parseJSON(data).comments;
+                    comments = data.comments;
                     l = comments.length;
                     for(i = 0; i < l; i++)
                     {
@@ -258,7 +259,7 @@ function init()
                             "<div class='mt-1'>",
                                 "<div class='row w-100' style='margin-left:0'>",
                                     "<div class='col-7 px-0'>",
-                                        "<button class='btn w-100 "
+                                        "<button class='btn w-100 btn-unactive "
                         ].join("");
                         
                         if(admin == 1)

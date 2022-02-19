@@ -91,14 +91,17 @@ Class MapColumn extends Modele
         $requete = $this->getBdd()->prepare($sql);
         $requete->execute([$rowid]);
 
-        $obj = $requete->fetch(PDO::FETCH_OBJ);
-
-        $this->rowid        = $obj->rowid;
-        $this->name         = $obj->name;
-        $this->fk_team      = $obj->fk_team;
-        $this->rank         = $obj->rank;
-
-        $this->fetchTasks();
+        if($requete->rowCount() > 0)
+        {
+            $obj = $requete->fetch(PDO::FETCH_OBJ);
+    
+            $this->rowid        = $obj->rowid;
+            $this->name         = $obj->name;
+            $this->fk_team      = $obj->fk_team;
+            $this->rank         = $obj->rank;
+    
+            $this->fetchTasks();
+        }
     }
 
     public function initialize($Obj)

@@ -79,43 +79,43 @@
         <!-- SIDE BAR -->
         <div class="row" style="height: 100%;">
             <div id="sideBar" class="navbar-expand-lg col-md-0 col-lg-2 p-0 collapse show">
-                <div class="collapse navbar-collapse align-items-start text-center pt-2 bg-light overflow-y" style="height: 100%; border: 1px solid rgba(0, 0, 0, 0.125);">
+                <div class="collapse navbar-collapse align-items-start text-center pt-2 overflow-y" style="background-color: rgba(31,41,55,1);height: 100%; border: 1px solid rgba(0, 0, 0, 0.125);">
                     <nav class="w-100">
                         <ul class="list-unstyled">
-                            <li><a href="<?= VIEWS_URL ?>admin/index.php" class="btn btn-outline-secondary w-75">Accueil</a></li>
+                            <li><a href="<?= VIEWS_URL ?>admin/index.php" class="btn h-12 px-3 mt-2 w-75 sidebar-btn">Accueil</a></li>
                             <!-- COLLABORATEURS -->
                             <li>
-                                <button class="btn btn-outline-primary w-75 mt-4" data-bs-toggle="collapse" data-bs-target="#equipesCollapse" aria-expanded="false">Collaborateurs</button>
+                                <button class="btn w-75 mt-4 h-12 px-3 mt-2 rounded sidebar-btn" data-bs-toggle="collapse" data-bs-target="#equipesCollapse" aria-expanded="false">Collaborateurs</button>
 
                                 <div id="equipesCollapse" class="collapse">
                                     <ul class="list-unstyled">
-                                        <li><a class="btn btn-outline-primary w-75 mt-2" href="<?= CONTROLLERS_URL ?>admin/collaborateurs.php">Vue d'ensemble</a></li>
-                                        <li><a class="btn btn-outline-secondary w-75 mt-2" href="<?= CONTROLLERS_URL ?>admin/inscriptionUtilisateur.php">Inscriptions</a></li>
-                                        <li><a class="btn btn-outline-secondary w-75 mt-2" href="<?= CONTROLLERS_URL ?>admin/listeMembres.php">Liste des membres</a></li>
+                                        <li><a class="btn h-12 px-3 mt-2 rounded w-75 mt-2 sidebar-btn" href="<?= CONTROLLERS_URL ?>admin/collaborateurs.php">Vue d'ensemble</a></li>
+                                        <li><a class="btn h-12 px-3 mt-2 rounded w-75 mt-2 sidebar-btn" href="<?= CONTROLLERS_URL ?>admin/inscriptionUtilisateur.php">Inscriptions</a></li>
+                                        <li><a class="btn h-12 px-3 mt-2 rounded w-75 mt-2 sidebar-btn" href="<?= CONTROLLERS_URL ?>admin/listeMembres.php">Liste des membres</a></li>
                                     </ul>
                                 </div>
                             </li>
                             <!-- ORGANISATION -->
                             <li class="mt-2">
-                                <button class="btn btn-outline-primary w-75 mt-4" data-bs-toggle="collapse" data-bs-target="#organisationCollapse" aria-expanded="false">Organisation</button>
+                                <button class="btn h-12 px-3 mt-2 rounded w-75 mt-4 sidebar-btn" data-bs-toggle="collapse" data-bs-target="#organisationCollapse" aria-expanded="false">Organisation</button>
 
                                 <div id="organisationCollapse" class="collapse">
                                     <ul class="list-unstyled">
-                                        <li><a class="btn btn-outline-primary w-75 mt-2" href="<?= CONTROLLERS_URL ?>admin/organisation.php">Vue d'ensemble</a></li>
-                                        <li><a class="btn btn-outline-secondary w-75 mt-2" href="<?= CONTROLLERS_URL ?>admin/gestionOrganisation.php">Gestion organisation</a></li>
+                                        <li><a class="btn h-12 px-3 mt-2 rounded w-75 mt-2 sidebar-btn" href="<?= CONTROLLERS_URL ?>admin/organisation.php">Vue d'ensemble</a></li>
+                                        <li><a class="btn h-12 px-3 mt-2 rounded w-75 mt-2 sidebar-btn" href="<?= CONTROLLERS_URL ?>admin/gestionOrganisation.php">Gestion organisation</a></li>
                                     </ul>
                                 </div>
                             
                             </li>
                             <!-- PROJETS -->
                             <li class="mt-2">
-                                <button class="btn btn-outline-primary w-75 mt-4" data-bs-toggle="collapse" data-bs-target="#projetsCollapse" aria-expanded="false">Projets</button>
+                                <button class="btn h-12 px-3 mt-2 rounded w-75 mt-2 sidebar-btn" data-bs-toggle="collapse" data-bs-target="#projetsCollapse" aria-expanded="false">Projets</button>
 
                                 <div id="projetsCollapse" class="collapse">
                                     <ul class="list-unstyled">
-                                        <li><a class="btn btn-outline-primary w-75 mt-2" href="<?= CONTROLLERS_URL ?>admin/projets.php">Vue d'ensemble</a></li>
-                                        <li><a class="btn btn-outline-secondary w-75 mt-2" href="<?= CONTROLLERS_URL ?>admin/creationProjets.php">Création de projets</a></li>
-                                        <li><a class="btn btn-outline-secondary w-75 mt-2" href="<?= CONTROLLERS_URL ?>admin/listeProjets.php">Liste des projets</a></li>
+                                        <li><a class="btn h-12 px-3 mt-2 rounded w-75 mt-2 sidebar-btn" href="<?= CONTROLLERS_URL ?>admin/projets.php">Vue d'ensemble</a></li>
+                                        <li><a class="btn h-12 px-3 mt-2 rounded w-75 mt-2 sidebar-btn" href="<?= CONTROLLERS_URL ?>admin/creationProjets.php">Création de projets</a></li>
+                                        <li><a class="btn h-12 px-3 mt-2 rounded w-75 mt-2 sidebar-btn" href="<?= CONTROLLERS_URL ?>admin/listeProjets.php">Liste des projets</a></li>
                                     </ul>
                                 </div>
                             

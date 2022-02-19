@@ -342,6 +342,10 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
                                 // echo json_encode($th);
                             }
                         }
+                        else
+                        {
+                            echo json_encode(false);
+                        }
                         break;
                     case 'getTaskMembers':
                         if($taskId && $Team->checkTask($taskId))

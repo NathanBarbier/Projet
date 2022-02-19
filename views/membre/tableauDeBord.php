@@ -49,7 +49,7 @@ require_once "layouts/entete.php";
                             </div>
                             <div class="row mt-4 justify-content-around">
                                 <div class="sticker col-4 text-center">
-                                    <b>Nb membres</b>
+                                    <b class="border-bottom">Membres</b>
                                     <p class="text-center">
                                         <?php
                                         $counter = 0; 
@@ -62,7 +62,7 @@ require_once "layouts/entete.php";
                                 </div>
                                 
                                 <div class="sticker col-4 text-center">
-                                    <b>Nb tâches</b>
+                                    <b class="border-bottom">Tâches affectées</b>
                                     <br>
                                     <p class="text-center">
                                     <?php foreach($Project->getTeams() as $Team) {
@@ -71,7 +71,14 @@ require_once "layouts/entete.php";
                                                     $teamId = $Team->getRowid();
                                                     $taskCount = 0;
                                                     foreach($Team->getMapColumns() as $MapColumn) {
-                                                        $taskCount+= count($MapColumn->getTasks());
+                                                        foreach($MapColumn->getTasks() as $Task) {
+                                                            foreach($Task->getMembers() as $Member) {
+                                                                if($Member->getRowid() == $idUser) {
+                                                                    $taskCount+= count($MapColumn->getTasks());
+                                                                    break;
+                                                                }
+                                                            }
+                                                        }
                                                     }
                                                     break 2;
                                                 }

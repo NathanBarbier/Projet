@@ -21,7 +21,7 @@ require_once "layouts/entete.php";
             
             <div id="current-projects-col" class="bg-white border row mx-3 collapse show mb-3" style="border-radius: 15px;">
                 <h3 class="mx-auto text-center w-50 py-2 underline">Tableaux Actifs</h3>
-                <div style="height: 90%; overflow: auto">
+                <div class="pb-5" style="height: 90%; overflow: auto">
                     <?php 
                     if(count($Projects) > 0) {
                         foreach($Projects as $Project) { 

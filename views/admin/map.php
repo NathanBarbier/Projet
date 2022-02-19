@@ -61,10 +61,11 @@ require_once "layouts/entete.php";
     <i id="open-right-section" class="btn btn-outline-dark bi bi-arrow-bar-left position-absolute end-0 top-0 mt-2 me-2 w-auto collapse"></i>
 
     <div id="archive-confirmation" class="collapse mt-3">
-        <h3 class="mx-auto text-center border-bottom w-50">Archiver le tableau</h3>
+        <h3 class="mx-auto text-center w-50 underline">Archiver le tableau</h3>
 
-        <div class="sticker h-auto w-50 mx-auto text-center mt-3 pb-5">
-            <p class="mt-5"><b>Êtes-vous sûr de vouloir archiver le tableau ? (vous pourrez le ré-ouvrir plus tard)</b></p>
+        <div class="sticker h-auto w-50 mx-auto text-center mt-3 pb-5 px-3">
+            <p class="mt-5 mb-0"><b>Êtes-vous sûr de vouloir archiver le tableau ?</b></p>
+	    <p><b>(vous pourrez le ré-ouvrir plus tard)</b></p>
             <a href="<?= CONTROLLERS_URL ?>admin/map.php?action=archiveTeam&projectId=<?= $projectId ?>&teamId=<?= $teamId ?>" class="btn btn-outline-success w-50 mt-5">Archiver le tableau</a>
             <a id="cancel-archive" class="btn btn-outline-danger w-50 mt-3">Annuler</a>
         </div>
@@ -93,15 +94,15 @@ require_once "layouts/entete.php";
                         <div class="column-content">
                             <?php foreach($Column->getActiveTasks() as $taskKey => $Task) {
                                 $isAdmin = false;
-                                foreach($TeamUsers as $User) {
-                                    if($Task->getFk_user() == $User->getRowid() && $User->isAdmin()) {
+                                foreach($TeamUsers as $TeamUser) {
+                                    if($Task->getFk_user() == $TeamUser->getRowid() && $TeamUser->isAdmin()) {
                                         $isAdmin = true;
                                         break;
                                     }
                                 } ?>
                                 <div class="task">
                                     <input class="taskId-input" type="hidden" value="<?= $Task->getRowid() ?>">
-                                    <button class='btn disabled btn-outline-<?= $isAdmin ? 'danger' : 'classic' ?> task-author mt-2 ms-2 px-0 w-50 overflow-x'><?= $authors[$columnKey][$taskKey] ?></button>
+                                    <button class='btn disabled btn-outline-<?= $isAdmin ? 'danger' : 'classic' ?> line-height-40 mt-2 ms-2 px-0 w-50 overflow-x'><?= $authors[$columnKey][$taskKey] ?></button>
                                     <div class='task-bubble pt-2 mb-1 mt-1 mx-2'>
                                         <textarea class='task-bubble-input text-center pt-1'><?= $Task->getName() ?></textarea>
                                     </div>
@@ -137,13 +138,13 @@ require_once "layouts/entete.php";
             </div>
         </div>
         <div id="task-details" class="mt-3 collapse">
-            <textarea id="task-title" class="card px-2 pt-3 text-center" cols="25" rows="2" readonly>Title</textarea>
-            <div class="mt-2">
+            <!-- <textarea id="task-title" class="card px-2 pt-3 text-center" cols="25" rows="2" readonly>Title</textarea> -->
+            <div class="mt-3">
                 <i id="up-task-btn" class="w-25 me-2 bi bi-arrow-up btn btn-outline-dark"></i>
                 <i id="down-task-btn" class="w-25 ms-2 bi bi-arrow-down btn btn-outline-dark"></i>
             </div>
-            <div class="border ps-2 pb-4 mt-2" style="height: 28vh;">
-                <div id="task-comment-container" class="overflow-y pe-2" style="height: 80%"></div>
+            <div class="border ps-2 pb-4 mt-3 radius" style="height: 32vh;">
+                <div id="task-comment-container" class="overflow-y pe-2 pb-3" style="height: 80%"></div>
                 <i id="add-comment-btn" class="bi bi-chat-square-text-fill btn btn-outline-classic mt-3 me-2 collapse show w-25" style="font-size: larger;"></i>
                 <i id="check-comment-btn" class="btn btn-outline-success mt-3 me-2 collapse bi bi-check-lg" tabindex="0" data-bs-toggle="tooltip" title="Enregistrer"></i>
                 <i id="delete-comment-btn" class="mt-3 me-2 btn btn-outline-danger collapse bi bi-trash" tabindex="0" data-bs-toggle="tooltip" title="Supprimer"></i>
@@ -151,8 +152,8 @@ require_once "layouts/entete.php";
             
             <div id="members-container-div">
                 <div class="row mt-2">
-                    <div class="col-4 pt-3">
-                        <button id="members-switch-button" class="btn btn-outline-info" style="line-height: 70%;">
+                    <div class="col-4 pt-3 ps-1">
+                        <button id="members-switch-button" class="btn btn-outline-info ms-2 p-1 mb-1" style="line-height: 70%;float: left">
                             <div class="row mx-auto">
                                 <div class="col-6 p-0">
                                     <i class="bi bi-caret-left-fill"></i>
@@ -168,22 +169,16 @@ require_once "layouts/entete.php";
                         <h5 class="members-label collapse show">Task members</h5>
                     </div>
                 </div>
-                <div id="team-members-container" class="overflow-y border collapse" style="height: 20vh;">
-                    <?php
-                    foreach($Team->getUsers() as $User) { ?>
-                    <div class="team-member">
-                        <input type="hidden" class="team-member-id" value="<?= $User->getRowid() ?>">
-                        <input type="text" class="form-control sticker mx-auto mt-2 hover text-center w-90" readonly  value="<?= $User->getLastname() . " " . $User->getFirstname() ?>">
-                    </div>
-                    <?php } ?>
+                <div id="team-members-container" class="overflow-y border collapse pt-1 pb-3 radius" style="height: 25vh;">
+
                 </div>
-                <div id="task-members-container" class="overflow-y border collapse show" style="height: 20vh; width:100%">
+                <div id="task-members-container" class="overflow-y border collapse show pt-1 pb-3 radius" style="height: 25vh; width:100%;">
                     
                 </div>
 
                 <button id="attributed-member-button" class="btn btn-outline-classic collapse w-50 mt-2" disabled>Attribué</button>
                 <button id="attribute-member-button" class="collapse btn btn-outline-success w-50 mt-2">Attribuer</button>
-                <button id="desattribute-member-button" class="collapse btn btn-outline-danger w-50 mt-2">Désattribuer</button>
+                <button id="desattribute-member-button" class="collapse btn btn-outline-danger mt-2">Désattribuer</button>
             </div>
         </div>
         <div id="add-column-form" class="sticker text-center pt-1 collapse w-100" style="height:91%">
@@ -210,7 +205,7 @@ require_once "layouts/entete.php";
         </div>
     </div>
 
-<script type="text/Javascript" src="<?= JS_URL ?>admin/map.min.js" defer></script>
+<script type="text/Javascript" src="<?= JS_URL ?>admin/map.js" defer></script>
 <?php 
 require_once "layouts/pied.php";
 ?>

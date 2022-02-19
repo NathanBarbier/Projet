@@ -169,7 +169,7 @@ if($teamId)
                 </script>
                 <?php
             
-                require_once VIEWS_PATH."admin".DIRECTORY_SEPARATOR.$tpl;
+                require_once VIEWS_PATH."admin/".$tpl;
             }
             else
             {

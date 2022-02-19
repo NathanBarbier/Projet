@@ -58,7 +58,7 @@ Class LogHistory extends Modele
         $this->identification   = $Obj->identification;
         $this->fk_organization  = $Obj->fk_organization;
         $this->status           = $Obj->status;
-        $this->exception        = $obj->exception;
+        $this->exception        = $Obj->exception;
     }
 
     public function setRowid($rowid)

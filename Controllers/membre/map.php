@@ -11,7 +11,7 @@ $tpl = "map.php";
 $errors = array();
 $success = false;
 
-if($teamId) 
+if($teamId)
 {
     if($projectId)
     {
@@ -33,6 +33,7 @@ if($teamId)
         {
             foreach($Project->getTeams() as $Obj)
             {
+                // check if the team belongs to this project
                 if($Obj->getRowid() == $teamId)
                 {
                     $Team = $Obj;
@@ -44,9 +45,9 @@ if($teamId)
             {
                 // check if the user belongs to the team
                 $UserBelongsToTeam = false;
-                foreach($Team->getUsers() as $User)
+                foreach($Team->getUsers() as $TeamUser)
                 {
-                    if($User->getRowid() == $idUser)
+                    if($TeamUser->getRowid() == $idUser)
                     {
                         $UserBelongsToTeam = true;
                         break;
@@ -90,9 +91,9 @@ if($teamId)
                 $usernames = array();
 
                 // Get tasks authors for JS
-                foreach($Team->getUsers() as $User)
+                foreach($Team->getUsers() as $TeamUser)
                 {
-                    $usernames[$User->getRowid()] = $User->getLastname() . ' ' . $User->getFirstname();
+                    $usernames[$TeamUser->getRowid()] = $TeamUser->getLastname() . ' ' . $TeamUser->getFirstname();
                 }
 
                 foreach($Team->getMapColumns() as $columnKey => $Column)
@@ -103,20 +104,20 @@ if($teamId)
                         $TeamUsers = $Team->getUsers();
                         
                         // get all organization admins
-                        foreach($Organization->getUsers() as $User)
+                        foreach($Organization->getUsers() as $TeamUser)
                         {
-                            if($User->isAdmin())
+                            if($TeamUser->isAdmin())
                             {
-                                $TeamUsers[] = $User;
+                                $TeamUsers[] = $TeamUser;
                             }
                         }
-
+    
                         // verify that fk_author correspond to an admin user
-                        foreach($TeamUsers as $User)
+                        foreach($TeamUsers as $TeamUser)
                         {
-                            if($User->getRowid() == $Task->getFk_user())
+                            if($TeamUser->getRowid() == $Task->getFk_user())
                             {
-                                if($User->isAdmin())
+                                if($TeamUser->isAdmin())
                                 {
                                     $authors[$columnKey][$taskKey] = $Organization->getName();
                                 }
@@ -133,6 +134,7 @@ if($teamId)
                 ?>
                 <script>
                 var teamId = <?php echo json_encode($Team->getRowid()); ?>;
+                var projectId = <?php echo json_encode($Project->getRowid()); ?>;
                 const username = <?php echo json_encode($username); ?>;
                 const idOrganization = <?php echo json_encode($idOrganization); ?>;
                 const idUser = <?php echo json_encode($idUser); ?>;

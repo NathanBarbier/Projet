@@ -176,7 +176,7 @@ class Organization extends Modele
             foreach($lines as $line)
             {
                 $User = new User();
-                $User->initialize($line);
+                $User->initialize($line, true);
                 $this->users[] = $User;
             }
         }

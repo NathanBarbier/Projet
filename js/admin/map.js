@@ -34,15 +34,26 @@ $("#cancel-archive").click(function() {
 $("#close-details").click(function() {
     $(this).removeClass('show');
     $("#details-section").removeClass('show');
-    $("#left-section").removeClass('col-10').addClass('col');
+    $("#left-section").removeClass('col-sm-8 col-md-9 col-lg-10').addClass('col-12');
     $("#open-right-section").addClass('show');
 });
 
 $("#open-right-section").click(function() {
     $("#close-details").addClass('show');
     $("#details-section").addClass('show');
-    $("#left-section").removeClass('col').addClass('col-10');
+    $("#left-section").removeClass('col-12').addClass('col-sm-8 col-md-9 col-lg-10');
     $(this).removeClass('show');
+});
+
+// switch button
+$("#members-switch-button").off('click').click(function() {
+    $(".members-label").toggleClass('show');
+    $("#team-members-container").toggleClass('show');
+    $("#task-members-container").toggleClass('show');
+
+    $("#desattribute-member-button").removeClass('show');
+    $("#attribute-member-button").removeClass('show');
+    $("#attributed-member-button").removeClass('show');
 });
 
 $(".close-alert").click(function() {
@@ -56,11 +67,12 @@ $(".close-alert").click(function() {
 $("#add-column-form").find('#create-column').click(function() {
     $("#archive-btn").addClass('show');
     $("#add-column-form").removeClass('show');
+
     columnName = $("#columnName-input").val();
     columnName = columnName.length == 0 ? " " : columnName;
 
-    columnNameInput = $(this).prev();
-    btnColumnForm = $(this);
+    columnNameInput     = $(this).prev();
+    btnColumnForm       = $(this);
     
     $("#loading-modal").modal('show');
     // insert in bdd
@@ -72,7 +84,6 @@ $("#add-column-form").find('#create-column').click(function() {
                 async: true,
                 url: AJAX_URL+"admin/map.php?action=getLastColumnId"+"&teamId="+teamId+"&projectId="+projectId,
                 success: function(data) {
-                    
                     columnId = data;    
                     columnId = columnId.replace("\"", '').replace("\"", '');
                     
@@ -145,6 +156,9 @@ function init()
         $(".task-bubble-input:not(.not)").prop('disabled', true);
         $(this).removeClass("not");
 
+        // hide team-members (affectation) during loading
+        $(".team-member").removeClass('show');
+
         // show the right details column and content
         $("#column-details").removeClass('show');
         $("#add-column-btn").addClass('show');
@@ -163,8 +177,8 @@ function init()
         $("#attribute-member-button").removeClass('show');
         $("#desattribute-member-button").removeClass('show');
 
-        var title = $(this).val();
-        $("#task-title").val(title);
+        // var title = $(this).val();
+        // $("#task-title").val(title);
 
         $(this).parent().next().find(".task-buttons-container").first().addClass('show');
 
@@ -214,17 +228,16 @@ function init()
             success: function (data) {
                 if(data != undefined)
                 {
-                    data = $.parseJSON(data);
-                    comments = data.comments;
+                    comments = $.parseJSON(data).comments;
                     l = comments.length;
                     for(i = 0; i < l; i++)
                     {
-                        note = comments[i].note;
-                        note = note == null ? '' : note;
-                        admin = comments[i].admin;
-                        author = comments[i].author;
-                        authorId = comments[i].fk_user;
-                        tms = comments[i].tms;
+                        note        = comments[i].note;
+                        note        = note == null ? '' : note;
+                        admin       = comments[i].admin;
+                        author      = comments[i].author;
+                        authorId    = comments[i].fk_user;
+                        tms         = comments[i].tms;
 
                         var prepend = [
                             "<div class='task-comment-div'>",
@@ -275,119 +288,151 @@ function init()
                     }
                     initComment();
                 }
+            }
+        });
 
-                // load task members
-                $.ajax({
-                    async: true,
-                    url: AJAX_URL+"admin/map.php?action=getTaskMembers&taskId="+taskId+"&teamId="+teamId+"&projectId="+projectId,
-                    success: function (data) {
-                        // re-enable click on task-bubble-input
-                        $(".task-bubble-input").prop('disabled', false);
+        // refresh team members & task members display
+        $.ajax({
+            async: true,
+            url: AJAX_URL+"admin/map.php?action=getTeamMembers&taskId="+taskId+"&teamId="+teamId+"&projectId="+projectId,
+            success: function (data) {
+                // clean team & task members containers
+                $("#team-members-container").children().remove()
+                $("#task-members-container").children().remove()
 
-                        task = $.parseJSON(data);
-                        members = task.members;
-                        
-                        l = members.length;
-                        for(i = 0; i < l; i++)
-                        {
-                            var prepend = [
-                                "<div class='task-member'>",
-                                    "<input type='hidden' class='task-member-id' value='"+members[i].rowid+"'>",
-                                    "<input class='w-90 sticker mx-auto mt-2 hover text-center form-control' readonly value='"+members[i].lastname+" "+members[i].firstname+"'>",
-                                "</div>"
-                            ].join("");
+                data = $.parseJSON(data);
 
-                            $("#task-members-container").prepend(prepend);
-                        }
+                // users that are attributed to the task
+                affectedUsers = data.affectedUsers;
+                affectedUsers.forEach(user => {
 
-                        $("#members-switch-button").off('click').click(function() {
-                            $(".members-label").toggleClass('show');
-                            // $(".members-buttons").toggleClass('show');
-                            $("#team-members-container").toggleClass('show');
-                            $("#task-members-container").toggleClass('show');
-                
-                            $("#desattribute-member-button").removeClass('show');
-                            $("#attribute-member-button").removeClass('show');
-                            $("#attributed-member-button").removeClass('show');
-                        });
-                
-                        // member onclick userid
-                        $(".team-member").off('click').click(function() {
-                            memberId = $(this).find('.team-member-id').val();
-                            memberId = memberId.replace("\"", ' ').replace("\"", ' ');
-                            memberName = $(this).find('.sticker').val();
-                
-                            if($(".task-member-id[value='"+memberId+"']").length > 0)
-                            {
-                                $("#attributed-member-button").addClass('show');
-                                $("#attribute-member-button").removeClass('show');
-                            }
-                            else
-                            {
-                                $("#attribute-member-button").addClass('show');
-                                $("#attributed-member-button").removeClass('show');
-                            }
+                    // task-member thumbnail
+                    var prepend = [
+                        "<div class='task-member'>",
+                            "<input type='hidden' class='task-member-id' value='"+user.rowid+"'>",
+                            "<input class='w-90 sticker mx-auto mt-2 hover text-center form-control "+(idUser == user.rowid ? "underline" : "")+"' readonly value='"+user.lastname+" "+user.firstname +"'>",
+                        "</div>"
+                    ].join("");
 
-                        })
-                
-                        $(".task-member").off('click').click(function() {
-                            memberId = $(this).find('.task-member-id').val();
-                            memberId = memberId.replace("\"", ' ').replace("\"", ' ');
-                
-                            $("#desattribute-member-button").addClass('show');
-                        })
-                
-                        $("#attribute-member-button").off('click').click(function() {
-                            btn = $(this);
-                            if($(".task-member-id[value='"+memberId+"']").length == 0)
-                            {
-                                $.ajax({
-                                    async: true,
-                                    url: AJAX_URL+"admin/map.php?action=attributeMemberToTask&taskId="+taskId+"&memberId="+memberId+"&teamId="+teamId+"&projectId="+projectId,
-                                    success: function(data) {
-                                        // disable like appearance on team member input
-                                        $(".team-member-id[value='"+memberId+"']").parent().css('opacity', '35%')
-                                        
-                                        btn.removeClass('show');
-    
-                                        var prepend = [
-                                        "<div class='task-member'>",
-                                            "<input type='hidden' class='task-member-id' value='"+memberId+"'>",
-                                            "<input class='w-90 sticker mx-auto mt-2 hover text-center form-control' readonly value='"+memberName+"'>",
-                                        "</div>"
-                                        ].join("")
+                    $("#task-members-container").prepend(prepend);
 
-                                        $("#task-members-container").prepend(prepend);
-    
-                                        $(".task-member").off('click').click(function() {
-                                            memberId = $(this).find('.task-member-id').val();
-                                            memberId = memberId.replace("\"", ' ').replace("\"", ' ');
+                    
+                    // team-member thumbnail
+                    var append = [
+                        "<div class='team-member collapse show'>",
+                            "<input type='hidden' class='team-member-id' value='"+user.rowid+"'>",
+                            "<input type='text' class='affected-team-member form-control sticker mx-auto mt-2 hover text-center w-90 "+(idUser == user.rowid ? "underline" : "")+"' readonly  value='"+ user.lastname + ' ' + user.firstname +"'>",
+                        "</div>"
+                    ].join("");
+
+                    $("#team-members-container").append(append);;
+
+                });
+
+                // users that are not attributed to the task
+                freeUsers = data.freeUsers;
+                freeUsers.forEach(user => {
+
+                    var append = [
+                        "<div class='team-member collapse show'>",
+                            "<input type='hidden' class='team-member-id' value='"+user.rowid+"'>",
+                            "<input type='text' class='form-control sticker mx-auto mt-2 hover text-center w-90 "+(idUser == user.rowid ? "underline" : "")+"' readonly  value='"+ user.lastname + ' ' + user.firstname +"'>",
+                        "</div>"
+                    ].join("");
+
+                    // create element in DOM
+                    $("#team-members-container").append(append);;
+                });
+
+
+                // Attach event listeners to new DOM elements
+
+                $(".team-member").off('click').click(function() {
+                    // save the id of the clicked member to attribute him later
+                    memberId = $(this).find('.team-member-id').val();
+                    memberId = memberId.replace("\"", ' ').replace("\"", ' ');
+                    memberName = $(this).find('.sticker').val();
+
+                    if($(this).find(".form-control").hasClass("affected-team-member"))
+                    {
+                        // can't attribute users that are already attributed
+                        $("#attributed-member-button").addClass('show');
+                        $("#attribute-member-button").removeClass('show');
+                    }
+                    else
+                    {
+                        // can attribute free users
+                        $("#attribute-member-button").addClass('show');
+                        $("#attributed-member-button").removeClass('show');
+                    }
+
+                })
+
+                $(".task-member").off('click').click(function() {
+                    // save the id of the clicked member to desattribute him later
+                    memberId = $(this).find('.task-member-id').val();
+                    memberId = memberId.replace("\"", ' ').replace("\"", ' ');
+
+                    $("#desattribute-member-button").addClass('show');
+                })
+
+                $("#attribute-member-button").off('click').click(function() {
+                    btn = $(this);
+                    // if the user is not attributed
+                    if($(".task-member-id[value='"+memberId+"']").length == 0)
+                    {
+                        $.ajax({
+                            async: true,
+                            url: AJAX_URL+"admin/map.php?action=attributeMemberToTask&taskId="+taskId+"&memberId="+memberId+"&teamId="+teamId+"&projectId="+projectId,
+                            success: function(data) {
+                                // disable like appearance on team member input
+                                $(".team-member-id[value='"+memberId+"']").nextAll(".form-control").first().addClass('affected-team-member');
                                 
-                                            $("#desattribute-member-button").addClass('show');
-                                        })
-                                    }
-                                });
+                                btn.removeClass('show');
+
+                                var prepend = [
+                                "<div class='task-member'>",
+                                    "<input type='hidden' class='task-member-id' value='"+memberId+"'>",
+                                    "<input class='w-90 sticker mx-auto mt-2 hover text-center form-control' readonly value='"+memberName+"'>",
+                                "</div>"
+                                ].join("")
+
+                                $("#task-members-container").prepend(prepend);
+
+                                $(".task-member").off('click').click(function() {
+                                    memberId = $(this).find('.task-member-id').val();
+                                    memberId = memberId.replace("\"", ' ').replace("\"", ' ');
+                        
+                                    $("#desattribute-member-button").addClass('show');
+                                })
                             }
-                        });
-                
-                        $("#desattribute-member-button").off('click').click(function() {
-                            btn = $(this);
-                            $.ajax({
-                                async: true,
-                                url: AJAX_URL+"admin/map.php?action=desattributeMemberToTask&taskId="+taskId+"&memberId="+memberId+"&teamId="+teamId+"&projectId="+projectId,
-                                success: function(data) {
-                                    // remove disable like appearance on team member input
-                                    $(".team-member-id[value='"+memberId+"']").parent().css('opacity', '100%')
-                                    
-                                    btn.removeClass('show');
-                                    $(".task-member-id[value='"+memberId+"']").parent().remove();
-                                }
-                            });
                         });
                     }
                 });
+
+                $("#desattribute-member-button").off('click').click(function() {
+                    btn = $(this);
+                    $.ajax({
+                        async: true,
+                        url: AJAX_URL+"admin/map.php?action=desattributeMemberToTask&taskId="+taskId+"&memberId="+memberId+"&teamId="+teamId+"&projectId="+projectId,
+                        success: function(data) {
+                            // remove disable like appearance on team member input
+                            $(".team-member-id[value='"+memberId+"']").nextAll(".form-control").first().removeClass('affected-team-member')
+                            
+                            btn.removeClass('show');
+                            $(".task-member-id[value='"+memberId+"']").parent().remove();
+                        }
+                    });
+                });
+
+                // display team-members
+                $(".team-member").addClass('show');
+
+                // re-enable tasks click
+                $(".task-bubble-input").prop('disabled', false);
             }
         });
+
         $("#task-details").addClass("show");
     });
     
@@ -442,7 +487,6 @@ function initTask()
             async: true,
             url: AJAX_URL+"admin/map.php?action=addTask&columnId="+columnId+"&teamId="+teamId+"&projectId="+projectId,
             success: function(data) {
-                
                 $.ajax({
                     async: true,
                     url: AJAX_URL+"admin/map.php?action=getLastTaskId"+"&teamId="+teamId+"&projectId="+projectId,
@@ -455,7 +499,7 @@ function initTask()
                         var prepend = [
                             "<div class='task'>",
                                 "<input class='taskId-input' type='hidden' value='"+taskId+"'>",
-                                "<button class='btn btn-outline-danger disabled task-author mt-2 ms-2 px-0 w-50 overflow-x'>",
+                                "<button class='btn btn-outline-danger disabled line-height-40 mt-2 ms-2 px-0 w-50 overflow-x'>",
                                     username,
                                 "</button>",
                                 "<div class='task-bubble pt-2 mb-1 mt-1 mx-2'>",
@@ -527,26 +571,26 @@ function initTask()
 
     $(".task-to-left").click(function() {
         // update fk_column in bdd
-        task = $(this).parents(".task");
-        taskId = task.find(".taskId-input").first().val();
-        newColumn = task.parents(".project-column").prevAll(".project-column").first();
+        task        = $(this).parents(".task");
+        taskId      = task.find(".taskId-input").first().val();
+        newColumn   = task.parents(".project-column").prevAll(".project-column").first();
 
         updateTaskColumn(task, taskId, newColumn);
     });
 
     $(".task-to-right").click(function() {
         // update fk_column in bdd
-        task = $(this).parents(".task");
-        taskId = task.find(".taskId-input").first().val();
-        newColumn = task.parents(".project-column").nextAll(".project-column").first();
+        task        = $(this).parents(".task");
+        taskId      = task.find(".taskId-input").first().val();
+        newColumn   = task.parents(".project-column").nextAll(".project-column").first();
 
         updateTaskColumn(task, taskId, newColumn);
     });
 
     $(".task-archive").click(function() {
         // update task active
-        task = $(this).parents(".task");
-        taskId = task.find(".taskId-input").first().val();
+        task        = $(this).parents(".task");
+        taskId      = task.find(".taskId-input").first().val();
 
         $("#loading-modal").modal('show');
 
@@ -588,12 +632,11 @@ function initCol()
         
         $("#loading-modal").modal('show');
 
-        // DELETE COLUMN IN BDD
+        // delete the column in db
         $.ajax({
             async: true,
             url: AJAX_URL+"admin/map.php?action=deleteColumn&columnId="+columnId+"&teamId="+teamId+"&projectId="+projectId,
             success: function(data) {
-                ;
                 $("#column-details").removeClass('show');
                 $("#loading-modal").modal('hide');
             }
@@ -620,7 +663,6 @@ function initCol()
             async: true,
             url: AJAX_URL+"admin/map.php?action=rightColumn&columnId="+columnId+"&teamId="+teamId+"&teamId="+teamId+"&projectId="+projectId,
             success: function(data) {
-                
                 column = $(".columnId-input[value='"+columnId+"']").parents('.project-column').first();
                 column.insertAfter(column.nextAll(".project-column").first());
                 $("#loading-modal").modal('hide');
@@ -634,7 +676,6 @@ function initCol()
             async: true,
             url: AJAX_URL+"admin/map.php?action=deleteColumn&columnId="+columnId+"&teamId="+teamId+"&projectId="+projectId,
             success: function(data) {
-                
                 $(".columnId-input[value='"+columnId+"']").parents('.project-column').first().remove();
                 $("#column-details").removeClass('show');
                 $("#loading-modal").modal('hide');
@@ -650,7 +691,6 @@ function initCol()
             async: true,
             url: AJAX_URL+"admin/map.php?action=updateColumn&columnId="+columnId+"&columnName="+columnName+"&teamId="+teamId+"&projectId="+projectId,
             success: function(data) {
-                
                 $("#column-details-check-btn").removeClass('show');
                 $(".columnId-input[value='"+columnId+"']").nextAll('.column-title').first().find('.column-title-text').first().text(columnName);
                 $("#loading-modal").modal('hide');
@@ -735,8 +775,7 @@ function updateTaskColumn(task, taskId, newColumn)
         $.ajax({
             async: true,
             url: AJAX_URL+"admin/map.php?action=taskColumnUpdate&taskId="+taskId+"&columnId="+newColumnId+"&teamId="+teamId+"&projectId="+projectId,
-            success: function(data)
-            {
+            success: function(data) {
                 // prepend html from column a to column b
                 task.prependTo(newColumn.find(".column-content").first());
                 $("#loading-modal").modal('hide');

@@ -208,18 +208,22 @@ class User extends Modele
         }
     }
 
-    public function initialize(object $Obj)
+    public function initialize(object $Obj, $privacy = false)
     {
         $this->rowid            = $Obj->rowid;
         $this->firstname        = $Obj->firstname;
         $this->lastname         = $Obj->lastname;
-        $this->birth            = $Obj->birth;
-        $this->password         = $Obj->password;
-        $this->email            = $Obj->email;
         $this->fk_organization  = $Obj->fk_organization;
-        $this->consent          = $Obj->consent;
         $this->admin            = $Obj->admin;
-        $this->token            = $Obj->token;
+
+        if($privacy == false) 
+        {
+            $this->birth            = $Obj->birth;
+            $this->password         = $Obj->password;
+            $this->email            = $Obj->email;
+            $this->consent          = $Obj->consent;
+            $this->token            = $Obj->token;
+        }
 
         $BelongsTo = new BelongsTo();
         $this->BelongsTo = $BelongsTo->fetchAll($Obj->rowid);

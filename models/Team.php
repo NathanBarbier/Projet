@@ -132,7 +132,7 @@ class Team extends Modele
             foreach($lines as $line)
             {
                 $User = new User();
-                $User->initialize($line);
+                $User->initialize($line, true);
                 $this->users[] = $User;
             }
         }
@@ -182,7 +182,7 @@ class Team extends Modele
             foreach($lines as $line)
             {
                 $User = new User();
-                $User->initialize($line);
+                $User->initialize($line, true);
                 $this->users[] = $User;
             }
         }

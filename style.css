@@ -5,7 +5,7 @@
 /* 3. Sticker */
 /* 4. Map */
 /* 5. DetailsProjet */
-/* 6. Button Classic */
+/* 6. Buttons */
 /* 7. Icons */
 /* 8. Gestion Organization */
 /* 9. sideBar */
@@ -125,6 +125,14 @@ input:read-only:hover:not(.form-check-input) {
 .border-lg {
   border: 2px solid rgba(0, 0, 0, 0.125);
   border-radius: 15px;
+}
+
+.radius {
+  border-radius: 5px;
+}
+
+.line-height-40 {
+  line-height: 40%;
 }
 
 .alert {
@@ -381,10 +389,6 @@ input:read-only:hover:not(.form-check-input) {
   background-color: white;
 }
 
-.task-author {
-  line-height: 40%;
-}
-
 .task-comment:focus {
   -webkit-appearance: none;
   outline: none;
@@ -405,8 +409,16 @@ input:read-only:hover:not(.form-check-input) {
   width: 65%;
 }
 
+.btn-unactive {
+  box-shadow: none !important;
+}
+
 #task-members-container {
   width: 90%;
+}
+
+.affected-team-member {
+  opacity: 35% !important;
 }
 
 #task-title {

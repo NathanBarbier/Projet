@@ -39,12 +39,12 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
             {
                 $action = htmlentities(GETPOST('action'));
                 $columnName = htmlentities(GETPOST('columnName'));
-                $columnId = intval(GETPOST('columnId'));
+                $columnId = htmlentities(intval(GETPOST('columnId')));
                 $taskName = htmlentities(GETPOST('taskName'));
-                $taskId = intval(GETPOST('taskId'));
+                $taskId = htmlentities(intval(GETPOST('taskId')));
                 $taskNote = htmlentities(GETPOST('taskNote'));
-                $commentId = intval(GETPOST('commentId'));
-                $memberId = intval(GETPOST('memberId'));
+                $commentId = htmlentities(intval(GETPOST('commentId')));
+                $memberId = htmlentities(intval(GETPOST('memberId')));
             
                 $MapColumn = new MapColumn($columnId);
                 $Task = new Task($taskId);
@@ -182,9 +182,9 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
                             try {
                                 $Task->setFk_column($columnId);
                                 $Task->update();
-                                LogHistory::create($idOrganization, $idUser, "INFO", 'move', 'task to column', $Task->getName(), 'column id : '.$columnId);
+                                LogHistory::create($idOrganization, $idUser, "INFO", 'move', 'task to column', $Task->getName(), '', 'column id : '.$columnId);
                             } catch (\Throwable $th) {
-                                LogHistory::create($idOrganization, $idUser, "ERROR", 'move', 'task to column', '', $Task->getName(), 'column id : '.$columnId, $th);
+                                LogHistory::create($idOrganization, $idUser, "ERROR", 'move', 'task to column', $Task->getName(), '', 'column id : '.$columnId, $th);
                             }
                         }
                         break;
@@ -193,9 +193,9 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
                         {
                             try {
                                 $Task->switchRank($taskId, $columnId, 'up'); 
-                                LogHistory::create($idOrganization, $idUser, "INFO", 'up task', 'task', $Task->getName());
+                                LogHistory::create($idOrganization, $idUser, "INFO", 'up task', 'task', $Task->getName(), '', 'task id : '.$taskId." column id : ".$columnId);
                             } catch (\Throwable $th) {
-                                LogHistory::create($idOrganization, $idUser, "ERROR", 'up task', 'task', $Task->getName(), '', 'task id : '.$Task->getRowid(), $th);
+                                LogHistory::create($idOrganization, $idUser, "ERROR", 'up task', 'task', $Task->getName(), '', 'task id : '.$taskId." column id : ".$columnId, $th);
                             }
                         }
                         break;
@@ -204,9 +204,9 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
                         {
                             try {
                                 $Task->switchRank($taskId, $columnId, 'down');
-                                LogHistory::create($idOrganization, $idUser, "INFO", 'down task', 'task', $Task->getName(), '', 'task id : '.$taskId);
+                                LogHistory::create($idOrganization, $idUser, "INFO", 'down task', 'task', $Task->getName(), '', 'task id : '.$taskId." column id : ".$columnId);
                             } catch (\Throwable $th) {
-                                LogHistory::create($idOrganization, $idUser, "ERROR", 'down task', 'task', $Task->getName(), '', 'task id : '.$taskId, $th);
+                                LogHistory::create($idOrganization, $idUser, "ERROR", 'down task', 'task', $Task->getName(), '', 'task id : '.$taskId." column id : ".$columnId, $th);
                             }
                         }
                         break;
@@ -355,6 +355,42 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
                             }
                         }
                         break;
+                    case 'getTeamMembers':
+                        if($taskId && $Team->checkTask($taskId))
+                        {
+                            $taskMembers    = $Task->getMembers();
+                            $teamMembers    = $Team->getUsers();
+
+                            $affectedUsers  = array();
+                            $freeUsers      = array();
+
+                            foreach($teamMembers as $teamMember)
+                            {
+                                $free = true;
+                                foreach($taskMembers as $taskMember)
+                                {
+                                    if($teamMember->getRowid() == $taskMember->getRowid())
+                                    {
+                                        $free = false;
+                                        $affectedUsers[] = $Team->object_to_array($teamMember);
+                                        break;
+                                    }
+                                }
+
+                                if($free == true)
+                                {
+                                    $freeUsers[] = $Team->object_to_array($teamMember);
+                                }
+                            }
+
+                            $data = array(
+                                "affectedUsers"     => $affectedUsers,
+                                "freeUsers"         => $freeUsers
+                            );
+
+                            echo json_encode($data);
+                        }
+                        break;
                 }
             }
         }
@@ -363,8 +399,9 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
     {
         header("location:".ROOT_URL."index.php");
     }
-} else {
+}
+else
+{
     header("location:".ROOT_URL."index.php");
-} 
-
+}
 ?>

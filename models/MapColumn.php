@@ -121,16 +121,12 @@ Class MapColumn extends Modele
         $requete = $this->getBdd()->prepare($sql);
         $requete->execute([$this->rowid]);
 
-        // var_dump($sql, $this->rowid);
-
         if($requete->rowCount() > 0)
         {
             $lines = $requete->fetchAll(PDO::FETCH_OBJ);
     
             foreach($lines as $line)
             {
-                // var_dump($line);
-                // $this->tasks[] = new Task($line->rowid);
                 $Task = new Task();
                 $Task->initialize($line);
                 $this->tasks[] = $Task;
@@ -245,19 +241,19 @@ Class MapColumn extends Modele
         $sql .= " WHERE fk_task IN";
         $sql .= " (SELECT t.rowid";
         $sql .= " FROM storieshelper_task AS t";
-        $sql .= " WHERE fk_column = ?)";
+        $sql .= " WHERE fk_column = ?);";
 
         $sql .= "DELETE FROM storieshelper_task_member";
         $sql .= " WHERE fk_task IN";
         $sql .= " (SELECT t.rowid";
         $sql .= " FROM storieshelper_task AS t";
-        $sql .= " WHERE fk_column = ?)";
+        $sql .= " WHERE fk_column = ?);";
 
         $sql .= "DELETE FROM storieshelper_task";
-        $sql .= " WHERE fk_column = ?";
+        $sql .= " WHERE fk_column = ?;";
 
         $sql .= "DELETE FROM storieshelper_map_column";
-        $sql .= " WHERE rowid = ?";
+        $sql .= " WHERE rowid = ?;";
 
         $requete = $this->getBdd()->prepare($sql);
         $requete->execute([$this->rowid,$this->rowid,$this->rowid,$this->rowid]);

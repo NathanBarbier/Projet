@@ -6,12 +6,19 @@ class Organization extends Modele
     protected $users = [];
     protected $projects = [];
     protected $logs = [];
+    protected $privacy;
 
-    public function __construct($rowid = null)
+    /**
+     * @param int rowid The Organization id
+     * @param int privacy The level of privacy of the recovered informations | 0 = fetch all | 1 = fetch user emails | 2 = max privacy level
+     */
+    public function __construct(int $rowid = 0, int $privacy = 2)
     {
-        if($rowid != null)
+        if($rowid != 0)
         {
-            $this->fetch($rowid);
+            $this->rowid    = $rowid;
+            $this->privacy   = $privacy;
+            $this->fetch();
         }
     }
 
@@ -130,27 +137,28 @@ class Organization extends Modele
 
     // FETCH
 
-    public function fetch($rowid = null)
+    public function fetch()
     {
-        $rowid = $rowid == null ? $this->rowid : $rowid;
-
         $sql = "SELECT *";
         $sql .= " FROM storieshelper_organization";
         $sql .= " WHERE rowid = ?";
 
         $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$rowid]);
+        $requete->execute([$this->rowid]);
 
         if($requete->rowCount() > 0)
         {
             $obj = $requete->fetch(PDO::FETCH_OBJ);
             
-            $this->rowid    = $rowid;
+            $this->rowid    = intval($obj->rowid);
             $this->name     = $obj->name;
 
             $this->fetchUsers();
             $this->fetchProjects();
-            $this->fetchLogs();
+
+            if($this->privacy == 0) {
+                $this->fetchLogs();
+            }
             
             return true;
         }
@@ -172,12 +180,26 @@ class Organization extends Modele
         if($requete->rowCount() > 0)
         {
             $lines = $requete->fetchAll(PDO::FETCH_OBJ);
-            
+
+            // position the current user at the top of the list
+            $idUser = $_SESSION['idUser'];
             foreach($lines as $line)
             {
-                $User = new User();
-                $User->initialize($line, true);
-                $this->users[] = $User;
+                if($line->rowid == $idUser) {
+                    $User = new User();
+                    $User->initialize($line, $this->privacy);
+                    $this->users[] = $User;
+                    break;
+                }
+            }
+
+            foreach($lines as $line)
+            {
+                if($line->rowid != $idUser) {
+                    $User = new User();
+                    $User->initialize($line, $this->privacy);
+                    $this->users[] = $User;
+                }
             }
         }
     }

@@ -2,6 +2,7 @@
 <html lang="fr">
     <head>
         <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Stories Helper</title>
         
         <link rel="icon" href="<?= IMG_URL ?>logo.png">
@@ -12,25 +13,29 @@
         <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous" defer></script>
     </head>
 
-    <body>
-        <nav class="navbar navbar-dark bg-dark w-100 pt-1 before d-sm-block d-md-none" style="height: 55px;">
+    <body class="position-relative">
+        <nav id="top-navbar" class="navbar navbar-dark bg-dark w-100 pt-1 before" style="height: 55px;">
 
             <!-- LOGO -->
             <a class="navbar-brand" href="<?= ROOT_URL ?>index.php">
                 <img src="<?= IMG_URL ?>logo.png" width="35" height="35" class="ms-3 mb-2 mt-1 me-2" alt="">
                 Stories Helper
             </a>
-            <!-- DISCONNECT -->
-            <a class="btn btn-sm me-2 mt-1 rounded sidebar-btn danger" style="float: right;" href="<?= CONTROLLERS_URL ?>visiteur/deconnexion.php">Déconnexion</a>
 
-            <!-- NAVBAR TOGGLER -->
-            <button style="float:right" class="navbar-toggler collapse mt-1 me-2" type="button" data-bs-toggle="collapse" data-bs-target="#sidebar-content" aria-controls="sidebar-content" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+            <div class="w-50 pb-3" style="float: right;">
+                <!-- NAVBAR TOGGLER -->
+                <button class="navbar-toggler collapse mt-1 me-2" style="float: right;" type="button" data-bs-toggle="collapse" data-bs-target="#sidebar-content" aria-controls="sidebar-content" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+    
+                <!-- DISCONNECT -->
+                <a class="btn btn-sm me-2 mt-1 rounded sidebar-btn danger" style="float: right;" href="<?= CONTROLLERS_URL ?>visiteur/deconnexion.php">Déconnexion</a>
+            </div>
+
 
             <div class="collapse navbar-collapse w-100" id="sidebar-content">
-                <div class="navbar-nav w-100 mt-1" style="background-color: rgba(31,41,55,1); border-bottom: 2px solid rgba(0, 0, 0, 0.225)">  
-                    <nav class="w-100 text-center mt-3">
+                <div class="navbar-nav w-100" style="background-color: rgba(31,41,55,1); border-bottom: 2px solid rgba(0, 0, 0, 0.225)">  
+                    <nav class="w-100 text-center">
                         <ul class="list-unstyled">
                             <li>
                                 <a href="<?= VIEWS_URL ?>admin/index.php" class="btn px-3 mt-2 w-90 sidebar-btn">
@@ -101,11 +106,10 @@
                 </div>
             </div>
         </nav>
-        <!-- <div class="row" style="height: 60px;">
-        </div> -->
+
         <?php if($pageName != 'map.php') { ?>
         <!-- SIDE BAR -->
-        <div class="row" style="height: 100%;">
+        <div class="row w-100" style="height: 100%;">
             <div id="sideBar" class="navbar-expand-lg col-md-0 col-lg-2 p-0 collapse show">
                 <div class="collapse navbar-collapse align-items-start text-center pt-2 ps-2" style="background-color: rgba(31,41,55,1);height: 100%; border: 1px solid rgba(0, 0, 0, 0.125);">
                     <nav class="w-100">
@@ -133,7 +137,7 @@
                                 <hr class="border-bottom w-75 mx-auto">
                                 <!-- COLLABORATEURS -->
                                 <li class="mt-3">
-                                    <button id="collaborateurs-btn" class="btn w-90 px-3 rounded sidebar-btn" data-bs-toggle="collapse" data-bs-target="#collaborateursCollapse" aria-expanded="false">
+                                    <button style="min-width: max-content;" id="collaborateurs-btn" class="btn w-90 px-3 rounded sidebar-btn" data-bs-toggle="collapse" data-bs-target="#collaborateursCollapse" aria-expanded="false">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="sidebar-icon bi bi-person-circle ms-2" viewBox="0 0 16 16">
                                             <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
                                             <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
@@ -152,7 +156,7 @@
                                 <hr class="border-bottom w-75 mx-auto">
                                 <!-- ORGANISATION -->
                                 <li class="mt-3">
-                                    <button id="organization-btn" class="btn px-3 mt-2 rounded w-90 sidebar-btn" data-bs-toggle="collapse" data-bs-target="#organisationCollapse" aria-expanded="false">
+                                    <button style="min-width: max-content;" id="organization-btn" class="btn px-3 mt-2 rounded w-90 sidebar-btn" data-bs-toggle="collapse" data-bs-target="#organisationCollapse" aria-expanded="false">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="sidebar-icon bi bi-building ms-2" viewBox="0 0 16 16">
                                             <path fill-rule="evenodd" d="M14.763.075A.5.5 0 0 1 15 .5v15a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5V14h-1v1.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V10a.5.5 0 0 1 .342-.474L6 7.64V4.5a.5.5 0 0 1 .276-.447l8-4a.5.5 0 0 1 .487.022zM6 8.694 1 10.36V15h5V8.694zM7 15h2v-1.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5V15h2V1.309l-7 3.5V15z"/>
                                             <path d="M2 11h1v1H2v-1zm2 0h1v1H4v-1zm-2 2h1v1H2v-1zm2 0h1v1H4v-1zm4-4h1v1H8V9zm2 0h1v1h-1V9zm-2 2h1v1H8v-1zm2 0h1v1h-1v-1zm2-2h1v1h-1V9zm0 2h1v1h-1v-1zM8 7h1v1H8V7zm2 0h1v1h-1V7zm2 0h1v1h-1V7zM8 5h1v1H8V5zm2 0h1v1h-1V5zm2 0h1v1h-1V5zm0-2h1v1h-1V3z"/>
@@ -170,7 +174,7 @@
                                 <hr class="border-bottom w-75 mx-auto">
                                 <!-- PROJETS -->
                                 <li class="mt-3">
-                                    <button id="projets-btn" class="btn px-3 mt-2 rounded w-90 sidebar-btn" data-bs-toggle="collapse" data-bs-target="#projetsCollapse" aria-expanded="false">
+                                    <button style="min-width: max-content;" id="projets-btn" class="btn px-3 mt-2 rounded w-90 sidebar-btn" data-bs-toggle="collapse" data-bs-target="#projetsCollapse" aria-expanded="false">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="sidebar-icon bi bi-briefcase-fill ms-2" viewBox="0 0 16 16">
                                             <path d="M6.5 1A1.5 1.5 0 0 0 5 2.5V3H1.5A1.5 1.5 0 0 0 0 4.5v1.384l7.614 2.03a1.5 1.5 0 0 0 .772 0L16 5.884V4.5A1.5 1.5 0 0 0 14.5 3H11v-.5A1.5 1.5 0 0 0 9.5 1h-3zm0 1h3a.5.5 0 0 1 .5.5V3H6v-.5a.5.5 0 0 1 .5-.5z"/>
                                             <path d="M0 12.5A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5V6.85L8.129 8.947a.5.5 0 0 1-.258 0L0 6.85v5.65z"/>
@@ -209,7 +213,7 @@
                     </nav>
                 </div>
             </div>
-            <div id="main" class="col-md-12 col-lg-10 pt-3 px-3 position-relative">
+            <div id="main" class="pt-3 px-3 position-relative">
                 <i id="close-sidebar" class="btn btn-outline-dark bi bi-arrow-bar-left position-absolute start-0 w-auto collapse show before"></i>
                 <i id="open-sidebar" class="btn btn-outline-dark bi bi-arrow-bar-right position-absolute start-0 w-auto collapse before"></i>
             <?php } ?>

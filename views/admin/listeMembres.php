@@ -15,6 +15,43 @@ require_once "layouts/entete.php";
     </div>
     <?php } ?>
 
+    <!-- Modal -->
+    <div class="modal" id="user-delete-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog position-absolute start-50 translate-middle" style="top:40%;">
+            <div class="modal-content" style="height: inherit;">
+                <div class="modal-body position-relative">
+                    <div class="row text-center">
+                        <h4 class="underline">Confirmation de suppression</h4>
+                        <p class="mt-4">
+                            Êtes-vous de vouloir supprimer cet utilisateur ?
+                            <br>
+                            Cette action est irréversible.
+                        <p>
+
+                    </div>
+
+                    <div class="mt-4 row">
+                        <div class="col-6 col-sm-12 mb-0 mb-sm-2 mb-md-0 col-md-6 text-end">
+                            <form action="<?= CONTROLLERS_URL ?>admin/listeMembres.php">
+                                <input type="hidden" name="action" value="userDelete">
+                                <input type="hidden" id="delete-user-id" name="idUser" value="">
+                                <button class="w-100 custom-button danger double-button-responsive">
+                                    Confirmer
+                                </button>
+                            </form>
+                        </div>
+                        <div class="col-6 col-sm-12 col-md-6 text-start">
+                            <button id="cancel-user-delete" class="w-100 custom-button warning double-button-responsive">
+                                Annuler
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     <table class="table table-radius mt-4">
         <thead class="bg-white">
             <tr>
@@ -40,73 +77,67 @@ require_once "layouts/entete.php";
             </tr>
 
             <?php
-            foreach($Organization->getUsers() as $User)
-            {
+            foreach($Organization->getUsers() as $User) {
             ?>
             <tr class="text-center">
-                <td>
-                    <div id="nom<?= $User->getRowid() ?>" class="collapse show">
-                        <?= $User->getLastname(); ?>
-                    </div>
-
-                    <div id="divModifNom<?= $User->getRowid() ?>" class="collapse show mt-3">
-                        <a onclick="afficherConfModifNom(<?= $User->getRowid() ?>)" class="custom-button">Modifier</a>
-                    </div>
-                    <form method="POST" action="<?= CONTROLLERS_URL ?>admin/listeMembres.php?action=updateLastname&idUser=<?= $User->getRowid() ?>">
-                        <div id="divInputModifNom<?= $User->getRowid() ?>" class="collapse">
-                            <input class="form-control mb-1 text-center w-50 mx-auto" value="<?= $User->getLastname() ?>" type="text" name="lastname" placeholder="Écrivez un nom" required>
-                        </div>
-
-                        <!-- Confirmer la modification du nom de l'utilisateur -->
-                        <div id="divConfModifNom<?= $User->getRowid() ?>" class="collapse">
-                            <button type="submit" name="envoi" value="<?= true ?>" class="btn btn-success">Confirmer</button>
-                            <a onclick="annulerModifNom(<?= $User->getRowid() ?>)" class="btn btn-warning">Annuler</a>
-                        </div>
-                    </form>
-                </td>
-                
-                <td>
-                    <div id="prenom<?= $User->getRowid() ?>" class="collapse show">
-                        <?=$User->getFirstname();?>
-                    </div>
-
-                    <div id="divModifPrenom<?= $User->getRowid() ?>" class="collapse show mt-3">
-                        <button onclick="afficherConfModifPrenom(<?= $User->getRowid() ?>)" class="custom-button">
-                            Modifier
-                        </button>
-                    </div>
-                    <form method="POST" action="<?= CONTROLLERS_URL ?>admin/listeMembres.php?action=updateFirstname&idUser=<?= $User->getRowid() ?>">
-                        <div id="divInputModifPrenom<?= $User->getRowid() ?>" class="collapse">
-                            <input class="form-control mb-1 text-center w-50 mx-auto" value="<?= $User->getFirstname() ?>" type="text" name="firstname" placeholder="Écrivez un prénom" required>
-                        </div>
-
-                        <!-- Confirmer la modification du nom de l'utilisateur -->
-                        <div id="divConfModifPrenom<?= $User->getRowid() ?>" class="collapse">
-                            <button type="submit" name="envoi" value="<?= true ?>" class="btn btn-success">Confirmer</button>
-                            <a onclick="annulerModifPrenom(<?= $User->getRowid() ?>)" class="btn btn-warning">Annuler</a>
-                        </div>
-                    </form>
-                </td>
-
-                <td class="align-middle"><?= $User->getEmail();?></td>
-
-                <td class="align-middle"><b><?= $User->isAdmin() == 1 ? '<span style="color:red">Administrateur</span>' : '<span style="color:grey">Utilisateur</span>' ?></b></td>
-
-                <td class="align-middle">
-                    <div id="divDelUser<?= $User->getRowid() ?>" class="collapse show">
-                        <button onclick="afficherConfDelUser(<?= $User->getRowid() ?>)" class="btn btn-outline-danger">Supprimer</button>
-                    </div>
-                    <div id="divConfDelUser<?= $User->getRowid() ?>" class="collapse">
+                <!-- Update user form -->
+                <form id="user-update-form" method="POST" action="<?= CONTROLLERS_URL ?>admin/listeMembres.php?action=userUpdate">
+                    <td class="align-middle">
                         <div class="row">
-                            <div class="col-sm-12 mb-2 col-md-6 text-md-end">
-                                <a href="<?= CONTROLLERS_URL ?>admin/listeMembres.php?action=deleteUser&idUser=<?= $User->getRowid() ?>" class="btn btn-outline-danger w-75">Confirmer</a><br>
+                            <div class="col-12 col-sm-12 col-md-9 mx-auto">
+                                <input class="form-control mb-1 text-center w-100 mx-auto" value="<?= $User->getLastname() ?>" type="text" name="lastname" placeholder="Écrivez un nom" required>
                             </div>
-                            <div class="col-sm-12 col-md-6 text-md-start">
-                                <button onclick="annulerDelUser(<?= $User->getRowid() ?>)" class="btn btn-outline-warning w-75">Annuler</button>
+                        </div>
+                    </td>
+                    
+                    <td class="align-middle">
+                        <div class="row">
+                            <div class="col-12 col-sm-12 col-md-9 mx-auto">
+                                <input class="form-control mb-1 text-center w-100 mx-auto" value="<?= $User->getFirstname() ?>" type="text" name="firstname" placeholder="Écrivez un prénom" required>
                             </div>
-                        </div class="row">
-                    </div>
-                </td>
+                        </div>
+                    </td>
+
+                    <td class="align-middle">
+                        <div class="row">
+                            <div class="col-12 col-sm-12 col-md-9 mx-auto">
+                                <input class="form-control mb-1 text-center w-100 mx-auto" value="<?= $User->getEmail() ?>" type="text" name="email" placeholder="Écrivez un email" required>
+                            </div>
+                        </div>
+                    </td>
+
+                    <td class="align-middle">
+                        <b>
+                            <?php if($User->isAdmin() == 1) {
+                                echo '<span style="color:red">Administrateur</span>';
+                            } else {
+                                echo '<span style="color:grey">Utilisateur</span>';
+                            } ?>
+
+                            <?php if($CurrentUser->getRowid() == $User->getRowid()) {
+                                echo '&nbsp;(You)';
+                            } ?>
+                        </b>
+                    </td>
+
+                    <!-- Options -->
+                    <td class="align-middle">
+                        <div class="mt-4 row">
+                            <div class="col-12 col-sm-12 col-md-6 pb-2">
+                                <button type="button" id="user-delete-btn-<?= $User->getRowid() ?>" class="w-100 custom-button danger double-button-responsive px-1" style="min-width: max-content;">
+                                    Supprimer
+                                </button>
+                            </div>
+
+                            <div class="col-12 col-sm-12 col-md-6">
+                                <input type="hidden" name="idUser" value="<?= $User->getRowid() ?>">
+                                <button onclick="document.getElementById('user-update-form').submit()" class="w-100 custom-button double-button-responsive px-1" style="min-width: max-content;">
+                                    Mettre à jour
+                                </button>
+                            </div>
+                        </div>
+                    </td>
+                </form>
             </tr>
             <?php
             }

@@ -3,62 +3,54 @@
 require_once "../../services/header.php";
 require "layouts/head.php";
 
-$action = htmlentities(GETPOST('action'));
-//override $idUser
-$idUser = intval(GETPOST('idUser'));
-$envoi = GETPOST('envoi');
+$action     = htmlentities(GETPOST('action'));
+$idUser     = intval(htmlentities(GETPOST('idUser')));
 
-$firstname = htmlentities(GETPOST('firstname'));
-$lastname = htmlentities(GETPOST('lastname'));
-$email = htmlentities(GETPOST('email'));
-$birth = htmlentities(GETPOST('birth'));
+$firstname  = htmlentities(GETPOST('firstname'));
+$lastname   = htmlentities(GETPOST('lastname'));
+$email      = htmlentities(GETPOST('email'));
+$birth      = htmlentities(GETPOST('birth'));
 
-$oldmdp = htmlentities(GETPOST('oldmdp'));
-$newmdp = htmlentities(GETPOST('newmdp'));
-$newmdp2 = htmlentities(GETPOST('newmdp2'));
+$oldmdp     = htmlentities(GETPOST('oldmdp'));
+$newmdp     = htmlentities(GETPOST('newmdp'));
+$newmdp2    = htmlentities(GETPOST('newmdp2'));
 
-$Organization = new Organization($idOrganization);
+$Organization   = new Organization($idOrganization , 1);
+$CurrentUser    = $Organization->fetchUser($_SESSION['idUser']);
 
 $errors = array();
 $success = false;
 
 $tpl = "listeMembres.php";
 
-if($action == "updateFirstname")
+if($action == "userUpdate")
 {
-    if($idUser && $firstname)
+    if($idUser)
     {
-        if($envoi)
+        // check if the user belongs to the Organization
+        $User = $Organization->fetchUser($idUser);
+        if($User)
         {
-            $User = $Organization->fetchUser($idUser);
-            // check if the user belongs to the Organization
-            if($User)
-            {
-                if($firstname != $User->getFirstname())
-                {
-                    try
-                    {
-                        $oldFirstname = $User->getFirstname();
-                        $User->setFirstname($firstname);
-                        $User->update();
-                        LogHistory::create($idOrganization, $idUser, "INFO", 'update firstname', 'user', $User->getLastname().' '.$oldFirstname, $User->getFirstname(), 'user id : '.$User->getRowid());
-                        $success = "Le prénom a bien été modifié.";
-                    } 
-                    catch (exception $e)
-                    {
-                        $errors[] = "Le prénom n'a pas pu être modifié.";
-                        LogHistory::create($idOrganization, $idUser, "ERROR", 'update firstname', 'user', $User->getLastname().' '.$oldFirstname, $User->getFirstname(), 'user id : '.$User->getRowid(), $th);
-                    }
-                } 
-                else 
-                {
-                    $errors[] = "Le nom est le même qu'avant.";
-                }
+            if(!empty($firstname)) {
+                $User->setFirstname($firstname);
             }
-        } 
-        else 
-        {
-            header("location:".ROOT_URL."/index.php");
+            if(!empty($lastname)) {
+                $User->setLastname($lastname);
+            }
+            if(!empty($email)) {
+                $User->setEmail($email);
+            }
+
+            try {
+                $User->update();
+                
+                LogHistory::create($idOrganization, $idUser, "INFO", 'update firstname', 'user', '', 'user id : '.$User->getRowid());
+                
+                $success = "L'utilisateur a bien été mis à jour.";
+            } catch (exception $e) {
+                $errors[] = "Le prénom n'a pas pu être modifié.";
+                LogHistory::create($idOrganization, $idUser, "ERROR", 'update firstname', 'user', '', 'user id : '.$User->getRowid(), $th);
+            }
         }
     } 
     else 
@@ -67,52 +59,11 @@ if($action == "updateFirstname")
     }
 }
 
-if($action == "updateLastname")
-{
-    if($idUser && $lastname)
-    {
-        if($envoi)
-        {
-            $User = $Organization->fetchUser($idUser);
-            if($User)
-            {
-                if($lastname != $User->getLastname())
-                {
-                    try
-                    {
-                        $oldLastname = $User->getLastname();
-                        $User->setLastname($lastname);
-                        $User->update();
-                        LogHistory::create($idOrganization, $idUser, "INFO", 'update lastname', 'user', $oldLastname.' '.$User->getFirstname(), $User->getLastname(), 'user id : '.$User->getRowid());
-                        $success = "Le nom a bien été modifié.";
-                    } 
-                    catch (exception $e)
-                    {
-                        $errors[] = "La modification de nom n'a pas pu aboutir.";
-                        LogHistory::create($idOrganization, $idUser, "ERROR", 'update lastname', 'user', $oldLastname.' '.$User->getFirstname(), $User->getLastname(), 'user id : '.$User->getRowid(), $th);
-                    }
-                } 
-                else 
-                {
-                    $errors[] = "Le nom n'a pas été modifié.";
-                }
-            }
-        } 
-        else
-        {
-            header("location:".ROOT_URL."index.php");
-        }
-    }
-    else
-    {
-        header("location:".ROOT_URL."index.php");
-    }
-}
-
-if($action == "deleteUser")
+if($action == "userDelete")
 {
     if($idUser)
     {
+        // check if the user belongs to the organization
         $User = $Organization->fetchUser($idUser);
         if($User)
         {

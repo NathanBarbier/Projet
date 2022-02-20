@@ -112,10 +112,10 @@
         <div class="row w-100" style="height: 100%;">
             <div id="sideBar" class="navbar-expand-lg col-md-0 col-lg-2 p-0 collapse show">
                 <div class="collapse navbar-collapse align-items-start text-center pt-2 ps-2" style="background-color: rgba(31,41,55,1);height: 100%; border: 1px solid rgba(0, 0, 0, 0.125);">
-                    <nav class="w-100">
-                        <ul class="list-unstyled position-relative" style="height: 100vh;">
+                    <nav class="w-100 h-100">
+                        <ul class="list-unstyled position-relative" style="height: 100%;">
                             <!-- LOGO -->
-                            <div class="overflow-y" style="height: 88vh;">
+                            <div class="overflow-y" style="height: 100%;">
                                 <li class="mt-2">
                                     <a class="navbar-brand text-light mb-1" href="<?= ROOT_URL ?>index.php">
                                         <img src="<?= IMG_URL ?>logo.png" width="35" height="35" class="d-inline-block align-top ms-3 me-2" alt="">

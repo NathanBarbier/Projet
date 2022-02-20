@@ -122,6 +122,10 @@ input:read-only:hover:not(.form-check-input) {
   width: 90%;
 }
 
+.h-50px {
+  height: 50px;
+}
+
 .border-lg {
   border: 2px solid rgba(0, 0, 0, 0.125);
   border-radius: 15px;
@@ -274,7 +278,6 @@ input:read-only:hover:not(.form-check-input) {
   border: 1px solid rgba(0, 0, 0, 0.125);
   border-radius: 15px;
   background-color: #f8f9fa;
-  height: 60px;
 }
 
 .sticker-deep {
@@ -548,6 +551,48 @@ transform: translateY(0em);
   box-shadow: inset 0px 0.1em 0.6em #ffc107;
 }
 
+/* secondary */
+.custom-button.secondary {
+  background: radial-gradient( 100% 100% at 100% 0%, #d8d9da 0%, #616a72 100% );
+}
+
+.custom-button.secondary:hover {
+  box-shadow: 0px 0.1em 0.2em rgb(45 35 66 / 40%), 0px 0.4em 0.7em -0.1em rgb(45 35 66 / 30%), inset 0px -0.1em 0px #6c757d;
+}
+
+.custom-button.secondary:active {
+  box-shadow: inset 0px 0.1em 0.6em #6c757d;
+}
+
+/* info */
+.custom-button.info {
+  background: radial-gradient( 100% 100% at 100% 0%, #83eaff 0%, #06a4c4 100% );
+}
+
+.custom-button.info:hover {
+  box-shadow: 0px 0.1em 0.2em rgb(45 35 66 / 40%), 0px 0.4em 0.7em -0.1em rgb(45 35 66 / 30%), inset 0px -0.1em 0px #0dcaf0;
+}
+
+.custom-button.info:active {
+  box-shadow: inset 0px 0.1em 0.6em #0dcaf0;
+}
+
+/* success */
+.custom-button.success {
+  background: radial-gradient( 100% 100% at 100% 0%, #7cf5bc 0%, #0e7243 100% );
+}
+
+.custom-button.success:hover {
+  box-shadow: 0px 0.1em 0.2em rgb(45 35 66 / 40%), 0px 0.4em 0.7em -0.1em rgb(45 35 66 / 30%), inset 0px -0.1em 0px #198754;
+}
+
+.custom-button.success:active {
+  box-shadow: inset 0px 0.1em 0.6em #198754;
+}
+
+a.custom-button {
+  color: #f8f9fa;
+}
 
 /* -------------- 7. ------------- */
 

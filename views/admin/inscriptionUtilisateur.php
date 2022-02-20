@@ -40,7 +40,7 @@ require_once "layouts/entete.php";
             </div>
 
             <div class="text-center mt-5">
-                <button type="submit" class="btn btn-outline-classic w-50" name="envoi" value="1">Inscrire</button>
+                <button type="submit" class="custom-button w-50" name="envoi" value="1">Inscrire</button>
             </div>
 
         </form>

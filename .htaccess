@@ -11,7 +11,7 @@
 Options -Indexes
 
 # Personalized server error redirect
-ErrorDocument 403 http://127.0.0.1/school/storieshelper/errors/403
+ErrorDocument 403 https://storieshelper.ipssi-sio.fr%{ENV:REQUEST_URI}/errors/403
 
 # http headers
 <IfModule mod_headers.c>

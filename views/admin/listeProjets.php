@@ -9,7 +9,7 @@ require_once "layouts/entete.php";
             <?php echo $error . "<br>";
         } ?>
         </div>
-        <?php } else if ($success) { ?>
+        <?php } else if (!empty($success)) { ?>
         <div class="before alert alert-success mt-3 w-50 text-center position-absolute top-0 start-50 translate-middle-x">
             <i class="bi bi-check-circle-fill"></i>
             <?= $success; ?>
@@ -19,17 +19,19 @@ require_once "layouts/entete.php";
 
     <h1 class="text-center mx-auto w-50 mb-3 pb-2 bg-white underline sticker">Liste des projets</h1>
 
-    <div id="del-project-confirmation" class="sticker mb-3 py-3 px-3 mx-3 text-center collapse" style="height: max-content;">
-        <h4 class="mx-auto border-bottom w-75 mb-3">Confirmation de suppression de projet.</h4>
-        <b>Êtes-vous sûr de vouloir supprimer le projet ?</b>
-        <br>
-        (Cette action est définitive et supprimera toute donnée étant en lien avec celui-ci)
-        <div class="mt-4 row">
-            <div class="col-6 col-sm-12 mb-0 mb-sm-2 mb-md-0 col-md-6 text-end">
-                <a id="delete-project-btn-conf" class="w-100 btn btn-outline-danger double-button-responsive" href="<?= CONTROLLERS_URL ?>admin/listeProjets.php?action=deleteProject">Supprimer</a>
-            </div>
-            <div class="col-6 col-sm-12 col-md-6 text-start">
-                <button id="cancel-delete-btn" class="w-100 btn btn-outline-warning double-button-responsive">Annuler</button>
+    <div class="row px-4">
+        <div id="del-project-confirmation" class="sticker p-3 mb-3 mx-auto text-center collapse col-12 col-md-6" style="height: max-content;">
+            <h4 class="mx-auto border-bottom w-75 mb-3">Confirmation de suppression de projet.</h4>
+            <b>Êtes-vous sûr de vouloir supprimer le projet ?</b>
+            <br>
+            (Cette action est définitive et supprimera toute donnée étant en lien avec celui-ci)
+            <div class="mt-4 row">
+                <div class="col-6">
+                    <a id="delete-project-btn-conf" class="w-100 pt-2 custom-button danger double-button-responsive" href="<?= CONTROLLERS_URL ?>admin/listeProjets.php?action=deleteProject">Supprimer</a>
+                </div>
+                <div class="col-6">
+                    <button id="cancel-delete-btn" class="w-100 custom-button warning double-button-responsive">Annuler</button>
+                </div>
             </div>
         </div>
     </div>
@@ -47,18 +49,26 @@ require_once "layouts/entete.php";
         <?php
         foreach($Organization->getProjects() as $Project)
         { ?>
-        <div class="row sticker mx-2 mt-4" style="height: 80px;">
-            <div class="col-3 text-center pt-4 mx-auto"><b><?= $Project->getName() ?></b></div>
-            <div class="col-2 text-center pt-4 mx-auto"><b><?= $Project->getType() ?></b></div>
-            <div class="col-3 text-center pt-4 mx-auto"><b><?= $Project->isActive() == 1 ? '<span style="color:green">Ouvert</span>' : '<span style="color:red">Archivé</span>' ?></b></div>
-            <div class="col-3 text-center pt-3 mx-auto">
-                <a href="<?= CONTROLLERS_URL ?>admin/detailsProjet.php?idProject=<?= $Project->getRowid() ?>" class="btn btn-info btn-sm mt-1">
-                    Détails
-                </a>
+        <div class="row sticker mx-2 mt-4 pb-2 h-auto d-flex align-items-center">
+            <div class="col-3 text-center mx-auto"><b><?= $Project->getName() ?></b></div>
+            <div class="col-2 text-center mx-auto"><b><?= $Project->getType() ?></b></div>
+            <div class="col-3 text-center mx-auto"><b><?= $Project->isActive() == 1 ? '<span style="color:green">Ouvert</span>' : '<span style="color:red">Archivé</span>' ?></b></div>
+            <div class="col-3 text-center mx-auto">
+                
                 <input type="hidden" class="project-id" value="<?= $Project->getRowid() ?>">
-                <button class="del-project-btn btn btn-outline-danger btn-sm mt-1">
-                    Supprimer
-                </button>
+                
+                <div class="row">
+                    <div class="col-12 col-lg-6">
+                        <a href="<?= CONTROLLERS_URL ?>admin/detailsProjet.php?idProject=<?= $Project->getRowid() ?>" class="w-100 custom-button info btn-sm mt-1 px-1 pt-2 double-button-responsive">
+                            Détails
+                        </a>
+                    </div>
+                    <div class="col-12 col-lg-6">
+                        <button class="w-100 del-project-btn custom-button danger btn-sm mt-1 px-1 double-button-responsive">
+                            Supprimer
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
         <?php }

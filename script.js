@@ -4,6 +4,7 @@ $(document).ready(function () {
     $(".alert").addClass("collapse");
   }, 7500);
 
+  // SIDEBAR RESPONSIVE COLLAPSE
   $("#close-sidebar").click(function() {
     $("#sideBar").removeClass('show');
     $(this).removeClass('show');

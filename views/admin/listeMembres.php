@@ -50,7 +50,7 @@ require_once "layouts/entete.php";
                     </div>
 
                     <div id="divModifNom<?= $User->getRowid() ?>" class="collapse show mt-3">
-                        <a onclick="afficherConfModifNom(<?= $User->getRowid() ?>)" class="btn btn-outline-info">Modifier</a>
+                        <a onclick="afficherConfModifNom(<?= $User->getRowid() ?>)" class="custom-button">Modifier</a>
                     </div>
                     <form method="POST" action="<?= CONTROLLERS_URL ?>admin/listeMembres.php?action=updateLastname&idUser=<?= $User->getRowid() ?>">
                         <div id="divInputModifNom<?= $User->getRowid() ?>" class="collapse">
@@ -71,7 +71,9 @@ require_once "layouts/entete.php";
                     </div>
 
                     <div id="divModifPrenom<?= $User->getRowid() ?>" class="collapse show mt-3">
-                        <a onclick="afficherConfModifPrenom(<?= $User->getRowid() ?>)" class="btn btn-outline-info">Modifier</a>
+                        <button onclick="afficherConfModifPrenom(<?= $User->getRowid() ?>)" class="custom-button">
+                            Modifier
+                        </button>
                     </div>
                     <form method="POST" action="<?= CONTROLLERS_URL ?>admin/listeMembres.php?action=updateFirstname&idUser=<?= $User->getRowid() ?>">
                         <div id="divInputModifPrenom<?= $User->getRowid() ?>" class="collapse">

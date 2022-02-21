@@ -79,7 +79,7 @@ require_once "layouts/entete.php";
                     <div class="project-column">
                         <input class="columnId-input" type="hidden" value="<?= $Column->getRowid() ?>">
                         <div class="column-title text-center">
-                            <div class="row">
+                            <div class="row" style="height: 85px">
                                 <div class="col-7 pt-3 ps-2 ms-3 pe-0 column-title-name">
                                     <div class="overflow-x">
                                         <b class="column-title-text"><?= $Column->getName() ?></b>
@@ -87,7 +87,9 @@ require_once "layouts/entete.php";
                                 </div>
                                 <ul class="offset-1 col-3 pt-2 ps-0">
                                     <li class="me-2"><button class="btn btn-outline-dark add-task-btn">New</button></li>
-                                    <li class="mt-2 me-2"><button class="btn btn-outline-danger delete-col-btn">Delete</button></li>
+                                    <?php if($Column->getName() != "Open" && $Column->getName() != "Closed"){ ?>
+                                        <li class="mt-2 me-2"><button class="btn btn-outline-danger delete-col-btn">Delete</button></li>
+                                    <?php } ?>
                                 </ul>
                             </div>
                         </div>
@@ -169,16 +171,14 @@ require_once "layouts/entete.php";
                         <h5 class="members-label collapse show">Task members</h5>
                     </div>
                 </div>
-                <div id="team-members-container" class="overflow-y border collapse pt-1 pb-3 radius" style="height: 25vh;">
-
-                </div>
-                <div id="task-members-container" class="overflow-y border collapse show pt-1 pb-3 radius" style="height: 25vh; width:100%;">
-                    
-                </div>
+                <div id="team-members-container" class="overflow-y border collapse pt-1 pb-3 radius" style="height: 25vh;"></div>
+                <div id="task-members-container" class="overflow-y border collapse show pt-1 pb-3 radius" style="height: 25vh; width:100%;"></div>
 
                 <button id="attributed-member-button" class="btn btn-outline-classic collapse w-50 mt-2" disabled>Attribué</button>
                 <button id="attribute-member-button" class="collapse btn btn-outline-success w-50 mt-2">Attribuer</button>
                 <button id="desattribute-member-button" class="collapse btn btn-outline-danger mt-2">Désattribuer</button>
+                
+                <button id="finish-task-button" class="btn btn-warning w-100 mt-3 ">Terminer la tâche</button>
             </div>
         </div>
         <div id="add-column-form" class="sticker text-center pt-1 collapse w-100" style="height:91%">
@@ -205,7 +205,7 @@ require_once "layouts/entete.php";
         </div>
     </div>
 
-<script type="text/Javascript" src="<?= JS_URL ?>admin/map.min.js" defer></script>
+<script type="text/Javascript" src="<?= JS_URL ?>admin/map.js" defer></script>
 <?php 
 require_once "layouts/pied.php";
 ?>

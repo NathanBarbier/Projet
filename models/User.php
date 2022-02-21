@@ -9,7 +9,7 @@ class User extends Modele
     protected $email;
     protected $fk_organization;
     protected $BelongsTo;
-    protected $consent;
+    protected $consent = 0;
     protected $admin;
     protected $token;
 

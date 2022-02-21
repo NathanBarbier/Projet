@@ -48,10 +48,6 @@
         $this->rank = $rank;
     }
 
-    // public function setAuthor(User $Author)
-    // {
-    //     $this->Author = $Author;
-    // }
     public function setFk_user(int $fk_user)
     {
         $this->fk_user = $fk_user;
@@ -62,6 +58,20 @@
         $this->active = $active;
     }
 
+    public function setComments($comments)
+    {
+        $this->comments = $comments;
+    }
+
+    public function setFinished_at($finished_at)
+    {
+        $this->finished_at = $finished_at;
+    }
+
+    public function setCreated_at($created_at)
+    {
+        $this->created_at = $created_at;
+    }
     
     // GETTER
 
@@ -299,10 +309,12 @@
         $sql .= " , fk_column = ?";
         $sql .= " , rank = ?";
         $sql .= " , active = ?";
+        $sql .= " , finished_at = ?";
+        $sql .= " , created_at = ?";
         $sql .= " WHERE rowid = ?";
 
         $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$this->name,$this->description,$this->fk_column,$this->rank,$this->active,$this->rowid]);
+        $requete->execute([$this->name,$this->description,$this->fk_column,$this->rank,$this->active,$this->finished_at,$this->created_at,$this->rowid]);
     }
 
     // DELETE

@@ -50,7 +50,7 @@ require_once "layouts/entete.php";
                     <div class="project-column">
                         <input class="columnId-input" type="hidden" value="<?= $Column->getRowid() ?>">
                         <div class="column-title text-center">
-                            <div class="row">
+                            <div class="row" style="height : 85px">
                                 <div class="col-7 pt-3 ps-2 ms-3 pe-0 column-title-name">
                                     <div class="overflow-x">
                                         <b class="column-title-text"><?= $Column->getName() ?></b>
@@ -58,7 +58,9 @@ require_once "layouts/entete.php";
                                 </div>
                                 <ul class="offset-1 col-3 pt-2 ps-0">
                                     <li class="me-2"><button class="btn btn-outline-dark add-task-btn">New</button></li>
-                                    <li class="mt-2 me-2"><button class="btn btn-outline-danger delete-col-btn">Delete</button></li>
+                                   <?php if($Column->getName() != "Open" && $Column->getName() != "Closed"){ ?>
+                                        <li class="mt-2 me-2"><button class="btn btn-outline-danger delete-col-btn">Delete</button></li>
+                                    <?php } ?>
                                 </ul>
                             </div>
                         </div>

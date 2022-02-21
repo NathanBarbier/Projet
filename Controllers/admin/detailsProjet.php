@@ -48,30 +48,30 @@ if($idProject)
         $freeUsersIds = array();
 
         // remove admins
-        foreach($freeUsers as $key => $User)
+        foreach($freeUsers as $key => $TeamUser)
         {
-            if($User->isAdmin())
+            if($TeamUser->isAdmin())
             {
                 unset($freeUsers[$key]);
             }
             else
             {
-                $freeUsersIds[] = $User->getRowid();
+                $freeUsersIds[] = $TeamUser->getRowid();
             }
         }
 
         // Remove users belonging to a team
         foreach($Organization->getProjects() as $Obj)
         {
-            foreach($Obj->getTeams() as $Team)
+            foreach($Obj->getTeams() as $ProjectTeam)
             {
-                foreach($Team->getUsers() as $User)
+                foreach($ProjectTeam->getUsers() as $TeamUser)
                 {
-                    if(in_array($User, $freeUsers))
+                    if(in_array($TeamUser, $freeUsers))
                     {
-                        $key = array_search($User, $freeUsers);
+                        $key = array_search($TeamUser, $freeUsers);
                         unset($freeUsers[$key]);
-                        $key = array_search($User->getRowid(), $freeUsersIds);
+                        $key = array_search($TeamUser->getRowid(), $freeUsersIds);
                         unset($freeUsersIds[$key]);
                     }
                     if(count($freeUsers) == 0) break;
@@ -265,10 +265,10 @@ if($idProject)
                     $Project->removeTeam($teamId);
 
                     // get team users to free them
-                    foreach($Team->getUsers() as $User)
+                    foreach($Team->getUsers() as $TeamUser)
                     {
-                        $freeUsers[] = $User;
-                        $freeUsersIds[] = $User->getRowid();
+                        $freeUsers[] = $TeamUser;
+                        $freeUsersIds[] = $TeamUser->getRowid();
                     }
 
                     $success = "L'équipe a bien été supprimée.";
@@ -322,7 +322,7 @@ if($idProject)
                     }
 
                     // remove team users
-                    foreach($Team->getUsers() as $key => $User)
+                    foreach($Team->getUsers() as $key => $TeamUser)
                     {
                         if(GETPOST('removingUser'.$key))
                         {
@@ -330,10 +330,10 @@ if($idProject)
 
                             $BelongsTo->delete($fk_user, $Team->getRowid());
 
-                            $freeUsersIds[] = $User->getRowid();
-                            $freeUsers[] = $User;
+                            $freeUsersIds[] = $TeamUser->getRowid();
+                            $freeUsers[] = $TeamUser;
 
-                            $Team->removeUser($User->getRowid());
+                            $Team->removeUser($TeamUser->getRowid());
                         }
                     }
 
@@ -400,9 +400,9 @@ if($idProject)
         // For JS
         $teamIds = array();
 
-        foreach($Project->getTeams() as $Team)
+        foreach($Project->getTeams() as $ProjectTeam)
         {
-            $teamIds[] = $Team->getRowid();
+            $teamIds[] = $ProjectTeam->getRowid();
         }
 
         ?>

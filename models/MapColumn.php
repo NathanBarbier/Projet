@@ -164,9 +164,10 @@ Class MapColumn extends Modele
 
     public function fetchNextRank($rowid, $fk_team)
     {
-        $sql = "SELECT m.rank AS nextRank, rowid";
+        $sql = "SELECT m.rank AS nextRank, m.name AS name, rowid";
         $sql .= " FROM storieshelper_map_column AS m";
         $sql .= " WHERE fk_team = ?";
+        $sql .= " AND name <> 'Closed'";
         $sql .= " AND m.rank > (SELECT rank FROM storieshelper_map_column WHERE rowid = ?)";
         $sql .= " ORDER BY m.rank ASC";
         $sql .= " LIMIT 1";
@@ -183,9 +184,10 @@ Class MapColumn extends Modele
 
     public function fetchPrevRank($rowid, $fk_team)
     {
-        $sql = "SELECT m.rank AS prevRank, rowid";
+        $sql = "SELECT m.rank AS prevRank, m.name AS name, rowid";
         $sql .= " FROM storieshelper_map_column AS m";
         $sql .= " WHERE fk_team = ?";
+        $sql .= " AND name <> 'Open'";
         $sql .= " AND m.rank < (SELECT rank FROM storieshelper_map_column WHERE rowid = ?)";
         $sql .= " ORDER BY m.rank DESC";
         $sql .= " LIMIT 1";
@@ -199,7 +201,19 @@ Class MapColumn extends Modele
             return false;
         }
     }
+    
+    public function fetchFinishedColumn(int $fk_team)
+    {
+        $sql = "SELECT rowid AS Closed";
+        $sql .= " FROM storieshelper_map_column";
+        $sql .= " WHERE fk_team = ?";
+        $sql .= " AND name = 'Closed'";
 
+        $requete = $this->getBdd()->prepare($sql);
+        $requete->execute([$fk_team]);
+
+        return $requete->fetch(PDO::FETCH_ASSOC);
+    }
 
     // CREATE
 
@@ -262,7 +276,6 @@ Class MapColumn extends Modele
         $requete->execute([$this->rowid,$this->rowid,$this->rowid,$this->rowid]);
     }
     
-
     // METHODS
 
     /**
@@ -300,6 +313,9 @@ Class MapColumn extends Modele
             $MapColumn = new MapColumn($otherRowid);
             $MapColumn->setRank($rank);
             $MapColumn->update();
+            return true;
+        } else {
+            return false;
         }
     }
 }

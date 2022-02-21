@@ -84,50 +84,53 @@ $("#add-column-form").find('#create-column').click(function() {
                 async: true,
                 url: AJAX_URL+"admin/map.php?action=getLastColumnId"+"&teamId="+teamId+"&projectId="+projectId,
                 success: function(data) {
-                    columnId = data;    
-                    columnId = columnId.replace("\"", '').replace("\"", '');
-                    
-                    columnNameInput.val("");
-                    btnColumnForm.addClass('show');
+                    result = $.parseJSON(result);
+                    if(result.success)
+                    {
+                        columnId = data;    
+                        columnId = columnId.replace("\"", '').replace("\"", '');
 
-                    var append = [
-                        "<div class='project-column'>",
-                            "<input class='columnId-input' type='hidden' value='"+columnId+"'>",
-                            "<div class='column-title text-center'>",
-                                "<div class='row'>",
-                                    "<div class='col-7 pt-3 ps-2 ms-3 pe-0 column-title-name'>",
-                                        "<div class='overflow-x'>",
-                                            "<b class='column-title-text'>",
-                                                columnName,
-                                            "</b>",
+                        columnNameInput.val("");
+                        btnColumnForm.addClass('show');
+
+                        var append = [
+                            "<div class='project-column'>",
+                                "<input class='columnId-input' type='hidden' value='"+columnId+"'>",
+                                "<div class='column-title text-center'>",
+                                    "<div class='row'>",
+                                        "<div class='col-7 pt-3 ps-2 ms-3 pe-0 column-title-name'>",
+                                            "<div class='overflow-x'>",
+                                                "<b class='column-title-text'>",
+                                                    columnName,
+                                                "</b>",
+                                            "</div>",
                                         "</div>",
+                                        "<ul class='offset-1 col-3 pt-2 ps-0'>",
+                                            "<li class='me-2'>",
+                                                "<button class='btn btn-outline-dark add-task-btn'>",
+                                                    "New",
+                                                "</button>",
+                                            "</li>",
+                                            "<li class='mt-2 me-2'>",
+                                                "<button class='btn btn-outline-danger delete-col-btn'>",
+                                                    "Delete",
+                                                "</button>",
+                                            "</li>",
+                                        "</ul>",
                                     "</div>",
-                                    "<ul class='offset-1 col-3 pt-2 ps-0'>",
-                                        "<li class='me-2'>",
-                                            "<button class='btn btn-outline-dark add-task-btn'>",
-                                                "New",
-                                            "</button>",
-                                        "</li>",
-                                        "<li class='mt-2 me-2'>",
-                                            "<button class='btn btn-outline-danger delete-col-btn'>",
-                                                "Delete",
-                                            "</button>",
-                                        "</li>",
-                                    "</ul>",
+                                "</div>",
+                                "<div class='column-content'>",
                                 "</div>",
                             "</div>",
-                            "<div class='column-content'>",
-                            "</div>",
-                        "</div>",
-                    ].join("");
-                
-                    $("#columns-container").append(append);
-                    $("#add-column-btn").toggleClass('show');
-            
-                    $("#loading-modal").modal('hide');
-            
-                    initTask();
-                    initCol();
+                        ].join("");
+                    
+                        $("#columns-container").append(append);
+                        $("#add-column-btn").toggleClass('show'); 
+                        initTask();
+                        initCol();
+                    }
+                    
+                    $("#loading-modal").modal('hide');                                            
                 }
             });
         }
@@ -472,6 +475,22 @@ function init()
     });
 
     initComment();
+    
+    $("#finish-task-button").click(function() {
+        newColumn   = taskDiv.parents(".project-column").nextAll(".project-column").last();
+        oldColumn   = taskDiv.parents(".project-column").find(".column-title-text").val();
+        console.log(oldColumn);
+        $("#loading-modal").modal('show');
+        $.ajax({
+            async: true,
+            url: AJAX_URL+"admin/map.php?action=finishedTask&taskId="+taskId+"&teamId="+teamId+"&projectId="+projectId+"&oldColumn="+oldColumn,
+            success: function(data) {
+                // prepend html from column a to column b
+                taskDiv.prependTo(newColumn.find(".column-content").first());
+                $("#loading-modal").modal('hide');
+            }
+        });
+    })
 }
 
 function initTask()
@@ -620,6 +639,17 @@ function initCol()
         $("#archive-btn").addClass('show');
         $("#column-details").addClass('show');
         $("#column-title").val($(this).find(".column-title-text").first().text());
+        if($("#column-title").val() === "Open" || $("#column-title").val() === "Closed" ) {
+            $("#left-column-btn").addClass('collapse');
+            $("#right-column-btn").addClass('collapse');
+            $("#column-title").prop("disabled" ,true);
+            $("#column-details-delete-btn").addClass('collapse');
+        } else {
+            $("#left-column-btn").removeClass('collapse');
+            $("#right-column-btn").removeClass('collapse');
+            $("#column-title").prop("disabled" ,false);
+            $("#column-details-delete-btn").removeClass('collapse');
+        }
 
         columnId = $(this).parents('.column-title').first().prevAll('.columnId-input').first().val();
     });
@@ -646,26 +676,33 @@ function initCol()
 
     $("#left-column-btn").off('click').click(function() {
         $("#loading-modal").modal('show');
+        columnName = $("#column-title").val();
         $.ajax({
             async: true,
-            url: AJAX_URL+"admin/map.php?action=leftColumn&columnId="+columnId+"&teamId="+teamId+"&teamId="+teamId+"&projectId="+projectId,
+            url: AJAX_URL+"admin/map.php?action=leftColumn&columnId="+columnId+"&teamId="+teamId+"&projectId="+projectId+"&columnName="+columnName,
             success: function(data) {
-                
-                column = $(".columnId-input[value='"+columnId+"']").parents('.project-column').first()
-                column.insertBefore(column.prevAll('.project-column').first());
-                $("#loading-modal").modal('hide');
+                data = $.parseJSON(data);
+                if(data) {
+                    column = $(".columnId-input[value='"+columnId+"']").parents('.project-column').first()
+                    column.insertBefore(column.prevAll('.project-column').first());
+                }
+                $("#loading-modal").modal('hide'); 
             }
         })
     });
 
     $("#right-column-btn").off('click').click(function() {
+        columnName = $("#column-title").val();
         $("#loading-modal").modal('show');
         $.ajax({
             async: true,
-            url: AJAX_URL+"admin/map.php?action=rightColumn&columnId="+columnId+"&teamId="+teamId+"&teamId="+teamId+"&projectId="+projectId,
+            url: AJAX_URL+"admin/map.php?action=rightColumn&columnId="+columnId+"&teamId="+teamId+"&projectId="+projectId+"&columnName="+columnName,
             success: function(data) {
-                column = $(".columnId-input[value='"+columnId+"']").parents('.project-column').first();
-                column.insertAfter(column.nextAll(".project-column").first());
+                data = $.parseJSON(data);
+                if(data) {
+                    column = $(".columnId-input[value='"+columnId+"']").parents('.project-column').first();
+                    column.insertAfter(column.nextAll(".project-column").first());
+                }
                 $("#loading-modal").modal('hide');
             }
         })
@@ -692,8 +729,11 @@ function initCol()
             async: true,
             url: AJAX_URL+"admin/map.php?action=updateColumn&columnId="+columnId+"&columnName="+columnName+"&teamId="+teamId+"&projectId="+projectId,
             success: function(data) {
-                $("#column-details-check-btn").removeClass('show');
-                $(".columnId-input[value='"+columnId+"']").nextAll('.column-title').first().find('.column-title-text').first().text(columnName);
+                data = $.parseJSON(data);
+                if(data.success){
+                    $("#column-details-check-btn").removeClass('show');
+                    $(".columnId-input[value='"+columnId+"']").nextAll('.column-title').first().find('.column-title-text').first().text(columnName);
+                }
                 $("#loading-modal").modal('hide');
             }
         });
@@ -770,7 +810,7 @@ function updateTaskColumn(task, taskId, newColumn)
 {
     newColumnId = newColumn.length == 0 ? false : newColumn.find(".columnId-input").first().val();
 
-    if(newColumnId)
+    if(newColumnId) 
     {
         $("#loading-modal").modal('show');
         $.ajax({
@@ -784,3 +824,5 @@ function updateTaskColumn(task, taskId, newColumn)
         });
     }
 }
+
+

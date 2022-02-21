@@ -1,8 +1,3 @@
-var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-  return new bootstrap.Tooltip(tooltipTriggerEl)
-})
-
 // hide body overflow
 $("body").css('overflow-y', 'hidden');
 
@@ -480,6 +475,22 @@ function init()
     });
 
     initComment();
+    
+    $("#finish-task-button").click(function() {
+        newColumn   = taskDiv.parents(".project-column").nextAll(".project-column").last();
+        oldColumn   = taskDiv.parents(".project-column").find(".column-title-text").val();
+        console.log(oldColumn);
+        $("#loading-modal").modal('show');
+        $.ajax({
+            async: true,
+            url: AJAX_URL+"admin/map.php?action=finishedTask&taskId="+taskId+"&teamId="+teamId+"&projectId="+projectId+"&oldColumn="+oldColumn,
+            success: function(data) {
+                // prepend html from column a to column b
+                taskDiv.prependTo(newColumn.find(".column-content").first());
+                $("#loading-modal").modal('hide');
+            }
+        });
+    })
 }
 
 function initTask()
@@ -632,10 +643,12 @@ function initCol()
             $("#left-column-btn").addClass('collapse');
             $("#right-column-btn").addClass('collapse');
             $("#column-title").prop("disabled" ,true);
+            $("#column-details-delete-btn").addClass('collapse');
         } else {
             $("#left-column-btn").removeClass('collapse');
             $("#right-column-btn").removeClass('collapse');
             $("#column-title").prop("disabled" ,false);
+            $("#column-details-delete-btn").removeClass('collapse');
         }
 
         columnId = $(this).parents('.column-title').first().prevAll('.columnId-input').first().val();
@@ -663,9 +676,10 @@ function initCol()
 
     $("#left-column-btn").off('click').click(function() {
         $("#loading-modal").modal('show');
+        columnName = $("#column-title").val();
         $.ajax({
             async: true,
-            url: AJAX_URL+"admin/map.php?action=leftColumn&columnId="+columnId+"&teamId="+teamId+"&teamId="+teamId+"&projectId="+projectId,
+            url: AJAX_URL+"admin/map.php?action=leftColumn&columnId="+columnId+"&teamId="+teamId+"&projectId="+projectId+"&columnName="+columnName,
             success: function(data) {
                 data = $.parseJSON(data);
                 if(data) {
@@ -678,10 +692,11 @@ function initCol()
     });
 
     $("#right-column-btn").off('click').click(function() {
+        columnName = $("#column-title").val();
         $("#loading-modal").modal('show');
         $.ajax({
             async: true,
-            url: AJAX_URL+"admin/map.php?action=rightColumn&columnId="+columnId+"&teamId="+teamId+"&teamId="+teamId+"&projectId="+projectId,
+            url: AJAX_URL+"admin/map.php?action=rightColumn&columnId="+columnId+"&teamId="+teamId+"&projectId="+projectId+"&columnName="+columnName,
             success: function(data) {
                 data = $.parseJSON(data);
                 if(data) {
@@ -714,8 +729,11 @@ function initCol()
             async: true,
             url: AJAX_URL+"admin/map.php?action=updateColumn&columnId="+columnId+"&columnName="+columnName+"&teamId="+teamId+"&projectId="+projectId,
             success: function(data) {
-                $("#column-details-check-btn").removeClass('show');
-                $(".columnId-input[value='"+columnId+"']").nextAll('.column-title').first().find('.column-title-text').first().text(columnName);
+                data = $.parseJSON(data);
+                if(data.success){
+                    $("#column-details-check-btn").removeClass('show');
+                    $(".columnId-input[value='"+columnId+"']").nextAll('.column-title').first().find('.column-title-text').first().text(columnName);
+                }
                 $("#loading-modal").modal('hide');
             }
         });
@@ -792,7 +810,7 @@ function updateTaskColumn(task, taskId, newColumn)
 {
     newColumnId = newColumn.length == 0 ? false : newColumn.find(".columnId-input").first().val();
 
-    if(newColumnId)
+    if(newColumnId) 
     {
         $("#loading-modal").modal('show');
         $.ajax({
@@ -806,3 +824,5 @@ function updateTaskColumn(task, taskId, newColumn)
         });
     }
 }
+
+

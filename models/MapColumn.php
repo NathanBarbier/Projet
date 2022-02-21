@@ -201,7 +201,19 @@ Class MapColumn extends Modele
             return false;
         }
     }
+    
+    public function fetchFinishedColumn(int $fk_team)
+    {
+        $sql = "SELECT rowid AS Closed";
+        $sql .= " FROM storieshelper_map_column";
+        $sql .= " WHERE fk_team = ?";
+        $sql .= " AND name = 'Closed'";
 
+        $requete = $this->getBdd()->prepare($sql);
+        $requete->execute([$fk_team]);
+
+        return $requete->fetch(PDO::FETCH_ASSOC);
+    }
 
     // CREATE
 
@@ -264,7 +276,6 @@ Class MapColumn extends Modele
         $requete->execute([$this->rowid,$this->rowid,$this->rowid,$this->rowid]);
     }
     
-
     // METHODS
 
     /**

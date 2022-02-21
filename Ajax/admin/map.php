@@ -135,20 +135,6 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
                         }
                         print json_encode($return);
                         break;
-                    case 'renameColumn':
-                        // check if the column belong to the team
-                        if($columnId && $columnName && $Team->checkColumn($columnId))
-                        {
-                            try {
-                                $oldName = $MapColumn->getName();
-                                $MapColumn->setName($columnName);
-                                $MapColumn->update();
-                                LogHistory::create($idOrganization, $idUser, "INFO", 'update name', 'column', $oldName, $MapColumn->getName(), 'column id : '.$MapColumn->getRowid());
-                            } catch (\Throwable $th) {
-                                LogHistory::create($idOrganization, $idUser, "ERROR", 'update name', 'column', $oldName, $MapColumn->getName(), 'column id : '.$MapColumn->getRowid(), $th);
-                            }
-                        }
-                        break;
                     case 'addTask':
                         // check if the column belong to the team
                         if($columnId && $Team->checkColumn($columnId))
@@ -184,12 +170,38 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
                         // check if the column & task belong to the team
                         if($columnId && $taskId && $Team->checkTask($taskId) && $Team->checkColumn($columnId))
                         {
+                            $Column = new MapColumn($columnId);
                             try {
+                                if($Column->getName() === "Closed")
+                                {
+                                    $now = new DateTime();
+                                    $Task->setActive(-1);
+                                    $Task->setFinished_at($now->format("Y-m-d H:i:s"));
+                                } else {
+                                    $Task->setActive(1);
+                                }
                                 $Task->setFk_column($columnId);
                                 $Task->update();
                                 LogHistory::create($idOrganization, $idUser, "INFO", 'move', 'task to column', $Task->getName(), '', 'column id : '.$columnId);
                             } catch (\Throwable $th) {
                                 LogHistory::create($idOrganization, $idUser, "ERROR", 'move', 'task to column', $Task->getName(), '', 'column id : '.$columnId, $th);
+                            }
+                        }
+                        break;
+                    case 'finishedTask' :
+                        if($taskId && $Team->checkTask($taskId) && $oldColumn !== "Closed")
+                        {
+                            $Column = new MapColumn();
+                            try {
+                                $columnId = $Column->fetchFinishedColumn($teamId);
+                                $now = new DateTime();
+                                $Task->setActive(-1);
+                                $Task->setFinished_at($now->format("Y-m-d H:i:s"));
+                                $Task->setFk_column($columnId["Closed"]);
+                                $Task->update();
+                                LogHistory::create($idOrganization, $idUser, "INFO", 'move', 'task to column', $Task->getName(), '', 'column id : '.$columnId['Closed']);
+                            } catch (\Throwable $th) {
+                                LogHistory::create($idOrganization, $idUser, "ERROR", 'move', 'task to column', $Task->getName(), '', 'column id : '.$columnId['Closed'], $th);
                             }
                         }
                         break;
@@ -216,7 +228,7 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
                         }
                         break;
                     case 'leftColumn':
-                        if($teamId && $columnId && $Team->checkColumn($columnId))
+                        if($teamId && $columnId && $Team->checkColumn($columnId) && $columnName != "Open" && $columnName != "Closed")
                         {
                             try {
                                 $status = $MapColumn->switchRank($columnId, $teamId, 'left');
@@ -224,11 +236,13 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
                             } catch (\Throwable $th) {
                                 LogHistory::create($idOrganization, $idUser, "ERROR", 'move to left', 'column', $MapColumn->getName(), '', 'column id : '.$MapColumn->getRowid(), $th);
                             }
-                            echo json_encode($status);
+                        } else {
+                            $status = false;
                         }
+                        echo json_encode($status);
                         break;
                     case 'rightColumn':
-                        if($teamId && $columnId && $Team->checkColumn($columnId))
+                        if($teamId && $columnId && $Team->checkColumn($columnId) && $columnName != "Open" && $columnName != "Closed")
                         {
                             try {
                                 $status = $MapColumn->switchRank($columnId, $teamId, 'right');
@@ -236,21 +250,30 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
                             } catch (\Throwable $th) {
                                 LogHistory::create($idOrganization, $idUser, "ERROR", 'move to right', 'column', $MapColumn->getName(), '', 'column id : '.$MapColumn->getRowid(), $th);
                             }
-                            echo json_encode($status);
+                        } else {
+                            $status = false;
                         }
+                        echo json_encode($status);
                         break;
                     case 'updateColumn':
-                        if($columnId && $columnName && $Team->checkColumn($columnId))
+                        $oldName = $MapColumn->getName();
+                        // check if the column belong to the team
+                        if($columnId && $columnName && $Team->checkColumn($columnId) && $columnName != " " && $columnName != "Open" && $columnName != "Closed" && $oldName != "Open" && $oldName != "Closed")
                         {
-                            try {                 
-                                $oldName = $MapColumn->getName();
+                            try {
                                 $MapColumn->setName($columnName);
                                 $MapColumn->update();
-                                LogHistory::create($idOrganization, $idUser, "INFO", 'update', 'column', $oldName,$MapColumn->getName(), 'column id : '.$MapColumn->getRowid());
+                                LogHistory::create($idOrganization, $idUser, "INFO", 'update name', 'column', $oldName, $MapColumn->getName(), 'column id : '.$MapColumn->getRowid());
                             } catch (\Throwable $th) {
-                                LogHistory::create($idOrganization, $idUser, "ERROR", 'update', 'column', $oldName,$MapColumn->getName(), 'column id : '.$MapColumn->getRowid(), $th);
+                                LogHistory::create($idOrganization, $idUser, "ERROR", 'update name', 'column', $oldName, $MapColumn->getName(), 'column id : '.$MapColumn->getRowid(), $th);
                             }
+                            $return['success'] = true;
+                        } else {
+                            $return['success'] = false;
+                            $return['message'] = "le nom saisis pour la colonne est incorrect";
                         }
+                        print json_encode($return);
+                        break;
                         break;
                     case 'deleteTaskNote':
                         if($commentId && $Team->checkTaskComment($commentId))

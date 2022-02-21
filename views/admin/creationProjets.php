@@ -35,7 +35,7 @@ require_once "layouts/entete.php";
                 </div>
     
                 <div class="d-flex justify-content-center">
-                    <button type="submit" value="<?= true ?>" name="envoi" class="btn btn-outline-classic mt-3 w-75">Créer le projet</button>
+                    <button type="submit" value="<?= true ?>" name="envoi" class="custom-button mt-3 w-75">Créer le projet</button>
                 </div>
             </form>
         </div>

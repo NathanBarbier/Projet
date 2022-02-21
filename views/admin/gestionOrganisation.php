@@ -1,7 +1,7 @@
 <?php 
 require_once "layouts/entete.php";
 ?>
-    <div class="row ps-4 px-2">
+    <div class="row ps-4 px-2" style="height: 95vh;">
         <?php if($errors) { ?>
         <div class="alert alert-danger w-50 text-center position-absolute mt-3 top-0 start-50 translate-middle-x before">
         <?php foreach($errors as $error) { ?>
@@ -15,18 +15,18 @@ require_once "layouts/entete.php";
             <?= $success ?>
         </div>    
         <?php } ?>
-        <div id="gestion-organisation-left-section" class="col-sm-4 px-3 col-md-4 col-lg-4 col-xl-6 position-relative overflow-y">
+        <div id="gestion-organisation-left-section" class="col-sm-4 px-3 col-md-4 col-lg-4 col-xl-6 h-100 position-relative overflow-y">
             <div id="delete-organization-div" class="sticker mb-3 py-3 px-3 text-center collapse" style="height: max-content;">
                 <h4 class="mx-auto border-bottom w-75 mb-3">Confirmation de suppression d'organisation</h4>
                 <b>Êtes-vous sûr de vouloir supprimer l'organisation ?</b>
                 <br>
-                (Cette action est définitive et supprimera toute donnée étant en lien avec celle-ci)
+                <span style='color:red'>(Cette action est irréversible)</span>
                 <div class="mt-4 row">
-                    <div class="col-6 col-sm-12 mb-0 mb-sm-2 mb-md-0 col-md-6 text-end">
-                        <a class="w-100 btn btn-outline-danger double-button-responsive" href="<?= CONTROLLERS_URL ?>admin/gestionOrganisation.php?action=deleteOrganization">Supprimer</a>
+                    <div class="col-6 col-sm-12 mb-0 mb-sm-2 mb-md-0 col-md-6">
+                        <a class="w-100 custom-button danger pt-2 double-button-responsive" href="<?= CONTROLLERS_URL ?>admin/gestionOrganisation.php?action=deleteOrganization">Supprimer</a>
                     </div>
-                    <div class="col-6 col-sm-12 col-md-6 text-start">
-                        <button id="cancel-delete-btn" class="w-100 btn btn-outline-warning double-button-responsive">Annuler</button>
+                    <div class="col-6 col-sm-12 col-md-6">
+                        <button id="cancel-delete-btn" class="w-100 custom-button warning double-button-responsive">Annuler</button>
                     </div>
                 </div>
             </div>
@@ -51,11 +51,11 @@ require_once "layouts/entete.php";
                     </div>
 
                     <div class="mt-4 row">
-                        <div class="col-6 col-sm-12 mb-0 mb-sm-2 mb-md-0 col-md-6 text-end">
-                            <button type="submit" class="w-100 btn btn-outline-primary double-button-responsive" name="envoi" value="1">Valider</button>
+                        <div class="col-6 col-sm-12 mb-0 mb-sm-2 mb-md-0 col-md-6">
+                            <button type="submit" class="w-100 custom-button double-button-responsive" name="envoi" value="1">Valider</button>
                         </div>
-                        <div class="col-6 col-sm-12 col-md-6 text-start">        
-                            <button id="cancel-password-update" class="w-100 btn btn-outline-danger double-button-responsive">Annuler</button>
+                        <div class="col-6 col-sm-12 col-md-6">        
+                            <button id="cancel-password-update" class="w-100 text-light custom-button danger double-button-responsive">Annuler</button>
                         </div>
                     </div>
                 </form>
@@ -69,11 +69,11 @@ require_once "layouts/entete.php";
                 (Cette action est définitive et supprimera toute donnée étant en lien avec celui-ci)</p>
             
                 <div class="mt-4 pb-3 row px-3">
-                    <div class="col-6 col-sm-12 mb-0 mb-sm-2 mb-md-0 col-md-6 text-end">
-                        <a href="<?= CONTROLLERS_URL ?>membre/tableauDeBord.php?action=accountDelete" class="w-100 btn btn-outline-danger double-button-responsive">Supprimer</a>
+                    <div class="col-6 col-sm-12 mb-0 mb-sm-2 mb-md-0 col-md-6">
+                        <a href="<?= CONTROLLERS_URL ?>membre/tableauDeBord.php?action=accountDelete" class="w-100 text-light pt-2 custom-button danger double-button-responsive">Supprimer</a>
                     </div>
-                    <div class="col-6 col-sm-12 col-md-6 text-start">
-                        <a id="cancel-account-deletion" class="w-100 btn btn-outline-warning double-button-responsive">Annuler</a>
+                    <div class="col-6 col-sm-12 col-md-6">
+                        <a id="cancel-account-deletion" class="w-100 custom-button warning pt-2 double-button-responsive">Annuler</a>
                     </div>
                 </div>
             </div>
@@ -87,19 +87,19 @@ require_once "layouts/entete.php";
                     </div>
 
                     <div class="mt-4 row mx-3">
-                        <div class="col-6 text-end">
-                            <button type="submit" class="w-100 btn btn-outline-primary double-button-responsive" name="envoi" value="1">Valider</button>
+                        <div class="col-6">
+                            <button type="submit" class="w-100 custom-button double-button-responsive" name="envoi" value="1">Valider</button>
                         </div>
-                        <div class="col-6 text-start">
-                            <a id="cancel-email-update" class="w-100 btn btn-outline-danger double-button-responsive">Annuler</a>
+                        <div class="col-6">
+                            <a id="cancel-email-update" class="w-100 text-light text-center pt-2 custom-button danger double-button-responsive">Annuler</a>
                         </div>
                     </div>
                 </form>
             </div>
         </div>
 
-        <div class="col-sm-4 col-md-4 col-lg-4 col-xl-3 px-3 mb-3">
-            <div class="card" style="height: 88vh;">
+        <div class="col-sm-4 col-md-4 col-lg-4 col-xl-3 px-3 mb-3 h-100">
+            <div class="card" style="height: 100%;">
                 <div class="card-header">
                 <h3 class="text-center border-bottom w-75 mx-auto"><?= $Organization->getName() ?></h3>
                 </div>
@@ -140,22 +140,22 @@ require_once "layouts/entete.php";
                     </div>
 
                     <div class="w-100 mt-3 mb-3 mx-auto text-center">
-                        <a href="#delete-organization-div" id="delete-organization-button" class="btn btn-outline-danger btn-sm w-100 mt-3">Supprimer l'organisation</a>
+                        <a href="#delete-organization-div" id="delete-organization-button" class="text-light pt-2 custom-button danger btn-sm w-100 mt-3 px-1">Supprimer l'organisation</a>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="col-sm-4 col-md-4 col-lg-4 col-xl-3 px-3 mb-3">
+        <div class="col-sm-4 col-md-4 col-lg-4 col-xl-3 px-3 mb-3 h-100">
             <!-- user profile-->
-            <div class="card" style="height:88vh">
+            <div class="card" style="height: 100%">
                 <div class="card-header">
                     <h3 class="mx-auto text-center" style="border-bottom: black solid 1px; border-color: rgb(216, 214, 214); width: 80%">Profil</h3>
                 </div>
                 
                 <h6 class="border-bottom mx-auto w-50 text-center mt-2">Email</h6>
                 <div class="text-center">
-                    <a href="#email-update-form" id="email-info-btn" type="text" class="btn btn-outline-classic form-control w-75 mx-auto text-center" tabindex="0" data-bs-toggle="tooltip" title="Modifier l'adresse email"><?= $User->getEmail() ?></a>
+                    <a href="#email-update-form" id="email-info-btn" type="text" class="custom-button secondary pt-2 form-control w-75 mx-auto text-center" tabindex="0" data-bs-toggle="tooltip" title="Modifier l'adresse email"><?= $User->getEmail() ?></a>
                 </div>
 
                 <div class="text-center mx-auto w-100 mt-2" style="height: 100%;">
@@ -171,9 +171,9 @@ require_once "layouts/entete.php";
                     </form>
                     
                     <div class="overflow-y w-100 px-3" style="height: 40%;">
-                        <button id="update-profile-submit" class="w-100 mt-4 btn btn-outline-primary btn-sm text-center">Mettre à jour</button>
-                        <a href="#password-update-form" class="btn btn-outline-secondary btn-sm mt-2 w-100" id="password-update-btn">Éditer mot de passe</a>
-                        <a href="#account-delete-confirmation" id="delete-account-btn" class="btn btn-outline-danger btn-sm mt-2 mb-3 w-100">Supprimer le compte</a>
+                        <button id="update-profile-submit" class="w-100 mt-4 custom-button btn-sm text-center">Mettre à jour</button>
+                        <a href="#password-update-form" class="custom-button secondary btn-sm mt-2 w-100 px-1 pt-2" id="password-update-btn">Éditer mot de passe</a>
+                        <a href="#account-delete-confirmation" id="delete-account-btn" class="text-light pt-2 custom-button danger btn-sm mt-2 mb-3 w-100 px-1">Supprimer le compte</a>
                     </div>
                 </div>
             </div>

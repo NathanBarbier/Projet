@@ -74,8 +74,7 @@ require_once "layouts/entete.php";
     <div id="left-section" class="col-sm-8 col-md-9 col-lg-10 mt-2 ps-3">
         <div class="collapse show position-relative">
             <i id="close-details" class="btn btn-outline-dark bi bi-arrow-bar-right position-absolute end-0 top-0 w-auto collapse show"></i>
-            <div id="columns-container" class="ms-3 overflow-x d-flex" style="height: 88vh;">
-
+            <div id="columns-container" class="ms-3 overflow-x d-flex" style="height: 98%;">
                 <?php foreach($Team->getMapColumns() as $columnKey => $Column) { ?>
                     <div class="project-column">
                         <input class="columnId-input" type="hidden" value="<?= $Column->getRowid() ?>">

@@ -21,14 +21,14 @@ require_once 'layouts/entete.php';
                 <div class="before alert alert-info alert-visible mt-3 w-75 text-center position-absolute top-0 start-50 translate-middle-x">
                     <i class="bi bi-info-circle-fill"></i>    
                     Ce projet est archivé.
-                    &nbsp;&nbsp;<a href="<?= CONTROLLERS_URL ?>admin/detailsProjet.php?action=openProject&idProject=<?= $Project->getRowid() ?>" class="btn btn-outline-secondary">Ré-ouvrir</a>
+                    &nbsp;&nbsp;<a href="<?= CONTROLLERS_URL ?>admin/detailsProjet.php?action=openProject&idProject=<?= $Project->getRowid() ?>" class="custom-button secondary pt-2">Ré-ouvrir</a>
                     <button id="close-alert" type="button" class="btn-close position-absolute top-0 end-0 me-4 mt-3" aria-label="Close"></button>
                 </div>
             <?php } ?>
         <?php } ?>
     </div>
 
-    <div class="row">
+    <div class="row" style="height: 90%;">
     <?php if($idProject) { ?>
         <div class="col-sm-12 col-md-3 px-sm-4 px-md-2 ps-md-4 text-center">
             <div class="row sticker overflow-x mx-sm-2 mx-md-0">
@@ -38,29 +38,29 @@ require_once 'layouts/entete.php';
             <div class="row sticker mt-2 position-relative mx-sm-2 mx-md-0" style="height: 95%;">
                 <form action="<?= CONTROLLERS_URL ?>admin/detailsProjet.php?action=updateProject&idProject=<?= $Project->getRowid() ?>" method="POST" style="margin-bottom: 0;">
                     <h5 class="mt-5 border-bottom w-50 mx-auto">Titre</h5>
-                    <input class="sticker text-center mt-2 px-2" style="max-width:inherit" name="projectName" id="projectName" type="text" value="<?= $Project->getName() ?>">
+                    <input class="sticker form-control text-center mt-2 px-2" style="max-width:inherit" name="projectName" id="projectName" type="text" value="<?= $Project->getName() ?>">
     
                     <h5 class="mt-3 border-bottom w-50 mx-auto">Description</h5>
-                    <textarea class="sticker text-center mt-2 pt-3 px-2" style="height: 150px;max-width:inherit" name="description" id="description" type="text"><?= $Project->getDescription() ?></textarea>
+                    <textarea class="sticker form-control text-center mt-2 pt-3 px-2" style="height: 150px;max-width:inherit" name="description" id="description" type="text"><?= $Project->getDescription() ?></textarea>
     
                     <h5 class="mt-3 border-bottom w-50 mx-auto">Type</h5>
-                    <input class="sticker text-center mt-2 px-2" style="max-width:inherit" name="type" id="type" type="text" value="<?= $Project->getType() ?>">
+                    <input class="sticker form-control text-center mt-2 px-2" style="max-width:inherit" name="type" id="type" type="text" value="<?= $Project->getType() ?>">
     
                     <div class="w-100">
                         <div class="row mx-auto mt-3">
                             <div class="col-5 p-md-1">
-                                <button class="btn btn-outline-primary w-100" type="submit" tabindex="0" data-bs-toggle="tooltip" title="Mettre à jour les informations du projet"><i class="bi bi-arrow-clockwise big-icon"></i></button>
+                                <button class="custom-button w-100 d-flex justify-content-center pt-2" type="submit" tabindex="0" data-bs-toggle="tooltip" title="Mettre à jour les informations du projet"><i class="bi bi-arrow-clockwise big-icon"></i></button>
                             </div>
                             <div class="col p-md-1">
-                                <a id="map-btn" href="<?= CONTROLLERS_URL ?>admin/map.php?projectId=<?= $Project->getRowid() ?>" class="btn btn-outline-info w-100" tabindex="0" data-bs-toggle="tooltip" title="Tableau de l'équipe"><i class="bi bi-layout-three-columns big-icon"></i></a>
+                                <a id="map-btn" href="<?= CONTROLLERS_URL ?>admin/map.php?projectId=<?= $Project->getRowid() ?>" class="custom-button info w-100 pt-2" tabindex="0" data-bs-toggle="tooltip" title="Tableau de l'équipe"><i class="bi bi-layout-three-columns big-icon"></i></a>
                             </div>
                             <?php if($Project->isActive()) { ?>
                                 <div id="archive-btn" class="col collapse show p-md-1">
-                                    <a href="<?= CONTROLLERS_URL ?>admin/detailsProjet.php?action=archive&idProject=<?= $Project->getRowid() ?>" class="w-100 btn btn-outline-danger text-center collapse show" tabindex="0" data-bs-toggle="tooltip" title="Archiver le projet"><i class="bi bi-archive-fill big-icon"></i></a>
+                                    <a href="<?= CONTROLLERS_URL ?>admin/detailsProjet.php?action=archive&idProject=<?= $Project->getRowid() ?>" class="w-100 custom-button danger text-center collapse show pt-2" tabindex="0" data-bs-toggle="tooltip" title="Archiver le projet"><i class="bi bi-archive-fill big-icon"></i></a>
                                 </div>
                             <?php } else { ?>
                                 <div id="unarchive-btn" class="col collapse show p-md-1">
-                                    <a href="<?= CONTROLLERS_URL ?>admin/detailsProjet.php?action=unarchive&idProject=<?= $Project->getRowid() ?>" class="w-100 btn btn-outline-success text-center collapse show" tabindex="0" data-bs-toggle="tooltip" title="Désarchiver le projet"><i class="bi bi-archive-fill big-icon"></i></a>
+                                    <a href="<?= CONTROLLERS_URL ?>admin/detailsProjet.php?action=unarchive&idProject=<?= $Project->getRowid() ?>" class="w-100 custom-button success text-center collapse show pt-2" tabindex="0" data-bs-toggle="tooltip" title="Désarchiver le projet"><i class="bi bi-archive-fill big-icon"></i></a>
                                 </div>
                             <?php } ?>
                         </div>
@@ -76,11 +76,11 @@ require_once 'layouts/entete.php';
 
             <div class="row sticker mt-2 mx-sm-2 mx-md-0" style="height: 95%;">
                 <div class="col-4 mt-3 position-relative">
-                    <button id="create-switch-button" class="btn btn-secondary w-75 collapse show">Création des équipes</button>
-                    <button id="update-switch-button" class="btn btn-secondary w-75 collapse">Modification des équipes</button>
+                    <button id="create-switch-button" class="custom-button secondary px-1 w-75 collapse show">Création des équipes</button>
+                    <button id="update-switch-button" class="custom-button secondary px-1 w-75 collapse">Modification des équipes</button>
 
                     <h5 class="mt-3 border-bottom w-50 mx-auto">Nom équipe</h5>
-                    <input id="teamName" class="sticker mt-1 w-100 text-center" type="text">
+                    <input id="teamName" class="sticker form-control mt-1 w-100 text-center" type="text">
 
                     <!-- AFFICHER TOUTES LES EQUIPES EXISTANTES POUR CE PROJET -->
                     <h5 id="project-teams-title" class="mt-3 border-bottom w-50 mx-auto collapse show">Équipes existantes</h5>
@@ -96,16 +96,30 @@ require_once 'layouts/entete.php';
                         <input type="hidden" value="" name="teamNameUpdate" id="teamName-hidden-update">
                         <input type="hidden" value="" name="teamId" id="team-id-update-input">
                         <div class="w-100">
-                            <div class="row mx-auto mt-3">
-                                <div class="col-sm-4 col-md-6 ps-0 pe-sm-0 pe-md-1 w-md-30" style="padding: 0;">
-                                    <a id="update-team-button" class="w-100 btn btn-outline-primary text-center collapse show" tabindex="0" data-bs-toggle="tooltip" title="Mettre à jour les informations de l'équipe"><i class="bi bi-arrow-clockwise big-icon"></i></a>
+                            <div class="row mx-auto pt-2">
+                                <div class="col-7 p-md-1">
+                                    <a id="update-team-button" class="w-100 custom-button text-center collapse show pt-2" tabindex="0" data-bs-toggle="tooltip" title="Mettre à jour les informations de l'équipe">
+                                        <i class="bi bi-arrow-clockwise big-icon"></i>
+                                    </a>
                                 </div>
-                                <div class="col-sm-4 col-md-3 ps-1 pe-sm-0 pe-md-1 w-md-30" style="padding: 0;">
-                                    <a href="<?= CONTROLLERS_URL ?>admin/detailsProjet.php?action=deleteTeam&idProject=<?= $Project->getRowid() ?>" id="delete-team-button" class="w-100 btn btn-outline-danger text-center collapse show" tabindex="0" data-bs-toggle="tooltip" title="Supprimer l'équipe"><i class="bi bi-trash-fill big-icon"></i></a>
+                                <div class="col-5 p-md-1">
+                                    <div class="d-flex justify-content-center">
+                                        <a href="<?= CONTROLLERS_URL ?>admin/detailsProjet.php?action=deleteTeam&idProject=<?= $Project->getRowid() ?>" id="delete-team-button" class="w-100 custom-button danger collapse show pt-2" tabindex="0" data-bs-toggle="tooltip" title="Supprimer l'équipe">
+                                            <i class="bi bi-trash-fill big-icon"></i>
+                                        </a>
+                                    </div>
                                 </div>
-                                <div class="col-sm-4 col-md-3 ps-1 px-0 w-md-30" style="padding: 0;">
-                                    <a id="archive-team-button" class="w-100 btn btn-outline-danger text-center collapse" tabindex="0" data-bs-toggle="tooltip" title="Archiver l'équipe"><i class="bi bi-archive-fill big-icon"></i></a>
-                                    <a id="open-team-button" class="w-100 btn btn-outline-success text-center collapse" tabindex="0" data-bs-toggle="tooltip" title="Désarchiver l'équipe"><i class="bi bi-archive-fill big-icon"></i></a>
+                                <div class="col px-0">
+                                    <div class="d-flex justify-content-center">
+                                        <a id="archive-team-button" class="w-100 custom-button danger collapse pt-2 mx-1" tabindex="0" data-bs-toggle="tooltip" title="Archiver l'équipe">
+                                            <i class="bi bi-archive-fill big-icon"></i>
+                                        </a>
+                                    </div>
+                                    <div class="d-flex justify-content-center">
+                                        <a id="open-team-button" class="w-100 custom-button success collapse pt-2 mx-1" tabindex="0" data-bs-toggle="tooltip" title="Désarchiver l'équipe">
+                                            <i class="bi bi-archive-fill big-icon"></i>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -113,7 +127,7 @@ require_once 'layouts/entete.php';
 
                     <form id="add-team-form" action="<?= CONTROLLERS_URL ?>admin/detailsProjet.php?action=addTeam&idProject=<?= $Project->getRowid() ?>" method="POST">
                         <input type="hidden" value="" name="teamName" id="teamName-hidden-create">
-                        <a id="create-team-button" class="btn btn-outline-primary w-75 text-center collapse">Créer l'équipe</a>
+                        <a id="create-team-button" class="custom-button w-75 text-center collapse pt-2">Créer l'équipe</a>
                     </form>
                 </div>
                 
@@ -139,7 +153,7 @@ require_once 'layouts/entete.php';
                                     <tr class="collapse" id="adding-user-<?= $User->getRowid() ?>">
                                         <td><?= $User->getLastname() ?></td>
                                         <td><?= $User->getFirstname() ?></td>
-                                        <td><button onclick="toggleUserToTeam(<?= $User->getRowid() ?>)" class="btn btn-outline-danger">Retirer</button></td>
+                                        <td><button onclick="toggleUserToTeam(<?= $User->getRowid() ?>)" class="custom-button danger px-2">Retirer</button></td>
                                     </tr>
                                     <?php
                                 }
@@ -150,7 +164,7 @@ require_once 'layouts/entete.php';
                                         <tr class="team-members-<?= $Team->getRowid() ?> collapse" id="adding-again-user-<?= $User->getRowid() ?>">
                                             <td><?= $User->getLastname() ?></td>
                                             <td><?= $User->getFirstname() ?></td>
-                                            <td><button onclick="toggleUserToExistingTeam(<?= $User->getRowid() ?>)" class="btn btn-outline-danger">Retirer</button></td>
+                                            <td><button onclick="toggleUserToExistingTeam(<?= $User->getRowid() ?>)" class="custom-button danger px-2">Retirer</button></td>
                                         </tr>
                                         <?php
                                     }
@@ -178,7 +192,7 @@ require_once 'layouts/entete.php';
                                         <tr class="collapse show" id="free-user-<?= $User->getRowid() ?>">
                                             <td><?= $User->getLastname() ?></td>
                                             <td><?= $User->getFirstname() ?></td>
-                                            <td><button onclick="toggleUserToTeam(<?= $User->getRowid() ?>)" class="btn btn-outline-success">Ajouter</button></td>
+                                            <td><button onclick="toggleUserToTeam(<?= $User->getRowid() ?>)" class="custom-button success px-2">Ajouter</button></td>
                                         </tr>
                                     <?php } ?>
                                     <!-- Membres en cours de désaffectation des équipe déjà créées -->
@@ -187,7 +201,7 @@ require_once 'layouts/entete.php';
                                             <tr class="freeing-team-members-<?= $Team->getRowid() ?> collapse" id="freeing-user-<?= $User->getRowid() ?>">
                                                 <td><?= $User->getLastname() ?></td>
                                                 <td><?= $User->getFirstname() ?></td>
-                                                <td><button onclick="toggleUserToExistingTeam(<?= $User->getRowid() ?>)" class="btn btn-outline-success">Ajouter</button></td>
+                                                <td><button onclick="toggleUserToExistingTeam(<?= $User->getRowid() ?>)" class="custom-button success px-2">Ajouter</button></td>
                                             </tr>
                                         <?php }
                                     } ?>

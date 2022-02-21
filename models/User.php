@@ -216,13 +216,19 @@ class User extends Modele
         $this->fk_organization  = $Obj->fk_organization;
         $this->admin            = $Obj->admin;
 
-        if($privacy == false) 
+        // the min level
+        if($privacy == 0) 
         {
             $this->birth            = $Obj->birth;
             $this->password         = $Obj->password;
-            $this->email            = $Obj->email;
             $this->consent          = $Obj->consent;
             $this->token            = $Obj->token;
+        }
+
+        // not the max level
+        if($privacy < 2)
+        {
+            $this->email            = $Obj->email;
         }
 
         $BelongsTo = new BelongsTo();
@@ -325,21 +331,49 @@ class User extends Modele
     }
 
 
-    // UPDATE
-
+    /**
+     * Update user db object
+     */
     public function update()
     {
+        // query
         $sql = "UPDATE storieshelper_user";
         $sql .= " SET";
-        $sql .= " firstname = ?";
-        $sql .= " , lastname = ?";
-        $sql .= " , email = ?";
-        $sql .= " , password = ?";
-        $sql .= " , birth = ?";
-        $sql .= " WHERE rowid = ?";
+        $sql .= " firstname = :firstname";
+        $sql .= " , lastname = :lastname";
 
+        if($this->email) {
+            $sql .= " , email = :email";
+        }
+        if($this->password) {
+            $sql .= " , password = :password";
+        }
+        if($this->birth) {
+            $sql .= " , birth = :birth";
+        }
+        
+        $sql .= " WHERE rowid = :rowid";
+
+        // prepare
         $requete = $this->getBdd()->prepare($sql);
-        return $requete->execute([$this->firstname,$this->lastname,$this->email,$this->password,$this->birth,$this->rowid]);
+
+        // Bind optional parameters
+        if($this->email) {
+            $requete->bindParam(':email', $this->email, PDO::PARAM_STR);
+        }
+        if($this->password) {
+            $requete->bindParam(':password', $this->password, PDO::PARAM_STR);
+        }
+        if($this->birth) {
+            $requete->bindParam(':birth', $this->birth, PDO::PARAM_STR);
+        }
+
+        // Bind required parameters
+        $requete->bindParam(':firstname', $this->firstname, PDO::PARAM_STR);
+        $requete->bindParam(':lastname', $this->lastname, PDO::PARAM_STR);
+        $requete->bindParam(':rowid', $this->rowid, PDO::PARAM_INT);       
+
+        $requete->execute();
     }
 
     public function updateConsent()

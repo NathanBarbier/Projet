@@ -48,7 +48,7 @@ require_once "layouts/entete.php";
                                 </div>
                             </div>
                             <div class="row mt-4 justify-content-around">
-                                <div class="sticker col-4 text-center">
+                                <div class="sticker col-4 pt-3 text-center">
                                     <b class="border-bottom">Membres</b>
                                     <p class="text-center">
                                         <?php
@@ -61,7 +61,7 @@ require_once "layouts/entete.php";
                                     <br>
                                 </div>
                                 
-                                <div class="sticker col-4 text-center">
+                                <div class="sticker col-4 pt-3 text-center">
                                     <b class="border-bottom">Tâches affectées</b>
                                     <br>
                                     <p class="text-center">
@@ -89,7 +89,11 @@ require_once "layouts/entete.php";
                                 </div>
                             </div>
                             <div class="row">
-                                <a href="<?= CONTROLLERS_URL ?>membre/map.php?projectId=<?= $Project->getRowid() ?>&teamId=<?= $teamId ?>" class="btn btn-outline-info w-25 mt-3 mx-auto">Aller sur le tableau</a>
+                                <div class="col-8 col-sm-6 col-md-8 col-lg-6 col-xl-4 mx-auto">
+                                    <a href="<?= CONTROLLERS_URL ?>membre/map.php?projectId=<?= $Project->getRowid() ?>&teamId=<?= $teamId ?>" class="custom-button info pt-2 w-100 mt-3 mx-1 text-center mx-auto">
+                                        Aller sur le tableau
+                                    </a>
+                                </div>
                             </div>
                         </div>
                         <?php }
@@ -107,8 +111,8 @@ require_once "layouts/entete.php";
 
                 <p class="mt-3"><b><span style="color: red;">Êtes-vous sûr de vouloir supprimer votre compte ? (cette action est irréversible)</span></b></p>
             
-                <a href="<?= CONTROLLERS_URL ?>membre/tableauDeBord.php?action=accountDelete" class="btn btn-outline-danger w-50 mt-4">Supprimer</a>
-                <a id="cancel-account-deletion" class="btn btn-outline-warning w-50 mt-3 mb-3">Annuler</a>
+                <a href="<?= CONTROLLERS_URL ?>membre/tableauDeBord.php?action=accountDelete" class="custom-button danger w-50 pt-2 mt-4">Supprimer</a>
+                <a id="cancel-account-deletion" class="custom-button warning w-50 pt-2 mt-3 mb-3">Annuler</a>
             </div>
         </div> 
 
@@ -122,16 +126,16 @@ require_once "layouts/entete.php";
                 <div class="text-center w-75">
                     <form action="<?= CONTROLLERS_URL ?>membre/tableauDeBord.php?action=userUpdate" method="POST">
 
-                        <input type="text" name="lastname" class="sticker form-control pt-2 text-center" value="<?= $User->getLastname() ?>">
-                        <input type="text" name="firstname" class="sticker form-control mt-4 pt-2 text-center" value="<?= $User->getFirstname() ?>">
-                        <input type="email" name="email" class="sticker form-control mt-4 pt-2 text-center" value="<?= $User->getEmail() ?>">
+                        <input type="text" name="lastname" class="sticker form-control pt-2 text-center h-50px" value="<?= $User->getLastname() ?>">
+                        <input type="text" name="firstname" class="sticker form-control mt-4 pt-2 text-center h-50px" value="<?= $User->getFirstname() ?>">
+                        <input type="email" name="email" class="sticker form-control mt-4 pt-2 text-center h-50px" value="<?= $User->getEmail() ?>">
     
-                        <button type="submit" class="w-50 mt-4 pt-2 btn btn-outline-primary text-center">Mettre à jour</button>
+                        <button type="submit" class="w-75 mt-4 custom-button text-center px-1">Mettre à jour</button>
                     </form>
 
-                    <div class="text-center position-absolute bottom-0 start-50 translate-middle-x">
-                        <a class="btn btn-outline-secondary mt-5 w-100" href="<?= CONTROLLERS_URL ?>membre/passwordUpdate.php">Modifier mot de passe</a>
-                        <button id="delete-account-btn" class="btn btn-outline-danger mt-3 mb-3 w-100">Supprimer le compte</button>
+                    <div class="text-center position-absolute bottom-0 start-50 translate-middle-x w-100">
+                        <a class="custom-button secondary mt-5 pt-2 px-1 w-75" href="<?= CONTROLLERS_URL ?>membre/passwordUpdate.php">Modifier mot de passe</a>
+                        <button id="delete-account-btn" class="custom-button danger mt-3 mb-3 px-1 w-75">Supprimer le compte</button>
                     </div>
                 </div>
             </div>

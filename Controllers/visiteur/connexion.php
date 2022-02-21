@@ -1,7 +1,6 @@
 <?php
 //import all models
 require_once "../../services/header.php";
-require "layouts/head.php";
 
 $envoi = GETPOST('envoi');
 

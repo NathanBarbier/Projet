@@ -122,6 +122,10 @@ input:read-only:hover:not(.form-check-input) {
   width: 90%;
 }
 
+.h-50px {
+  height: 50px;
+}
+
 .border-lg {
   border: 2px solid rgba(0, 0, 0, 0.125);
   border-radius: 15px;
@@ -274,7 +278,6 @@ input:read-only:hover:not(.form-check-input) {
   border: 1px solid rgba(0, 0, 0, 0.125);
   border-radius: 15px;
   background-color: #f8f9fa;
-  height: 60px;
 }
 
 .sticker-deep {
@@ -495,6 +498,102 @@ input:read-only:hover:not(.form-check-input) {
   background-color: transparent;
 }
 
+.custom-button {
+font-size: 18px;
+display: inline-block;
+outline: 0;
+border: 0;
+cursor: pointer;
+will-change: box-shadow,transform;
+background: radial-gradient( 100% 100% at 100% 0%, #89E5FF 0%, #5468FF 100% );
+box-shadow: 0px 0.01em 0.01em rgb(45 35 66 / 40%), 0px 0.3em 0.7em -0.01em rgb(45 35 66 / 30%), inset 0px -0.01em 0px rgb(58 65 111 / 50%);
+padding: 0 2em;
+border-radius: 0.3em;
+color: #fff;
+height: 2.6em;
+text-shadow: 0 1px 0 rgb(0 0 0 / 40%);
+transition: box-shadow 0.15s ease, transform 0.15s ease;
+}
+ 
+.custom-button:hover {
+box-shadow: 0px 0.1em 0.2em rgb(45 35 66 / 40%), 0px 0.4em 0.7em -0.1em rgb(45 35 66 / 30%), inset 0px -0.1em 0px #3c4fe0;
+transform: translateY(-0.1em);
+}
+
+.custom-button:active {
+box-shadow: inset 0px 0.1em 0.6em #3c4fe0;
+transform: translateY(0em);
+}
+
+/* danger */
+.custom-button.danger {
+  background: radial-gradient( 100% 100% at 100% 0%, #f7909a 0%, #b02a37 100% );
+}
+
+.custom-button.danger:hover {
+  box-shadow: 0px 0.1em 0.2em rgb(45 35 66 / 40%), 0px 0.4em 0.7em -0.1em rgb(45 35 66 / 30%), inset 0px -0.1em 0px #bb3240;
+}
+
+.custom-button.danger:active {
+  box-shadow: inset 0px 0.1em 0.6em #bb3240;
+}
+
+/* warning */
+.custom-button.warning {
+  background: radial-gradient( 100% 100% at 100% 0%, #ffdf81 0%, #e7ad00 100% );
+}
+
+.custom-button.warning:hover {
+  box-shadow: 0px 0.1em 0.2em rgb(45 35 66 / 40%), 0px 0.4em 0.7em -0.1em rgb(45 35 66 / 30%), inset 0px -0.1em 0px #ffc107;
+}
+
+.custom-button.warning:active {
+  box-shadow: inset 0px 0.1em 0.6em #ffc107;
+}
+
+/* secondary */
+.custom-button.secondary {
+  background: radial-gradient( 100% 100% at 100% 0%, #d8d9da 0%, #616a72 100% );
+}
+
+.custom-button.secondary:hover {
+  box-shadow: 0px 0.1em 0.2em rgb(45 35 66 / 40%), 0px 0.4em 0.7em -0.1em rgb(45 35 66 / 30%), inset 0px -0.1em 0px #6c757d;
+}
+
+.custom-button.secondary:active {
+  box-shadow: inset 0px 0.1em 0.6em #6c757d;
+}
+
+/* info */
+.custom-button.info {
+  background: radial-gradient( 100% 100% at 100% 0%, #83eaff 0%, #06a4c4 100% );
+}
+
+.custom-button.info:hover {
+  box-shadow: 0px 0.1em 0.2em rgb(45 35 66 / 40%), 0px 0.4em 0.7em -0.1em rgb(45 35 66 / 30%), inset 0px -0.1em 0px #0dcaf0;
+}
+
+.custom-button.info:active {
+  box-shadow: inset 0px 0.1em 0.6em #0dcaf0;
+}
+
+/* success */
+.custom-button.success {
+  background: radial-gradient( 100% 100% at 100% 0%, #7cf5bc 0%, #0e7243 100% );
+}
+
+.custom-button.success:hover {
+  box-shadow: 0px 0.1em 0.2em rgb(45 35 66 / 40%), 0px 0.4em 0.7em -0.1em rgb(45 35 66 / 30%), inset 0px -0.1em 0px #198754;
+}
+
+.custom-button.success:active {
+  box-shadow: inset 0px 0.1em 0.6em #198754;
+}
+
+a.custom-button {
+  color: #f8f9fa;
+}
+
 /* -------------- 7. ------------- */
 
 .bi-archive-fill {
@@ -550,21 +649,29 @@ input:read-only:hover:not(.form-check-input) {
   top: 2%;
 }
 
-@media only screen and (max-width: 991px) {
+@media only screen and (max-width: 1230px) {
   #close-sidebar,#open-sidebar {
     visibility: collapse;
   }
   #sideBar {
-    display:none;
+    display: none;
+  }
+
+  #top-navbar {
+    display: block;
   }
   .navbar-toggler {
     display: block !important;
   }
 }
 
-@media only screen and (min-width: 992px) {
+@media only screen and (min-width: 1230px) {
   #close-sidebar,#open-sidebar {
     visibility: unset;
+  }
+
+  #top-navbar {
+    display: none;
   }
   .navbar-toggler {
     display: none !important;
@@ -578,11 +685,29 @@ input:read-only:hover:not(.form-check-input) {
 
 .sidebar-btn:hover {
   background-color: rgba(55,65,81, 1);
-  color: rgba(229,231,235, 1)
+  color: rgba(229,231,235, 1);
 }
 
-.sidebar-btn:active {
-  color: rgb(250, 250, 250)
+.sidebar-btn:active,.sidebar-btn:focus {
+  color: #fff;
+  background-color: transparent;
+  border-color: dimgray;
+  box-shadow: none;
+  color: rgb(250, 250, 250);
+  background-color: rgba(55,65,81, 1);
+}
+
+.sidebar-icon {
+  float: left;
+}
+
+.btn.danger {
+  border-color: #b02a37;
+}
+
+.btn.danger:hover {
+  background-color: #bb3240;
+  color: rgba(229,231,235, 1);
 }
 
 /* -------------- 10. ------------- */

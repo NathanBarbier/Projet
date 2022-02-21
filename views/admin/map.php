@@ -205,7 +205,7 @@ require_once "layouts/entete.php";
         </div>
     </div>
 
-<script type="text/Javascript" src="<?= JS_URL ?>admin/map.js" defer></script>
+<script type="text/Javascript" src="<?= JS_URL ?>admin/map.min.js" defer></script>
 <?php 
 require_once "layouts/pied.php";
 ?>

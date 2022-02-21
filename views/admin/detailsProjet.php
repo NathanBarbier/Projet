@@ -213,7 +213,7 @@ require_once 'layouts/entete.php';
             </div>
         </div>
 
-        <script type="text/javascript" src="<?= JS_URL ?>admin/detailsProjet.js" defer></script>
+        <script type="text/javascript" src="<?= JS_URL ?>admin/detailsProjet.min.js" defer></script>
     <?php } ?>
 <?php 
 require_once 'layouts/pied.php';

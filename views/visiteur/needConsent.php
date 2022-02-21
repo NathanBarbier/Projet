@@ -21,10 +21,10 @@ require_once "layouts/entete.php";
         <p><b><span style="color: red;">Pour vous connecter vous devez consentir au traitement de vos données</span></b></p>
 
         <p class="mt-5"><b>J'accepte le traitement de mes données.</b></p>
-        <a href="<?= CONTROLLERS_URL ?>visiteur/needConsent.php?action=giveConsent" id="give-consent" class="btn btn-outline-success w-25">Accepter</a>
+        <a href="<?= CONTROLLERS_URL ?>visiteur/needConsent.php?action=giveConsent" id="give-consent" class="custom-button success w-25">Accepter</a>
 
         <p class="mt-5"><b>Je refuse le traitement de mes données. (Votre compte sera alors supprimé)</b></p>
-        <a href="<?= CONTROLLERS_URL ?>visiteur/needConsent.php?action=refuseConsent" id="refuse-consent" class="btn btn-outline-danger w-25">Refuser</a>
+        <a href="<?= CONTROLLERS_URL ?>visiteur/needConsent.php?action=refuseConsent" id="refuse-consent" class="custom-button danger w-25">Refuser</a>
     </div>
 </div>
 

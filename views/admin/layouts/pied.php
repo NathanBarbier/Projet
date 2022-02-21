@@ -14,8 +14,8 @@
 					<p class="mt-3">Ce site utilise des cookies pour vous fournir la meilleure expérience de navigation possible. En continuant sur ce site, vous acceptez l'utilisation des cookies.</p>
 				</div>
 				<div class="modal-footer">
-					<button id="cookieDetails" type="button" class="btn btn-outline-secondary">Détails</button>
-					<button type="button" class="btn btn-outline-success consentToCookie">Accepter</button>
+					<button id="cookieDetails" type="button" class="custom-button secondary">Détails</button>
+					<button type="button" class="custom-button success consentToCookie">Accepter</button>
 				</div>
 			</div>
 		</div>
@@ -41,8 +41,8 @@
 					</div>
 				</div>
 				<div class="modal-footer">
-					<button id="cookieback" type="button" class="btn btn-outline-secondary">Retour</button>
-					<button type="button" class="btn btn-outline-success consentToCookie">Accepter</button>
+					<button id="cookieback" type="button" class="custom-button secondary">Retour</button>
+					<button type="button" class="custom-button success consentToCookie">Accepter</button>
 				</div>
 			</div>
 		</div>

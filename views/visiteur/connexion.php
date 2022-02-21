@@ -43,14 +43,18 @@ require_once "layouts/entete.php";
             </div>
             
             <div class="form-group text-center mt-3">
-                <button type="submit" class="btn btn-outline-classic mt-3 w-100" name="envoi" value="1">Se connecter</button>
+                <button type="submit" class="custom-button mt-3 w-100" name="envoi" value="1">Se connecter</button>
             </div>
 
-            <div class="form-group text-center mt-2">
+            <div class="text-center mt-2">
                 <div class="mt-5">
                     Vous n'avez pas de compte ?
                 </div>
-                <a href="inscriptionOrganisation.php" class="btn btn-outline-classic w-md-100 w-lg-50 mt-3">Inscrivez-vous</a>
+                <div class="row">
+                    <div class="col-6 col-sm-6 col-md-5 col-lg-6 col-xl-5 mx-auto">
+                        <a href="inscriptionOrganisation.php" class="w-100 custom-button info pt-2 px-1 mt-3">Inscrivez-vous</a>
+                    </div>
+                </div>
             </div>
         </form>
     </div>

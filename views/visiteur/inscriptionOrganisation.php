@@ -40,18 +40,22 @@ require_once "layouts/entete.php";
         
             <div class="form-check mt-3">
                 <input class="form-check-input" name="consent" value="1" type="checkbox" id="consent-check" required>
-                <label class="form-check-label" for="consent-check">En cochant cette case vous acceptez nos <a href="<?= VIEWS_URL ?>visiteur/cgu.php" target="_blank">Conditions générales</a> et confirmez accepter le traitement de vos données</label>
+                <label class="form-check-label" for="consent-check">En cochant cette case vous acceptez nos <a class="custom-link" href="<?= VIEWS_URL ?>visiteur/cgu.php" target="_blank">Conditions générales</a> et confirmez accepter le traitement de vos données</label>
             </div>
 
             <div class="text-center mt-3">
-                <button type="submit" class="btn btn-outline-classic mt-3 w-100" name="envoi" value="1">S'inscrire</button>
+                <button type="submit" class="custom-button mt-3 w-100" name="envoi" value="1">S'inscrire</button>
             </div>
             
             <div class="form-group text-center mt-2">
                 <div class="mt-4">
                     Vous possédez un compte ?
                 </div>
-                <a href="<?= CONTROLLERS_URL ?>visiteur/connexion.php" class="btn btn-outline-classic w-md-100 w-lg-50 mt-3">Connectez-vous</a>
+                <div class="row">
+                    <div class="col-6 col-sm-6 col-md-5 col-lg-6 col-xl-5 mx-auto">
+                        <a href="<?= CONTROLLERS_URL ?>visiteur/connexion.php" class="w-100 custom-button info pt-2 px-1 mt-3">Connectez-vous</a>
+                    </div>
+                </div>
             </div>
         </form>
     </div>

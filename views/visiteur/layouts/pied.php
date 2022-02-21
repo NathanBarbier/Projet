@@ -42,8 +42,9 @@
 	</div>
 </div>
 
-<footer class="w-100 bg-dark text-center pt-3 footer">
-	<a href="<?= VIEWS_URL ?>visiteur/cgu.php">Conditions générales d'utilisation</a>
+<footer class="w-100 bg-dark text-center pt-2 footer">
+	<a class="custom-link" style="font-size: large;" href="<?= VIEWS_URL ?>visiteur/cgu.php">Conditions générales d'utilisation</a>
+	<div class="text-secondary mt-1">Copyright © 2022 All Rights Reserved by MacroSoft SAS.</div>
 </footer>
 
 <script>

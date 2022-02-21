@@ -115,7 +115,7 @@
                     <nav class="w-100 h-100">
                         <ul class="list-unstyled position-relative" style="height: 100%;">
                             <!-- LOGO -->
-                            <div class="overflow-y" style="height: 100%;">
+                            <div class="overflow-y" style="height: 100%; max-height: 85vh">
                                 <li class="mt-2">
                                     <a class="navbar-brand text-light mb-1" href="<?= ROOT_URL ?>index.php">
                                         <img src="<?= IMG_URL ?>logo.png" width="35" height="35" class="d-inline-block align-top ms-3 me-2" alt="">

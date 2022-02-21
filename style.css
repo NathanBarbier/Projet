@@ -6,10 +6,12 @@
 /* 4. Map */
 /* 5. DetailsProjet */
 /* 6. Buttons */
-/* 7. Icons */
-/* 8. Gestion Organization */
-/* 9. sideBar */
-/* 10. ListeMembres */
+/* 7. Link */
+/* 8. Icons */
+/* 9. Gestion Organization */
+/* 10. sideBar */
+/* 11. ListeMembres */
+/* 12. Overflow */
 
 /* -------------- 1. ------------- */
 
@@ -596,6 +598,53 @@ a.custom-button {
 
 /* -------------- 7. ------------- */
 
+.custom-link {
+  padding-top: 10px;
+}
+
+.custom-link:before {
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 2px;
+  background: #005f66;
+  transform:  scaleX(0);
+}
+
+@keyframes custom-link-color-before {
+  from { background: #00abb6; }
+  to { background: #005f66; }
+}
+
+.custom-link:hover:before {
+  transform:  scaleX(1);
+  animation: custom-link-color-before .3s ease;
+}
+
+@keyframes custom-link-color {
+  from { color: #00abb6; }
+  to { color: #005f66; }
+}
+
+.custom-link:hover {
+  animation: custom-link-color .3s ease;
+  color: #005f66;
+}
+
+.custom-link { 
+  position: relative;
+  text-decoration: none;
+  color: #00abb6;
+}
+
+a:before,a:after {
+  content: '';
+  position: absolute;
+  transition: transform .3s ease;
+}
+
+/* -------------- 8. ------------- */
+
 .bi-archive-fill {
   width: max-content;
 }
@@ -608,7 +657,7 @@ a.custom-button {
   font-size: x-large;
 }
 
-/* -------------- 8. ------------- */
+/* -------------- 9. ------------- */
 
 @media only screen and (max-width: 576px) {
   #gestion-organisation-left-section {
@@ -640,7 +689,7 @@ a.custom-button {
   }
 } 
 
-/* -------------- 9. ------------- */
+/* -------------- 10. ------------- */
 
 #close-sidebar,#open-sidebar {
   border-top-left-radius: 0;
@@ -710,15 +759,12 @@ a.custom-button {
   color: rgba(229,231,235, 1);
 }
 
-/* -------------- 10. ------------- */
+/* -------------- 11. ------------- */
 
 .table-radius {
   border-collapse: separate;
-
+  
 }
-/* .table-radius td {
-  border: solid 1px #000; 
-} */
 .table-radius tr:first-child td:first-child {
   border-top-left-radius: 10px; 
 }
@@ -730,4 +776,26 @@ a.custom-button {
 }
 .table-radius tr:last-child td:last-child {
   border-bottom-right-radius: 10px; 
+}
+
+/* -------------- 12. ------------- */
+
+::-webkit-scrollbar-track
+{
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	border-radius: 10px;
+	background-color: inherit;
+}
+
+::-webkit-scrollbar
+{
+	width: 12px;
+	background-color: inherit;
+}
+
+::-webkit-scrollbar-thumb
+{
+	border-radius: 10px;
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+	background-color: #ffffffe6;
 }

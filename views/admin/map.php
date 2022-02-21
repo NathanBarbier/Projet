@@ -15,7 +15,7 @@ require_once "layouts/entete.php";
         </div>
     <?php } ?>
     <?php if (!$Team->isActive()) { ?>
-        <div class="alert alert-info alert-visible mt-3 w-50 text-center position-absolute top-0 start-50 translate-middle-x collapse show" style="z-index: 1;">
+        <div class="alert alert-info alert-visible mt-3 w-50 text-center position-absolute top-0 start-50 translate-middle-x collapse show before">
             <i class="bi bi-info-circle-fill"></i>    
             Ce tableau est archivé.
             &nbsp;&nbsp;<a href="<?= CONTROLLERS_URL ?>admin/map.php?action=openTeam&projectId=<?= $Project->getRowid() ?>&teamId=<?= $teamId ?>" class="btn btn-outline-secondary">Ré-ouvrir</a>
@@ -26,14 +26,14 @@ require_once "layouts/entete.php";
         </div>
     <?php } ?>
     <?php if ($success) { ?>
-        <div class="alert alert-success mt-3 w-50 text-center position-absolute top-0 start-50 translate-middle-x" style="z-index: 1;">
+        <div class="alert alert-success mt-3 w-50 text-center position-absolute top-0 start-50 translate-middle-x before">
             <i class="bi bi-check-circle-fill"></i>
             <?= $success; ?>
         </div>
     <?php } ?>
 
     <?php if ($errors) { ?>
-        <div class="alert alert-danger w-50 text-center position-absolute top-0 start-50 translate-middle-x" style="z-index: 1;">
+        <div class="alert alert-danger w-50 text-center position-absolute top-0 start-50 translate-middle-x before">
             <?php foreach($errors as $error) { ?>
                 <i class="bi bi-exclamation-triangle-fill"></i>
                 <?php echo $error . "<br>";

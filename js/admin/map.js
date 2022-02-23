@@ -128,6 +128,8 @@ $("#add-column-form").find('#create-column').click(function() {
                         $("#add-column-btn").toggleClass('show'); 
                         initTask();
                         initCol();
+                        column = $(".columnId-input[value='"+columnId+"']").parents('.project-column').first()
+                        column.insertBefore(column.prevAll('.project-column').first());
                     }
                     
                     $("#loading-modal").modal('hide');                                            
@@ -479,7 +481,6 @@ function init()
     $("#finish-task-button").click(function() {
         newColumn   = taskDiv.parents(".project-column").nextAll(".project-column").last();
         oldColumn   = taskDiv.parents(".project-column").find(".column-title-text").val();
-        console.log(oldColumn);
         $("#loading-modal").modal('show');
         $.ajax({
             async: true,

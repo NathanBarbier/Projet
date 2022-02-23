@@ -124,9 +124,18 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
                                 $MapColumn->setFk_team($teamId);
                                 $MapColumn->setName($columnName);
                                 $MapColumn->create();
-                                LogHistory::create($idOrganization, $idUser, "INFO", 'create', 'column', $MapColumn->getName(), '', 'column id : '.$MapColumn->fetch_last_insert_id());
+                                // on échange les ranks des deux colonnes 
+                                $ClosedColumn = new MapColumn($MapColumn->fetchFinishedColumn($teamId)['rowid']);
+                                $CurrentColumn = new MapColumn($MapColumn->fetch_last_insert_id($teamId));
+                                $rank = $ClosedColumn->getRank();
+                                $ClosedColumn->setRank($CurrentColumn->getRank());
+                                $CurrentColumn->setRank($rank);
+                                $ClosedColumn->update();
+                                $CurrentColumn->update();
+
+                                LogHistory::create($idOrganization, $idUser, "INFO", 'create', 'column', $MapColumn->getName(), '', 'column id : '.$MapColumn->fetch_last_insert_id($teamId));
                             } catch (\Throwable $th) {
-                                LogHistory::create($idOrganization, $idUser, "ERROR", 'create', 'column', $MapColumn->getName(), '', 'column id : '.$MapColumn->fetch_last_insert_id(), $th);
+                                LogHistory::create($idOrganization, $idUser, "ERROR", 'create', 'column', $MapColumn->getName(), '', 'column id : '.$MapColumn->fetch_last_insert_id($teamId), $th);
                             }
                             $return['success'] = true;
                         } else {
@@ -193,15 +202,15 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
                         {
                             $Column = new MapColumn();
                             try {
-                                $columnId = $Column->fetchFinishedColumn($teamId);
+                                $closedColumn = $Column->fetchFinishedColumn($teamId);
                                 $now = new DateTime();
                                 $Task->setActive(-1);
                                 $Task->setFinished_at($now->format("Y-m-d H:i:s"));
-                                $Task->setFk_column($columnId["Closed"]);
+                                $Task->setFk_column($closedColumn["rowid"]);
                                 $Task->update();
-                                LogHistory::create($idOrganization, $idUser, "INFO", 'move', 'task to column', $Task->getName(), '', 'column id : '.$columnId['Closed']);
+                                LogHistory::create($idOrganization, $idUser, "INFO", 'move', 'task to column', $Task->getName(), '', 'column id : '.$closedColumn['rowid']);
                             } catch (\Throwable $th) {
-                                LogHistory::create($idOrganization, $idUser, "ERROR", 'move', 'task to column', $Task->getName(), '', 'column id : '.$columnId['Closed'], $th);
+                                LogHistory::create($idOrganization, $idUser, "ERROR", 'move', 'task to column', $Task->getName(), '', 'column id : '.$closedColumn['rowid'], $th);
                             }
                         }
                         break;
@@ -322,7 +331,7 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
                         break;
                     case 'getLastColumnId':
                         try {
-                            echo json_encode($MapColumn->fetch_last_insert_id());
+                            echo json_encode($MapColumn->fetch_last_insert_id($teamId));
                         } catch (\Throwable $th) {
                             // echo json_encode($th);
                         }

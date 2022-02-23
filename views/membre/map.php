@@ -147,16 +147,14 @@ require_once "layouts/entete.php";
                         <h5 class="members-label collapse show">Task members</h5>
                     </div>
                 </div>
-                <div id="team-members-container" class="overflow-y border collapse pt-1 pb-3 radius" style="height: 25vh;">
-
-                </div>
-                <div id="task-members-container" class="overflow-y border collapse show pt-1 pb-3 radius" style="height: 25vh; width:100%;">
-                    
-                </div>
+                <div id="team-members-container" class="overflow-y border collapse pt-1 pb-3 radius" style="height: 25vh;"></div>
+                <div id="task-members-container" class="overflow-y border collapse show pt-1 pb-3 radius" style="height: 25vh; width:100%;"></div>
 
                 <button id="attributed-member-button" class="btn btn-outline-classic collapse w-50 mt-2" disabled>Attribué</button>
                 <button id="attribute-member-button" class="collapse btn btn-outline-success w-50 mt-2">Attribuer</button>
                 <button id="desattribute-member-button" class="collapse btn btn-outline-danger mt-2">Désattribuer</button>
+
+                <button id="finish-task-button" class="btn btn-warning w-100 mt-3 ">Terminer la tâche</button>
             </div>
         </div>
         <div id="add-column-form" class="sticker text-center pt-1 collapse w-100" style="height:91%">

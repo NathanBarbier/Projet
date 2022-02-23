@@ -137,13 +137,14 @@ Class MapColumn extends Modele
         }
     }
 
-    public function fetch_last_insert_id()
+    public function fetch_last_insert_id($idTeam)
     {
         $sql = "SELECT MAX(rowid) AS rowid";
         $sql .= " FROM storieshelper_map_column";
-
+        $sql .= " WHERE fk_team = ?";
+        
         $requete = $this->getBdd()->prepare($sql);
-        $requete->execute();
+        $requete->execute([$idTeam]);
 
         return $requete->fetch(PDO::FETCH_OBJ)->rowid;
     }
@@ -204,7 +205,7 @@ Class MapColumn extends Modele
     
     public function fetchFinishedColumn(int $fk_team)
     {
-        $sql = "SELECT rowid AS Closed";
+        $sql = "SELECT *";
         $sql .= " FROM storieshelper_map_column";
         $sql .= " WHERE fk_team = ?";
         $sql .= " AND name = 'Closed'";
@@ -248,6 +249,12 @@ Class MapColumn extends Modele
 
         $requete = $this->getBdd()->prepare($sql);
         $requete->execute([$this->name,$this->fk_team,$this->rank,$this->rowid]);
+    }
+
+    public function updateClosedColumn($teamId, $rank)
+    {
+        $closedColumn = $this->fetchFinishedColumn($teamId);
+        
     }
 
     // DELETE

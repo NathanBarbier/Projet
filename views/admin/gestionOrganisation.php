@@ -2,19 +2,6 @@
 require_once "layouts/entete.php";
 ?>
     <div class="row ps-4 px-2" style="height: 95vh;">
-        <?php if($errors) { ?>
-        <div class="alert alert-danger w-50 text-center position-absolute mt-3 top-0 start-50 translate-middle-x before">
-        <?php foreach($errors as $error) { ?>
-            <i class="bi bi-exclamation-triangle-fill"></i>
-            <?php echo $error . "<br>";
-        } ?>
-        </div>
-        <?php } else if($success) { ?>
-        <div class="alert alert-success w-50 text-center position-absolute mt-3 top-0 start-50 translate-middle-x before">
-            <i class="bi bi-check-circle-fill"></i>
-            <?= $success ?>
-        </div>    
-        <?php } ?>
         <div id="gestion-organisation-left-section" class="col-sm-4 px-3 col-md-4 col-lg-4 col-xl-6 h-100 position-relative overflow-y">
             <div id="delete-organization-div" class="sticker mb-3 py-3 px-3 text-center collapse" style="height: max-content;">
                 <h4 class="mx-auto border-bottom w-75 mb-3">Confirmation de suppression d'organisation</h4>

@@ -3,28 +3,9 @@ require_once "layouts/entete.php";
 ?>
 
 <div class="container">
-
-    <?php if(!empty($errors)) { ?>
-    <div class="position-relative mx-auto">
-        <div class="alert alert-danger w-50 text-center position-absolute top-0 start-50 translate-middle-x">
-        <?php foreach($errors as $error) { ?>
-            <i class="bi bi-exclamation-triangle-fill"></i>
-            <?php echo $error . "<br>";
-        } ?>
-        </div>
-    </div>
-    <?php } else if($message) { ?>
-    <div class="position-relative mx-auto">
-        <div class="alert alert-success w-50 text-center position-absolute top-0 start-50 translate-middle-x">
-            <i class="bi bi-check-circle-fill"></i>
-            <?= $message ?>
-        </div>
-    </div>
-    <?php } ?>
-    
-    
     <div class="row">
-        <form class="col-md-12 col-lg-6 mx-auto border-lg bg-white px-4 pb-3" method="post" action="<?= CONTROLLERS_URL ?>visiteur/connexion.php">
+        <!-- <form class="col-md-12 col-lg-6 mx-auto border-lg bg-white px-4 pb-3" method="post" action="<?= CONTROLLERS_URL ?>visiteur/connexion.php"> -->
+        <form id="connexion-form" class="col-md-12 col-lg-6 mx-auto border-lg bg-white px-4 pb-3" method="POST">
             <h1 class="text-center w-100 mx-auto border-bottom mt-2 underline">Connexion</h1>
     
             <div class="form-floating mt-5">
@@ -43,7 +24,7 @@ require_once "layouts/entete.php";
             </div>
             
             <div class="form-group text-center mt-3">
-                <button type="submit" class="custom-button mt-3 w-100" name="envoi" value="1">Se connecter</button>
+                <button id="connexion-form-button" type="submit" class="custom-button mt-3 w-100" name="envoi" value="1">Se connecter</button>
             </div>
 
             <div class="text-center mt-2">
@@ -59,6 +40,8 @@ require_once "layouts/entete.php";
         </form>
     </div>
 </div>
+
+<script type="text/Javascript" src="<?= JS_URL ?>visiteur/connexion.js" defer></script>
 
 <?php
 require_once "layouts/pied.php";

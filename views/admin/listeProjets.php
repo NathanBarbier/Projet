@@ -1,21 +1,6 @@
 <?php
 require_once "layouts/entete.php";
 ?>
-    <div class="row position-relative">
-        <?php if($errors) { ?>
-        <div class="before alert alert-danger mt-3 w-50 text-center position-absolute top-0 start-50 translate-middle-x">
-        <?php foreach($errors as $error) { ?>
-            <i class="bi bi-exclamation-triangle-fill"></i>
-            <?php echo $error . "<br>";
-        } ?>
-        </div>
-        <?php } else if (!empty($success)) { ?>
-        <div class="before alert alert-success mt-3 w-50 text-center position-absolute top-0 start-50 translate-middle-x">
-            <i class="bi bi-check-circle-fill"></i>
-            <?= $success; ?>
-        </div>
-        <?php } ?>
-    </div>
 
     <h1 class="text-center mx-auto w-50 mb-3 pb-2 bg-white underline sticker">Liste des projets</h1>
 

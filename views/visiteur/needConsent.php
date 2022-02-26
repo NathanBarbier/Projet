@@ -3,17 +3,6 @@ require_once "layouts/entete.php";
 ?>
 
 <div class="container mt-5">
-
-    <?php if(!empty($errors)) { ?>
-    <div class="position-relative mx-auto">
-        <div class="alert alert-danger w-50 text-center position-absolute top-0 start-50 translate-middle-x">
-        <?php foreach($errors as $error) { ?>
-            <i class="bi bi-exclamation-triangle-fill"></i>
-            <?php echo $error . "<br>";
-        } ?>
-        </div>
-    </div>
-    <?php } ?>
     
     <h1 class="text-center w-50 mx-auto" style="border-bottom: rgb(216, 214, 214) 1px solid;">Traitement de vos données</h1>
 

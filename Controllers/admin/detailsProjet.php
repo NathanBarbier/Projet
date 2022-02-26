@@ -366,6 +366,7 @@ if($idProject)
                     $Project->setActive(0);
                     $Project->update();
                     LogHistory::create($idOrganization, $idUser, "WARNING", $action, 'project', $Project->getName(), '', 'project id : '.$idProject);
+                    $success = 'Le projet a bien été archivé.';
                 } catch (\Throwable $th) {
                     $errors[] = "Une erreur innatendue est survenue.";
                     LogHistory::create($idOrganization, $idUser, "ERROR", $action, 'project', $Project->getName(), '', 'project id : '.$idProject, $th);

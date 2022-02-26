@@ -1,19 +1,6 @@
 <?php
 require_once "layouts/entete.php"; 
 ?>
-    <?php if($success) { ?>
-        <div class="alert alert-success w-50 text-center position-absolute top-0 start-50 translate-middle-x">
-            <i class="bi bi-check-circle-fill"></i>
-            <?= $success ?>
-        </div>
-    <?php } else if ($errors) { ?>
-        <div class="alert alert-danger w-50 text-center position-absolute top-0 start-50 translate-middle-x">
-    <?php foreach($errors as $error) { ?>
-        <i class="bi bi-exclamation-triangle-fill"></i>
-        <?php echo $error . "<br>";
-    } ?>
-        </div>
-    <?php } ?>
     <div class="row mt-4 px-3">
         <div class="col-md-10 col-lg-6 mx-auto border-lg bg-white px-4 pb-3">
             <h2 class="mx-auto text-center mt-2 w-50 underline">Création de projet</h2>

@@ -1,20 +1,6 @@
 <?php
 require_once "layouts/entete.php";
 ?>
-    <?php if($success) { ?>
-    <div class="alert alert-success mt-3 w-50 text-center position-absolute top-0 start-50 translate-middle-x">
-        <i class="bi bi-check-circle-fill"></i>
-        <?= $success; ?>
-    </div>
-    <?php } else if($errors) { ?>
-    <div class="alert alert-danger mt-3 w-50 text-center position-absolute top-0 start-50 translate-middle-x">
-    <?php foreach($errors as $error) { ?>
-        <i class="bi bi-exclamation-triangle-fill"></i>
-        <?php echo $error . "<br>";
-    } ?>
-    </div>
-    <?php } ?>
-
     <!-- Modal -->
     <div class="modal" id="user-delete-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog position-absolute start-50 translate-middle" style="top:40%;">

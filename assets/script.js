@@ -1,4 +1,4 @@
-$(document).ready(function () {
+jQuery(function () {
   $(".alert").animate({ opacity: "0" }, 7500);
   setTimeout(() => {
     $(".alert").addClass("collapse");
@@ -8,13 +8,13 @@ $(document).ready(function () {
   var viewportWidth = $(window).width();
 
   resizeMain(viewportWidth);
-  $(window).resize(function() {
+  $(window).on('resize', function() {
     viewportWidth = $(window).width();
     resizeMain(viewportWidth);
   });
 
   // SIDEBAR RESPONSIVE COLLAPSE
-  $("#close-sidebar").click(function() {
+  $("#close-sidebar").on('click', function() {
     $("#sideBar").removeClass('show');
     $(this).removeClass('show');
     $("#main").removeClass('col-10').addClass('col-12');
@@ -22,7 +22,7 @@ $(document).ready(function () {
     $("#open-sidebar").addClass('show');
   });
 
-  $("#open-sidebar").click(function() {
+  $("#open-sidebar").on('click', function() {
     $("#sideBar").addClass('show');
     $(this).removeClass('show');
     $("#main").removeClass('col-12').addClass('col-10');

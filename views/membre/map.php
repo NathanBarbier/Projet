@@ -3,15 +3,6 @@ require_once "layouts/entete.php";
 ?>
 <div class="row position-relative bg-white" style="height: 100%;">
 
-    <?php if ($errors) { ?>
-        <div class="alert alert-danger w-50 text-center position-absolute top-0 start-50 translate-middle-x before">
-            <?php foreach($errors as $error) { ?>
-                <i class="bi bi-exclamation-triangle-fill"></i>
-                <?php echo $error . "<br>";
-            } ?>
-        </div>
-    <?php } ?>
-
     <!-- Modal -->
     <div class="modal" id="loading-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog position-absolute bottom-0 end-0 me-3" style="width: 200px;">

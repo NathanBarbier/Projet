@@ -4,9 +4,9 @@ require_once "../../services/header.php";
 require "layouts/head.php";
 
 $action = htmlentities(GETPOST('action'));
-$firstname = htmlentities(GETPOST('firstname'));
-$lastname = htmlentities(GETPOST('lastname'));
-$email = htmlentities(GETPOST('email'));
+$firstname = htmlentities($_POST['firstname'] ?? '');
+$lastname = htmlentities($_POST['lastname'] ?? '');
+$email = htmlentities($_POST['email'] ?? '');
 $success = GETPOST('success');
 $errors = GETPOST("errors");
 
@@ -27,26 +27,21 @@ $errors = !empty($errors) ? unserialize($errors) : array();
 
 if($action == 'userUpdate')
 {
-    if($firstname && $lastname && $email)
+    if(empty($email) || strlen($email) > 0 && !filter_var($email, FILTER_VALIDATE_EMAIL))
     {
-        if(filter_var($email, FILTER_VALIDATE_EMAIL))
-        {
-            try {          
-                $User->setFirstname($firstname);
-                $User->setLastname($lastname);
-                $User->setEmail($email);
-                $User->update();
-                LogHistory::create($idOrganization, $idUser, "INFO", 'update', 'user', $User->getLastname().' '.$User->getFirstname(), '', 'user id : '.$User->getRowid());
-                $success = "Vos informations ont bien été mises à jour.";
-            } catch (\Throwable $th) {
-                $errors[] = "Une error est survenue.";
-                LogHistory::create($idOrganization, $idUser, "ERROR", 'update', 'user', $User->getLastname().' '.$User->getFirstname(), '', 'user id : '.$User->getRowid(), $th);
-            }
+        try {          
+            $User->setFirstname($firstname);
+            $User->setLastname($lastname);
+            $User->setEmail($email);
+            $User->update();
+            LogHistory::create($idOrganization, $idUser, "INFO", 'update', 'user', $User->getLastname().' '.$User->getFirstname(), '', 'user id : '.$User->getRowid());
+            $success = "Vos informations ont bien été mises à jour.";
+        } catch (\Throwable $th) {
+            $errors[] = "Une error est survenue.";
+            LogHistory::create($idOrganization, $idUser, "ERROR", 'update', 'user', $User->getLastname().' '.$User->getFirstname(), '', 'user id : '.$User->getRowid(), $th);
         }
-        else
-        {
-            $errors[] = "L'adresse email n'est pas valide.";
-        }
+    } else {
+        $errors[] = "L'adresse email n'est pas valide.";
     }
 }
 
@@ -64,6 +59,6 @@ if($action == 'accountDelete')
     }
 }
 
-require_once VIEWS_PATH."membre".DIRECTORY_SEPARATOR.$tpl;
+require_once VIEWS_PATH."membre/".$tpl;
 
 ?>

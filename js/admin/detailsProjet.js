@@ -1,14 +1,14 @@
-$("#create-switch-button").click(function() {
+$("#create-switch-button").on('click', function() {
     switchTeamApp();
     $("#archive-team-button").removeClass("show");
     $("#open-team-button").removeClass("show");
 });
 
-$("#update-switch-button").click(function() {
+$("#update-switch-button").on('click', function() {
     switchTeamApp();
 });
 
-$("#create-team-button").click(function() {
+$("#create-team-button").on('click', function() {
     $("#teamName-hidden-create").val($("#teamName").val());
     
     freeUsersIds.forEach(function(id, key) {
@@ -19,14 +19,14 @@ $("#create-team-button").click(function() {
     });
     
 
-   $("#add-team-form").submit();
+   $("#add-team-form").trigger('submit');
 });
 
-$("#close-alert").click(function() {
+$("#close-alert").on('click', function() {
     $(this).parent().removeClass('show alert-visible').css({'opacity': '0', 'display': 'none'});
 });
 
-$("#update-team-button").click(function() {
+$("#update-team-button").on('click', function() {
     // update team name
     $("#teamName-hidden-update").val($("#teamName").val());
     Obj = Project["teams"];
@@ -73,7 +73,7 @@ $("#update-team-button").click(function() {
         }
     });
 
-    $("#update-team-form").submit();
+    $("#update-team-form").trigger('submit');
 });
 
 function switchTeamApp()

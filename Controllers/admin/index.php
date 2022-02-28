@@ -3,6 +3,8 @@
 require_once "../../services/header.php";
 require "layouts/head.php";
 
+$User = new User($idUser);
+
 $tpl = 'index.php';
 
 

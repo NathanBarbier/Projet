@@ -41,11 +41,11 @@ jQuery(function() {
                 {
                     request = 'on=1&type=info&title=bienvenue&msg=connexion';
 
-                    if(response.rights = 'admin') {
+                    if(response.rights == 'admin') {
                         location.href = CONTROLLERS_URL+'admin/index.php?'+request;
-                    } else if(response.rights = 'user') {
-                        location.href = CONTROLLERS_URL+'membre/index.php?'+request;
-                    } else if(response.rights = 'needConsent') {
+                    } else if(response.rights == 'user') {
+                        location.href = CONTROLLERS_URL+'membre/tableauDeBord.php?'+request;
+                    } else if(response.rights == 'needConsent') {
                         location.href = ROOT_URL+'index.php';
                     }
                 }

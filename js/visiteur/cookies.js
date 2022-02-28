@@ -9,7 +9,7 @@
     },
   });
 
-  $(".consentToCookie").click(function () {
+  $(".consentToCookie").on('click', function () {
     $.ajax({
       async: true,
       url: AJAX_URL + "setCookie.php?action=consentCookie",
@@ -21,13 +21,13 @@
   });
   
   // display cookie policy details
-  $("#cookieDetails").click(function () {
+  $("#cookieDetails").on('click', function () {
     $("#cookiedetailsmodal").modal("toggle");
     $("#cookiemodal").modal("toggle");
   });
 
   // from the cookie details modal to first cookie modal
-  $("#cookieback").click(function () {
+  $("#cookieback").on('click', function () {
     $("#cookiedetailsmodal").modal("toggle");
     $("#cookiemodal").modal("toggle");
   })

@@ -1,4 +1,4 @@
-$(".del-project-btn").click(function() {
+$(".del-project-btn").on('click', function() {
     $("#del-project-confirmation").addClass('show');
 
     var projectId = $(this).parents(".row").first().prevAll(".project-id").first().val();
@@ -12,6 +12,6 @@ $(".del-project-btn").click(function() {
     }
 });
 
-$("#cancel-delete-btn").click(function() {
+$("#cancel-delete-btn").on('click', function() {
     $("#del-project-confirmation").removeClass('show');
 });

@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 $on  = $_GET['on'] ?? false;
 $type    = $_GET['type'] ?? false;
@@ -6,11 +6,12 @@ $title    = $_GET['title'] ?? false;
 $msg    = $_GET['msg'] ?? false;
 
 if(!empty($errors)) {
+    $on = true;
+    $type = 'error';
+    $title = 'Erreur';
+    $message = '';
     foreach($errors as $error) {
-        $on = true;
-        $type = 'error';
-        $title = 'Erreur';
-        $message = $error;
+        $message .= $error . "\n";
     }
 } else if(!empty($success)) {
     $on = true;
@@ -19,14 +20,17 @@ if(!empty($errors)) {
     $message = $success;
 }
 
+
 // put messages on a lang file
 if($msg == 'connexion') {
-    $message = 'Content de vous revoir connecté !';
+    if(!empty($User)) {
+        $username = $User ? ($User->getFirstname() ?? $User->getEmail()) : '';
+        $username .= ' ';
+    } else {
+        $username = '';
+    }
+    $message = 'Content de vous revoir connecté ' . $username . '!';
 }
-
-// clear the url
-
-
 
 if(!empty($type) && !empty($on)) 
 {

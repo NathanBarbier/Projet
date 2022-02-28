@@ -62,7 +62,7 @@ if(!empty($type) && !empty($on))
     var icon = <?php echo json_encode($icon); ?>;
 
     // url rewrite (remove get params)
-    if(window.location.href.includes('/index.php')) {
+    if(window.location.href.includes('/index.php') || window.location.href.includes('/tableauDeBord.php')) {
         if(typeof window.history.pushState == 'function') {
             window.history.pushState({}, "Hide", url);
         }

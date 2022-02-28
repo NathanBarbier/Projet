@@ -1,20 +1,7 @@
 <?php
 require_once 'layouts/entete.php';
 ?>
-    <div class="row position-relative">
-        <?php if($errors) { ?>
-        <div class="before alert alert-danger mt-3 w-50 text-center position-absolute top-0 start-50 translate-middle-x">
-        <?php foreach($errors as $error) { ?>
-            <i class="bi bi-exclamation-triangle-fill"></i>
-            <?php echo $error . "<br>";
-        } ?>
-        </div>
-        <?php } else if ($success) { ?>
-        <div class="before alert alert-success mt-3 w-50 text-center position-absolute top-0 start-50 translate-middle-x">
-            <i class="bi bi-check-circle-fill"></i>
-            <?= $success; ?>
-        </div>
-        <?php } ?>
+    <!-- <div class="row position-relative">
 
         <?php if($idProject) { ?>
             <?php if ($Project->isActive() == 0) { ?>
@@ -26,7 +13,7 @@ require_once 'layouts/entete.php';
                 </div>
             <?php } ?>
         <?php } ?>
-    </div>
+    </div> -->
 
     <div class="row" style="height: 90%;">
     <?php if($idProject) { ?>

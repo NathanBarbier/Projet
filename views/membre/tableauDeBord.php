@@ -5,19 +5,6 @@ require_once "layouts/entete.php";
 <div class="col-12" style="height: 100%;">
     <div class="row w-100 mx-auto px-3" style="height: 100%;">
         <div class="col-sm-12 col-md-7 col-lg-8 mt-3 position-relative" style="height:87%; height:max-content">
-            <?php if($success) { ?>
-                <div class="alert alert-success w-50 text-center position-absolute top-0 start-50 translate-middle-x">
-                    <i class="bi bi-check-circle-fill me-2"></i>
-                    <?= $success ?>
-                </div>
-                <?php } else if ($errors) { ?>
-                <div class="alert alert-danger w-50 text-center position-absolute top-0 start-50 translate-middle-x">
-                    <?php foreach($errors as $error) { ?>
-                        <i class="bi bi-exclamation-triangle-fill"></i>
-                        <?php echo $error . "<br>";
-                    } ?>
-                </div>
-            <?php } ?>
             
             <div id="current-projects-col" class="bg-white border row mx-3 collapse show mb-3" style="border-radius: 15px;">
                 <h3 class="mx-auto text-center w-50 py-2 underline">Tableaux Actifs</h3>

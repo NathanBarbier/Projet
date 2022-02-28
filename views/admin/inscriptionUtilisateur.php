@@ -3,19 +3,6 @@ require_once "layouts/entete.php";
 ?>
     <div class="container">
         <form class="mx-auto position-relative col-md-12 col-lg-6 mx-auto border-lg bg-white px-4 pb-3" method="post" action="<?= CONTROLLERS_URL ?>admin/inscriptionUtilisateur.php?action=signup">
-            <?php if($success) { ?>
-            <div class="alert alert-success w-100 text-center position-absolute top-0 start-50 translate-middle-x before">
-                <i class="bi bi-check-circle-fill"></i>
-                <?= $success; ?>
-            </div>
-            <?php } else if($errors) { ?>
-            <div class="alert alert-danger w-100 text-center position-absolute top-0 start-50 translate-middle-x before">
-            <?php foreach($errors as $error) { ?>
-                <i class="bi bi-exclamation-triangle-fill"></i>
-                <?php echo $error . "<br>";
-            } ?>
-            </div>
-            <?php } ?>
             <h1 class="text-center mx-auto w-100 underline">Inscription d'un collaborateur</h1>
             <hr>
                 

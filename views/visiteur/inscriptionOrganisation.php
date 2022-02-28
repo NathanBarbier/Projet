@@ -2,16 +2,6 @@
 require_once "layouts/entete.php";
 ?>
 <div class="container">
-    <?php if(!empty($errors)) { ?>
-        <div class="position-relative mx-auto">
-        <div class="alert alert-danger w-50 text-center position-absolute top-0 start-50 translate-middle-x before">
-        <?php foreach($errors as $error) { ?>
-            <i class="bi bi-exclamation-triangle-fill"></i>
-            <?php echo $error . "<br>";
-        } ?>
-        </div>
-    </div>
-    <?php } ?>
 
     <div class="row">
         <form class="col-md-12 col-lg-6 mx-auto border-lg bg-white px-4 pb-3" method="POST" action="<?= CONTROLLERS_URL?>visiteur/inscriptionOrganisation.php">

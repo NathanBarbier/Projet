@@ -2,16 +2,6 @@
 require_once "layouts/entete.php";
 ?>
 <div class="col-12 mt-4">
-    <div class="position-relative mx-auto">
-            <?php  if($errors) { ?>
-            <div class="alert alert-danger w-50 text-center position-absolute top-0 start-50 translate-middle-x">
-                <?php foreach($errors as $error) { ?>
-                    <i class="bi bi-exclamation-triangle-fill"></i>
-                    <?php echo $error . "<br>";
-                } ?>
-            </div>
-        <?php } ?>
-    </div>
 
     <div class="row px-3">
         <div class="col-md-9 col-lg-6 mx-auto border-lg bg-white px-4 pb-3">

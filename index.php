@@ -8,7 +8,8 @@ $connected = !empty($_SESSION) ? true : false;
 
 if($rights === "admin")
 {
-    header("location:".VIEWS_URL."admin/index.php");
+    header("location:".CONTROLLERS_URL."admin/index.php");
+    // header("location:".VIEWS_URL."admin/index.php");
     exit;
 }
 

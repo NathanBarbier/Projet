@@ -20,7 +20,7 @@ require_once "layouts/entete.php";
             </a>
         </div>
         <div class="col-xs-12 col-md-6 pt-4" style="height:35vh">
-            <a href="<?= CONTROLLERS_URL ?>admin/organisation.php" class="aVignette">
+            <a href="<?= CONTROLLERS_URL ?>admin/gestionOrganisation.php" class="aVignette">
                 <div id="vignette1" class="bg-info mx-auto rounded vignette">
                     <div class="row">
                         <div class="col-4">

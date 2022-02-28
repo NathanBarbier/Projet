@@ -479,7 +479,7 @@ function init()
     $("#finish-task-button").click(function() {
         newColumn   = taskDiv.parents(".project-column").nextAll(".project-column").last();
         oldColumn   = taskDiv.parents(".project-column").find(".column-title-text").val();
-        console.log(oldColumn);
+
         $("#loading-modal").modal('show');
         $.ajax({
             async: true,

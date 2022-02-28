@@ -62,7 +62,7 @@ class User extends Modele
         $this->fk_organization = $fk_organization;
     }
 
-    public function setConsent(bool $consent)
+    public function setConsent(int $consent)
     {
         $this->consent = $consent;
     }

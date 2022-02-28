@@ -1,6 +1,5 @@
 <?php 
 
-// $request    = $_GET['request'] ?? false;
 $on  = $_GET['on'] ?? false;
 $type    = $_GET['type'] ?? false;
 $title    = $_GET['title'] ?? false;
@@ -59,8 +58,10 @@ if(!empty($type) && !empty($on))
     var icon = <?php echo json_encode($icon); ?>;
 
     // url rewrite (remove get params)
-    if(typeof window.history.pushState == 'function') {
-        window.history.pushState({}, "Hide", url);
+    if(window.location.href.includes('/index.php')) {
+        if(typeof window.history.pushState == 'function') {
+            window.history.pushState({}, "Hide", url);
+        }
     }
     </script>
     <?php

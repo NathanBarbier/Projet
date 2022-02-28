@@ -1,8 +1,6 @@
 <?php
 require_once "../../services/header.php";
 
-// echo json_encode('CA RENTRE');
-
 if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest' ) )
 {
     $envoi = GETPOST('envoi');
@@ -20,14 +18,12 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
 
     $tpl = "connexion.php";
 
-    
     if($envoi)
     {
         if($email && $password)
         {
             if(filter_var($email, FILTER_VALIDATE_EMAIL))
             {
-                $error = 'HOLAAAAAAAAAAAAAAA';
                 if($User->checkByEmail($email))
                 {
                     $User->fetchByEmail($email);
@@ -57,7 +53,7 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
                             $User->updateToken();
     
                             $consent = $User->getConsent();
-                            if($consent == true)
+                            if($consent == 1)
                             {
                                 $_SESSION["rights"] = $User->isAdmin() == 1 ? "admin" : "user";
                                 LogHistory::create($User->getFk_organization(), $User->getRowid(), "INFO", 'connect', 'user', $User->getLastname().' '.$User->getFirstname());
@@ -72,7 +68,7 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
                             
                             $success = 'Vous êtes connecté.';
                         } catch (\Throwable $th) {
-                            // $error = $th;
+                            $error = $th;
                             // echo json_encode($th);
                         }                  
                     } 

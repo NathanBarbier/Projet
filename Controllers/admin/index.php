@@ -1,9 +1,7 @@
 <?php
 //import all models
 require_once "../../services/header.php";
-// require "layouts/head.php";
-
-// var_dump($_POST, $_GET, $_SESSION);
+require "layouts/head.php";
 
 $tpl = 'index.php';
 

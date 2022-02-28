@@ -10,7 +10,7 @@ jQuery(function() {
         "showDuration": "5",
         "hideDuration": "1000",
         "timeOut": "10000",
-        // "timeOut": "500000",
+        // "timeOut": "500000", // for tests
         "extendedTimeOut": "1000",
         "showEasing": "swing",
         "hideEasing": "linear",
@@ -26,35 +26,20 @@ jQuery(function() {
             envoi : $('[name="envoi"]').val(),
             email : $('#email').val(),
             password : $('#password').val(),
+            rememberMe: $('[name="rememberMe"]').val(),
         };
-
-        // console.log($('#password').val());
 
         $.ajax({
             type: "POST",
-            // url: AJAX_URL+"visiteur/connexion.php",
             url: AJAX_URL+"visiteur/connexion.php",
             data: formData,
             dataType: "json",
             encode: true,
             success: function(response) {
-                console.log(response);
 
                 if(response.success) 
                 {
-                    // $request = [];
-                    // request = {
-                    //     on: true,
-                    //     type: 'info',
-                    //     title: 'Bienvenue',
-                    //     message: 'Content de vous revoir connecté !'
-                    // }
-
                     request = 'on=1&type=info&title=bienvenue&msg=connexion';
-
-                    
-                    request = encodeURI(request);
-
 
                     if(response.rights = 'admin') {
                         location.href = CONTROLLERS_URL+'admin/index.php?'+request;

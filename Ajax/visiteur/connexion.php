@@ -12,7 +12,7 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
     $User = new User();
     $Organization = new Organization();
 
-    $errors     = false;
+    $error     = false;
     $success    = false;
     $rights     = false;
 

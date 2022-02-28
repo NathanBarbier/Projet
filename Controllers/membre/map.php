@@ -123,7 +123,7 @@ if($teamId)
                                 }
                                 else
                                 {
-                                    $authors[$columnKey][$taskKey] = $usernames[$task->getFk_author()];
+                                    $authors[$columnKey][$taskKey] = $usernames[$Task->getFk_user()];
                                 }
                                 break;
                             }

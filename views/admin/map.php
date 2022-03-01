@@ -41,7 +41,7 @@ require_once "layouts/entete.php";
         </div>
     <?php } ?>
 
-    <!-- Modal -->
+    <!-- Loading Modal -->
     <div class="modal" id="loading-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog position-absolute bottom-0 end-0 me-3" style="width: 200px;">
             <div class="modal-content">
@@ -49,6 +49,44 @@ require_once "layouts/entete.php";
                     <div class="d-flex align-items-center">
                         <strong>Chargement...</strong>
                         <div class="spinner-border ms-auto" role="status" aria-hidden="true"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Archived tasks Modal -->
+    <div class="modal" id="archive-tasks-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog position-absolute start-50 translate-middle w-75" style="top:40%; height:75vh">
+            <div class="modal-content" style="height: inherit;">
+                <div class="modal-body position-relative pt-0">
+                    <i id="close-tasks-modal" class="bi bi-x btn btn-outline-danger position-absolute end-0 top-0 mt-2 me-2" style="width: auto;"></i>
+                    <div class="row text-center mt-2">
+                        <h4 class="underline">Tâches archivées</h4>
+                        <hr class="mx-auto mt-2 mb-0">
+                        
+                        <div id="archived-tasks-container" class="overflow-y mt-3" style="height: 60vh;">
+                            <?php
+                            foreach($Team->getMapColumns() as $Column) {
+                                foreach($Column->getTasks() as $Task) {
+                                    if(!$Task->isActive()) { ?>
+                                        <div class="row radius hover w-100 mx-0 mt-3 align-content-center border task-line" style="height: 100px;">
+                                            <div class="col-8 d-flex align-content-center">
+                                                <div class="w-100 h-100">
+                                                    <?= $Task->getName() ?>
+                                                </div>
+                                            </div>
+                                            <div class="col-4 align-content-center">        
+                                                <input type="hidden" name="task-id" value="<?= $Task->getRowid() ?>">
+                                                <i class="bi bi-archive-fill btn btn-outline-success w-100 mb-2 open-task-btn"></i>
+                                            </div>
+                                        </div>
+                                    <?php 
+                                    }
+                                }
+                            } ?>
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -104,7 +142,7 @@ require_once "layouts/entete.php";
                                 } ?>
                                 <div class="task">
                                     <input class="taskId-input" type="hidden" value="<?= $Task->getRowid() ?>">
-                                    <button class='btn disabled btn-outline-<?= $isAdmin ? 'danger' : 'classic' ?> line-height-40 mt-2 ms-2 px-0 w-50 overflow-x'><?= $authors[$columnKey][$taskKey] ?></button>
+                                    <button class='btn disabled <?= $isAdmin ? 'btn-outline-danger w-75' : 'btn-outline-classic w-50' ?> line-height-40 mt-2 ms-2 px-0 overflow-x'><?= $authors[$columnKey][$taskKey] ?></button>
                                     <div class='task-bubble pt-2 mb-1 mt-1 mx-2'>
                                         <textarea class='task-bubble-input text-center pt-1'><?= $Task->getName() ?></textarea>
                                     </div>
@@ -127,14 +165,19 @@ require_once "layouts/entete.php";
     </div>
 
     <div id="details-section" class="col-sm-4 col-md-3 col-lg-2 pt-1 pe-4 text-center border position-relative collapse show" style="height: 100vh">
-        <div class="row">
-            <div class="col">
+        <div class="row justify-content-center">
+            <div class="col-5">
                 <?php if($Team->isActive()) { ?>
-                    <i id="archive-btn" class="bi bi-archive-fill btn btn-outline-danger w-75 mb-2 collapse show" tabindex="0" data-bs-toggle="tooltip" title="Archiver le tableau" data-bs-placement="left"></i>
+                    <i id="archive-btn" class="bi bi-archive-fill btn btn-outline-danger w-100 mb-2 collapse show" tabindex="0" data-bs-toggle="tooltip" title="Archiver le tableau" data-bs-placement="left"></i>
                 <?php } else { ?>
                     <a href="<?= CONTROLLERS_URL ?>admin/map.php?action=openTeam&projectId=<?= $Project->getRowid() ?>&teamId=<?= $teamId ?>"><i id="unarchive-btn" class="bi bi-archive-fill btn btn-outline-success w-75 mb-2 collapse show" tabindex="0" data-bs-toggle="tooltip" title="Désarchiver le tableau" data-bs-placement="left"></i></a>
                 <?php } ?>
             </div>
+            <div class="col-5">
+                <i id="show-archive-tasks-modal" class="bi bi-list-task btn btn-outline-success w-100"></i>
+            </div>
+        </div>
+        <div class="row">
             <div class="col">
                 <button id="add-column-btn" class="btn btn-outline-dark collapse show">Nouvelle colonne</button>
             </div>

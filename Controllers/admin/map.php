@@ -16,6 +16,7 @@ if($teamId)
     if($projectId)
     {
         $Organization = new Organization($idOrganization);
+        $CurrentUser = new User($idUser);
 
         // fetching project & team
         foreach($Organization->getProjects() as $Obj)
@@ -103,7 +104,10 @@ if($teamId)
                 }
     
                 // for JS
-                $username = $Organization->getName();
+                $username = $CurrentUser->getLastname() . ' ' . $CurrentUser->getFirstname();
+                if(strlen(trim($username)) == 0) {
+                    $username = $Organization->getName();
+                }
     
                 $authors = array();
                 $usernames = array();
@@ -126,6 +130,7 @@ if($teamId)
                         {
                             if($User->isAdmin())
                             {
+                                $usernames[$User->getRowid()] = $User->getLastname() . ' ' . $User->getFirstname();
                                 $TeamUsers[] = $User;
                             }
                         }
@@ -135,14 +140,7 @@ if($teamId)
                         {
                             if($User->getRowid() == $Task->getFk_user())
                             {
-                                if($User->isAdmin())
-                                {
-                                    $authors[$columnKey][$taskKey] = $Organization->getName();
-                                }
-                                else
-                                {
-                                    $authors[$columnKey][$taskKey] = $usernames[$Task->getFk_user()];
-                                }
+                                $authors[$columnKey][$taskKey] = $usernames[$Task->getFk_user()] ?? ($User->isAdmin() ? $Organization->getName() : '');
                                 break;
                             }
                         }

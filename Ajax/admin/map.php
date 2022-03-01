@@ -329,6 +329,40 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
                             }
                         }
                         break;
+                    case 'openTask':
+                        if($taskId && $Team->checkTask($taskId)) {
+                            try {
+                                foreach($Team->getMapColumns() as $Column) {
+                                    if($Column->getName() == 'Open') {
+                                        $Task->setActive(1);
+                                        $Task->setFk_column($Column->getRowid());
+                                        $Task->update();
+
+                                        // not team users because it is possible that the author is no longer in the team
+                                        foreach($Organization->getUsers() as $User) {
+                                            if($User->getRowid() == $Task->getFk_user()) {
+                                                $username   = $User->getLastname() . ' ' . $User->getFirstname();
+                                                $admin      = $User->isAdmin();
+                                                break;
+                                            }
+                                        }
+
+                                        $response = array(
+                                            'columnId'  => $Column->getRowid(),
+                                            'username'  => $username,
+                                            'admin'     => $admin,
+                                            'taskName'  => $Task->getName(),
+                                        );
+                                        echo json_encode($response);
+                                        break 2;
+                                    }
+                                }
+                                
+                                LogHistory::create($idOrganization, $idUser, "INFO", 'open', 'task', $Task->getName(), '', 'task id : '.$Task->getRowid());
+                            } catch (\Throwable $th) {
+                                LogHistory::create($idOrganization, $idUser, "ERROR", 'open', 'task', $Task->getName(), '', 'task id : '.$Task->getRowid(), $th);
+                            }
+                        }
                     case 'getLastColumnId':
                         try {
                             echo json_encode($MapColumn->fetch_last_insert_id($teamId));

@@ -199,22 +199,22 @@ class User extends Modele
             $this->birth            = $obj->birth;
             $this->password         = $obj->password;
             $this->email            = $obj->email;
-            $this->fk_organization  = $obj->fk_organization;
+            $this->fk_organization  = intval($obj->fk_organization);
             $this->consent          = $obj->consent;
-            $this->admin            = $obj->admin;
+            $this->admin            = intval($obj->admin);
 
             $BelongsTo = new BelongsTo();
-            $this->BelongsTo = $BelongsTo->fetchAll($obj->rowid);
+            $this->BelongsTo = $BelongsTo->fetchAll(intval($obj->rowid));
         }
     }
 
     public function initialize(object $Obj, $privacy = false)
     {
-        $this->rowid            = $Obj->rowid;
+        $this->rowid            = intval($Obj->rowid);
         $this->firstname        = $Obj->firstname;
         $this->lastname         = $Obj->lastname;
-        $this->fk_organization  = $Obj->fk_organization;
-        $this->admin            = $Obj->admin;
+        $this->fk_organization  = intval($Obj->fk_organization);
+        $this->admin            = intval($Obj->admin);
 
         // the min level
         if($privacy == 0) 

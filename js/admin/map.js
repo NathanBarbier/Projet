@@ -64,6 +64,51 @@ $(".close-alert").on('click', function() {
     $(".notificationCount").text(notificationCount + "+");
 });
 
+$(".open-task-btn").on('click', function() {
+    var taskId = parseInt($(this).prevAll("[name='task-id']").first().val());
+
+    $.ajax({
+        async: true,
+        url: AJAX_URL+"admin/map.php?action=openTask&teamId="+teamId+"&projectId="+projectId+"&taskId="+taskId,
+        success: function(response) {
+            response = JSON.parse(response);
+            // remove task from archived tasks
+            $("[name='task-id'][value='"+taskId+"']").parents('.task-line').first().remove();
+
+            // create the taks DOM element at the end of the 'Open' column
+            var append = [
+                "<div class='task'>",
+                    "<input class='taskId-input' type='hidden' value='"+taskId+"'>",
+                    "<button class='btn ",
+                    response.admin ? "btn-outline-danger w-75" : "btn-outline-classic w-50",
+                    " disabled line-height-40 mt-2 ms-2 px-0 overflow-x'>",
+                        response.username,
+                    "</button>",
+                    "<div class='task-bubble pt-2 mb-1 mt-1 mx-2'>",
+                        "<textarea class='task-bubble-input text-center'>",
+                        response.taskName,
+                        "</textarea>",
+                    "</div>",
+                    "<div class='d-flex justify-content-between pe-2 ps-2'>",
+                        "<div class='collapse mx-auto task-buttons-container'>",
+                            "<i class='bi bi-check-lg btn btn-outline-success task-check'></i>",
+                            "<i class='bi bi-trash ms-1 btn btn-outline-danger task-delete'></i>",
+                            "<i class='bi bi-caret-left-fill ms-1 btn btn-outline-dark arrow-img-btn task-to-left'></i>",
+                            "<i class='bi bi-caret-right-fill ms-1 btn btn-outline-dark arrow-img-btn task-to-right'></i>",
+                            "<i class='bi bi-archive-fill task-archive ms-1 me-1 btn btn-outline-danger'></i>",
+                        "</div>",
+                    "</div>",
+                "</div>"
+            ].join('');
+
+            // add task in open column
+            $(".columnId-input[value='"+response.columnId+"']").nextAll('.column-content').append(append);
+
+            init();
+        }
+    });
+});
+
 $("#add-column-form").find('#create-column').on('click', function() {
     $("#archive-btn").addClass('show');
     $("#add-column-form").removeClass('show');
@@ -520,7 +565,7 @@ function initTask()
                         var prepend = [
                             "<div class='task'>",
                                 "<input class='taskId-input' type='hidden' value='"+taskId+"'>",
-                                "<button class='btn btn-outline-danger disabled line-height-40 mt-2 ms-2 px-0 w-50 overflow-x'>",
+                                "<button class='btn btn-outline-danger disabled line-height-40 mt-2 ms-2 px-0 w-75 overflow-x'>",
                                     username,
                                 "</button>",
                                 "<div class='task-bubble pt-2 mb-1 mt-1 mx-2'>",
@@ -583,7 +628,7 @@ function initTask()
             }
         });
 
-        task = $(this).parents(".task").first();
+        var task = $(this).parents(".task").first();
         // remove task html
         task.remove();
 
@@ -592,8 +637,8 @@ function initTask()
 
     $(".task-to-left").on('click', function() {
         // update fk_column in bdd
-        task        = $(this).parents(".task");
-        taskId      = task.find(".taskId-input").first().val();
+        var task        = $(this).parents(".task");
+        var taskId      = task.find(".taskId-input").first().val();
         newColumn   = task.parents(".project-column").prevAll(".project-column").first();
 
         updateTaskColumn(task, taskId, newColumn);
@@ -601,8 +646,8 @@ function initTask()
 
     $(".task-to-right").on('click', function() {
         // update fk_column in bdd
-        task        = $(this).parents(".task");
-        taskId      = task.find(".taskId-input").first().val();
+        var task        = $(this).parents(".task");
+        var taskId      = task.find(".taskId-input").first().val();
         newColumn   = task.parents(".project-column").nextAll(".project-column").first();
 
         updateTaskColumn(task, taskId, newColumn);
@@ -610,8 +655,9 @@ function initTask()
 
     $(".task-archive").on('click', function() {
         // update task active
-        task        = $(this).parents(".task");
-        taskId      = task.find(".taskId-input").first().val();
+        var task        = $(this).parents(".task");
+        var taskId      = task.find(".taskId-input").first().val();
+        var taskName = task.find('.task-bubble-input').text();
 
         $("#loading-modal").modal('show');
 
@@ -622,6 +668,21 @@ function initTask()
                 // remove task html
                 task.remove();
                 $("#loading-modal").modal('hide');
+
+                var append = [
+                    "<div class='row radius hover w-100 mx-0 mt-3 align-content-center border task-line' style='height: 100px;'>",
+                        "<div class='col-8 d-flex align-content-center'>",
+                            "<div class='w-100 h-100'>",
+                                taskName,
+                            "</div>",
+                        "</div>",
+                        "<div class='col-4 align-content-center'>",
+                            "<input type='hidden' name='task-id' value='"+taskId+"'>",
+                            "<i class='bi bi-archive-fill btn btn-outline-success w-100 mb-2 open-task-btn'></i>",
+                        "</div>",
+                    "</div>",
+                ].join('');
+                $('#archived-tasks-container').append(append);
             }
         });
     })
@@ -826,4 +887,10 @@ function updateTaskColumn(task, taskId, newColumn)
     }
 }
 
+$("#show-archive-tasks-modal").on('click', function() {
+    $("#archive-tasks-modal").modal('show');
+});
 
+$("#close-tasks-modal").on('click', function() {
+    $("#archive-tasks-modal").modal('hide');
+});

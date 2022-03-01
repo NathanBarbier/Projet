@@ -221,7 +221,7 @@ require_once "layouts/entete.php";
                 <button id="attribute-member-button" class="collapse btn btn-outline-success w-50 mt-2">Attribuer</button>
                 <button id="desattribute-member-button" class="collapse btn btn-outline-danger mt-2">Désattribuer</button>
                 
-                <button id="finish-task-button" class="btn btn-warning w-100 mt-3 ">Terminer la tâche</button>
+                <button id="finish-task-button" class="btn btn-warning w-100 mt-3 collapse">Terminer la tâche</button>
             </div>
         </div>
         <div id="add-column-form" class="sticker text-center pt-1 collapse w-100" style="height:91%">
@@ -248,7 +248,7 @@ require_once "layouts/entete.php";
         </div>
     </div>
 
-<script type="text/Javascript" src="<?= JS_URL ?>admin/map.min.js" defer></script>
+<script type="text/Javascript" src="<?= JS_URL ?>admin/map.js" defer></script>
 <?php 
 require_once "layouts/pied.php";
 ?>

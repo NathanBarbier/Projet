@@ -227,8 +227,12 @@ function init()
         $("#attribute-member-button").removeClass('show');
         $("#desattribute-member-button").removeClass('show');
 
-        // var title = $(this).val();
-        // $("#task-title").val(title);
+        // show the finish task button if the task is not in the 'closed' column
+        if($(this).parents('.project-column').find('.column-title-text').text() != 'Closed') {
+            $("#finish-task-button").addClass('show');
+        } else {
+            $("#finish-task-button").removeClass('show');
+        }
 
         $(this).parent().next().find(".task-buttons-container").first().addClass('show');
 

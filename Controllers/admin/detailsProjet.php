@@ -61,26 +61,13 @@ if($idProject)
         }
 
         // Remove users belonging to the team
-        foreach($Organization->getProjects() as $Obj)
-        {
-            foreach($Obj->getTeams() as $ProjectTeam)
-            {
-                if($ProjectTeam->getRowid() == $Team->getRowid()) {
-                    foreach($ProjectTeam->getUsers() as $TeamUser)
-                    {
-                        if(in_array($TeamUser, $freeUsers))
-                        {
-                            $key = array_search($TeamUser, $freeUsers);
-                            unset($freeUsers[$key]);
-                            $key = array_search($TeamUser->getRowid(), $freeUsersIds);
-                            unset($freeUsersIds[$key]);
-                        }
-                        if(count($freeUsers) == 0) break;
-                    }
-                    if(count($freeUsers) == 0) break;
-                }
+        foreach($Project->getTeams() as $TempTeam) {
+            foreach($TempTeam->getUsers() as $TempUser) {
+                $key = array_search($TempUser, $freeUsers);
+                unset($freeUsers[$key]);
+                $key = array_search($TempUser->getRowid(), $freeUsersIds);
+                unset($freeUsersIds[$key]);
             }
-            if(count($freeUsers) == 0) break;
         }
 
         if($action == 'addTeam' || $action == "updateTeam")

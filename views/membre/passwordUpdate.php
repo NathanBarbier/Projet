@@ -9,17 +9,17 @@ require_once "layouts/entete.php";
             <hr class="w-75 mx-auto">
             <form class="mt-4" method="post" action="<?= CONTROLLERS_URL ?>membre/passwordUpdate.php?action=passwordUpdate">
                 <div class="form-floating w-100 mx-auto">
-                    <input class="form-control" type="password" required id="oldmdp" name="oldmdp" placeholder="Ancien mot de passe">
+                    <input class="form-control" type="password" required id="oldmdp" name="oldmdp" placeholder=" ">
                     <label for="oldmdp">Ancien mot de passe</label>
                 </div>
         
                 <div class="form-floating mt-3 w-100 mx-auto">
-                    <input class="form-control" type="password" required id="newmdp" name="newmdp" placeholder="Nouveau mot de passe">
+                    <input class="form-control" type="password" required id="newmdp" name="newmdp" placeholder=" ">
                     <label for="newmdp">Nouveau mot de passe</label>
                 </div>
         
                 <div class="form-floating mt-3 w-100 mx-auto">
-                    <input class="form-control" type="password" required id="newmdp2" name="newmdp2" placeholder="Nouveau mot de passe">
+                    <input class="form-control" type="password" required id="newmdp2" name="newmdp2" placeholder=" ">
                     <label for="newdmp2">Nouveau mot de passe</label>
                 </div>
         

@@ -7,22 +7,22 @@ require_once "layouts/entete.php";
             <hr>
                 
             <div class="form-floating mt-3 mb-3">
-                <input class="form-control" type="email" name="email" id="email" placeholder="adresse email" value="<?= $email ?? ""?>"  required>
+                <input class="form-control" type="email" name="email" id="email" placeholder=" " value="<?= $email ?? ""?>"  required>
                 <label for="email">Adresse email</label>
             </div>
 
             <div class="form-floating mb-3">
-                <input class="form-control" type="text" name="lastname" id="lastname" placeholder="Nom" value="<?= $lastname ?? ""?>"  required>
+                <input class="form-control" type="text" name="lastname" id="lastname" placeholder=" " value="<?= $lastname ?? ""?>"  required>
                 <label for="nom">Nom</label>
             </div>
 
             <div class="form-floating mb-3">
-                <input class="form-control" type="text" name="firstname" id="firstname" placeholder="Prénom" value="<?= $firstname ?? ""?>"  required>
+                <input class="form-control" type="text" name="firstname" id="firstname" placeholder=" " value="<?= $firstname ?? ""?>"  required>
                 <label for="prenom">Prénom</label>
             </div>
             
             <div class="form-floating mb-3">
-                <input class="form-control" type="date" name="birth" id="birth" placeholder="AAAA-MM-JJ" value="<?= $birth ?? ""?>"  required>
+                <input class="form-control" type="date" name="birth" id="birth" placeholder=" " value="<?= $birth ?? ""?>"  required>
                 <label for="dateNaiss">Date de naissance</label>
             </div>
 

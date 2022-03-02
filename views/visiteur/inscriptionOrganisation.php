@@ -9,22 +9,22 @@ require_once "layouts/entete.php";
             <h1 class="mx-auto text-center mt-2 underline" style="border-bottom: rgb(216, 214, 214) 1px solid;">Inscription </h1>
         
             <div class="form-floating mt-4">
-                <input type="text" class="form-control" placeholder="Entrez le nom de votre organisation" id='name' name="name" value="<?= isset($name) ? $name : ''?>" required>
+                <input type="text" class="form-control" placeholder=" " id='name' name="name" value="<?= isset($name) ? $name : ''?>" required>
                 <label for="name">Nom organisation</label>
             </div>
         
             <div class="form-floating mt-3">
-                <input type="email" class="form-control" placeholder="Entrez l'adresse mail administrateur" id='email' name="email" value="<?= isset($email) ? $email : ''?>" required>
+                <input type="email" class="form-control" placeholder=" " id='email' name="email" value="<?= isset($email) ? $email : ''?>" required>
                 <label for="email">Adresse email</label>
             </div>
         
             <div class="form-floating mt-3">
-                <input type="password" class="form-control" placeholder="Entrez le mot de passe administrateur" id="pwd" name="pwd" value="<?= isset($pwd2) ? $pwd2 : ''?>" required>
+                <input type="password" class="form-control" placeholder=" " id="pwd" name="pwd" value="<?= isset($pwd2) ? $pwd2 : ''?>" required>
                 <label for="pwd">Mot de passe</label>
             </div>
         
             <div class="form-floating mt-3">
-                <input type="password" class="form-control" placeholder="Entrez le mot de passe administrateur" id="pwd2" name="pwd2" value="<?= isset($pwd2) ? $pwd2 : ''?>" required>
+                <input type="password" class="form-control" placeholder=" " id="pwd2" name="pwd2" value="<?= isset($pwd2) ? $pwd2 : ''?>" required>
                 <label for="pwd2">Confirmer mot de passe</label>
             </div>
         

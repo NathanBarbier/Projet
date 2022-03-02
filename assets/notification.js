@@ -1,4 +1,4 @@
-if (typeof type !== 'undefined') {
+if (typeof type == 'string' && typeof message == 'string') {
     toastr.options = {
         "closeButton": false,
         "debug": false,

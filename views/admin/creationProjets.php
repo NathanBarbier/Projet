@@ -7,17 +7,17 @@ require_once "layouts/entete.php";
             <hr class="w-75 mx-auto">
             <form method="POST" action="<?= CONTROLLERS_URL ?>admin/creationProjets.php?action=addProjet&idProject=<?= $idProject ?? '' ?>">
                 <div class="form-floating mb-3 mt-5 w-75 mx-auto">
-                    <input required class="form-control" type="text" name="name" id="name-id" placeholder="Titre du projet" value="<?= $name ?? '' ?>">
+                    <input required class="form-control" type="text" name="name" id="name-id" placeholder=" " value="<?= $name ?? '' ?>">
                     <label for="name">Titre du projet</label>
                 </div>
     
                 <div class="form-floating mb-3 w-75 mx-auto">
-                    <input required class="form-control" type="text" name="type" id="type-id" placeholder="Type du projet" value="<?= $type ?? '' ?>">
+                    <input required class="form-control" type="text" name="type" id="type-id" placeholder=" " value="<?= $type ?? '' ?>">
                     <label for="type">Type du projet</label>
                 </div>
     
                 <div class="form-floating mb-3 w-75 mx-auto">
-                    <textarea required class="form-control" name="description" id="description-id" placeholder="Description" maxlength="255"><?= $description ?? '' ?></textarea>
+                    <textarea required class="form-control" name="description" id="description-id" placeholder=" " maxlength="255"><?= $description ?? '' ?></textarea>
                     <label for="description">Description</label>
                 </div>
     

@@ -9,12 +9,12 @@ require_once "layouts/entete.php";
             <h1 class="text-center w-100 mx-auto border-bottom mt-2 underline">Connexion</h1>
     
             <div class="form-floating mt-5">
-                <input id="email" type="email" class="form-control" name="email" placeholder="Saisissez votre identifiant" value="<?= $email ?? '' ?>" maxlength="50" required>
+                <input id="email" type="email" class="form-control" name="email" placeholder=" " value="<?= $email ?? '' ?>" maxlength="50" required>
                 <label for="email" class="mb-1">Addresse email</label>
             </div>
     
             <div class="form-floating mt-3">
-                <input id="password" type="password" class="form-control" name="password" placeholder="Saisissez votre mot de passe" required>
+                <input id="password" type="password" class="form-control" name="password" placeholder=" " required>
                 <label for="password" class="mb-1">Mot de passe</label>
             </div>
             

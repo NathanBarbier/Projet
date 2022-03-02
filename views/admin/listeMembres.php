@@ -71,7 +71,7 @@ require_once "layouts/entete.php";
                     <td class="align-middle">
                         <div class="row">
                             <div class="col-12 col-sm-12 col-md-9 mx-auto">
-                                <input class="form-control mb-1 text-center w-100 mx-auto" value="<?= $User->getLastname() ?>" type="text" name="lastname" placeholder="Écrivez un nom" required>
+                                <input class="form-control mb-1 text-center w-100 mx-auto" value="<?= $User->getLastname() ?>" type="text" name="lastname" placeholder=" " required>
                             </div>
                         </div>
                     </td>
@@ -79,7 +79,7 @@ require_once "layouts/entete.php";
                     <td class="align-middle">
                         <div class="row">
                             <div class="col-12 col-sm-12 col-md-9 mx-auto">
-                                <input class="form-control mb-1 text-center w-100 mx-auto" value="<?= $User->getFirstname() ?>" type="text" name="firstname" placeholder="Écrivez un prénom" required>
+                                <input class="form-control mb-1 text-center w-100 mx-auto" value="<?= $User->getFirstname() ?>" type="text" name="firstname" placeholder=" " required>
                             </div>
                         </div>
                     </td>
@@ -87,7 +87,7 @@ require_once "layouts/entete.php";
                     <td class="align-middle">
                         <div class="row">
                             <div class="col-12 col-sm-12 col-md-9 mx-auto">
-                                <input class="form-control mb-1 text-center w-100 mx-auto" value="<?= $User->getEmail() ?>" type="text" name="email" placeholder="Écrivez un email" required>
+                                <input class="form-control mb-1 text-center w-100 mx-auto" value="<?= $User->getEmail() ?>" type="text" name="email" placeholder=" " required>
                             </div>
                         </div>
                     </td>

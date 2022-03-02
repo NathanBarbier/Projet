@@ -7,7 +7,6 @@ Class Project extends Modele
     protected $type;
     protected $open;
     protected $description;
-    // private $Organization;
     protected $fk_organization;
     protected $teams = array();
     protected $active;
@@ -41,10 +40,6 @@ Class Project extends Modele
         return $this->open;
     }
 
-    // public function getOrganization()
-    // {
-    //     return $this->Organization;
-    // }
     public function getFk_organization()
     {
         return $this->fk_organization;

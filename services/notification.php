@@ -1,9 +1,9 @@
 <?php
 
-$on  = $_GET['on'] ?? false;
-$type    = $_GET['type'] ?? false;
-$title    = $_GET['title'] ?? false;
-$msg    = $_GET['msg'] ?? false;
+$on     = $_GET['on'] ?? false;
+$type   = $_GET['type'] ?? false;
+$title  = $_GET['title'] ?? false;
+$message    = $_GET['msg'] ?? false;
 
 if(!empty($errors)) {
     $on = true;
@@ -11,7 +11,7 @@ if(!empty($errors)) {
     $title = 'Erreur';
     $message = '';
     foreach($errors as $error) {
-        $message .= $error . "\n";
+        $message .= $error . "<br>";
     }
 } else if(!empty($success)) {
     $on = true;
@@ -22,7 +22,7 @@ if(!empty($errors)) {
 
 
 // put messages on a lang file
-if($msg == 'connexion') {
+if($message == 'connexion') {
     if(!empty($User)) {
         $username = $User ? ($User->getFirstname() ?? $User->getEmail()) : '';
         $username .= ' ';
@@ -32,8 +32,6 @@ if($msg == 'connexion') {
     $message = 'Content de vous revoir connecté ' . $username . '!';
 }
 
-if(!empty($type) && !empty($on)) 
-{
     switch ($type) {
         case 'info':
             $class  = 'toast-info';
@@ -51,9 +49,13 @@ if(!empty($type) && !empty($on))
             $class  = 'toast-warning';
             $icon   = 'bi-exclamation-triangle';
             break;
+        default:
+            $class  = false;
+            $icon   = false;
+            break;
     }
+?>
 
-    ?>
     <script>        
     var url = <?php echo json_encode($url); ?>;
     var type = <?php echo json_encode($type); ?>;
@@ -69,6 +71,5 @@ if(!empty($type) && !empty($on))
     }
     </script>
     <?php
-}
 ?>
 

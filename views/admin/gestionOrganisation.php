@@ -23,17 +23,17 @@ require_once "layouts/entete.php";
 
                 <form class="pt-3" action="<?= CONTROLLERS_URL ?>admin/gestionOrganisation.php?action=updatePassword" method="POST">
                     <div class="form-floating mb-3 w-75 mx-auto">
-                        <input class="form-control" type="password" name="oldpwd" id="oldpwd" placeholder="Ancien mot de passe" value="<?= $oldPwd ?? ""?>"  required>
+                        <input class="form-control" type="password" name="oldpwd" id="oldpwd" placeholder=" " value="<?= $oldPwd ?? ""?>"  required>
                         <label for="prenom">Ancien mot de passe</label>
                     </div>
     
                     <div class="form-floating mb-3 w-75 mx-auto">
-                        <input class="form-control" type="password" name="newpwd" id="newpwd" placeholder="Nouveau mot de passe" value="<?= $newPwd ?? ""?>"  required>
+                        <input class="form-control" type="password" name="newpwd" id="newpwd" placeholder=" " value="<?= $newPwd ?? ""?>"  required>
                         <label for="prenom">Nouveau mot de passe</label>
                     </div>
     
                     <div class="form-floating mb-3 w-75 mx-auto">
-                        <input class="form-control" type="password" name="newpwd2" id="newpwd2" placeholder="Confirmer le mot de passe" value="<?= $newPwd2 ?? ""?>"  required>
+                        <input class="form-control" type="password" name="newpwd2" id="newpwd2" placeholder=" " value="<?= $newPwd2 ?? ""?>"  required>
                         <label for="prenom">Confirmer le mot de passe</label>
                     </div>
 
@@ -69,7 +69,7 @@ require_once "layouts/entete.php";
                 <h4 class="text-center mx-auto border-bottom w-75 mt-3">Édition de l'adresse email</h4>
                 <form class="pt-4" action="<?= CONTROLLERS_URL ?>admin/gestionOrganisation.php?action=updateEmail" method="POST">
                     <div class="form-floating mb-3 w-75 mx-auto">
-                        <input class="form-control <?= in_array('email', $invalidInput) ? 'is-invalid' : '' ?>" type="email" name="email" id="email" placeholder="Nouvelle adresse email" value="<?= $email ?? ""?>"  required>
+                        <input class="form-control <?= in_array('email', $invalidInput) ? 'is-invalid' : '' ?>" type="email" name="email" id="email" placeholder=" " value="<?= $email ?? ""?>"  required>
                         <label for="email">Adresse email</label>
                     </div>
 

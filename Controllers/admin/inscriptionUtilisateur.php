@@ -17,7 +17,7 @@ $mail->isSMTP();                      // Set mailer to use SMTP
 $mail->Host = 'smtp.gmail.com';       // Specify main and backup SMTP servers 
 $mail->SMTPAuth = true;               // Enable SMTP authentication 
 $mail->Username = 'storiesHelperSignUp@gmail.com';   // SMTP username 
-$mail->Password = 'unsecurepassword';   // SMTP password 
+$mail->Password = '248757C537DF1E2E20663659518A8C8BD6BA9E753BA25FEC108D9A7E9925140A';   // SMTP password 
 $mail->SMTPSecure = 'tls';            // Enable TLS encryption, `ssl` also accepted 
 $mail->Port = 587;                    // TCP port to connect to 
 
@@ -71,7 +71,12 @@ if($action == "signup")
                                 $User->setBirth($birth);
                                 $User->create();
                                 LogHistory::create($idOrganization, $idUser, "INFO", 'signup', 'user', $User->getLastname().' '.$User->getFirstname());
+                            } catch (\Throwable $th) {
+                                $errors[] = "L'inscription n'a pas pu aboutir.";
+                                LogHistory::create($idOrganization, $idUser, "ERROR", 'signup', 'user', $User->getLastname().' '.$User->getFirstname(), '', '', $th);
+                            }
                             
+                            try {
                                 $Organization = new Organization($idOrganization);
 
                                 $subject = "New registration !";
@@ -102,7 +107,7 @@ if($action == "signup")
 
                                 $success = "Le collaborateur a bien été inscrit et reçu son mot de passe par email."; 
                             } catch (\Throwable $th) {
-                                $errors[] = "L'inscription n'a pas pu aboutir.";
+                                $errors[] = "L'email de confirmation d'inscription n'a pas pu être envoyé.";
                                 LogHistory::create($idOrganization, $idUser, "ERROR", 'signup', 'user', $User->getLastname().' '.$User->getFirstname(), '', '', $th);
                             }
                         } 

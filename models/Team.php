@@ -160,7 +160,7 @@ class Team extends Modele
         }
     }
 
-    public function initialize(object $Obj)
+    public function initialize(object $Obj, int $depth)
     {
         $this->rowid        = $Obj->rowid;
         $this->name         = $Obj->name;
@@ -172,6 +172,7 @@ class Team extends Modele
         $sql .= " FROM storieshelper_user AS u";
         $sql .= " LEFT JOIN storieshelper_belong_to AS b ON u.rowid = b.fk_user";
         $sql .= " WHERE b.fk_team = ?";
+        $sql .= " ORDER BY lastname, firstname";
 
         $requete = $this->getBdd()->prepare($sql);
         $requete->execute([$this->rowid]);
@@ -188,24 +189,27 @@ class Team extends Modele
             }
         }
 
-        // fetch team / board columns
-        $sql = "SELECT *";
-        $sql .= " FROM storieshelper_map_column AS m";
-        $sql .= " WHERE m.fk_team = ?";
-        $sql .= " ORDER BY m.rank ASC";
-
-        $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$this->rowid]);
-
-        if($requete->rowCount() > 0)
+        if($depth > 1)
         {
-            $lines = $requete->fetchAll(PDO::FETCH_OBJ);
+            // fetch team / board columns
+            $sql = "SELECT *";
+            $sql .= " FROM storieshelper_map_column AS m";
+            $sql .= " WHERE m.fk_team = ?";
+            $sql .= " ORDER BY m.rank ASC";
 
-            foreach($lines as $line)
+            $requete = $this->getBdd()->prepare($sql);
+            $requete->execute([$this->rowid]);
+
+            if($requete->rowCount() > 0)
             {
-                $MapColumn = new MapColumn();
-                $MapColumn->initialize($line);
-                $this->mapColumns[] = $MapColumn;  
+                $lines = $requete->fetchAll(PDO::FETCH_OBJ);
+
+                foreach($lines as $line)
+                {
+                    $MapColumn = new MapColumn();
+                    $MapColumn->initialize($line);
+                    $this->mapColumns[] = $MapColumn;  
+                }
             }
         }
     }
@@ -242,7 +246,9 @@ class Team extends Modele
         $sql .= " VALUES ('Open', ?, 0),('Ready', ?, 1),('In progress', ?, 2),('Closed', ?, 3)";
 
         $requete = $this->getBdd()->prepare($sql);
-        return $requete->execute([$fk_team, $fk_team, $fk_team, $fk_team]);
+        $requete->execute([$fk_team, $fk_team, $fk_team, $fk_team]);
+
+        return $fk_team;
     } 
 
 

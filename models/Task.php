@@ -143,7 +143,9 @@
         $sql .= " VALUES (?,?,?,?,NOW())";
 
         $requete = $this->getBdd()->prepare($sql);
-        return $requete->execute([$this->fk_column,$rank,$this->fk_user,$this->active]);
+        $requete->execute([$this->fk_column,$rank,$this->fk_user,$this->active]);
+
+        return $rank;
     }
 
     // FETCH

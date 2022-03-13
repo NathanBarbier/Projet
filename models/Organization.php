@@ -16,7 +16,7 @@ class Organization extends Modele
     {
         if($rowid != 0)
         {
-            $this->rowid    = $rowid;
+            $this->rowid     = $rowid;
             $this->privacy   = $privacy;
             $this->fetch();
         }
@@ -89,7 +89,7 @@ class Organization extends Modele
 
     public function update()
     {
-        $sql = "UPDATE organization"; 
+        $sql = "UPDATE storieshelper_organization"; 
         $sql .= " SET name = ?";
         $sql .= " WHERE rowid = ?";
 
@@ -168,34 +168,48 @@ class Organization extends Modele
         }
     }
 
+    /**
+     * Fetch all organization users and affect them to the Organization $users property
+     */
     public function fetchUsers()
     {
+        $idUser = !empty($_SESSION['idUser']) ? $_SESSION['idUser'] : 0;
+
+        // position the current user at the top of the list
+        if($idUser) 
+        {
+            $sql = "SELECT * FROM storieshelper_user WHERE rowid = ?";
+
+            $requete = $this->getBdd()->prepare($sql);
+            $requete->execute([$idUser]);
+
+            if($requete->rowCount() > 0)
+            {
+                $obj = $requete->fetch(PDO::FETCH_OBJ);
+
+                $User = new User();
+                $User->initialize($obj);
+                $this->users[] = $User;
+            }
+        }
+
         $sql = "SELECT *";
         $sql .= " FROM storieshelper_user";
         $sql .= " WHERE fk_organization = ?";
+        $sql .= " ORDER BY lastname, firstname";
+        $sql .= " LIMIT 30";
 
         $requete = $this->getBdd()->prepare($sql);
         $requete->execute([$this->rowid]);
-        
+         
         if($requete->rowCount() > 0)
         {
             $lines = $requete->fetchAll(PDO::FETCH_OBJ);
 
-            // position the current user at the top of the list
-            $idUser = $_SESSION['idUser'];
             foreach($lines as $line)
             {
-                if($line->rowid == $idUser) {
-                    $User = new User();
-                    $User->initialize($line, $this->privacy);
-                    $this->users[] = $User;
-                    break;
-                }
-            }
-
-            foreach($lines as $line)
-            {
-                if($line->rowid != $idUser) {
+                if($line->rowid != $idUser)
+                {
                     $User = new User();
                     $User->initialize($line, $this->privacy);
                     $this->users[] = $User;
@@ -204,11 +218,23 @@ class Organization extends Modele
         }
     }
 
-    public function fetchProjects()
+    public function fetchNextUsers() 
+    {
+        
+    }
+
+    /**
+     * Fetch all organization projects and affect them to the Organization $projects property
+     * @param int $depth The depth of loading of children properties of projects |
+     * load : 
+     * 0 = projects | 1 = teams | 2 = columns | 3 = |
+     */
+    public function fetchProjects(int $depth = 2)
     {
         $sql = "SELECT *";
         $sql .= " FROM storieshelper_project";
         $sql .= " WHERE fk_organization = ?";
+        $sql .= " ORDER BY open DESC, name ASC";
 
         $requete = $this->getBdd()->prepare($sql);
         $requete->execute([$this->rowid]);
@@ -220,12 +246,15 @@ class Organization extends Modele
             foreach($lines as $line)
             {
                 $Project = new Project();
-                $Project->initialize($line);
+                $Project->initialize($line, $depth);
                 $this->projects[] = $Project;
             }
         }
     }
 
+    /** 
+     * Fetch all organization logs and affect them to the Organization $logs property
+     */
     public function fetchLogs()
     {
         $sql = "SELECT *";

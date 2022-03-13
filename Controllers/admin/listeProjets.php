@@ -6,7 +6,9 @@ require "layouts/head.php";
 $action = GETPOST('action');
 $projectId = intval(htmlentities(GETPOST('projectId')));
 
-$Organization = new Organization($idOrganization);
+$Organization = new Organization();
+$Organization->setRowid($idOrganization);
+$Organization->fetchProjects(0);
 
 $tpl = "listeProjets.php";
 

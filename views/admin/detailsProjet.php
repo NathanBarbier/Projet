@@ -123,7 +123,7 @@ require_once 'layouts/entete.php';
                         <div class="card-header text-center">
                             <h3>Membres affectés</h3>
                         </div>
-                        <div class="card-body overflow-x">
+                        <div class="card-body overflow-x overflow-y">
                             <table class="table">
                                 <tbody class="tbodyEquipeProjet">
                                     <tr>
@@ -167,7 +167,7 @@ require_once 'layouts/entete.php';
                         <div class="card-header text-center">
                             <h3>Membres prêts</h3>
                         </div>
-                        <div class="card-body overflow-x">
+                        <div class="card-body overflow-x overflow-y">
                             <table class="table">
                                 <tbody class="text-start">
                                     <tr>

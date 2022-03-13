@@ -64,25 +64,6 @@ require_once "layouts/entete.php";
                     </div>
                 </div>
             </div>
-
-            <div id="email-update-form" class="mx-auto sticker w-100 mb-3 pb-3 collapse <?= in_array('email', $invalidForm) ? 'show' : '' ?>" style="height: max-content;">
-                <h4 class="text-center mx-auto border-bottom w-75 mt-3">Édition de l'adresse email</h4>
-                <form class="pt-4" action="<?= CONTROLLERS_URL ?>admin/gestionOrganisation.php?action=updateEmail" method="POST">
-                    <div class="form-floating mb-3 w-75 mx-auto">
-                        <input class="form-control <?= in_array('email', $invalidInput) ? 'is-invalid' : '' ?>" type="email" name="email" id="email" placeholder=" " value="<?= $email ?? ""?>"  required>
-                        <label for="email">Adresse email</label>
-                    </div>
-
-                    <div class="mt-4 row mx-3">
-                        <div class="col-6">
-                            <button type="submit" class="w-100 custom-button double-button-responsive" name="envoi" value="1">Valider</button>
-                        </div>
-                        <div class="col-6">
-                            <a id="cancel-email-update" class="w-100 text-light text-center pt-2 custom-button danger double-button-responsive">Annuler</a>
-                        </div>
-                    </div>
-                </form>
-            </div>
         </div>
 
         <div class="col-sm-4 col-md-4 col-lg-4 col-xl-3 px-3 mb-3 h-100">
@@ -139,14 +120,9 @@ require_once "layouts/entete.php";
                 <div class="card-header">
                     <h3 class="mx-auto text-center" style="border-bottom: black solid 1px; border-color: rgb(216, 214, 214); width: 80%">Profil</h3>
                 </div>
-                
-                <h6 class="border-bottom mx-auto w-50 text-center mt-2">Email</h6>
-                <div class="text-center">
-                    <a href="#email-update-form" id="email-info-btn" type="text" class="custom-button secondary pt-2 form-control w-75 mx-auto text-center" tabindex="0" data-bs-toggle="tooltip" title="Modifier l'adresse email"><?= $User->getEmail() ?></a>
-                </div>
 
                 <div class="text-center mx-auto w-100 mt-2" style="height: 100%;">
-                    <form id="profile-form" class="w-75 mx-auto" action="<?= CONTROLLERS_URL ?>admin/gestionOrganisation.php?action=userUpdate" method="POST" style="height: 60%;">
+                    <form id="profile-form" class="mt-3 w-75 mx-auto" action="<?= CONTROLLERS_URL ?>admin/gestionOrganisation.php?action=userUpdate" method="POST" style="height: 60%;">
                         
                         <h6 class="border-bottom mx-auto w-50">Nom</h6>
                         <input type="text" name="lastname" class="sticker form-control pt-2 text-center" value="<?= $User->getLastname() ?>">

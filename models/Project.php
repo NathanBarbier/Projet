@@ -165,7 +165,11 @@ Class Project extends Modele
         }
     }
 
-    public function initialize($Obj)
+    /**
+     * @param object $Obj the mysql 'Project' object
+     * @param int $depth
+     */
+    public function initialize($Obj,int $depth)
     {
         $this->rowid            = intval($Obj->rowid);
         $this->name             = $Obj->name;
@@ -175,14 +179,18 @@ Class Project extends Modele
         $this->active           = $Obj->active;
         $this->fk_organization  = intval($Obj->fk_organization);
         
-        $this->fetchTeams();
+        if($depth > 0) 
+        {
+            $this->fetchTeams($depth);
+        }
     }
 
-    public function fetchTeams()
+    public function fetchTeams(int $depth = 2)
     {
         $sql = "SELECT *"; 
         $sql .= " FROM storieshelper_team"; 
         $sql .= " WHERE fk_project = ?";
+        $sql .= " ORDER BY name ASC";
         
         $requete = $this->getBdd()->prepare($sql);
         $requete->execute([$this->rowid]);
@@ -194,7 +202,7 @@ Class Project extends Modele
             foreach($lines as $line)
             {
                 $Team = new Team();
-                $Team->initialize($line);
+                $Team->initialize($line, $depth);
                 $this->teams[] = $Team;
             }
         }
@@ -212,8 +220,15 @@ Class Project extends Modele
         $sql .= " VALUES (?,?,NOW(),?,?,1)";
 
         $requete = $this->getBdd()->prepare($sql);
+        $requete->execute([$this->name, $this->type, $this->description, $this->fk_organization]);
 
-        return $requete->execute([$this->name, $this->type, $this->description, $this->fk_organization]);
+        $sql = "SELECT MAX(rowid) AS rowid FROM storieshelper_project";
+
+        $requete = $this->getBdd()->prepare($sql);
+        $requete->execute();
+        $obj = $requete->fetch(PDO::FETCH_OBJ);
+
+        return $obj->rowid;
     }
 
     // delete

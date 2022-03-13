@@ -15,11 +15,15 @@ $oldmdp     = htmlentities(GETPOST('oldmdp'));
 $newmdp     = htmlentities(GETPOST('newmdp'));
 $newmdp2    = htmlentities(GETPOST('newmdp2'));
 
-$Organization   = new Organization($idOrganization , 1);
-$CurrentUser    = $Organization->fetchUser($_SESSION['idUser']);
+$Organization = new Organization();
+$Organization->setRowid($idOrganization);
+$Organization->fetchUsers();
 
 $errors = array();
 $success = false;
+
+// for pagination
+$pageIndex = 1;
 
 $tpl = "listeMembres.php";
 
@@ -83,5 +87,11 @@ if($action == "userDelete")
         header("location:".ROOT_PATH."index.php");
     }
 }
+
+?>
+<script>
+var pageIndex = <?php echo json_encode($pageIndex); ?>;
+</script>
+<?php
 
 require_once VIEWS_PATH."admin/".$tpl;

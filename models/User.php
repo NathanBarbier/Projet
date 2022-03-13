@@ -328,6 +328,14 @@ class User extends Modele
         $requete = $this->getBdd()->prepare($sql);
 
         $requete->execute([$this->lastname, $this->firstname, $this->birth, $this->email, $this->fk_organization, $this->password, $this->consent, $this->admin]);
+    
+        $sql = "SELECT MAX(rowid) AS rowid FROM storieshelper_user";
+        $requete = $this->getBdd()->prepare($sql);
+        $requete->execute();
+
+        $obj = $requete->fetch(PDO::FETCH_OBJ);
+
+        return $obj->rowid;
     }
 
 

@@ -23,7 +23,11 @@ if($errors) {
 
 if($idProject)
 {
-    $Organization = new Organization($idOrganization);
+    // fetch all organization projects with only teams
+    $Organization = new Organization();
+    $Organization->setRowid($idOrganization);
+    $Organization->fetchProjects(1);
+    $Organization->fetchUsers();
 
     if(!empty($Organization) && $Organization->checkProject($idProject))
     {

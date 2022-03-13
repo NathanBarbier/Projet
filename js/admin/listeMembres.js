@@ -14,3 +14,29 @@ $("#cancel-user-delete").on('click', function() {
 
     $("#delete-user-id").val('');
 });
+
+$("#previous-page").on('click', function() {
+    $("#loading-modal").modal('show');
+    $.ajax({
+        async: true,
+        url: AJAX_URL+"admin/map.php?action=previous",
+        success: function (data) {
+            
+            
+            $("#loading-modal").modal('hide');
+        }
+    });
+});
+
+$("#next-page").on('click', function() {
+    $("#loading-modal").modal('show');
+    $.ajax({
+        async: true,
+        url: AJAX_URL+"admin/map.php?action=next",
+        success: function (data) {
+            
+            
+            $("#loading-modal").modal('hide');
+        }
+    });
+});

@@ -27,21 +27,26 @@ $errors = !empty($errors) ? unserialize($errors) : array();
 
 if($action == 'userUpdate')
 {
-    if(empty($email) || strlen($email) > 0 && !filter_var($email, FILTER_VALIDATE_EMAIL))
+    if(!empty($email)) 
     {
-        try {          
-            $User->setFirstname($firstname);
-            $User->setLastname($lastname);
-            $User->setEmail($email);
-            $User->update();
-            LogHistory::create($idOrganization, $idUser, "INFO", 'update', 'user', $User->getLastname().' '.$User->getFirstname(), '', 'user id : '.$User->getRowid());
-            $success = "Vos informations ont bien été mises à jour.";
-        } catch (\Throwable $th) {
-            $errors[] = "Une error est survenue.";
-            LogHistory::create($idOrganization, $idUser, "ERROR", 'update', 'user', $User->getLastname().' '.$User->getFirstname(), '', 'user id : '.$User->getRowid(), $th);
+        if(strlen($email) > 0 && filter_var($email, FILTER_VALIDATE_EMAIL))
+        {
+            try {          
+                $User->setFirstname($firstname);
+                $User->setLastname($lastname);
+                $User->setEmail($email);
+                $User->update();
+                LogHistory::create($idOrganization, $idUser, "INFO", 'update', 'user', $User->getLastname().' '.$User->getFirstname(), '', 'user id : '.$User->getRowid());
+                $success = "Vos informations ont bien été mises à jour.";
+            } catch (\Throwable $th) {
+                $errors[] = "Une error est survenue.";
+                LogHistory::create($idOrganization, $idUser, "ERROR", 'update', 'user', $User->getLastname().' '.$User->getFirstname(), '', 'user id : '.$User->getRowid(), $th);
+            }
+        } else {
+            $errors[] = "L'adresse email n'est pas valide.";
         }
     } else {
-        $errors[] = "L'adresse email n'est pas valide.";
+        $errors[] = "L'adresse email ne peut être vide.";
     }
 }
 

@@ -24,8 +24,8 @@ require_once "layouts/entete.php";
                                     <p>
                                         <b>Equipe : </b>
                                         <?php foreach($Project->getTeams() as $Team) {
-                                            foreach($Team->getUsers() as $User) {
-                                                if($User->getRowid() == $idUser) {
+                                            foreach($Team->getUsers() as $teamMember) {
+                                                if($teamMember->getRowid() == $idUser) {
                                                     echo $Team->getName();
                                                     break 2;
                                                 }
@@ -53,8 +53,8 @@ require_once "layouts/entete.php";
                                     <br>
                                     <p class="text-center">
                                     <?php foreach($Project->getTeams() as $Team) {
-                                            foreach($Team->getUsers() as $User) {
-                                                if($User->getRowid() == $idUser) {
+                                            foreach($Team->getUsers() as $TeamUser) {
+                                                if($TeamUser->getRowid() == $idUser) {
                                                     $teamId = $Team->getRowid();
                                                     $taskCount = 0;
                                                     foreach($Team->getMapColumns() as $MapColumn) {
@@ -113,8 +113,13 @@ require_once "layouts/entete.php";
                 <div class="text-center w-75">
                     <form action="<?= CONTROLLERS_URL ?>membre/tableauDeBord.php?action=userUpdate" method="POST">
 
+                        <h6 class="border-bottom mx-auto w-50">Nom</h6>
                         <input type="text" name="lastname" class="sticker form-control pt-2 text-center h-50px" value="<?= $User->getLastname() ?>">
+                        
+                        <h6 class="border-bottom mx-auto w-50">Prénom</h6>
                         <input type="text" name="firstname" class="sticker form-control mt-4 pt-2 text-center h-50px" value="<?= $User->getFirstname() ?>">
+                        
+                        <h6 class="border-bottom mx-auto w-50">Email</h6>
                         <input type="email" name="email" class="sticker form-control mt-4 pt-2 text-center h-50px" value="<?= $User->getEmail() ?>">
     
                         <button type="submit" class="w-75 mt-4 custom-button text-center px-1">Mettre à jour</button>

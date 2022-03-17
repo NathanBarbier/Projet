@@ -24,7 +24,8 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
         {
             if(filter_var($email, FILTER_VALIDATE_EMAIL))
             {
-                if($User->checkByEmail($email))
+                $User->setEmail($email);
+                if($User->checkByEmail())
                 {
                     $User->fetchByEmail($email);
                     

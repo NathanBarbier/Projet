@@ -1,16 +1,16 @@
 <?php Class Task extends Modele
 { 
-    protected $rowid;
-    protected $name;
-    protected $description;
-    protected $fk_column;
-    protected $rank;
-    protected $fk_user;
-    protected $active;
-    protected $created_at;
-    protected $finished_at;
-    protected $members = array();
-    protected $comments = array();
+    protected int $rowid;
+    protected string $name;
+    protected string $description;
+    protected int $fk_column;
+    protected int $rank;
+    protected int $fk_user;
+    protected int $active;
+    protected string $created_at;
+    protected string $finished_at;
+    protected array $members;
+    protected array $comments;
 
     public function __construct($rowid = null)
     {

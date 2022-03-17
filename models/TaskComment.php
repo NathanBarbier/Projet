@@ -1,11 +1,11 @@
 <?php 
 class TaskComment extends Modele 
 {
-    protected $rowid;
-    protected $fk_task;
-    protected $note;
-    protected $fk_user;
-    protected $tms;
+    protected int $rowid;
+    protected int $fk_task;
+    protected string $note;
+    protected int $fk_user;
+    protected string $tms;
 
     public function __construct($rowid = null)
     {

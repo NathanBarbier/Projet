@@ -1,12 +1,12 @@
 <?php
 class Team extends Modele
 {
-    protected $rowid;
-    protected $name;
-    protected $fk_project;
-    protected $users = array();
-    protected $mapColumns = array();
-    protected $active;
+    protected int $rowid;
+    protected array $name;
+    protected int $fk_project;
+    protected array $users;
+    protected array $mapColumns;
+    protected int $active;
 
     public function __construct($rowid = null)
     {

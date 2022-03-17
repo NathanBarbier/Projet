@@ -1,9 +1,9 @@
 <?php 
 Class TaskMember extends Modele 
 {
-    protected $rowid;
-    protected $fk_user;
-    protected $fk_task;
+    protected int $rowid;
+    protected int $fk_user;
+    protected int $fk_task;
 
     public function __construct($fk_task = null)
     {

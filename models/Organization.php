@@ -1,12 +1,12 @@
 <?php
 class Organization extends Modele
 {
-    protected $rowid;
-    protected $name;
-    protected $users = [];
-    protected $projects = [];
-    protected $logs = [];
-    protected $privacy;
+    protected int $rowid;
+    protected string $name;
+    protected array $users;
+    protected array $projects;
+    protected array $logs;
+    protected int $privacy;
 
     /**
      * @param int rowid The Organization id

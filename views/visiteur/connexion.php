@@ -1,5 +1,7 @@
 <?php
 require_once "layouts/entete.php";
+
+var_dump($_SERVER['REMOTE_ADDR']);
 ?>
 
 <div class="container">

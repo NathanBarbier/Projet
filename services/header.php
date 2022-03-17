@@ -6,6 +6,8 @@ session_start();
 require_once 'constants.php';
 require_once 'globalFunctions.php';
 require_once MODELS_PATH.'Modele.php';
+require_once MODELS_PATH.'AllowedIp.php';
+require_once MODELS_PATH.'BannedIp.php';
 require_once MODELS_PATH.'Team.php';
 require_once MODELS_PATH.'Organization.php';
 require_once MODELS_PATH.'Project.php';

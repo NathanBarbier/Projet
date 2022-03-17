@@ -7,6 +7,7 @@ class Organization extends Modele
     protected $projects = [];
     protected $logs = [];
     protected $privacy;
+    
 
     /**
      * @param int rowid The Organization id

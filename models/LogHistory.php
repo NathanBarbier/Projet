@@ -183,10 +183,10 @@ Class LogHistory extends Modele
     }
     
 
-    public static function create($fk_organization, $fk_author, $status, $action, $object_type, $object_name, $value = null, $identification = null, $exception = null)
+    public static function create($fk_organization, $fk_author, $status, $action, $object_type, $object_name, $value = null, $identification = null, $exception = null, $ip_adress = '')
     {
-        $sql = "INSERT INTO storieshelper_log_history (fk_organization, fk_author, date_creation, status, action, object_type, object_name, value, identification, exception, platform)";
-        $sql .= " VALUES (?,?, NOW(),?,?,?,?,?,?,?,'Website')";
+        $sql = "INSERT INTO storieshelper_log_history (fk_organization, fk_author, date_creation, status, action, object_type, object_name, value, identification, exception, platform, ip_adress)";
+        $sql .= " VALUES (?,?, NOW(),?,?,?,?,?,?,?,'Website',?)";
 
         // development environment
         $PDO = new PDO('mysql:host=localhost;dbname=storieshelper;charset=UTF8', 'root');
@@ -194,7 +194,7 @@ Class LogHistory extends Modele
         // $PDO = new PDO('mysql:host=ipssisqstorieshe.mysql.db;dbname=ipssisqstorieshe;charset=UTF8', 'ipssisqstorieshe', 'Ipssi2022storieshelper');
 
         $requete = $PDO->prepare($sql);
-        $requete->execute([$fk_organization, $fk_author, $status, $action, $object_type, $object_name, $value, $identification, $exception]);
+        $requete->execute([$fk_organization, $fk_author, $status, $action, $object_type, $object_name, $value, $identification, $exception, $ip_adress]);
     }
 
     public function delete($rowid)

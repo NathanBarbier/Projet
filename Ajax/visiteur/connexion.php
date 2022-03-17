@@ -30,47 +30,84 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
                     
                     if(password_verify($password, $User->getPassword()))
                     {
-                        try {
-                            $_SESSION["idUser"] = intval($User->getRowid());
-                            $_SESSION["idOrganization"] = intval($User->getFk_organization());
-    
-                            $token = '';
-                            if($rememberMe)
+                        // get the user ip adress
+                        $userIp = $_SERVER['REMOTE_ADDR'];
+
+                        // check the ip adresse is banned
+                        $BannedIp = new BannedIp($userIp);
+                        // if the $BannedIp has been fetched
+                        if(empty($BannedIp->getRowid())) 
+                        {
+                            // if user is admin then check if his ip address is allowed
+                            if($User->isAdmin())
                             {
-                                $token = bin2hex(random_bytes(15));
-                                setcookie(
-                                    'remember_me',
-                                    $User->getRowid() . "-" . $token,
-                                    time() + 604800,
-                                    '',
-                                    '',
-                                    false, //true on production otherwise false
-                                    true
-                                );
+                                $allowed = false;
+                                $AllowedIp = new AllowedIp($userIp);
+
+                                // If the $AllowedIp has been fetched
+                                if(!empty($AllowedIp->getFk_user()) && $User->getRowid() == $AllowedIp->getFk_user())
+                                {
+                                    $allowed = true;
+                                }
+                            
                             }
-    
-                            $User->setToken($token);
-                            $User->updateToken();
-    
-                            $consent = $User->getConsent();
-                            if($consent == 1)
+
+                            if($User->isAdmin() && $allowed || !$User->isAdmin())
                             {
-                                $_SESSION["rights"] = $User->isAdmin() == 1 ? "admin" : "user";
-                                LogHistory::create($User->getFk_organization(), $User->getRowid(), "INFO", 'connect', 'user', $User->getLastname().' '.$User->getFirstname());
+                                try 
+                                {
+                                    $_SESSION["idUser"] = $User->getRowid();
+                                    $_SESSION["idOrganization"] = $User->getFk_organization();
+            
+                                    $token = '';
+                                    if($rememberMe)
+                                    {
+                                        $token = bin2hex(random_bytes(15));
+                                        setcookie(
+                                            'remember_me',
+                                            $User->getRowid() . "-" . $token,
+                                            time() + 604800,
+                                            '',
+                                            '',
+                                            false, //true on production otherwise false
+                                            true
+                                        );
+                                    }
+            
+                                    $User->setToken($token);
+                                    $User->updateToken();
+            
+                                    $consent = $User->getConsent();
+                                    if($consent == 1)
+                                    {
+                                        $_SESSION["rights"] = $User->isAdmin() == 1 ? "admin" : "user";
+                                        LogHistory::create($User->getFk_organization(), $User->getRowid(), "INFO", 'connect', 'user', $User->getLastname().' '.$User->getFirstname());
+                                    }
+                                    else
+                                    {
+                                        $_SESSION["rights"] = "needConsent";
+                                        LogHistory::create($User->getFk_organization(), $User->getRowid(), "INFO", 'connect', 'user', $User->getLastname().' '.$User->getFirstname());
+                                    }
+    
+                                    $rights = $_SESSION['rights'] ?? false;
+                                    
+                                    $success = 'Vous êtes connecté.';
+                                } 
+                                catch (\Throwable $th) 
+                                {
+                                    $error = $th;
+                                    // echo json_encode($th);
+                                }
                             }
                             else
                             {
-                                $_SESSION["rights"] = "needConsent";
-                                LogHistory::create($User->getFk_organization(), $User->getRowid(), "INFO", 'connect', 'user', $User->getLastname().' '.$User->getFirstname());
+                                $error = "Votre adresse ip n'est pas autorisée à accèder à l'interface administrateur.";
                             }
-
-                            $rights = $_SESSION['rights'] ?? false;
-                            
-                            $success = 'Vous êtes connecté.';
-                        } catch (\Throwable $th) {
-                            $error = $th;
-                            // echo json_encode($th);
-                        }                  
+                        }
+                        else
+                        {
+                            $error = "L'adresse ip est bannie.";
+                        }      
                     } 
                     else 
                     {

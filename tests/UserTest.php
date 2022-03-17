@@ -1,7 +1,5 @@
 <?php
-require_once 'models/Modele.php';
-require_once 'models/User.php';
-require_once 'models/BelongsTo.php';
+require_once 'services/header.php';
 
 use PHPUnit\Framework\TestCase;
 
@@ -9,15 +7,22 @@ class UserTest extends TestCase
 { 
     public $userId;
 
-
-    public function getBdd()
+    private function initialize()
     {
-        // for development environment
-        return new PDO('mysql:host=localhost;dbname=storieshelper;charset=UTF8', 'root');
+        $Organization = new Organization();
+        $Organization->setName("org");
+        $Organization->create();
+        $lastIdOrganization = $Organization->fetch_last_insert_id();
+        $Organization->setRowid($lastIdOrganization);
+        
+        return $Organization;
     }
 
     public function testCreate()
     {
+        // create an organization
+        $Organization = $this->initialize();
+
         //create a new user object
         $User = new User();
 
@@ -26,7 +31,7 @@ class UserTest extends TestCase
         $User->setBirth('1956-05-23');
         $User->setPassword('pA$$0rWd');
         $User->setEmail('test@email.com');
-        $User->setFk_organization(0);
+        $User->setFk_organization($Organization->getRowid());
         $User->setConsent(1);
         $User->setAdmin(0);
         
@@ -53,6 +58,9 @@ class UserTest extends TestCase
 
     public function testFetch()
     {
+        // create an organization
+        $Organization = $this->initialize();
+
         // create a new user object
         $User = new User();
 
@@ -61,7 +69,7 @@ class UserTest extends TestCase
         $User->setBirth('1956-05-23');
         $User->setPassword('pA$$0rWd');
         $User->setEmail('test@email.com');
-        $User->setFk_organization(0);
+        $User->setFk_organization($Organization->getRowid());
         $User->setConsent(1);
         $User->setAdmin(0);
         
@@ -87,6 +95,9 @@ class UserTest extends TestCase
 
     public function testDelete()
     {
+        // create an organization
+        $Organization = $this->initialize();
+
         //create a new user object
         $User = new User();
 
@@ -95,7 +106,7 @@ class UserTest extends TestCase
         $User->setBirth('1956-05-23');
         $User->setPassword('pA$$0rWd');
         $User->setEmail('test@email.com');
-        $User->setFk_organization(0);
+        $User->setFk_organization($Organization->getRowid());
         $User->setConsent(1);
         $User->setAdmin(0);
 
@@ -112,6 +123,9 @@ class UserTest extends TestCase
 
     public function testCheckByEmailTrue()
     {
+        // create an organization
+        $Organization = $this->initialize();
+
         $User = new User();
 
         $User->setLastname('Couscous');
@@ -119,7 +133,7 @@ class UserTest extends TestCase
         $User->setBirth('1956-05-23');
         $User->setPassword('pA$$0rWd');
         $User->setEmail('email@impossible.com');
-        $User->setFk_organization(0);
+        $User->setFk_organization($Organization->getRowid());
         $User->setConsent(1);
         $User->setAdmin(0);
 
@@ -147,6 +161,9 @@ class UserTest extends TestCase
 
     public function testCheckTokenTrue()
     {
+        // create an organization
+        $Organization = $this->initialize();
+
         // create user
         $User = new User();
         
@@ -155,7 +172,7 @@ class UserTest extends TestCase
         $User->setBirth('1956-05-23');
         $User->setPassword('pA$$0rWd');
         $User->setEmail('email@impossible.com');
-        $User->setFk_organization(0);
+        $User->setFk_organization($Organization->setRowid());
         $User->setConsent(1);
         $User->setAdmin(0);
 
@@ -180,6 +197,9 @@ class UserTest extends TestCase
 
     public function testCheckTokenFalse()
     {
+        // create an organization
+        $Organization = $this->initialize();
+
         // create user
         $User = new User();
         
@@ -188,7 +208,7 @@ class UserTest extends TestCase
         $User->setBirth('1956-05-23');
         $User->setPassword('pA$$0rWd');
         $User->setEmail('email@impossible.com');
-        $User->setFk_organization(0);
+        $User->setFk_organization($Organization->getRowid());
         $User->setConsent(1);
         $User->setAdmin(0);
 
@@ -211,6 +231,9 @@ class UserTest extends TestCase
 
     public function testUpdate()
     {
+        // create an organization
+        $Organization = $this->initialize();
+
         // create user
         $User = new User();
 
@@ -219,7 +242,7 @@ class UserTest extends TestCase
         $User->setBirth('1956-05-23');
         $User->setPassword('pA$$0rWd');
         $User->setEmail('email@impossible.com');
-        $User->setFk_organization(0);
+        $User->setFk_organization($Organization->getRowid());
         $User->setConsent(0);
         $User->setAdmin(0);
 

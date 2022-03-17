@@ -29,7 +29,7 @@ if(isset($_COOKIE["remember_me"]))
         // check the ip adress is banned
         $BannedIp = new BannedIp($userIp);
 
-        if(empty($BannedIp->getRowid())) 
+        if($BannedIp->getRowid() == null) 
         {
             // attribute user properties
             $User->fetch($cookie[0]);
@@ -53,7 +53,7 @@ if(isset($_COOKIE["remember_me"]))
                 }
                 else
                 {
-                    $errors[] = "Votre adresse ip n'est pas autorisée à accèder à l'interface administrateur.";
+                    $errors[] = "Votre adresse ip n'est pas autorisée à accéder à l'interface administrateur.";
                 }
             }
             else

@@ -2,12 +2,15 @@
 
 Class AllowedIp extends Modele 
 {
-    protected int $fk_user;
-    protected string $ip;
+    protected ?int $fk_user = null;
+    protected ?string $ip = null;
 
-    function __construct(string $ip)
+    function __construct(string $ip = null)
     {
-        $this->fetch($ip);
+        if($ip != null) 
+        {
+            $this->fetch($ip);
+        }
     }
 
     public function getFk_user()
@@ -20,13 +23,14 @@ Class AllowedIp extends Modele
         return $this->ip;
     }
 
-    public function fetch()
+    public function fetch(string $ip)
     {
-        $sql = "SELECT * FROM storieshelper_allowed_ip";
-        $sql = "WHERE ip = ?";
+        $sql = "SELECT * FROM storieshelper_allowed_ips";
+        $sql .= " WHERE ip = ?";
+
 
         $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$this->ip]);
+        $requete->execute([$ip]);
 
         if($requete->rowCount() > 0)
         {

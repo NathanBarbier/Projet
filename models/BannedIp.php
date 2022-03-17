@@ -1,12 +1,15 @@
 <?php
 Class BannedIp extends Modele
 {
-    protected int $rowid;
-    protected string $ip;
+    protected ?int $rowid = null;
+    protected ?string $ip = null;
 
-    function __construct(string $ip)
+    function __construct(string $ip = null)
     {
-        $this->fetch($ip);
+        if($ip != null)
+        {
+            $this->fetch($ip);
+        }
     }
 
     public function getRowid()
@@ -19,17 +22,17 @@ Class BannedIp extends Modele
         return $this->ip;
     }
 
-    public function fetch()
+    public function fetch(string $ip)
     {
         $sql = "SELECT * FROM storieshelper_banned_ip";
-        $sql = "WHERE ip = ?";
+        $sql .= " WHERE ip = ?";
 
         $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$this->ip]);
+        $requete->execute([$ip]);
 
         if($requete->rowCount() > 0)
         {
-            $obj = $requete->fetch(PDO::FETCH_ASSOC);
+            $obj = $requete->fetch(PDO::FETCH_OBJ);
 
             $this->rowid    = $obj->rowid;
             $this->ip       = $obj->ip;

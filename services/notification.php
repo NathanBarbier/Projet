@@ -56,7 +56,7 @@ if($message == 'connexion') {
     }
 ?>
 
-    <script>        
+    <script>    
     var url = <?php echo json_encode($url); ?>;
     var type = <?php echo json_encode($type); ?>;
     var title = <?php echo json_encode($title); ?>;

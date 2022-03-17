@@ -35,17 +35,18 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
 
                         // check the ip adresse is banned
                         $BannedIp = new BannedIp($userIp);
+
                         // if the $BannedIp has been fetched
-                        if(empty($BannedIp->getRowid())) 
+                        if($BannedIp->getRowid() == null) 
                         {
+                            $allowed = false;
                             // if user is admin then check if his ip address is allowed
                             if($User->isAdmin())
                             {
-                                $allowed = false;
                                 $AllowedIp = new AllowedIp($userIp);
 
                                 // If the $AllowedIp has been fetched
-                                if(!empty($AllowedIp->getFk_user()) && $User->getRowid() == $AllowedIp->getFk_user())
+                                if($AllowedIp->getFk_user() != null && $User->getRowid() == $AllowedIp->getFk_user())
                                 {
                                     $allowed = true;
                                 }
@@ -93,15 +94,16 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
                                     
                                     $success = 'Vous êtes connecté.';
                                 } 
-                                catch (\Throwable $th) 
+                                catch (Exception $e) 
                                 {
-                                    $error = $th;
+                                    // $error = $e->getMessage();
                                     // echo json_encode($th);
+                                    $error = "Une erreur est survenue.";
                                 }
                             }
                             else
                             {
-                                $error = "Votre adresse ip n'est pas autorisée à accèder à l'interface administrateur.";
+                                $error = "Votre adresse ip n'est pas autorisée à accéder à l'interface administrateur.";
                             }
                         }
                         else

@@ -43,7 +43,7 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
                             // if user is admin then check if his ip address is allowed
                             if($User->isAdmin())
                             {
-                                $AllowedIp = new AllowedIp($userIp);
+                                $AllowedIp = new AllowedIp($userIp, $User->getRowid());
 
                                 // If the $AllowedIp has been fetched
                                 if($AllowedIp->getFk_user() != null && $User->getRowid() == $AllowedIp->getFk_user())
@@ -53,7 +53,8 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
                             
                             }
 
-                            if($User->isAdmin() && $allowed || !$User->isAdmin())
+
+                            if(($User->isAdmin() && $allowed) || !$User->isAdmin())
                             {
                                 try 
                                 {

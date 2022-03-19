@@ -34,6 +34,10 @@ class Organization extends Modele
         $this->name = $name;
     }
 
+    public function setPrivacy($privacy)
+    {
+        $this->privacy = $privacy;
+    }
 
     // GETTER
     public function getRowid()
@@ -101,37 +105,17 @@ class Organization extends Modele
 
     public function delete()
     {
-        // delete task comments
-        $sql = "DELETE FROM storieshelper_task_comment tc INNER JOIN storieshelper_task tk ON tk.rowid = tc.fk_task INNER JOIN storieshelper_map_column mc ON mc.rowid = tk.fk_column INNER JOIN storieshelper_team tm ON tm.rowid = mc.fk_team INNER JOIN storieshelper_project p ON p.rowid = tm.fk_project INNER JOIN storieshelper_organization o ON o.rowid = p.fk_organization WHERE o.rowid = ?;";
-        
-        // delete task member
-        $sql .= "DELETE FROM storieshelper_task_member tm INNER JOIN storieshelper_task tk ON tk.rowid = tm.fk_task INNER JOIN storieshelper_map_column mc ON mc.rowid = tk.fk_column INNER JOIN storieshelper_team tm ON tm.rowid = mc.fk_team INNER JOIN storieshelper_project p ON p.rowid = tm.fk_project INNER JOIN storieshelper_organization o ON o.rowid = p.fk_organization WHERE o.rowid = ?;";
-
-        // delete tasks
-        $sql .= "DELETE FROM storieshelper_task tk ON INNER JOIN storieshelper_map_column mc ON mc.rowid = tk.fk_column INNER JOIN storieshelper_team tm ON tm.rowid = mc.fk_team INNER JOIN storieshelper_project p ON p.rowid = tm.fk_project INNER JOIN storieshelper_organization o ON o.rowid = p.fk_organization WHERE o.rowid = ?;";
-
-        // delete all map columns
-        $sql .= "DELETE FROM storieshelper_map_column mc INNER JOIN storieshelper_team tm ON tm.rowid = mc.fk_team INNER JOIN storieshelper_project p ON p.rowid = tm.fk_project INNER JOIN storieshelper_organization o ON o.rowid = p.fk_organization WHERE o.rowid = ?;";
-
-        // delete all belongs_to
-        $sql .= "DELETE FROM storieshelper_belong_to bt INNER JOIN storieshelper_team tm ON tm.rowid = bt.fk_team INNER JOIN storieshelper_project p ON p.rowid = tm.fk_project INNER JOIN storieshelper_organization o ON o.rowid = p.fk_organization WHERE o.rowid = ?;";
-
-        // delete all teams
-        $sql .= "DELETE FROM storieshelper_team tm INNER JOIN storieshelper_project p ON p.rowid = tm.fk_project INNER JOIN storieshelper_organization o ON o.rowid = p.fk_organization WHERE o.rowid = ?;";
-
-        // delete projects
-        $sql .= "DELETE FROM storieshelper_project p INNER JOIN storieshelper_organization o ON o.rowid = p.fk_organization WHERE o.rowid = ?;";
-
-        // delete all users
-        $sql .= "DELETE FROM storieshelper_user WHERE fk_organization = ?;";
-        
         // delete organization
-        $sql .= "DELETE FROM storieshelper_organization WHERE rowid = ?;";
+        $sql = "DELETE FROM storieshelper_organization WHERE rowid = ?;";
 
         $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$this->rowid,$this->rowid,$this->rowid,$this->rowid,$this->rowid,$this->rowid,$this->rowid,$this->rowid,$this->rowid]);
+        $requete->execute([$this->rowid]);
 
-        session_destroy();
+        // check if a session exists
+        if(session_status() == PHP_SESSION_ACTIVE)
+        {
+            session_destroy();
+        }
     }
 
 
@@ -302,7 +286,7 @@ class Organization extends Modele
         $requete = $this->getBdd()->prepare($sql);
         $requete->execute();
 
-        return $requete->fetch(PDO::FETCH_OBJ)->rowid;
+        return intval($requete->fetch(PDO::FETCH_OBJ)->rowid);
     }
 
 

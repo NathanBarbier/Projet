@@ -26,8 +26,8 @@ class UserTest extends TestCase
         //create a new user object
         $User = new User();
 
-        $User->setLastname('Couscous');
         $User->setFirstname('Taboulé');
+        $User->setLastname('Couscous');
         $User->setBirth('1956-05-23');
         $User->setPassword('pA$$0rWd');
         $User->setEmail('test@email.com');
@@ -53,7 +53,8 @@ class UserTest extends TestCase
         $this->assertSame($User->getConsent(), $TestUser->getConsent());
         $this->assertSame($User->isAdmin(), $TestUser->isAdmin());
 
-        $User->delete();
+        // delete in db
+        $Organization->delete();
     }
 
     public function testFetch()
@@ -64,8 +65,8 @@ class UserTest extends TestCase
         // create a new user object
         $User = new User();
 
-        $User->setLastname('Couscous');
         $User->setFirstname('Taboulé');
+        $User->setLastname('Couscous');
         $User->setBirth('1956-05-23');
         $User->setPassword('pA$$0rWd');
         $User->setEmail('test@email.com');
@@ -90,7 +91,8 @@ class UserTest extends TestCase
         $this->assertSame($User->getConsent(), $TestUser->getConsent());
         $this->assertSame($User->isAdmin(), $TestUser->isAdmin());
 
-        $User->delete();
+        // delete in db
+        $Organization->delete();
     }
 
     public function testDelete()
@@ -101,8 +103,8 @@ class UserTest extends TestCase
         //create a new user object
         $User = new User();
 
-        $User->setLastname('Couscous');
         $User->setFirstname('Taboulé');
+        $User->setLastname('Couscous');
         $User->setBirth('1956-05-23');
         $User->setPassword('pA$$0rWd');
         $User->setEmail('test@email.com');
@@ -119,6 +121,8 @@ class UserTest extends TestCase
         $TestUser = new User($rowid);
 
         $this->assertNull($TestUser->getRowid());
+
+        $Organization->delete();
     }
 
     public function testCheckByEmailTrue()
@@ -128,8 +132,8 @@ class UserTest extends TestCase
 
         $User = new User();
 
-        $User->setLastname('Couscous');
         $User->setFirstname('Taboulé');
+        $User->setLastname('Couscous');
         $User->setBirth('1956-05-23');
         $User->setPassword('pA$$0rWd');
         $User->setEmail('email@impossible.com');
@@ -147,7 +151,8 @@ class UserTest extends TestCase
         $result = $TestUser->checkByEmail();
         $this->assertTrue($result);
 
-        $User->delete();
+        // delete in db
+        $Organization->delete();
     }
 
     public function testCheckByEmailFalse()
@@ -167,12 +172,12 @@ class UserTest extends TestCase
         // create user
         $User = new User();
         
-        $User->setLastname('Couscous');
         $User->setFirstname('Taboulé');
+        $User->setLastname('Couscous');
         $User->setBirth('1956-05-23');
         $User->setPassword('pA$$0rWd');
         $User->setEmail('email@impossible.com');
-        $User->setFk_organization($Organization->setRowid());
+        $User->setFk_organization($Organization->getRowid());
         $User->setConsent(1);
         $User->setAdmin(0);
 
@@ -189,10 +194,10 @@ class UserTest extends TestCase
 
         // check token
         $result = $User->checkToken($lastRowid, $token);
-
         $this->assertTrue($result);
+
         // delete in db
-        $User->delete();
+        $Organization->delete();
     }
 
     public function testCheckTokenFalse()
@@ -203,8 +208,8 @@ class UserTest extends TestCase
         // create user
         $User = new User();
         
-        $User->setLastname('Couscous');
         $User->setFirstname('Taboulé');
+        $User->setLastname('Couscous');
         $User->setBirth('1956-05-23');
         $User->setPassword('pA$$0rWd');
         $User->setEmail('email@impossible.com');
@@ -223,10 +228,10 @@ class UserTest extends TestCase
 
         // check token
         $result = $User->checkToken($lastRowid, $token . 'HACKED');
-
         $this->assertFalse($result);
+
         // delete in db
-        $User->delete();
+        $Organization->delete();
     }
 
     public function testUpdate()
@@ -237,8 +242,8 @@ class UserTest extends TestCase
         // create user
         $User = new User();
 
-        $User->setLastname('Couscous');
         $User->setFirstname('Taboulé');
+        $User->setLastname('Couscous');
         $User->setBirth('1956-05-23');
         $User->setPassword('pA$$0rWd');
         $User->setEmail('email@impossible.com');
@@ -251,12 +256,12 @@ class UserTest extends TestCase
 
         // modify all properties
         $User->setRowid($lastRowid);
-        $User->setLastname('Tacos');
         $User->setFirstname('Pastillas');
+        $User->setLastname('Tacos');
         $User->setBirth('1968-02-16');
         $User->setPassword('motdepasse');
         $User->setEmail('email@peuprobable.com');
-        $User->setFk_organization(1);
+        $User->setFk_organization($Organization->getRowid());
         $User->setConsent(1);
         $User->setAdmin(1);
 
@@ -266,16 +271,151 @@ class UserTest extends TestCase
         $TestUser = new User();
         $TestUser->fetch($lastRowid);
 
-        $this->assertSame('Tacos', $TestUser->getLastname());
-        $this->assertSame('Pastillas', $TestUser->getFirstname());
-        $this->assertSame('1968-02-16', $TestUser->getBirth());
-        $this->assertSame(password_hash('motdepasse', PASSWORD_BCRYPT), $TestUser->getPassword());
-        $this->assertSame('email@peuprobable.com', $TestUser->getEmail());
-        $this->assertSame(1, $TestUser->getFk_organization());
-        $this->assertSame(1, $TestUser->getConsent());
-        $this->assertSame(1, $TestUser->isAdmin());
+        $this->assertSame('Pastillas', $TestUser->getFirstname(), "`firstname` has not been updated");
+        $this->assertSame('Tacos', $TestUser->getLastname(), "`lastname` has not been updated");
+        $this->assertSame('1968-02-16', $TestUser->getBirth(), "`birth` has not been updated");
+        $this->assertTrue(password_verify('motdepasse', $TestUser->getPassword()), "`password` has not been updated");
+        $this->assertSame('email@peuprobable.com', $TestUser->getEmail(), "`email` has not been updated");
+        $this->assertSame($Organization->getRowid(), $TestUser->getFk_organization(), "`fk_organization` has not been updated");
+        $this->assertSame(1, $TestUser->getConsent(), "`consent` has not been updated");
+        $this->assertSame(1, $TestUser->isAdmin(), "`admin` has not been updated");
 
         // delete in db
-        $User->delete();
+        $Organization->delete();
+    }
+
+    public function testInitializePrivacyZero()
+    {
+        // create an organization
+        $Organization = $this->initialize();
+
+        // create user
+        $User = new User();
+
+        $User->setFirstname('Taboulé');
+        $User->setLastname('Couscous');
+        $User->setBirth('1956-05-23');
+        $User->setPassword('pA$$0rWd');
+        $User->setEmail('email@impossible.com');
+        $User->setFk_organization($Organization->getRowid());
+        $User->setConsent(0);
+        $User->setAdmin(0);
+
+        // insert in db
+        $lastUserId = $User->create();
+
+        $TestOrganization = new Organization();
+
+        $TestOrganization->setRowid($Organization->getRowid());
+        // Set privacy to zero
+        $TestOrganization->setPrivacy(0);
+        $TestOrganization->fetchUsers();
+
+        $TestUser = $TestOrganization->getUsers()[0];
+
+        $this->assertSame($lastUserId, $TestUser->getRowid());
+        $this->assertSame('Taboulé', $TestUser->getFirstname());
+        $this->assertSame('Couscous', $TestUser->getLastname());
+        $this->assertSame($Organization->getRowid(), $TestUser->getFk_organization());
+        $this->assertSame(0, $TestUser->isAdmin());
+        $this->assertSame($User->getBirth(), $TestUser->getBirth());
+        $this->assertSame($User->getPassword(), $TestUser->getPassword());
+        $this->assertSame($User->getConsent(), $TestUser->getConsent());
+        $this->assertSame($User->getConsentDate(), $TestUser->getConsentDate());
+        $this->assertSame($User->getToken(), $TestUser->getToken());
+        $this->assertSame($User->getEmail(), $TestUser->getEmail());        
+
+        // delete in db
+        $Organization->delete();
+    }
+
+    public function testInitializePrivacyOne()
+    {
+        // create an organization
+        $Organization = $this->initialize();
+
+        // create user
+        $User = new User();
+
+        $User->setFirstname('Taboulé');
+        $User->setLastname('Couscous');
+        $User->setBirth('1956-05-23');
+        $User->setPassword('pA$$0rWd');
+        $User->setEmail('email@impossible.com');
+        $User->setFk_organization($Organization->getRowid());
+        $User->setConsent(0);
+        $User->setAdmin(0);
+
+        // insert in db
+        $lastUserId = $User->create();
+
+        $TestOrganization = new Organization();
+
+        $TestOrganization->setRowid($Organization->getRowid());
+        // Set privacy to zero
+        $TestOrganization->setPrivacy(1);
+        $TestOrganization->fetchUsers();
+
+        $TestUser = $TestOrganization->getUsers()[0];
+
+        $this->assertSame($lastUserId, $TestUser->getRowid());
+        $this->assertSame('Taboulé', $TestUser->getFirstname());
+        $this->assertSame('Couscous', $TestUser->getLastname());
+        $this->assertSame($Organization->getRowid(), $TestUser->getFk_organization());
+        $this->assertSame(0, $TestUser->isAdmin());
+        $this->assertNull($TestUser->getBirth());
+        $this->assertNull($TestUser->getPassword());
+        $this->assertNull($TestUser->getConsent());
+        $this->assertNull($TestUser->getConsentDate());
+        $this->assertNull($TestUser->getToken());
+        $this->assertSame($User->getEmail(), $TestUser->getEmail());        
+
+        // delete in db
+        $Organization->delete();
+    }
+
+    public function testInitializePrivacyTwo()
+    {
+        // create an organization
+        $Organization = $this->initialize();
+
+        // create user
+        $User = new User();
+
+        $User->setFirstname('Taboulé');
+        $User->setLastname('Couscous');
+        $User->setBirth('1956-05-23');
+        $User->setPassword('pA$$0rWd');
+        $User->setEmail('email@impossible.com');
+        $User->setFk_organization($Organization->getRowid());
+        $User->setConsent(0);
+        $User->setAdmin(0);
+
+        // insert in db
+        $lastUserId = $User->create();
+
+        $TestOrganization = new Organization();
+
+        $TestOrganization->setRowid($Organization->getRowid());
+        // Set privacy to zero
+        $TestOrganization->setPrivacy(2);
+        $TestOrganization->fetchUsers();
+
+        $TestUser = $TestOrganization->getUsers()[0];
+
+        $this->assertSame($lastUserId, $TestUser->getRowid());
+        $this->assertSame('Taboulé', $TestUser->getFirstname());
+        $this->assertSame('Couscous', $TestUser->getLastname());
+        $this->assertSame($Organization->getRowid(), $TestUser->getFk_organization());
+        $this->assertSame(0, $TestUser->isAdmin());
+        $this->assertNull($TestUser->getBirth());
+        $this->assertNull($TestUser->getPassword());
+        $this->assertNull($TestUser->getConsent());
+        $this->assertNull($TestUser->getConsentDate());
+        $this->assertNull($TestUser->getToken());
+        $this->assertNull($TestUser->getEmail());        
+
+        // delete in db
+        $Organization->delete();
     }
 }

@@ -1,18 +1,18 @@
 <?php
 class User extends Modele
 {
-    protected ?int $rowid = null;
-    protected string $firstname;
-    protected string $lastname;
-    protected string $birth;
-    protected string $password;
-    protected string $email;
-    protected int $fk_organization;
-    protected array $BelongsTo;
-    protected int $consent;
-    protected ?string $consentDate = null;
-    protected int $admin;
-    protected string $token;
+    protected ?int      $rowid           = null;
+    protected ?string   $firstname       = null;
+    protected ?string   $lastname        = null;
+    protected ?string   $birth           = null;
+    protected ?string   $password        = null;
+    protected ?string   $email           = null;
+    protected ?int      $fk_organization = null;
+    protected ?array    $BelongsTo       = null;
+    protected ?int      $consent         = null;
+    protected ?string   $consentDate     = null;
+    protected ?int      $admin           = null;
+    protected ?string   $token           = null;
 
     public function __construct($rowid = null)
     {
@@ -44,7 +44,7 @@ class User extends Modele
         $this->birth = $birth;
     }
 
-    public function setPassword($password)
+    public function setPassword(string $password)
     {
         $this->password = password_hash($password, PASSWORD_BCRYPT);
     }
@@ -216,6 +216,10 @@ class User extends Modele
         }
     }
 
+    /**
+     * @param object $Obj The mysql object fetched from the database
+     * @param false|int $privacy The layer of privacy from the fetched user details
+     */
     public function initialize(object $Obj, $privacy = false)
     {
         $this->rowid            = intval($Obj->rowid);
@@ -244,7 +248,7 @@ class User extends Modele
         $this->BelongsTo = $BelongsTo->fetchAll($Obj->rowid);
     }
 
-    public function fetch_last_insert_id()
+    public function fetch_last_insert_id() : int
     {
         $sql = "SELECT MAX(rowid) as rowid";
         $sql .= " FROM storieshelper_user";
@@ -254,7 +258,7 @@ class User extends Modele
 
         if($requete->rowCount() > 0)
         {
-            return $requete->fetch(PDO::FETCH_OBJ)->rowid;
+            return intval($requete->fetch(PDO::FETCH_OBJ)->rowid);
         }
     }
 
@@ -368,11 +372,14 @@ class User extends Modele
         if($this->birth) {
             $sql .= " , birth = :birth";
         }
-        if($this->consent) {
+        if($this->consent !== null) {
             $sql .= " , consent = :consent";
         }
         if($this->consentDate) {
             $sql .= " , consent_date = :consentDate";
+        }
+        if($this->admin !== null) {
+            $sql .= " , admin = :admin";
         }
         
         $sql .= " WHERE rowid = :rowid";
@@ -396,13 +403,16 @@ class User extends Modele
         if($this->consentDate) {
             $requete->bindParam(':consentDate', $this->consentDate, PDO::PARAM_STR);
         }
+        if($this->admin !== null) {
+            $requete->bindParam(':admin', $this->admin, PDO::PARAM_INT);
+        }
 
         // Bind required parameters
         $requete->bindParam(':firstname', $this->firstname, PDO::PARAM_STR);
         $requete->bindParam(':lastname', $this->lastname, PDO::PARAM_STR);
         $requete->bindParam(':rowid', $this->rowid, PDO::PARAM_INT);       
 
-        $requete->execute();
+        $result = $requete->execute(); 
     }
 
 

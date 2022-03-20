@@ -104,7 +104,11 @@ try {
     
                     for($i = 0; $i < 10; $i++) {
                         $BelongsTo = new BelongsTo();
-                        $BelongsTo->create($randomusers[$i], $Team->getRowid());
+
+                        $BelongsTo->setFk_user($randomusers[$i]);
+                        $BelongsTo->setFk_team($Team->getRowid());
+
+                        $BelongsTo->create();
                     }
                 }
             }

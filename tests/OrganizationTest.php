@@ -10,7 +10,7 @@ class OrganizationTest extends TestCase
     {
         // create an organization
         $Organization = new Organization();
-        $Organization->setName('cb5ee0b4fd79968b56a718340c0a1514ece9ec612dfc0cecc0d0ebd96a5758849aa0fdd601cf4ca3cbb82314376944ab');
+        $Organization->setName('org');
         $lastrowid = $Organization->create();
         $Organization->setRowid($lastrowid);
 
@@ -27,7 +27,7 @@ class OrganizationTest extends TestCase
     {
         // create an organization
         $Organization = new Organization();
-        $Organization->setName('cb5ee0b4fd79968b56a718340c0a1514ece9ec612dfc0cecc0d0ebd96a5758849aa0fdd601cf4ca3cbb82314376944ab');
+        $Organization->setName('org');
         $lastrowid = $Organization->create();
         $Organization->setRowid($lastrowid);
 
@@ -68,7 +68,7 @@ class OrganizationTest extends TestCase
     {
         // create an organization
         $Organization = new Organization();
-        $Organization->setName('cb5ee0b4fd79968b56a718340c0a1514ece9ec612dfc0cecc0d0ebd96a5758849aa0fdd601cf4ca3cbb82314376944ab');
+        $Organization->setName('org');
         $lastrowid = $Organization->create();
         $Organization->setRowid($lastrowid);
 
@@ -89,7 +89,7 @@ class OrganizationTest extends TestCase
     {
         // create an organization
         $Organization = new Organization();
-        $Organization->setName('cb5ee0b4fd79968b56a718340c0a1514ece9ec612dfc0cecc0d0ebd96a5758849aa0fdd601cf4ca3cbb82314376944ab');
+        $Organization->setName('org');
         $lastrowid = $Organization->create();
         $Organization->setRowid($lastrowid);
 
@@ -107,7 +107,7 @@ class OrganizationTest extends TestCase
     {
         // create an organization
         $Organization = new Organization();
-        $Organization->setName('cb5ee0b4fd79968b56a718340c0a1514ece9ec612dfc0cecc0d0ebd96a5758849aa0fdd601cf4ca3cbb82314376944ab');
+        $Organization->setName('org');
         $lastrowid = $Organization->create();
         $Organization->setRowid($lastrowid);
 
@@ -119,6 +119,8 @@ class OrganizationTest extends TestCase
         $Project->setFk_organization($lastrowid);
 
         $projectId = $Project->create();
+
+        $Project->setRowid($projectId);
 
         // check if the project has been fetched correctly
         $Organization->fetchProjects(0);
@@ -138,7 +140,7 @@ class OrganizationTest extends TestCase
         try {    
             // create an organization
             $Organization = new Organization();
-            $Organization->setName('cb5ee0b4fd79968b56a718340c0a1514ece9ec612dfc0cecc0d0ebd96a5758849aa0fdd601cf4ca3cbb82314376944ab');
+            $Organization->setName('org');
             $organizationId = $Organization->create();
             $Organization->setRowid($organizationId);
 
@@ -170,7 +172,7 @@ class OrganizationTest extends TestCase
         try {
             // create an organization
             $Organization = new Organization();
-            $Organization->setName('cb5ee0b4fd79968b56a718340c0a1514ece9ec612dfc0cecc0d0ebd96a5758849aa0fdd601cf4ca3cbb82314376944ab');
+            $Organization->setName('org');
             $organizationId = $Organization->create();
             $Organization->setRowid($organizationId);
 
@@ -214,7 +216,7 @@ class OrganizationTest extends TestCase
     {
         // create an organization
         $Organization = new Organization();
-        $Organization->setName('cb5ee0b4fd79968b56a718340c0a1514ece9ec612dfc0cecc0d0ebd96a5758849aa0fdd601cf4ca3cbb82314376944ab');
+        $Organization->setName('org');
         $organizationId = $Organization->create();
         $Organization->setRowid($organizationId);
 
@@ -229,12 +231,12 @@ class OrganizationTest extends TestCase
     {
         // create an organization
         $Organization = new Organization();
-        $Organization->setName('cb5ee0b4fd79968b56a718340c0a1514ece9ec612dfc0cecc0d0ebd96a5758849aa0fdd601cf4ca3cbb82314376944ab');
+        $Organization->setName('org');
         $organizationId = $Organization->create();
         $Organization->setRowid($organizationId);
 
         // test
-        $this->assertFalse($Organization->checkByName('bGZpYGc6RW5KNiY=MnspM30iNj54dk9wUWs2K19RdipzNURxSTZSYA==S3JHTTRESmhJN01WbV5N'));
+        $this->assertFalse($Organization->checkByName('gro'));
 
         // delete
         $Organization->delete();
@@ -244,7 +246,7 @@ class OrganizationTest extends TestCase
     {
         // create an organization
         $Organization = new Organization();
-        $Organization->setName('cb5ee0b4fd79968b56a718340c0a1514ece9ec612dfc0cecc0d0ebd96a5758849aa0fdd601cf4ca3cbb82314376944ab');
+        $Organization->setName('org');
         $lastrowid = $Organization->create();
         $Organization->setRowid($lastrowid);
 
@@ -271,7 +273,7 @@ class OrganizationTest extends TestCase
     {
         // create an organization
         $Organization = new Organization();
-        $Organization->setName('cb5ee0b4fd79968b56a718340c0a1514ece9ec612dfc0cecc0d0ebd96a5758849aa0fdd601cf4ca3cbb82314376944ab');
+        $Organization->setName('org');
         $lastrowid = $Organization->create();
         $Organization->setRowid($lastrowid);
 

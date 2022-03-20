@@ -248,7 +248,7 @@ Class Project extends Modele
         $requete->execute();
         $obj = $requete->fetch(PDO::FETCH_OBJ);
 
-        return $obj->rowid;
+        return intval($obj->rowid);
     }
 
     // delete

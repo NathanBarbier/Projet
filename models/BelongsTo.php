@@ -1,10 +1,10 @@
 <?php
 class BelongsTo extends Modele
 {
-    protected int $fk_user;
-    protected int $fk_team;
+    protected ?int $fk_user = null;
+    protected ?int $fk_team = null;
 
-    function __construct($fk_user = null, $fk_team = null)
+    function __construct(int $fk_user = null, int $fk_team = null)
     {
         if($fk_user != null && $fk_team != null)
         {
@@ -15,7 +15,6 @@ class BelongsTo extends Modele
             $requete = $this->getBdd()->prepare($sql);
             $requete->execute([$fk_user, $fk_team]);
 
-            
             if($requete->rowCount() > 0)
             {
                 $obj = $requete->fetch(PDO::FETCH_OBJ);
@@ -51,24 +50,24 @@ class BelongsTo extends Modele
     
     // INSERT
 
-    public function create($fk_user, $fk_team)
+    public function create()
     {
         $sql = "INSERT INTO storieshelper_belong_to (fk_user, fk_team)"; 
-        $sql.= " VALUES (?, ?)";
+        $sql .= " VALUES (?, ?)";
 
         $requete = $this->getBdd()->prepare($sql);
-        return $requete->execute([$fk_user, $fk_team]);
+        return $requete->execute([$this->fk_user, $this->fk_team]);
     }
 
     // DELETE
 
-    public function delete($fk_user, $fk_team)
+    public function delete()
     {
         $sql = "DELETE FROM storieshelper_belong_to";
         $sql .= " WHERE fk_user = ? AND fk_team = ?";
 
         $requete = $this->getBdd()->prepare($sql);
-        return $requete->execute([$fk_user, $fk_team]);
+        return $requete->execute([$this->fk_user, $this->fk_team]);
     }
 
     // METHODS

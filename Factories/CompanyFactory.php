@@ -54,7 +54,7 @@ try {
             $User->setFirstname($faker->firstName);
             $User->setBirth($faker->date());
             $User->setEmail($faker->unique()->email);
-            $User->setFk_organization($faker->randomDigit);
+            $User->setFk_organization($a+1);
             $User->setPassword($faker->password(8,100));
             $User->setConsent($faker->numberBetween(0,1));
         

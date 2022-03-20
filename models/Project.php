@@ -2,14 +2,14 @@
 
 Class Project extends Modele
 {
-    public int $rowid;
-    protected string $name;
-    protected string $type;
-    protected string $open;
-    protected string $description;
-    protected int $fk_organization;
-    protected array $teams;
-    protected int $active;
+    protected ?int      $rowid              = null;
+    protected ?string   $name               = null;
+    protected ?string   $type               = null;
+    protected ?string   $open               = null;
+    protected ?string   $description        = null;
+    protected ?int      $fk_organization    = null;
+    protected ?array    $teams              = array();
+    protected ?int      $active             = null;
 
     public function __construct($rowid = null)
     {
@@ -87,10 +87,6 @@ Class Project extends Modele
         $this->teams[] = $teams;
     }
 
-    // public function setOrganization(Organization $Organization)
-    // {
-    //     $this->Organization = $Organization;
-    // }
     public function setFk_organization(int $fk_organization)
     {
         $this->fk_organization = $fk_organization;
@@ -124,16 +120,40 @@ Class Project extends Modele
     {
         $sql = "UPDATE storieshelper_project";
         $sql .= " SET";
-        $sql .= " name = ?";
-        $sql .= " ,type = ?";
-        $sql .= " ,open = ?";
-        $sql .= " ,fk_organization = ?";
-        $sql .= " ,description = ?";
-        $sql .= " ,active = ?";
-        $sql .= " WHERE rowid = ?";
 
+        $sql .= " name = :name";
+        $sql .= " ,type = :type";
+        $sql .= " ,description = :description";
+        $sql .= " ,fk_organization = :fk_organization";
+
+        if($this->open) {
+            $sql .= " ,open = :open";
+        }
+        if($this->active) {
+            $sql .= " ,active = :active";
+        }
+
+        $sql .= " WHERE rowid = :rowid;";
+
+        // prepare
         $requete = $this->getBdd()->prepare($sql);
-        return $requete->execute([$this->name,$this->type,$this->open,$this->fk_organization,$this->description,$this->active,$this->rowid]);
+
+        // Bind optional parameter
+        if($this->open) {
+            $requete->bindParam(':open', $this->open, PDO::PARAM_STR);
+        }
+        if($this->active) {
+            $requete->bindParam(':active', $this->active, PDO::PARAM_INT);
+        }
+
+        // Bind required parameters
+        $requete->bindParam(':name', $this->name, PDO::PARAM_STR);
+        $requete->bindParam(':type', $this->type, PDO::PARAM_STR);
+        $requete->bindParam(':description', $this->description, PDO::PARAM_STR);
+        $requete->bindParam(':fk_organization', $this->fk_organization, PDO::PARAM_INT);
+        $requete->bindParam(':rowid', $this->rowid, PDO::PARAM_INT);
+
+        return $requete->execute();
     }
 
 
@@ -235,29 +255,11 @@ Class Project extends Modele
 
     public function delete()
     {
-        // delete task comments
-        $sql = "DELETE FROM storieshelper_task_comment WHERE fk_task IN(SELECT rowid FROM storieshelper_task WHERE fk_column IN(SELECT rowid FROM storieshelper_map_column WHERE fk_team IN(SELECT rowid FROM storieshelper_team WHERE fk_project = ?)));";
-
-        // delete task member
-        $sql .= "DELETE FROM storieshelper_task_member WHERE fk_task IN(SELECT rowid FROM storieshelper_task WHERE fk_column IN(SELECT rowid FROM storieshelper_map_column WHERE fk_team IN(SELECT rowid FROM storieshelper_team WHERE fk_project = ?)));";
-
-        // delete tasks
-        $sql .= "DELETE FROM storieshelper_task WHERE fk_column IN(SELECT rowid FROM storieshelper_map_column WHERE fk_team IN(SELECT rowid FROM storieshelper_team WHERE fk_project = ?));";
-
-        // delete all map columns
-        $sql .= "DELETE FROM storieshelper_map_column WHERE fk_team IN(SELECT rowid FROM storieshelper_team WHERE fk_project = ?);";
-
-        // delete all belongs_to
-        $sql .= "DELETE FROM storieshelper_belong_to WHERE fk_team IN (SELECT rowid FROM storieshelper_team WHERE fk_project = ?);";
-
-        // delete all teams
-        $sql .= "DELETE FROM storieshelper_team WHERE fk_project = ?;";
-
         // delete project
-        $sql .= "DELETE FROM storieshelper_project WHERE rowid = ?;";
+        $sql = "DELETE FROM storieshelper_project WHERE rowid = ?;";
         
         $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$this->rowid,$this->rowid,$this->rowid,$this->rowid,$this->rowid,$this->rowid,$this->rowid]);
+        $requete->execute([$this->rowid]);
     }
 
     // methods

@@ -1,12 +1,12 @@
 <?php
 class Team extends Modele
 {
-    protected int $rowid;
-    protected array $name;
-    protected int $fk_project;
-    protected array $users;
-    protected array $mapColumns;
-    protected int $active;
+    protected ?int      $rowid      = null;
+    protected ?string   $name       = null;
+    protected ?int      $fk_project = null;
+    protected ?array    $users      = array();
+    protected ?array    $mapColumns = array();
+    protected ?int      $active     = null;
 
     public function __construct($rowid = null)
     {
@@ -228,6 +228,9 @@ class Team extends Modele
 
     // INSERT
 
+    /**
+     * @return int $fk_team The last inserted team id
+     */
     public function create()
     {
         $sql = "INSERT INTO storieshelper_team (name, fk_project, active)";

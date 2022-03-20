@@ -12,6 +12,8 @@ Class LogHistory extends Modele
     protected $identification;
     protected $fk_organization;
     protected $exception;
+    protected $platform;
+    protected $ipAddress;
 
     public function __construct($rowid = null)
     {
@@ -28,37 +30,38 @@ Class LogHistory extends Modele
             {
                 $obj = $requete->fetch(PDO::FETCH_OBJ);
                 
-                $this->rowid            = $obj->rowid;
-                $this->fk_author        = $obj->fk_author;
+                $this->rowid            = intval($obj->rowid);
+                $this->fk_author        = intval($obj->fk_author);
                 $this->date_creation    = $obj->date_creation;
                 $this->status           = $obj->status;
                 $this->action           = $obj->action;
                 $this->object_type      = $obj->object_type;
                 $this->object_name      = $obj->object_name;
-                $this->admin            = $obj->admin;
-                $this->fk_organization  = $obj->fk_organization;
+                $this->fk_organization  = intval($obj->fk_organization);
                 $this->value            = $obj->value;
                 $this->identification   = $obj->identification;
-                $this->fk_organization  = $obj->fk_organization;
-                $this->status           = $obj->status;
                 $this->exception        = $obj->exception;
+                $this->platform         = $obj->platform;
+                $this->ipAddress        = $obj->ip_address;
             }
         }
     }
 
     public function initialize($Obj)
     {
-        $this->rowid            = $Obj->rowid;
-        $this->fk_author        = $Obj->fk_author;
+        $this->rowid            = intval($Obj->rowid);
+        $this->fk_author        = intval($Obj->fk_author);
         $this->date_creation    = $Obj->date_creation;
         $this->action           = $Obj->action;
         $this->object_type      = $Obj->object_type;
         $this->object_name      = $Obj->object_name;
         $this->value            = $Obj->value;
         $this->identification   = $Obj->identification;
-        $this->fk_organization  = $Obj->fk_organization;
+        $this->fk_organization  = intval($Obj->fk_organization);
         $this->status           = $Obj->status;
         $this->exception        = $Obj->exception;
+        $this->platform         = $Obj->platform;
+        $this->ipAddress        = $Obj->ip_address;
     }
 
     public function setRowid($rowid)
@@ -66,37 +69,37 @@ Class LogHistory extends Modele
         $this->rowid = $rowid;
     }
 
-    public function setfk_author($fk_author)
+    public function setFk_author($fk_author)
     {
         $this->fk_author = $fk_author;
     }
 
-    public function setdate_creation($date_creation)
+    public function setDate_creation($date_creation)
     {
         $this->date_creation = $date_creation;
     }
     
-    public function setaction($action)
+    public function setAction($action)
     {
         $this->action = $action;
     }
 
-    public function setobject_type($object_type)
+    public function setObject_type($object_type)
     {
         $this->object_type = $object_type;
     }
 
-    public function setobject_name($object_name)
+    public function setObject_name($object_name)
     {
         $this->object_name = $object_name;
     }
 
-    public function setadmin($admin)
+    public function setAdmin($admin)
     {
         $this->admin = $admin;
     }
 
-    public function setfk_organization($fk_organization)
+    public function setFk_organization($fk_organization)
     {
         $this->fk_organization = $fk_organization;
     }
@@ -106,37 +109,42 @@ Class LogHistory extends Modele
         return $this->rowid;
     }
 
-    public function getfk_author()
+    public function getFk_author()
     {
         return $this->fk_author;
     }
 
-    public function getdate_creation()
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    public function getDate_creation()
     {
         return $this->date_creation;
     }
 
-    public function getaction()
+    public function getAction()
     {
         return $this->action;
     }
     
-    public function getobject_type()
+    public function getObject_type()
     {
         return $this->object_type;
     }
     
-    public function getobject_name()
+    public function getObject_name()
     {
         return $this->object_name;
     }
 
-    public function getadmin()
+    public function getAdmin()
     {
         return $this->admin;
     }
 
-    public function getfk_organization()
+    public function getFk_organization()
     {
         return $this->fk_organization;
     }
@@ -153,19 +161,23 @@ Class LogHistory extends Modele
         $sql .= " WHERE rowid = ?";
 
         $requete = $this->getBdd()->prepare($sql);
-        $status = $requete->execute([$rowid]);
+        $requete->execute([$rowid]);
 
-        $obj = $requete->fetch(PDO::FETCH_OBJ);
-
-        $this->rowid            = $obj->rowid;
-        $this->fk_author        = $obj->fk_author;
-        $this->date_creation    = $obj->date_creation;
-        $this->action           = $obj->action;
-        $this->object_type      = $obj->object_type;
-        $this->object_name      = $obj->object_name;
-        $this->admin            = $obj->admin;
-        $this->value            = $obj->value;
-        $this->identification   = $obj->identification;
+        if($requete->rowCount() > 0)
+        {
+            $obj = $requete->fetch(PDO::FETCH_OBJ);
+    
+            $this->rowid            = intval($obj->rowid);
+            $this->fk_author        = intval($obj->fk_author);
+            $this->date_creation    = $obj->date_creation;
+            $this->action           = $obj->action;
+            $this->object_type      = $obj->object_type;
+            $this->object_name      = $obj->object_name;
+            $this->value            = $obj->value;
+            $this->identification   = $obj->identification;
+            $this->platform         = $obj->platform;
+            $this->ipAddress        = $obj->ip_address;
+        }
     }
 
     public function fetchAll($fk_organization = null)
@@ -183,27 +195,28 @@ Class LogHistory extends Modele
     }
     
 
-    public static function create($fk_organization, $fk_author, $status, $action, $object_type, $object_name, $value = null, $identification = null, $exception = null, $ip_adress = '')
+    public static function create($fk_organization, $fk_author, $status, $action, $object_type, $object_name, $value = null, $identification = null, $exception = null, $ip_address = '')
     {
-        $sql = "INSERT INTO storieshelper_log_history (fk_organization, fk_author, date_creation, status, action, object_type, object_name, value, identification, exception, platform, ip_adress)";
+        $sql = "INSERT INTO storieshelper_log_history (fk_organization, fk_author, date_creation, status, action, object_type, object_name, value, identification, exception, platform, ip_address)";
         $sql .= " VALUES (?,?, NOW(),?,?,?,?,?,?,?,'Website',?)";
 
         // development environment
         $PDO = new PDO('mysql:host=localhost;dbname=storieshelper;charset=UTF8', 'root');
+        $PDO->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         // production environment
         // $PDO = new PDO('mysql:host=ipssisqstorieshe.mysql.db;dbname=ipssisqstorieshe;charset=UTF8', 'ipssisqstorieshe', 'Ipssi2022storieshelper');
 
         $requete = $PDO->prepare($sql);
-        $requete->execute([$fk_organization, $fk_author, $status, $action, $object_type, $object_name, $value, $identification, $exception, $ip_adress]);
+        $requete->execute([$fk_organization, $fk_author, $status, $action, $object_type, $object_name, $value, $identification, $exception, $ip_address]);
     }
 
-    public function delete($rowid)
+    public function delete()
     {
         $sql = "DELETE FROM storieshelper_log_history";
         $sql .= " WHERE rowid = ?";
 
         $requete = $this->getBdd()->prepare($sql);
-        return $requete->execute([$rowid]);
+        return $requete->execute([$this->rowid]);
     }
 }
 

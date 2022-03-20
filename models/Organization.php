@@ -1,23 +1,23 @@
 <?php
 class Organization extends Modele
 {
-    protected int $rowid;
-    protected string $name;
-    protected array $users;
-    protected array $projects;
-    protected array $logs;
-    protected int $privacy;
+    protected ?int      $rowid      = null;
+    protected string    $name;
+    protected array     $users      = array();
+    protected array     $projects   = array();
+    protected array     $logs;
+    protected int       $privacy    = 0;
 
     /**
      * @param int rowid The Organization id
      * @param int privacy The level of privacy of the recovered informations | 0 = fetch all | 1 = fetch user emails | 2 = max privacy level
      */
-    public function __construct(int $rowid = 0, int $privacy = 2)
+    public function __construct(int $rowid = null, int $privacy = 2)
     {
-        if($rowid != 0)
+        if($rowid != null)
         {
-            $this->rowid     = $rowid;
-            $this->privacy   = $privacy;
+            $this->rowid    = $rowid;
+            $this->privacy  = $privacy;
             $this->fetch();
         }
     }
@@ -37,6 +37,16 @@ class Organization extends Modele
     public function setPrivacy($privacy)
     {
         $this->privacy = $privacy;
+    }
+
+    public function addUser(User $user)
+    {
+        $this->users[] = $user;
+    }
+
+    public function addProject(Project $project)
+    {
+        $this->projects[] = $project;
     }
 
     // GETTER
@@ -85,7 +95,23 @@ class Organization extends Modele
         $sql .= " VALUES (?)";
 
         $requete = $this->getBdd()->prepare($sql);
-        return $requete->execute([$this->name]);
+        $requete->execute([$this->name]);
+
+        $sql = "SELECT MAX(rowid) AS rowid FROM storieshelper_organization";
+
+        $requete = $this->getBdd()->prepare($sql);
+        $requete->execute();
+
+        if($requete->rowCount() > 0)
+        {
+            $obj = $requete->fetch(PDO::FETCH_OBJ);
+
+            return intval($obj->rowid);
+        }
+        else
+        {
+            return false;
+        }
     }
 
 
@@ -256,6 +282,7 @@ class Organization extends Modele
             {
                 $LogHistory = new LogHistory();
                 $LogHistory->initialize($line);
+
                 $this->logs[] = $LogHistory;
             }
         }

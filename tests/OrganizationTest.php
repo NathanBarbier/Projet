@@ -3,6 +3,11 @@ require_once 'services/header.php';
 
 use PHPUnit\Framework\TestCase;
 
+/***********************************************
+ * To Test, write  "vendor/bin/phpunit tests/" *
+ * in the windows shell at the project root    *
+ ***********************************************/
+
 class OrganizationTest extends TestCase
 {
 
@@ -137,79 +142,71 @@ class OrganizationTest extends TestCase
 
     public function testFetchLogs()
     {
-        try {    
-            // create an organization
-            $Organization = new Organization();
-            $Organization->setName('org');
-            $organizationId = $Organization->create();
-            $Organization->setRowid($organizationId);
+        // create an organization
+        $Organization = new Organization();
+        $Organization->setName('org');
+        $organizationId = $Organization->create();
+        $Organization->setRowid($organizationId);
 
-            // create a log entry
-        
-            LogHistory::create($organizationId, 15, 'INFO', 'action', 'object_type', 'object_name');
+        // create a log entry
     
-            // check if the log has been fetched correctly
-            $Organization->fetchLogs();
-            $TestLog = $Organization->getLogs()[0];
+        LogHistory::create($organizationId, 15, 'INFO', 'action', 'object_type', 'object_name');
 
-            $this->assertSame($organizationId, $TestLog->getfk_organization());
-            $this->assertSame(15, $TestLog->getfk_author());
-            $this->assertSame('INFO', $TestLog->getStatus());
-            $this->assertSame('action', $TestLog->getAction());
-            $this->assertSame('object_type', $TestLog->getObject_type());
-            $this->assertSame('object_name', $TestLog->getObject_name());
+        // check if the log has been fetched correctly
+        $Organization->fetchLogs();
+        $TestLog = $Organization->getLogs()[0];
 
-            //delete
-            $TestLog->delete();
-            $Organization->delete();
-        } catch (Exception $e) {
-            var_dump('OrganizationTest::testFetchLogs | '. $e->getMessage());
-        }
+        $this->assertSame($organizationId, $TestLog->getfk_organization());
+        $this->assertSame(15, $TestLog->getfk_author());
+        $this->assertSame('INFO', $TestLog->getStatus());
+        $this->assertSame('action', $TestLog->getAction());
+        $this->assertSame('object_type', $TestLog->getObject_type());
+        $this->assertSame('object_name', $TestLog->getObject_name());
+
+        //delete
+        $TestLog->delete();
+        $Organization->delete();
     }
 
     public function testFetchUser()
     {
-        try {
-            // create an organization
-            $Organization = new Organization();
-            $Organization->setName('org');
-            $organizationId = $Organization->create();
-            $Organization->setRowid($organizationId);
+        // create an organization
+        $Organization = new Organization();
+        $Organization->setName('org');
+        $organizationId = $Organization->create();
+        $Organization->setRowid($organizationId);
 
-            //create a new user object
-            $User = new User();
+        //create a new user object
+        $User = new User();
 
-            $User->setFirstname('Taboulé');
-            $User->setLastname('Couscous');
-            $User->setBirth('1956-05-23');
-            $User->setPassword('pA$$0rWd');
-            $User->setEmail('test@email.com');
-            $User->setFk_organization($organizationId);
-            $User->setConsent(1);
-            $User->setAdmin(0);
+        $User->setFirstname('Taboulé');
+        $User->setLastname('Couscous');
+        $User->setBirth('1956-05-23');
+        $User->setPassword('pA$$0rWd');
+        $User->setEmail('test@email.com');
+        $User->setFk_organization($organizationId);
+        $User->setConsent(1);
+        $User->setAdmin(0);
+    
+        //insert the user into the database
+        $userId = $User->create();
+        $User->setRowid($userId);
+        $Organization->addUser($User);
         
-            //insert the user into the database
-            $userId = $User->create();
-            $User->setRowid($userId);
-            $Organization->addUser($User);
-            
-            $TestUser = $Organization->fetchUser($userId);
+        $TestUser = $Organization->fetchUser($userId);
 
-            $this->assertNotFalse($TestUser);
-            $this->assertSame($User->getFirstname(), $TestUser->getFirstname());
-            $this->assertSame($User->getLastname(), $TestUser->getLastname());
-            $this->assertSame($User->getBirth(), $TestUser->getBirth());
-            $this->assertSame($User->getPassword(), $TestUser->getPassword());
-            $this->assertSame($User->getEmail(), $TestUser->getEmail());
-            $this->assertSame($User->getFk_organization(), $TestUser->getFk_organization());
-            $this->assertSame($User->getConsent(), $TestUser->getConsent());
-            $this->assertSame($User->isAdmin(), $TestUser->isAdmin());
+        $this->assertNotFalse($TestUser);
+        $this->assertSame($User->getFirstname(), $TestUser->getFirstname());
+        $this->assertSame($User->getLastname(), $TestUser->getLastname());
+        $this->assertSame($User->getBirth(), $TestUser->getBirth());
+        $this->assertSame($User->getPassword(), $TestUser->getPassword());
+        $this->assertSame($User->getEmail(), $TestUser->getEmail());
+        $this->assertSame($User->getFk_organization(), $TestUser->getFk_organization());
+        $this->assertSame($User->getConsent(), $TestUser->getConsent());
+        $this->assertSame($User->isAdmin(), $TestUser->isAdmin());
 
-            // delete
-            $Organization->delete();
-        } catch (\Exception $e) {
-            var_dump('OrganizationTest::testFetchUser | '. $e->getMessage());
-        }
+        // delete
+        $Organization->delete();
     }
 
     public function testCheckByNameTrue()

@@ -1,16 +1,16 @@
 <?php Class Task extends Modele
 { 
-    protected int $rowid;
-    protected string $name;
-    protected string $description;
-    protected int $fk_column;
-    protected int $rank;
-    protected int $fk_user;
-    protected int $active;
-    protected string $created_at;
-    protected string $finished_at;
-    protected array $members;
-    protected array $comments;
+    protected ?int $rowid            = 0;
+    protected ?string $name          = '';
+    protected ?string $description   = '';
+    protected ?int $fk_column        = 0;
+    protected ?int $rank             = 0;
+    protected ?int $fk_user          = 0;
+    protected ?int $active           = 0;
+    protected ?string $created_at    = '';
+    protected ?string $finished_at   = '';
+    protected ?array $members        = array();
+    protected ?array $comments       = array();
 
     public function __construct($rowid = null)
     {
@@ -217,7 +217,7 @@
 
     public function fetchMembers()
     {
-        $sql = "SELECT u.rowid, u.firstname, u.lastname, u.birth, u.password, u.email, u.fk_organization, u.consent, u.admin, u.token";
+        $sql = "SELECT *";
         $sql .= " FROM storieshelper_task_member AS tm";
         $sql .= " INNER JOIN storieshelper_user AS u ON u.rowid = tm.fk_user";
         $sql .= " WHERE fk_task = ?";
@@ -246,7 +246,13 @@
         $requete = $this->getBdd()->prepare($sql);
         $requete->execute();
 
-        return $requete->fetch(PDO::FETCH_OBJ);
+        if($requete->rowCount() > 0)
+        {
+            $obj = $requete->fetch(PDO::FETCH_OBJ);
+            $last_inserted_id = intval($obj->rowid);
+
+            return $last_inserted_id;
+        }
     }
 
     public function fetchRank($rowid)

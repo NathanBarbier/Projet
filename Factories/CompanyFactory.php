@@ -168,7 +168,7 @@ try {
     
             $Task->update();
 
-            $taskid = $Task->fetch_last_insert_id()->rowid;
+            $taskid = $Task->fetch_last_insert_id();
 
 
             // Tasks Comments Creation

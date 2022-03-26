@@ -49,7 +49,7 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
                 $MapColumn = new MapColumn($columnId);
                 $Task = new Task($taskId);
                 $TaskComment = new TaskComment($commentId);
-                $TaskMember = new TaskMember($memberId);
+                $TaskMember = new TaskMember($memberId, $taskId);
                 $User = new User();
             
                 switch($action)
@@ -153,7 +153,7 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
                                 $Task->setFk_user($idUser);
                                 $Task->setfk_column($columnId);
                                 $Task->create();
-                                $taskId = intval($Task->fetch_last_insert_id());
+                                $taskId = $Task->fetch_last_insert_id();
                                 LogHistory::create($idOrganization, $idUser, "INFO", 'create', 'task', '', '', 'task id : '.$taskId);
                                 echo json_encode($Task);
                             } catch (\Throwable $th) {

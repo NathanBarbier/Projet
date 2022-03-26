@@ -1,4 +1,4 @@
-<?php
+<?php 
 require_once 'services/header.php';
 
 use PHPUnit\Framework\TestCase;
@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
  * in the windows shell at the project root    *
  ***********************************************/
 
-class BelongsToTest extends TestCase
+class MapColumnTest extends TestCase
 {
     private function initialize()
     {
@@ -63,27 +63,23 @@ class BelongsToTest extends TestCase
     {
         $Organization = $this->initialize();
 
-        // fetch the user
-        $User = $Organization->getUsers()[0];
+        // get team
+        $Project    = $Organization->getProjects()[0];
+        $Team       = $Project->getTeams()[0]; 
 
-        // fetch the team
-        $Team = $Organization->getProjects()[0]->getTeams()[0];
+        // create column
+        $MapColumn = new MapColumn();
 
-        // create
-        $BelongsTo = new BelongsTo();
+        $MapColumn->setName('unnomdecolonneimprobable');
+        $MapColumn->setFk_team($Team->getRowid());
 
-        $BelongsTo->setFk_team($Team->getRowid());
-        $BelongsTo->setFk_user($User->getRowid());
+        $lastrowid = $MapColumn->create();
 
-        $BelongsTo->create();
+        $TestMapColumn = new MapColumn($lastrowid);
 
-        // test
-        $TestBelongsTo = new BelongsTo($User->getRowid(), $Team->getRowid());
+        $this->assertSame($TestMapColumn->getRowid(), $lastrowid);
+        $this->assertSame($TestMapColumn->getName(), 'unnomdecolonneimprobable');
 
-        $this->assertNotNull($TestBelongsTo->getFk_user());
-        $this->assertNotNull($TestBelongsTo->getFk_team());
-
-        // delete   
         $Organization->delete();
     }
 
@@ -91,27 +87,29 @@ class BelongsToTest extends TestCase
     {
         $Organization = $this->initialize();
 
-        // fetch the user
-        $User = $Organization->getUsers()[0];
+        // get team
+        $Project    = $Organization->getProjects()[0];
+        $Team       = $Project->getTeams()[0]; 
 
-        // fetch the team
-        $Team = $Organization->getProjects()[0]->getTeams()[0];
+        // create column
+        $MapColumn = new MapColumn();
 
-        // create
-        $BelongsTo = new BelongsTo();
+        $MapColumn->setName('unnomdecolonneimprobable');
+        $MapColumn->setFk_team($Team->getRowid());
 
-        $BelongsTo->setFk_user($User->getRowid());
-        $BelongsTo->setFk_team($Team->getRowid());
+        $lastrowid = $MapColumn->create();
+        $MapColumn->setRowid($lastrowid);
 
-        $BelongsTo->create();
+        // delete
+        $MapColumn->delete();
 
-        $BelongsTo->delete();
-
-        $TestBelongsTo = new BelongsTo($User->getRowid(), $Team->getRowid());
-
-        $this->assertNull($TestBelongsTo->getFk_user());
-        $this->assertNull($TestBelongsTo->getFk_team());
-
+        // test
+        $TestMapColumn = new MapColumn($lastrowid);
+        
+        $this->assertNull($TestMapColumn->getRowid());
+        
         $Organization->delete();
     }
 }
+
+?>

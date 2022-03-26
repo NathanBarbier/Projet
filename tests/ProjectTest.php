@@ -3,6 +3,11 @@ require_once 'services/header.php';
 
 use PHPUnit\Framework\TestCase;
 
+/***********************************************
+ * To Test, write  "vendor/bin/phpunit tests/" *
+ * in the windows shell at the project root    *
+ ***********************************************/
+
 class ProjectTest extends TestCase
 {
     private function initialize()

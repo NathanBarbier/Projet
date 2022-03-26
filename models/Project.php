@@ -235,29 +235,11 @@ Class Project extends Modele
 
     public function delete()
     {
-        // delete task comments
-        $sql = "DELETE FROM storieshelper_task_comment WHERE fk_task IN(SELECT rowid FROM storieshelper_task WHERE fk_column IN(SELECT rowid FROM storieshelper_map_column WHERE fk_team IN(SELECT rowid FROM storieshelper_team WHERE fk_project = ?)));";
-
-        // delete task member
-        $sql .= "DELETE FROM storieshelper_task_member WHERE fk_task IN(SELECT rowid FROM storieshelper_task WHERE fk_column IN(SELECT rowid FROM storieshelper_map_column WHERE fk_team IN(SELECT rowid FROM storieshelper_team WHERE fk_project = ?)));";
-
-        // delete tasks
-        $sql .= "DELETE FROM storieshelper_task WHERE fk_column IN(SELECT rowid FROM storieshelper_map_column WHERE fk_team IN(SELECT rowid FROM storieshelper_team WHERE fk_project = ?));";
-
-        // delete all map columns
-        $sql .= "DELETE FROM storieshelper_map_column WHERE fk_team IN(SELECT rowid FROM storieshelper_team WHERE fk_project = ?);";
-
-        // delete all belongs_to
-        $sql .= "DELETE FROM storieshelper_belong_to WHERE fk_team IN (SELECT rowid FROM storieshelper_team WHERE fk_project = ?);";
-
-        // delete all teams
-        $sql .= "DELETE FROM storieshelper_team WHERE fk_project = ?;";
-
         // delete project
-        $sql .= "DELETE FROM storieshelper_project WHERE rowid = ?;";
+        $sql = "DELETE FROM storieshelper_project WHERE rowid = ?;";
         
         $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$this->rowid,$this->rowid,$this->rowid,$this->rowid,$this->rowid,$this->rowid,$this->rowid]);
+        $requete->execute([$this->rowid]);
     }
 
     // methods

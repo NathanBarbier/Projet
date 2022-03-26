@@ -1,11 +1,11 @@
 <?php 
 class TaskComment extends Modele 
 {
-    protected $rowid;
-    protected $fk_task;
-    protected $note;
-    protected $fk_user;
-    protected $tms;
+    protected ?int $rowid = null;
+    protected ?int $fk_task = null;
+    protected ?string $note = null;
+    protected ?int $fk_user = null;
+    protected ?string $tms = null;
 
     public function __construct($rowid = null)
     {
@@ -23,10 +23,6 @@ class TaskComment extends Modele
         $this->rowid = $rowid;
     }
 
-    // public function setTask(Task $Task)
-    // {
-    //     $this->Task = $Task;
-    // }
     public function setFk_task(int $fk_task)
     {
         $this->fk_task = $fk_task;
@@ -37,10 +33,6 @@ class TaskComment extends Modele
         $this->note = $note;
     }
 
-    // public function setUser(User $User)
-    // {
-    //     $this->User = $User;
-    // }
     public function setFk_user(int $fk_user)
     {
         $this->fk_user = $fk_user;
@@ -48,30 +40,22 @@ class TaskComment extends Modele
 
     // GETTER
 
-    public function getRowid()
+    public function getRowid(): ?int
     {
         return $this->rowid;
     }
 
-    // public function getTask()
-    // {
-    //     return $this->Task;
-    // }
-    public function getFk_task()
+    public function getFk_task(): ?int
     {
         return $this->fk_task;
     }
 
-    public function getNote()
+    public function getNote(): ?string
     {
         return $this->note;
     }
 
-    // public function getUser()
-    // {
-    //     return $this->User;
-    // }
-    public function getFk_user()
+    public function getFk_user(): ?int
     {
         return $this->fk_user;
     }

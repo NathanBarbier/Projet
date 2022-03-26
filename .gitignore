@@ -1,0 +1,10 @@
+/vendor/bin/
+/vendor/composer/
+/vendor/doctrine/
+/vendor/myclabs/
+/vendor/phpdocumentor/
+/vendor/phpspec/
+/vendor/phpunit/
+/vendor/sebastien/
+/vendor/symfony/
+/vendor/webmozart/

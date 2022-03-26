@@ -18,8 +18,20 @@ require_once SERVICES_PATH.'notification.php' ;
     <link rel="stylesheet" href="<?= ASSETS_URL ?>style.css">
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous" defer></script>
+<<<<<<< Updated upstream
     <!-- Toaster cdn -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js" integrity="sha512-lbwH47l/tPXJYG9AcFNoJaTMhGvYWhVM9YI43CT+uteTRRaiLCui8snIgyAN8XWgNjNhCqlAUdzZptso6OCoFQ==" crossorigin="anonymous" referrerpolicy="no-referrer" defer></script>
+=======
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-MSX9XSMFBN"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-MSX9XSMFBN');
+    </script>
+>>>>>>> Stashed changes
 </head>
 <body style="overflow-y: auto;">
     <nav class="navbar navbar-dark bg-dark w-100 pt-1" style="height: 55px;">

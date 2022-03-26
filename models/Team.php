@@ -249,7 +249,7 @@ class Team extends Modele
         $requete->execute([$fk_team, $fk_team, $fk_team, $fk_team]);
 
         return $fk_team;
-    } 
+    }
 
 
     // UPDATE
@@ -272,14 +272,9 @@ class Team extends Modele
     public function delete()
     {
         $sql = "DELETE FROM storieshelper_team WHERE rowid = ?;";
-        $sql .= "DELETE FROM storieshelper_belong_to WHERE fk_team = ?;";
-        $sql .= "DELETE FROM storieshelper_task_comment WHERE fk_task IN (SELECT rowid FROM storieshelper_task WHERE fk_column IN (SELECT rowid FROM storieshelper_map_column WHERE fk_team = ?));";
-        $sql .= "DELETE FROM storieshelper_task_member WHERE fk_task IN (SELECT rowid FROM storieshelper_task WHERE fk_column IN (SELECT rowid FROM storieshelper_map_column WHERE fk_team = ?));";
-        $sql .= "DELETE FROM storieshelper_tasks WHERE fk_column IN (SELECT rowid FROM storieshelper_map_column WHERE fk_team = ?);";
-        $sql .= "DELETE FROM storieshelper_map_column WHERE fk_team = ?;";
         
         $requete = $this->getBdd()->prepare($sql);
-        return $requete->execute([$this->rowid,$this->rowid,$this->rowid,$this->rowid,$this->rowid,$this->rowid]);
+        return $requete->execute([$this->rowid]);
     }
 
     // METHODS

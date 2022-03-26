@@ -1,16 +1,16 @@
-<?php Class Task extends Modele
+<?php 
+Class Task extends Modele
 { 
-    protected $rowid;
-    protected $name;
-    protected $description;
-    protected $fk_column;
-    protected $rank;
-    protected $fk_user;
-    protected $active;
-    protected $created_at;
-    protected $finished_at;
-    protected $members = array();
-    protected $comments = array();
+    protected ?int $rowid = null;
+    protected ?string $name = null;
+    protected ?int $fk_column = null;
+    protected ?int $rank = null;
+    protected ?int $fk_user;
+    protected ?int $active = null;
+    protected ?string $created_at = null;
+    protected ?string $finished_at = null;
+    protected array $members = [];
+    protected array $comments = [];
 
     public function __construct($rowid = null)
     {
@@ -23,104 +23,99 @@
 
     // SETTER
 
-    public function setRowid($rowid)
+    public function setRowid(?int $rowid)
     {
         $this->rowid = $rowid;
     }
 
-    public function setName($name)
+    public function setName(?string $name)
     {
         $this->name = $name;
     }
 
-    public function setDescription($description)
-    {
-        $this->description = $description;
-    }
-
-    public function setFk_column($fk_column)
+    public function setFk_column(?int $fk_column)
     {
         $this->fk_column = $fk_column;
     }
 
-    public function setRank($rank)
+    public function setRank(?int $rank)
     {
         $this->rank = $rank;
     }
 
-    public function setFk_user(int $fk_user)
+    public function setFk_user(?int $fk_user)
     {
         $this->fk_user = $fk_user;
     }
 
-    public function setActive(int $active)
+    public function setActive(?int $active)
     {
         $this->active = $active;
     }
 
-    public function setComments($comments)
+    public function setComments(array $comments)
     {
         $this->comments = $comments;
     }
 
-    public function setFinished_at($finished_at)
+    public function setFinished_at(?string $finished_at)
     {
         $this->finished_at = $finished_at;
     }
 
-    public function setCreated_at($created_at)
+    public function setCreated_at(?string $created_at)
     {
         $this->created_at = $created_at;
     }
     
     // GETTER
 
-    public function getRowid()
+    public function getRowid(): ?int
     {
         return $this->rowid;
     }
 
-    public function getName()
+    public function getName(): ?string
     {
         return $this->name;
     }
 
-    public function getDescription()
-    {
-        return $this->description;
-    }
-
-    public function getFk_column()
+    public function getFk_column(): ?int
     {
         return $this->fk_column;
     }
 
-    public function getFk_user()
+    public function getRank(): ?int
+    {
+        return $this->rank;
+    }
+
+    public function getFk_user(): ?int
     {
         return $this->fk_user;
     }
 
-    public function isActive()
+    public function isActive(): ?int
     {
-        return intval($this->active);
+        return $this->active;
     }
 
-    public function getComments()
+    public function getComments(): ?array
     {
         return $this->comments;
     }
 
-    public function getMembers()
+    public function getMembers(): ?array
     {
         return $this->members;
     }
 
-    public function getCreated_at()
+    public function getCreated_at(): ?string
     {
         return $this->created_at;
     }
 
-    public function getFinished_at()
+    public function getFinished_at(): ?string
     {
         return $this->finished_at;
     }
@@ -165,7 +160,6 @@
 
             $this->rowid            = $obj->rowid;
             $this->name             = $obj->name;
-            $this->description      = $obj->description;
             $this->fk_column        = $obj->fk_column;
             $this->rank             = $obj->rank;
             $this->fk_user          = $obj->fk_user;
@@ -181,7 +175,6 @@
     {
         $this->rowid        = $Obj->rowid;
         $this->name         = $Obj->name;
-        $this->description  = $Obj->description;
         $this->fk_column    = $Obj->fk_column;
         $this->rank         = $Obj->rank;
         $this->fk_user      = $Obj->fk_user;
@@ -246,7 +239,7 @@
         $requete = $this->getBdd()->prepare($sql);
         $requete->execute();
 
-        return $requete->fetch(PDO::FETCH_OBJ);
+        return $requete->fetch(PDO::FETCH_OBJ)->rowid;
     }
 
     public function fetchRank($rowid)
@@ -307,7 +300,6 @@
         $sql = "UPDATE storieshelper_task";
         $sql .= " SET";
         $sql .= " name = ?";
-        $sql .= " , description = ?";
         $sql .= " , fk_column = ?";
         $sql .= " , rank = ?";
         $sql .= " , active = ?";
@@ -316,7 +308,7 @@
         $sql .= " WHERE rowid = ?";
 
         $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$this->name,$this->description,$this->fk_column,$this->rank,$this->active,$this->finished_at,$this->created_at,$this->rowid]);
+        $requete->execute([$this->name,$this->fk_column,$this->rank,$this->active,$this->finished_at,$this->created_at,$this->rowid]);
     }
 
     // DELETE
@@ -373,6 +365,5 @@
             $Task->update();
         }
     }
-
 }
 ?>

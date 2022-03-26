@@ -37,7 +37,8 @@ if($action == "inscriptionOrg")
             {
                 if(filter_var($email, FILTER_VALIDATE_EMAIL))
                 {
-                    if($User->checkByEmail($email) == false)
+                    $User->setEmail($email);
+                    if($User->checkByEmail() == false)
                     {
                         if($pwd === $pwd2)
                         {

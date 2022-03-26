@@ -1,34 +1,19 @@
 <?php 
 Class TaskMember extends Modele 
 {
-    protected $rowid;
-    protected $fk_user;
-    protected $fk_task;
+    protected ?int $fk_user = null;
+    protected ?int $fk_task = null;
 
-    public function __construct($fk_task = null)
+    public function __construct($fk_user = null, $fk_task = null)
     {
-        if($fk_task != null)
+        if($fk_user != null && $fk_task != null)
         {
-            $this->fetchByTaskId($fk_task);
+            $this->fetch($fk_user, $fk_task);
         }
     }
 
 
     // SETTER
-    public function setRowid($rowid)
-    {
-        $this->rowid = $rowid;
-    }
-
-    // public function setUser($User)
-    // {
-    //     $this->User = $User;
-    // }
-
-    // public function setTask($Task)
-    // {
-    //     $this->Task = $Task;
-    // }
 
     public function setFk_user(int $fk_user)
     {
@@ -42,21 +27,6 @@ Class TaskMember extends Modele
 
     
     // GETTER
-
-    public function getRowid()
-    {
-        return $this->rowid;
-    }
-
-    // public function getUser()
-    // {
-    //     return $this->User;
-    // }
-
-    // public function getTask()
-    // {
-    //     return $this->Task;
-    // }
 
     public function getFk_user()
     {
@@ -94,22 +64,21 @@ Class TaskMember extends Modele
 
     // FETCH
 
-    public function fetchByTaskId(int $fk_task)
+    public function fetch(int $fk_user, int $fk_task)
     {
-        $sql = "SELECT t.fk_user";
-        $sql .= " FROM storieshelper_task_member AS t";
-        $sql .= " WHERE t.fk_task = ?";
+        $sql = "SELECT *";
+        $sql .= " FROM storieshelper_task_member";
+        $sql .= " WHERE fk_user = ? AND fk_task = ?";
 
         $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$fk_task]);
+        $requete->execute([$fk_user, $fk_task]);
 
         if($requete->rowCount() > 0)
         {
             $obj = $requete->fetch(PDO::FETCH_OBJ);
     
-            $this->rowid    = $obj->rowid;
             $this->fk_user  = $obj->fk_user;
-            $this->fk_task  = $fk_task;
+            $this->fk_task  = $obj->fk_task;
         }
     }
 }

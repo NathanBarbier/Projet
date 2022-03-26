@@ -1,11 +1,11 @@
 <?php 
 Class MapColumn extends Modele
 {
-    protected $rowid;
-    protected $name;
-    protected $tasks = array();
-    protected $fk_team;
-    protected $rank;
+    protected ?int       $rowid     = null;
+    protected ?string    $name      = null;
+    protected ?array     $tasks     = null;
+    protected ?int       $fk_team   = null;
+    protected ?int       $rank      = null;
 
     public function __construct($rowid = null)
     {
@@ -233,7 +233,20 @@ Class MapColumn extends Modele
         $sql .= " VALUES (?,?,?)";
         
         $requete = $this->getBdd()->prepare($sql);
-        return $requete->execute([$this->name, $this->fk_team, $rank]);
+        $status = $requete->execute([$this->name, $this->fk_team, $rank]);
+
+        if($status)
+        {
+            $sql = "SELECT MAX(rowid) AS rowid FROM storieshelper_map_column";
+            $requete = $this->getBdd()->prepare($sql);
+            $requete->execute();
+
+            if($requete->rowCount() > 0)
+            {
+                $obj = $requete->fetch(PDO::FETCH_OBJ);
+                return intval($obj->rowid);
+            }
+        }
     }
 
     // UPDATE

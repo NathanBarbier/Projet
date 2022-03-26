@@ -1,17 +1,18 @@
 <?php
 class User extends Modele
 {
-    protected $rowid;
-    protected $firstname;
-    protected $lastname;
-    protected $birth;
-    protected $password;
-    protected $email;
-    protected $fk_organization;
-    protected $BelongsTo;
-    protected $consent = 0;
-    protected $admin;
-    protected $token;
+    protected ?int      $rowid           = null;
+    protected ?string   $firstname       = null;
+    protected ?string   $lastname        = null;
+    protected ?string   $birth           = null;
+    protected ?string   $password        = null;
+    protected ?string   $email           = null;
+    protected ?int      $fk_organization = null;
+    protected ?array    $BelongsTo       = null;
+    protected ?int      $consent         = null;
+    protected ?string   $consentDate     = null;
+    protected ?int      $admin           = null;
+    protected ?string   $token           = null;
 
     public function __construct($rowid = null)
     {
@@ -43,7 +44,7 @@ class User extends Modele
         $this->birth = $birth;
     }
 
-    public function setPassword($password)
+    public function setPassword(string $password)
     {
         $this->password = password_hash($password, PASSWORD_BCRYPT);
     }
@@ -53,10 +54,6 @@ class User extends Modele
         $this->email = $email;
     }
 
-    // public function setOrganization(Organization $Organization)
-    // {
-    //     $this->Organization = $Organization;
-    // }
     public function setFk_organization(int $fk_organization)
     {
         $this->fk_organization = $fk_organization;
@@ -65,6 +62,11 @@ class User extends Modele
     public function setConsent(int $consent)
     {
         $this->consent = $consent;
+    }
+
+    public function setConsentDate(string $consentDate)
+    {
+        $this->consentDate = $consentDate;
     }
 
     public function setAdmin(int $admin)
@@ -109,10 +111,6 @@ class User extends Modele
         return $this->email;
     }
 
-    // public function getOrganization()
-    // {
-    //     return $this->Organization;
-    // }
     public function getFk_organization()
     {
         return $this->fk_organization;
@@ -121,6 +119,11 @@ class User extends Modele
     public function getConsent()
     {
         return $this->consent;
+    }
+
+    public function getConsentDate()
+    {
+        return $this->consentDate;
     }
 
     public function isAdmin()
@@ -132,21 +135,25 @@ class User extends Modele
     {
         return $this->BelongsTo;
     }
+
+    public function getToken()
+    {
+        return $this->token;
+    }
     
     // METHODES
 
     /** Check if an email is linked to a user
-     * @param string $email the email to check
      * @return boolean true if email is linked to a user, otherwise not linked
      */
-    public function checkByEmail(string $email)
+    public function checkByEmail()
     {
         $sql = "SELECT u.email";
         $sql .= " FROM storieshelper_user AS u"; 
         $sql .= " WHERE u.email = ?";
 
         $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$email]);
+        $requete->execute([$this->email]);
 
         if($requete->rowcount() > 0)
         {
@@ -200,7 +207,8 @@ class User extends Modele
             $this->password         = $obj->password;
             $this->email            = $obj->email;
             $this->fk_organization  = intval($obj->fk_organization);
-            $this->consent          = $obj->consent;
+            $this->consent          = intval($obj->consent);
+            $this->consentDate      = $obj->consent_date;
             $this->admin            = intval($obj->admin);
 
             $BelongsTo = new BelongsTo();
@@ -208,6 +216,10 @@ class User extends Modele
         }
     }
 
+    /**
+     * @param object $Obj The mysql object fetched from the database
+     * @param false|int $privacy The layer of privacy from the fetched user details
+     */
     public function initialize(object $Obj, $privacy = false)
     {
         $this->rowid            = intval($Obj->rowid);
@@ -222,6 +234,7 @@ class User extends Modele
             $this->birth            = $Obj->birth;
             $this->password         = $Obj->password;
             $this->consent          = $Obj->consent;
+            $this->consentDate      = $Obj->consent_date;
             $this->token            = $Obj->token;
         }
 
@@ -235,7 +248,7 @@ class User extends Modele
         $this->BelongsTo = $BelongsTo->fetchAll($Obj->rowid);
     }
 
-    public function fetch_last_insert_id()
+    public function fetch_last_insert_id() : int
     {
         $sql = "SELECT MAX(rowid) as rowid";
         $sql .= " FROM storieshelper_user";
@@ -245,7 +258,7 @@ class User extends Modele
 
         if($requete->rowCount() > 0)
         {
-            return $requete->fetch(PDO::FETCH_OBJ)->rowid;
+            return intval($requete->fetch(PDO::FETCH_OBJ)->rowid);
         }
     }
 
@@ -335,7 +348,7 @@ class User extends Modele
 
         $obj = $requete->fetch(PDO::FETCH_OBJ);
 
-        return $obj->rowid;
+        return intval($obj->rowid);
     }
 
 
@@ -359,6 +372,15 @@ class User extends Modele
         if($this->birth) {
             $sql .= " , birth = :birth";
         }
+        if($this->consent !== null) {
+            $sql .= " , consent = :consent";
+        }
+        if($this->consentDate) {
+            $sql .= " , consent_date = :consentDate";
+        }
+        if($this->admin !== null) {
+            $sql .= " , admin = :admin";
+        }
         
         $sql .= " WHERE rowid = :rowid";
 
@@ -375,24 +397,22 @@ class User extends Modele
         if($this->birth) {
             $requete->bindParam(':birth', $this->birth, PDO::PARAM_STR);
         }
+        if($this->consent) {
+            $requete->bindParam(':consent', $this->consent, PDO::PARAM_INT);
+        }
+        if($this->consentDate) {
+            $requete->bindParam(':consentDate', $this->consentDate, PDO::PARAM_STR);
+        }
+        if($this->admin !== null) {
+            $requete->bindParam(':admin', $this->admin, PDO::PARAM_INT);
+        }
 
         // Bind required parameters
         $requete->bindParam(':firstname', $this->firstname, PDO::PARAM_STR);
         $requete->bindParam(':lastname', $this->lastname, PDO::PARAM_STR);
         $requete->bindParam(':rowid', $this->rowid, PDO::PARAM_INT);       
 
-        $requete->execute();
-    }
-
-    public function updateConsent()
-    {
-        $sql = "UPDATE storieshelper_user";
-        $sql .= " SET consent = ?,";
-        $sql .= " consent_date = NOW()";
-        $sql .= " WHERE rowid = ?";
-
-        $requete = $this->getBdd()->prepare($sql);
-        return $requete->execute([$this->consent, $this->rowid]);
+        $result = $requete->execute(); 
     }
 
 

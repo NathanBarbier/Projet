@@ -203,7 +203,10 @@ if($idProject)
                             $key = array_search($idUser, $freeUsersIds);
                             unset($freeUsersIds[$key]);
 
-                            $BelongsTo->create($idUser, $teamId);
+                            $BelongsTo->setFk_user($idUser);
+                            $BelongsTo->setFk_team($teamId);
+
+                            $BelongsTo->create();
                         }
 
                         foreach($freeUsersToUnset as $key)
@@ -296,7 +299,10 @@ if($idProject)
                         {
                             if($freeUser->getRowid() == $idUser)
                             {
-                                $BelongsTo->create($idUser, $Team->getRowid());
+                                $BelongsTo->setFk_user($idUser);
+                                $BelongsTo->setFk_team($Team->getRowid());
+                                $BelongsTo->create();
+                                
                                 $Team->addUser($freeUser);
                                 $freeUsersToUnset[] = $key;
                                 break;
@@ -306,7 +312,10 @@ if($idProject)
                         $key = array_search($idUser, $freeUsersIds);
                         unset($freeUsersIds[$key]);
 
-                        $BelongsTo->create($idUser, $teamId);
+                        $BelongsTo->setFk_user($idUser);
+                        $BelongsTo->setFk_team($teamId);
+
+                        $BelongsTo->create();
                     }
 
                     foreach($freeUsersToUnset as $key)
@@ -321,7 +330,12 @@ if($idProject)
                         {
                             $fk_user = intval(GETPOST('removingUser'.$key)); 
 
-                            $BelongsTo->delete($fk_user, $Team->getRowid());
+                            $BelongsTo = new BelongsTo();
+                            
+                            $BelongsTo->setFk_user($fk_user);
+                            $BelongsTo->setFk_team($team->getRowid());
+
+                            $BelongsTo->delete();
 
                             $freeUsersIds[] = $TeamUser->getRowid();
                             $freeUsers[] = $TeamUser;

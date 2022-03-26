@@ -10,7 +10,7 @@ require_once "layouts/entete.php";
     
             <div class="form-floating mt-5">
                 <input id="email" type="email" class="form-control" name="email" placeholder=" " value="<?= $email ?? '' ?>" maxlength="50" required>
-                <label for="email" class="mb-1">Addresse email</label>
+                <label for="email" class="mb-1">Adresse email</label>
             </div>
     
             <div class="form-floating mt-3">

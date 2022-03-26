@@ -1,12 +1,12 @@
 <?php
 class Team extends Modele
 {
-    protected $rowid;
-    protected $name;
-    protected $fk_project;
-    protected $users = array();
-    protected $mapColumns = array();
-    protected $active;
+    protected ?int      $rowid      = null;
+    protected ?string   $name       = null;
+    protected ?int      $fk_project = null;
+    protected ?array    $users      = array();
+    protected ?array    $mapColumns = array();
+    protected ?int      $active     = null;
 
     public function __construct($rowid = null)
     {
@@ -113,7 +113,6 @@ class Team extends Modele
             $obj = $requete->fetch(PDO::FETCH_OBJ);
             $this->rowid = $rowid;
             $this->name = $obj->name;
-            // $this->Project = new Project($obj->fk_project);
             $this->fk_project = $obj->fk_project;
             $this->active = $obj->active;
         }       
@@ -228,6 +227,9 @@ class Team extends Modele
 
     // INSERT
 
+    /**
+     * @return int $fk_team The last inserted team id
+     */
     public function create()
     {
         $sql = "INSERT INTO storieshelper_team (name, fk_project, active)";

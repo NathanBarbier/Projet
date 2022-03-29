@@ -34,6 +34,7 @@ define('CONTROLLERS_PATH', $rootDir.'controllers'.DIRECTORY_SEPARATOR);
 define('SERVICES_PATH', $rootDir.'services'.DIRECTORY_SEPARATOR);
 define('VIEWS_PATH', $rootDir.'views'.DIRECTORY_SEPARATOR);
 define('ASSETS_PATH', $rootDir.'assets'.DIRECTORY_SEPARATOR);
+define('REPO_PATH', $rootDir.'repositories'.DIRECTORY_SEPARATOR);
 define('PHP_MAILER_PATH', $rootDir.'vendor'.DIRECTORY_SEPARATOR.'phpmailer'.DIRECTORY_SEPARATOR.'phpmailer'.DIRECTORY_SEPARATOR.'src'.DIRECTORY_SEPARATOR);
 
 // URL PATH
@@ -47,4 +48,5 @@ define('JS_URL', $rootUrl.'js/');
 define('AJAX_URL', $rootUrl.'ajax/');
 define('ASSETS_URL', $rootUrl.'assets/');
 define('PHP_MAILER_URL', $rootUrl.'vendor/phpmailer/phpmailer/src/');
+define('REPO_URL', $rootUrl.'repositories'.DIRECTORY_SEPARATOR);
 ?>

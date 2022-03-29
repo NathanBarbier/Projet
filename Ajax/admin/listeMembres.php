@@ -14,9 +14,7 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
         $action = htmlentities(GETPOST('action'));
         $offset = intval(htmlentities(GETPOST('offset')));
 
-        $Organization = new Organization();
-        $Organization->setRowid($idOrganization);
-        $Organization->setPrivacy(1);
+        $UserRepository = new UserRepository();
 
         switch($action)
         {
@@ -24,17 +22,21 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
                 if($offset)
                 {
                     try {
-                        $Organization->fetchNextUsers($offset);
-                        $users = $Organization->getUsers();
+                        $users = $UserRepository->fetchNextUsers($idOrganization, $offset);
                         
                         if(is_array($users) && count($users) > 0)
                         {
                             // return new users
                             echo json_encode($users);
                         }
+                        else
+                        {
+                            // there are no more users
+                            echo json_encode(false);
+                        }
                     } catch (\Throwable $th) {
-                        echo json_encode($th);
-                        // echo json_encode(false);
+                        // echo json_encode($th);
+                        echo json_encode(false);
                     }
                     break;
                 }

@@ -243,33 +243,6 @@ class Organization extends Modele
         }
     }
 
-    public function fetchNextUsers(int $offset = 0) 
-    {
-        $sql = "SELECT *";
-        $sql .= " FROM storieshelper_user";
-        $sql .= " WHERE fk_organization = ?";
-        // $sql .= " ORDER BY `lastname`, `firstname`";
-        $sql .= " LIMIT 30";
-        $sql .= " OFFSET ?";
-        // $sql .= " OFFSET 30";
-
-        $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$this->rowid, $offset]);
-        // $requete->execute([$this->rowid]);
-
-        if($requete->rowCount() > 0)
-        {
-            $lines = $requete->fetchAll(PDO::FETCH_OBJ);
-
-            foreach($lines as $line)
-            {
-                $User = new User();
-                $User->initialize($line, $this->privacy);
-                $this->users[] = $User;
-            }
-        }
-    }
-
     /**
      * Fetch all organization projects and affect them to the Organization $projects property
      * @param int $depth The depth of loading of children properties of projects |

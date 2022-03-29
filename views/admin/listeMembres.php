@@ -129,9 +129,9 @@ require_once "layouts/entete.php";
                 }
                 ?>
 
-                <tr>
+                <tr id="load-more-line">
                     <td class="text-center" colspan="5">
-                        <a id="load-more" type="button" class="custom-link">Load more</a>
+                        <a id="load-more" type="button" class="custom-link py-0" style="font-size: 2rem;">Load more</a>
                     </td>
                 </tr>
 

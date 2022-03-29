@@ -1,18 +1,18 @@
 <?php
 class User extends Modele
 {
-    protected ?int      $rowid           = null;
-    protected ?string   $firstname       = null;
-    protected ?string   $lastname        = null;
-    protected ?string   $birth           = null;
-    protected ?string   $password        = null;
-    protected ?string   $email           = null;
-    protected ?int      $fk_organization = null;
-    protected ?array    $BelongsTo       = null;
-    protected ?int      $consent         = null;
-    protected ?string   $consentDate     = null;
-    protected ?int      $admin           = null;
-    protected ?string   $token           = null;
+    protected ?int      $rowid           = 0;
+    protected ?string   $firstname       = '';
+    protected ?string   $lastname        = '';
+    protected ?string   $birth           = '';
+    protected ?string   $password        = '';
+    protected ?string   $email           = '';
+    protected ?int      $fk_organization = 0;
+    protected ?array    $BelongsTo       = array();
+    protected ?int      $consent         = 0;
+    protected ?string   $consentDate     = '';
+    protected ?int      $admin           = 0;
+    protected ?string   $token           = '';
 
     public function __construct($rowid = null)
     {
@@ -220,7 +220,7 @@ class User extends Modele
      * @param object $Obj The mysql object fetched from the database
      * @param false|int $privacy The layer of privacy from the fetched user details
      */
-    public function initialize(object $Obj, $privacy = false)
+    public function initialize($Obj, $privacy = false)
     {
         $this->rowid            = intval($Obj->rowid);
         $this->firstname        = $Obj->firstname;

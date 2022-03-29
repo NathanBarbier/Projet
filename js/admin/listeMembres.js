@@ -17,7 +17,6 @@ $("#cancel-user-delete").on('click', function() {
 
 loadMore();
 
-
 function loadMore()
 {
     $("#load-more").off('click').on('click', function() {
@@ -30,7 +29,8 @@ function loadMore()
     
                 var users = JSON.parse(data);
 
-                console.log(users.length)
+                // hide the loadmore button
+                $('#load-more-line').remove();
 
                 // if there are no users
                 if(Array.isArray(users) && users.length > 0)
@@ -110,8 +110,6 @@ function loadMore()
                     });
         
                     $('#tbody-users').append(append);
-
-                    $('#load-more-line').remove();
 
                     if(users.length == 30)
                     {

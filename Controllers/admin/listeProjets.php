@@ -14,6 +14,10 @@ $tpl = "listeProjets.php";
 
 $errors = array();
 $success = false;
+
+// for pagination
+$offset = 10;
+
 if($action == 'deleteProject')
 {
     if(is_int($projectId)) 
@@ -42,5 +46,10 @@ if($action == 'deleteProject')
     }
 }
 
+?>
+<script>
+var offset = <?php echo json_encode($offset); ?>;
+</script>
+<?php
 
 require_once VIEWS_PATH."admin/".$tpl;

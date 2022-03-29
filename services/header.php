@@ -1,7 +1,5 @@
 <?php
-// print_r($_COOKIE);
 session_start();
-
 
 require_once 'constants.php';
 require_once 'globalFunctions.php';
@@ -20,3 +18,6 @@ require_once MODELS_PATH.'TaskMember.php';
 require_once MODELS_PATH.'LogHistory.php';
 require_once REPO_PATH.'Repository.php';
 require_once REPO_PATH.'UserRepository.php';
+require_once REPO_PATH.'ProjectRepository.php';
+
+?>

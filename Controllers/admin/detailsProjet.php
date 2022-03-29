@@ -415,7 +415,6 @@ if($idProject)
 
         ?>
         <script>
-        const CONTROLLERS_URL = <?php echo json_encode(CONTROLLERS_URL); ?>;
         const projectId = <?php echo json_encode($Project->getRowid()); ?>;
         var teamIds = <?php echo json_encode($teamIds); ?>;
         // use of array_values to avoid JS object conversion

@@ -255,6 +255,7 @@ class Organization extends Modele
         $sql .= " FROM storieshelper_project";
         $sql .= " WHERE fk_organization = ?";
         $sql .= " ORDER BY open DESC, name ASC";
+        $sql .= " LIMIT 10";
 
         $requete = $this->getBdd()->prepare($sql);
         $requete->execute([$this->rowid]);

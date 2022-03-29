@@ -23,7 +23,7 @@ $errors = array();
 $success = false;
 
 // for pagination
-$pageIndex = 1;
+$offset = 30;
 
 $tpl = "listeMembres.php";
 
@@ -90,7 +90,7 @@ if($action == "userDelete")
 
 ?>
 <script>
-var pageIndex = <?php echo json_encode($pageIndex); ?>;
+var offset = <?php echo json_encode($offset); ?>;
 </script>
 <?php
 

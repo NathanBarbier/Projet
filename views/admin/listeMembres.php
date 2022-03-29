@@ -47,13 +47,13 @@ require_once "layouts/entete.php";
                         </div>
                         <div class="me-5" style="float : right">
                             <div>
-                                <h5 class="underline">Nombres de membres : <?= count($Organization->getUsers()); ?></h5>
+                                <h5 class="underline">Nombres de membres : <?= $Organization->fetchUsersCount() ?></h5>
                             </div> 
                         </div>
                     </th>
                 </tr>
             </thead>
-            <tbody class="bg-white">
+            <tbody id="tbody-users" class="bg-white">
                 <tr class="text-center">
                     <th>NOM</th>
                     <th>Prénom</th>
@@ -127,23 +127,22 @@ require_once "layouts/entete.php";
                 </tr>
                 <?php
                 }
-    
                 ?>
+
+                <tr>
+                    <td class="text-center" colspan="5">
+                        <a id="load-more" type="button" class="custom-link">Load more</a>
+                    </td>
+                </tr>
+
             </tbody>
         </table>
     </div>
 
-    <nav class="mx-auto w-50 justify-content-center d-flex mt-3" aria-label="Page navigation">
-        <ul class="pagination">
-            <li id="previous-page" class="page-item"><a class="page-link">Previous</a></li>
-            <!-- <li class="page-item"><a class="page-link" href="#">1</a></li>
-            <li class="page-item"><a class="page-link" href="#">2</a></li>
-            <li class="page-item"><a class="page-link" href="#">3</a></li> -->
-            <li id="next-page" class="page-item"><a class="page-link">Next</a></li>
-        </ul>
-    </nav>
-
-<script src="<?= JS_URL ?>admin/listeMembres.js" defer></script>
+    <script defer>
+        const idUser = <?php echo json_encode($idUser); ?>;
+    </script>
+    <script src="<?= JS_URL ?>admin/listeMembres.js" defer></script>
 
 <?php
 require_once "layouts/pied.php";

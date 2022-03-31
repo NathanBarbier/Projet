@@ -215,7 +215,7 @@ Class LogHistory extends Modele
         $sql = "DELETE FROM storieshelper_log_history";
         $sql .= " WHERE rowid = ?";
 
-        $requete = $this->getBdd()->prepare($sql);
+        $requete = $this->getBddSafe()->prepare($sql);
         return $requete->execute([$this->rowid]);
     }
 }

@@ -274,26 +274,11 @@ Class MapColumn extends Modele
 
     public function delete()
     {
-        $sql = "DELETE FROM storieshelper_task_comment";
-        $sql .= " WHERE fk_task IN";
-        $sql .= " (SELECT t.rowid";
-        $sql .= " FROM storieshelper_task AS t";
-        $sql .= " WHERE fk_column = ?);";
-
-        $sql .= "DELETE FROM storieshelper_task_member";
-        $sql .= " WHERE fk_task IN";
-        $sql .= " (SELECT t.rowid";
-        $sql .= " FROM storieshelper_task AS t";
-        $sql .= " WHERE fk_column = ?);";
-
-        $sql .= "DELETE FROM storieshelper_task";
-        $sql .= " WHERE fk_column = ?;";
-
-        $sql .= "DELETE FROM storieshelper_map_column";
+        $sql = "DELETE FROM storieshelper_map_column";
         $sql .= " WHERE rowid = ?;";
 
-        $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$this->rowid,$this->rowid,$this->rowid,$this->rowid]);
+        $requete = $this->getBddSafe()->prepare($sql);
+        $requete->execute([$this->rowid]);
     }
     
     // METHODS

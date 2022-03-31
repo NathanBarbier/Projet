@@ -66,7 +66,7 @@ class BelongsTo extends Modele
         $sql = "DELETE FROM storieshelper_belong_to";
         $sql .= " WHERE fk_user = ? AND fk_team = ?";
 
-        $requete = $this->getBdd()->prepare($sql);
+        $requete = $this->getBddSafe()->prepare($sql);
         return $requete->execute([$this->fk_user, $this->fk_team]);
     }
 

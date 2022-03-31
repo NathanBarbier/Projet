@@ -58,7 +58,7 @@ Class TaskMember extends Modele
         $sql = "DELETE FROM storieshelper_task_member";
         $sql .= " WHERE fk_task = ? AND fk_user = ?";
 
-        $requete = $this->getBdd()->prepare($sql);
+        $requete = $this->getBddSafe()->prepare($sql);
         return $requete->execute([$this->fk_task, $this->fk_user]);
     }
 

@@ -134,7 +134,7 @@ class Organization extends Modele
         // delete organization
         $sql = "DELETE FROM storieshelper_organization WHERE rowid = ?;";
 
-        $requete = $this->getBdd()->prepare($sql);
+        $requete = $this->getBddSafe()->prepare($sql);
         $requete->execute([$this->rowid]);
 
         // check if a session exists

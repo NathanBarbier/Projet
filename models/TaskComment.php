@@ -115,7 +115,7 @@ class TaskComment extends Modele
         $sql = "DELETE FROM storieshelper_task_comment";
         $sql .= " WHERE rowid = ?";
 
-        $requete = $this->getBdd()->prepare($sql);
+        $requete = $this->getBddSafe()->prepare($sql);
         return $requete->execute([$this->rowid]);
     }
 

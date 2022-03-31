@@ -258,7 +258,7 @@ Class Project extends Modele
         // delete project
         $sql = "DELETE FROM storieshelper_project WHERE rowid = ?;";
         
-        $requete = $this->getBdd()->prepare($sql);
+        $requete = $this->getBddSafe()->prepare($sql);
         $requete->execute([$this->rowid]);
     }
 

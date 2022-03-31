@@ -293,7 +293,6 @@ class User extends Modele
         $sql .= " WHERE u.rowid NOT IN(";
         $sql .= " SELECT rowid";
         $sql .= " FROM storieshelper_user";
-
         $sql .= " WHERE rowid IN ('".$notFreeUsers."') )"; 
         $sql .= " AND u.fk_organization = ?";
 
@@ -421,12 +420,8 @@ class User extends Modele
     public function delete()
     {
         $sql = "DELETE FROM storieshelper_user WHERE rowid = ?";
-        //* on trigger
-        // $sql .= "DELETE FROM task_member WHERE fk_user = ?;";
-        // $sql .= "DELETE FROM task_comment WHERE fk_user = ?;";
-        // $sql .= "DELETE FROM belong_to WHERE fk_user = ?;";
 
-        $requete = $this->getBdd()->prepare($sql);
+        $requete = $this->getBddSafe()->prepare($sql);
         return $requete->execute([$this->rowid]);
     }
     

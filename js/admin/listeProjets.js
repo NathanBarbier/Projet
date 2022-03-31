@@ -42,7 +42,12 @@ function loadMore()
                     offset += 10;
                     var append = '';
 
-                    projects.forEach(project => {
+                    projects.forEach((project, index) => {
+                        
+                        // display only the 10 or less projects
+                        if(index == 10) {
+                            return
+                        }
 
                         if(project.active == 1)
                         {
@@ -83,7 +88,7 @@ function loadMore()
         
                     $('#projects-container').append(append);
 
-                    if(projects.length == 10)
+                    if(projects.length > 10)
                     {
                         var append = [
                             '<div id="load-more-line" class="radius text-center mx-auto mt-2 border" style="height: 5vh;width:33%;font-size: x-large">',
@@ -93,11 +98,11 @@ function loadMore()
 
                         $('#projects-container').append(append);
                     }
-                    
-                    $("#loading-modal").modal('hide');
     
                     loadMore();
                 }
+                // hide the loading modal
+                $("#loading-modal").modal('hide');
             }
         });
     });

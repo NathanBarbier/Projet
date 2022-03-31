@@ -6,16 +6,17 @@ class ProjectRepository extends Repository
     {
         if(is_int($offset) && is_int($fk_organization))
         {
+            // fetch projects
             $sql = "SELECT rowid, name, type, active, fk_organization";
             $sql .= " FROM storieshelper_project";
             $sql .= " WHERE fk_organization = $fk_organization";
             $sql .= " ORDER BY name";
-            $sql .= " LIMIT 10";
+            $sql .= " LIMIT 11"; // limit is set to 11 instead of 10 to check if there are remaining projects after the offset
             $sql .= " OFFSET $offset";
     
             $requete = $this->getBdd()->prepare($sql);
             $requete->execute();
-    
+
             if($requete->rowCount() > 0)
             {
                 return $requete->fetchAll(PDO::FETCH_OBJ);

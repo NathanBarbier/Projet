@@ -41,20 +41,6 @@ require_once "layouts/entete.php";
         </div>
     <?php } ?>
 
-    <!-- Loading Modal -->
-    <div class="modal" id="loading-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog position-absolute bottom-0 end-0 me-3" style="width: 200px;">
-            <div class="modal-content">
-                <div class="modal-body position-relative">
-                    <div class="d-flex align-items-center">
-                        <strong>Chargement...</strong>
-                        <div class="spinner-border ms-auto" role="status" aria-hidden="true"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- Archived tasks Modal -->
     <div class="modal" id="archive-tasks-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog position-absolute start-50 translate-middle w-75" style="top:40%; height:75vh">
@@ -183,7 +169,6 @@ require_once "layouts/entete.php";
             </div>
         </div>
         <div id="task-details" class="mt-3 collapse">
-            <!-- <textarea id="task-title" class="card px-2 pt-3 text-center" cols="25" rows="2" readonly>Title</textarea> -->
             <div class="mt-3">
                 <i id="up-task-btn" class="w-25 me-2 bi bi-arrow-up btn btn-outline-dark"></i>
                 <i id="down-task-btn" class="w-25 ms-2 bi bi-arrow-down btn btn-outline-dark"></i>

@@ -159,6 +159,9 @@ class Team extends Modele
         }
     }
 
+    /**
+     * Depth : 0 = basic team properties | 1 = add team users | 2 = add columns
+     */
     public function initialize(object $Obj, int $depth)
     {
         $this->rowid        = $Obj->rowid;
@@ -166,25 +169,28 @@ class Team extends Modele
         $this->fk_project   = $Obj->fk_project;
         $this->active       = $Obj->active;
 
-        // fetch team users
-        $sql = "SELECT *";
-        $sql .= " FROM storieshelper_user AS u";
-        $sql .= " LEFT JOIN storieshelper_belong_to AS b ON u.rowid = b.fk_user";
-        $sql .= " WHERE b.fk_team = ?";
-        $sql .= " ORDER BY lastname, firstname";
-
-        $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$this->rowid]);
-
-        if($requete->rowCount() > 0)
+        if($depth > 0)
         {
-            $lines = $requete->fetchAll(PDO::FETCH_OBJ);
+            // fetch team users
+            $sql = "SELECT *";
+            $sql .= " FROM storieshelper_user AS u";
+            $sql .= " LEFT JOIN storieshelper_belong_to AS b ON u.rowid = b.fk_user";
+            $sql .= " WHERE b.fk_team = ?";
+            $sql .= " ORDER BY lastname, firstname";
 
-            foreach($lines as $line)
+            $requete = $this->getBdd()->prepare($sql);
+            $requete->execute([$this->rowid]);
+
+            if($requete->rowCount() > 0)
             {
-                $User = new User();
-                $User->initialize($line, true);
-                $this->users[] = $User;
+                $lines = $requete->fetchAll(PDO::FETCH_OBJ);
+
+                foreach($lines as $line)
+                {
+                    $User = new User();
+                    $User->initialize($line, true);
+                    $this->users[] = $User;
+                }
             }
         }
 
@@ -290,11 +296,14 @@ class Team extends Modele
     {
         foreach($this->mapColumns as $MapColumn)
         {
-            foreach($MapColumn->getTasks() as $Task)
+            if(!empty($MapColumn->getTasks()))
             {
-                if($Task->getRowid() == $fk_task)
+                foreach($MapColumn->getTasks() as $Task)
                 {
-                    return true;
+                    if($Task->getRowid() == $fk_task)
+                    {
+                        return true;
+                    }
                 }
             }
         }
@@ -310,13 +319,16 @@ class Team extends Modele
     {
         foreach($this->mapColumns as $MapColumn)
         {
-            foreach($MapColumn->getTasks() as $Task)
+            if(!empty($MapColumn->getTasks()))
             {
-                foreach($Task->getComments() as $Comment)
+                foreach($MapColumn->getTasks() as $Task)
                 {
-                    if($Comment->getRowid() == $fk_comment)
+                    foreach($Task->getComments() as $Comment)
                     {
-                        return true;
+                        if($Comment->getRowid() == $fk_comment)
+                        {
+                            return true;
+                        }
                     }
                 }
             }

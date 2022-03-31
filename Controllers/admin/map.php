@@ -15,7 +15,12 @@ if($teamId)
 {
     if($projectId)
     {
-        $Organization = new Organization($idOrganization);
+        // $Organization = new Organization($idOrganization);
+        $Organization = new Organization();
+        $Organization->setRowid($idOrganization);
+        $Organization->fetchProjects(0);
+        $Organization->fetchAllUsers();
+
         $CurrentUser = new User($idUser);
 
         // fetching project & team
@@ -31,9 +36,12 @@ if($teamId)
         // check if the Team & Project exists
         if(!empty($Project))
         {
+            // fetch The project teams
+            $Project->fetchTeams(0);
+
+            // check if the given team belongs to this project
             foreach($Project->getTeams() as $Obj)
             {
-                // check if the team belongs to this project
                 if($Obj->getRowid() == $teamId)
                 {
                     $Team = $Obj;
@@ -43,6 +51,9 @@ if($teamId)
 
             if(!empty($Team))
             {
+                // Entirely load the team
+                $Team->fetch($teamId);
+
                 if($action == "archiveTeam")
                 {
                     if($projectId)
@@ -120,33 +131,36 @@ if($teamId)
     
                 foreach($Team->getMapColumns() as $columnKey => $Column)
                 {
-                    foreach($Column->getTasks() as $taskKey => $Task)
+                    if(!empty($Column->getTasks()))
                     {
-                        // all team users + current admin
-                        $TeamUsers = $Team->getUsers();
-                        
-                        // get all organization admins
-                        foreach($Organization->getUsers() as $User)
+                        foreach($Column->getTasks() as $taskKey => $Task)
                         {
-                            if($User->isAdmin())
+                            // all team users + current admin
+                            $TeamUsers = $Team->getUsers();
+                            
+                            // get all organization admins
+                            foreach($Organization->getUsers() as $User)
                             {
-                                $usernames[$User->getRowid()] = $User->getLastname() . ' ' . $User->getFirstname();
-                                $TeamUsers[] = $User;
+                                if($User->isAdmin())
+                                {
+                                    $usernames[$User->getRowid()] = $User->getLastname() . ' ' . $User->getFirstname();
+                                    $TeamUsers[] = $User;
+                                }
                             }
-                        }
-    
-                        // verify that fk_author correspond to an admin user
-                        foreach($TeamUsers as $User)
-                        {
-                            if($User->getRowid() == $Task->getFk_user())
+        
+                            // verify that fk_author correspond to an admin user
+                            foreach($TeamUsers as $User)
                             {
-                                $authors[$columnKey][$taskKey] = $usernames[$Task->getFk_user()] ?? ($User->isAdmin() ? $Organization->getName() : '');
-                                break;
+                                if($User->getRowid() == $Task->getFk_user())
+                                {
+                                    $authors[$columnKey][$taskKey] = $usernames[$Task->getFk_user()] ?? ($User->isAdmin() ? $Organization->getName() : '');
+                                    break;
+                                }
                             }
                         }
                     }
                 }
-    
+
                 // notification count
                 $notificationCount = 0;
                 if($Team->isActive() == 0) {
@@ -188,6 +202,6 @@ else
 {
     $errors[] = "Aucune équipe n'a été sélectionnée.";
     $errors = serialize($errors);
-    header("location:".CONTROLLERS_URL.'admin/detailsProjet.php?idProject='.$projectId.'&errors='.$errors);
+    header("location:".CONTROLLERS_URL.'admin/projectDashboard.php?idProject='.$projectId.'&errors='.$errors);
 }
 ?>

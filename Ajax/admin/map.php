@@ -16,7 +16,11 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
     
         if($projectId > 0 && $teamId > 0)
         {
-            $Organization = new Organization($idOrganization);
+            // $Organization = new Organization($idOrganization);
+            $Organization = new Organization();
+            $Organization->setRowid($idOrganization);
+            $Organization->fetchName();
+            $Organization->fetchProjects(0);
     
             // check if the project && team belong to the organization
             foreach($Organization->getProjects() as $project)
@@ -24,11 +28,14 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
                 if($project->getRowid() == $projectId)
                 {
                     $Project = $project;
+                    $Project->fetchTeams(0);
+
                     foreach($project->getTeams() as $team)
                     {
                         if($team->getRowid() == $teamId)
                         {
                             $Team = $team;
+                            $Team->fetch($teamId);
                             break 2;
                         }
                     }
@@ -157,6 +164,7 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
                                 LogHistory::create($idOrganization, $idUser, "INFO", 'create', 'task', '', '', 'task id : '.$taskId);
                                 echo json_encode($Task);
                             } catch (\Throwable $th) {
+                                echo json_encode($th);
                                 LogHistory::create($idOrganization, $idUser, "ERROR", 'create', 'task', '', '','task id : '.$taskId, $th);
                             }
                         }
@@ -381,7 +389,7 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
                         if($taskId && $Team->checkTask($taskId)) 
                         {
                             try {                    
-                                $Organization = new Organization($idOrganization);
+                                // $Organization = new Organization($idOrganization);
                                 $Comments = $Task->getComments();
                 
                                 foreach($Comments as $key => $Comment)

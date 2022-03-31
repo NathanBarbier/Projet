@@ -87,6 +87,17 @@ class Organization extends Modele
         }
     }
 
+    public function removeProject(int $fk_project)
+    {
+        foreach($this->projects as $key => $Project)
+        {
+            if($Project->getRowid() == $fk_project)
+            {
+                unset($this->projects[$key]);
+            }
+        }
+    }
+
     // CREATE
 
     public function create()
@@ -178,8 +189,28 @@ class Organization extends Modele
         }
     }
 
+    public function fetchAllUsers()
+    {
+        $sql = "SELECT * FROM storieshelper_user WHERE fk_organization = ?";
+
+        $requete = $this->getBdd()->prepare($sql);
+        $requete->execute([$this->rowid]);
+
+        if($requete->rowCount() > 0)
+        {
+            $lines = $requete->fetchAll(PDO::FETCH_OBJ);
+
+            foreach($lines as $line)
+            {
+                $User = new User();
+                $User->initialize($line);
+                $this->users[] = $User;
+            }
+        }
+    }
+
     /**
-     * Fetch all organization users and affect them to the Organization $users property
+     * Fetch the 30 first organization users and affect them to the Organization $users property
      */
     public function fetchUsers()
     {
@@ -314,6 +345,21 @@ class Organization extends Modele
             }
         }
         return false;
+    }
+
+    public function fetchName()
+    {
+        $sql = "SELECT name FROM storieshelper_organization WHERE rowid = ?";
+
+        $requete = $this->getBdd()->prepare($sql);
+        $requete->execute([$this->rowid]);
+
+        if($requete->rowCount() > 0)
+        {
+            $obj = $requete->fetch(PDO::FETCH_OBJ);
+            $this->name = $obj->name;
+        }
+
     }
 
     public function fetch_last_insert_id()

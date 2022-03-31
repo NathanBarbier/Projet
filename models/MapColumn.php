@@ -64,11 +64,15 @@ Class MapColumn extends Modele
     public function getActiveTasks()
     {
         $activeTasks = array();
-        foreach($this->tasks as $Task)
+
+        if(!empty($this->tasks))
         {
-            if($Task->isActive())
+            foreach($this->tasks as $Task)
             {
-                $activeTasks[] = $Task;
+                if($Task->isActive())
+                {
+                    $activeTasks[] = $Task;
+                }
             }
         }
 

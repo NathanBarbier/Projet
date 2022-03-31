@@ -12,19 +12,19 @@ if($rights === "admin")
 
 if($rights === "user")
 {
-    header("location:".VIEWS_URL."membre/index.php");
+    header("location:".VIEWS_URL."member/index.php");
     exit;
 }
 
 if($rights === 'needConsent')
 {
-    header("location:".CONTROLLERS_URL."visiteur/needConsent.php");
+    header("location:".CONTROLLERS_URL."visitor/needConsent.php");
     exit;
 }
 
 if(empty($rights))
 {
     session_destroy();
-    header("Location:".CONTROLLERS_URL."visiteur/connexion.php");
+    header("Location:".CONTROLLERS_URL."visitor/login.php");
     exit;
 }

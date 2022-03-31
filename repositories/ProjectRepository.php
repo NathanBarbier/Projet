@@ -23,6 +23,34 @@ class ProjectRepository extends Repository
             }
         }
     }
+
+    public function fetchActiveProjectsCount(int $fk_organization)
+    {
+        $sql = "SELECT COUNT(*) AS counter FROM storieshelper_project";
+        $sql .= " WHERE fk_organization = $fk_organization AND active = 1";
+
+        $requete = $this->getBdd()->prepare($sql);
+        $requete->execute();
+
+        if($requete->rowCount() > 0)
+        {
+            return $requete->fetch(PDO::FETCH_OBJ)->counter;
+        }
+    }
+
+    public function fetchArchivedProjectsCount(int $fk_organization)
+    {
+        $sql = "SELECT COUNT(*) AS counter FROM storieshelper_project";
+        $sql .= " WHERE fk_organization = $fk_organization AND active = 0";
+
+        $requete = $this->getBdd()->prepare($sql);
+        $requete->execute();
+
+        if($requete->rowCount() > 0)
+        {
+            return $requete->fetch(PDO::FETCH_OBJ)->counter;
+        }
+    }
 }
 
 ?>

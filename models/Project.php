@@ -181,7 +181,20 @@ Class Project extends Modele
             $this->fk_organization  = $obj->fk_organization;
             
             $this->fetchTeams();
-            // $this->fetchOrganization();
+        }
+    }
+
+    public function fetchName()
+    {
+        $sql = "SELECT name FROM storieshelper_project WHERE rowid = ?";
+        
+        $requete = $this->getBdd()->prepare($sql);
+        $requete->execute([$this->rowid]);
+
+        if($requete->rowCount() > 0)
+        {
+            $obj = $requete->fetch(PDO::FETCH_OBJ);
+            $this->name = $obj->name;
         }
     }
 
@@ -205,6 +218,9 @@ Class Project extends Modele
         }
     }
 
+    /**
+     * Depth : 0 = basic team properties | 1 = add team users | 2 = add columns
+     */
     public function fetchTeams(int $depth = 2)
     {
         $sql = "SELECT *"; 

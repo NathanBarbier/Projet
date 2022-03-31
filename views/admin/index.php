@@ -1,10 +1,10 @@
 <?php 
 // require_once "../../services/header.php";
-require_once "layouts/entete.php";
+require_once "layouts/header.php";
 ?>
     <div class="row mt-4">
         <div class="col-xs-12 col-md-6 pt-4" style="height:35vh">
-            <a href="<?= CONTROLLERS_URL ?>admin/collaborateurs.php" class="aVignette">
+            <a href="<?= CONTROLLERS_URL ?>admin/associateMenu.php" class="aVignette">
                 <div id="vignette0" class="bg-info mx-auto rounded vignette">
                     <div class="row">
                         <div class="col-4">
@@ -20,7 +20,7 @@ require_once "layouts/entete.php";
             </a>
         </div>
         <div class="col-xs-12 col-md-6 pt-4" style="height:35vh">
-            <a href="<?= CONTROLLERS_URL ?>admin/gestionOrganisation.php" class="aVignette">
+            <a href="<?= CONTROLLERS_URL ?>admin/organizationDashboard.php" class="aVignette">
                 <div id="vignette1" class="bg-info mx-auto rounded vignette">
                     <div class="row">
                         <div class="col-4">
@@ -38,7 +38,7 @@ require_once "layouts/entete.php";
     </div>
     <div class="row">
         <div class="col-xs-12 col-md-6 pt-4" style="height:35vh">
-            <a href="<?= CONTROLLERS_URL ?>admin/projets.php" class="aVignette">
+            <a href="<?= CONTROLLERS_URL ?>admin/projectMenu.php" class="aVignette">
                 <div id="vignette2" class="bg-info mx-auto rounded vignette">
                     <div class="row">
                         <div class="col-4">
@@ -60,5 +60,5 @@ require_once "layouts/entete.php";
         </div>
     </div>
 <?php
-require_once "layouts/pied.php"; 
+require_once "layouts/footer.php"; 
 ?>

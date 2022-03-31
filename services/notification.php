@@ -22,14 +22,23 @@ if(!empty($errors)) {
 
 
 // put messages on a lang file
-if($message == 'connexion') {
-    if(!empty($User)) {
+if($message == 'connexion')
+{
+    if(!empty($User))
+    {
         $username = $User ? ($User->getFirstname() ?? $User->getEmail()) : '';
         $username .= ' ';
-    } else {
+    } 
+    else 
+    {
         $username = '';
     }
+
     $message = 'Content de vous revoir connecté ' . $username . '!';
+}
+else if($message == "inscription")
+{
+    $message = "L'inscription a bien été prise en compte";
 }
 
     switch ($type) {
@@ -64,7 +73,7 @@ if($message == 'connexion') {
     var icon = <?php echo json_encode($icon); ?>;
 
     // url rewrite (remove get params)
-    if(window.location.href.includes('/index.php') || window.location.href.includes('/tableauDeBord.php')) {
+    if(window.location.href.includes('/index.php') || window.location.href.includes('/dashboard.php')) {
         if(typeof window.history.pushState == 'function') {
             window.history.pushState({}, "Hide", url);
         }

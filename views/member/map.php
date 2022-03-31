@@ -3,84 +3,8 @@ require_once "layouts/header.php";
 ?>
 <div class="row position-relative bg-white" style="height: 100%;">
 
-    <?php if (!$Project->isActive()) { ?>
-        <div class="alert alert-info alert-visible mt-3 w-50 text-center position-absolute top-0 start-50 translate-middle-x collapse show" style="z-index: 1;">
-            <i class="bi bi-info-circle-fill"></i>    
-            Ce projet est archivé.
-            &nbsp;&nbsp;<a href="<?= CONTROLLERS_URL ?>admin/map.php?action=openProject&projectId=<?= $Project->getRowid() ?>&teamId=<?= $teamId ?>" class="btn btn-outline-secondary">Ré-ouvrir</a>
-            <button type="button" class="close-alert btn-close position-absolute top-0 end-0 me-4 mt-3" aria-label="Close"></button>
-            <span class="notificationCount position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark">
-                <?= $notificationCount . "+" ?>
-            </span>
-        </div>
-    <?php } ?>
-    <?php if (!$Team->isActive()) { ?>
-        <div class="alert alert-info alert-visible mt-3 w-50 text-center position-absolute top-0 start-50 translate-middle-x collapse show before">
-            <i class="bi bi-info-circle-fill"></i>    
-            Ce tableau est archivé.
-            &nbsp;&nbsp;<a href="<?= CONTROLLERS_URL ?>admin/map.php?action=openTeam&projectId=<?= $Project->getRowid() ?>&teamId=<?= $teamId ?>" class="btn btn-outline-secondary">Ré-ouvrir</a>
-            <button type="button" class="close-alert btn-close position-absolute top-0 end-0 me-4 mt-3" aria-label="Close"></button>
-            <span class="notificationCount position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark">
-                <?= $notificationCount . "+" ?>
-            </span>
-        </div>
-    <?php } ?>
-    <?php if ($success) { ?>
-        <div class="alert alert-success mt-3 w-50 text-center position-absolute top-0 start-50 translate-middle-x before">
-            <i class="bi bi-check-circle-fill"></i>
-            <?= $success; ?>
-        </div>
-    <?php } ?>
-
-    <?php if ($errors) { ?>
-        <div class="alert alert-danger w-50 text-center position-absolute top-0 start-50 translate-middle-x before">
-            <?php foreach($errors as $error) { ?>
-                <i class="bi bi-exclamation-triangle-fill"></i>
-                <?php echo $error . "<br>";
-            } ?>
-        </div>
-    <?php } ?>
-
-    <!-- Archived tasks Modal -->
-    <div class="modal" id="archive-tasks-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog position-absolute start-50 translate-middle w-75" style="top:40%; height:75vh">
-            <div class="modal-content" style="height: inherit;">
-                <div class="modal-body position-relative pt-0">
-                    <i id="close-tasks-modal" class="bi bi-x btn btn-outline-danger position-absolute end-0 top-0 mt-2 me-2" style="width: auto;"></i>
-                    <div class="row text-center mt-2">
-                        <h4 class="underline">Tâches archivées</h4>
-                        <hr class="mx-auto mt-2 mb-0">
-                        
-                        <div id="archived-tasks-container" class="overflow-y mt-3" style="height: 60vh;">
-                            <?php
-                            foreach($Team->getMapColumns() as $Column) {
-                                foreach($Column->getTasks() as $Task) {
-                                    if(!$Task->isActive()) { ?>
-                                        <div class="row radius hover w-100 mx-0 mt-3 align-content-center border task-line" style="height: 100px;">
-                                            <div class="col-8 d-flex align-content-center">
-                                                <div class="w-100 h-100">
-                                                    <?= $Task->getName() ?>
-                                                </div>
-                                            </div>
-                                            <div class="col-4 align-content-center">        
-                                                <input type="hidden" name="task-id" value="<?= $Task->getRowid() ?>">
-                                                <i class="bi bi-archive-fill btn btn-outline-success w-100 mb-2 open-task-btn"></i>
-                                            </div>
-                                        </div>
-                                    <?php 
-                                    }
-                                }
-                            } ?>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- Back Page -->
-    <a href="<?= CONTROLLERS_URL ?>admin/projectDashboard.php?idProject=<?= $Project->getRowid() ?>" ><i class="btn btn-outline-dark bi bi-box-arrow-left position-absolute start-0 top-0 mt-2 me-2 w-auto" style="z-index: 1;"></i></a>
+    <a href="<?= CONTROLLERS_URL ?>member/dashboard.php" ><i class="btn btn-outline-dark bi bi-box-arrow-left position-absolute start-0 top-0 mt-2 me-2 w-auto" style="z-index: 1;"></i></a>
     <!-- Expand right section -->
     <i id="open-right-section" class="btn btn-outline-dark bi bi-arrow-bar-left position-absolute end-0 top-0 mt-2 me-2 w-auto collapse"></i>
 
@@ -89,8 +13,8 @@ require_once "layouts/header.php";
 
         <div class="sticker h-auto w-50 mx-auto text-center mt-3 pb-5 px-3">
             <p class="mt-5 mb-0"><b>Êtes-vous sûr de vouloir archiver le tableau ?</b></p>
-	    <p><b>(vous pourrez le ré-ouvrir plus tard)</b></p>
-            <a href="<?= CONTROLLERS_URL ?>admin/map.php?action=archiveTeam&projectId=<?= $projectId ?>&teamId=<?= $teamId ?>" class="btn btn-outline-success w-50 mt-5">Archiver le tableau</a>
+            <p><b>(Sa ré-ouverture nécessitera l'intervention d'un administrateur.)</b></p>
+            <a href="<?= CONTROLLERS_URL ?>member/map.php?action=archiveTeam&teamId=<?= $teamId ?>&projectId=<?= $projectId ?>" class="btn btn-outline-success w-50 mt-5">Archiver le tableau</a>
             <a id="cancel-archive" class="btn btn-outline-danger w-50 mt-3">Annuler</a>
         </div>
     </div>
@@ -103,7 +27,7 @@ require_once "layouts/header.php";
                     <div class="project-column">
                         <input class="columnId-input" type="hidden" value="<?= $Column->getRowid() ?>">
                         <div class="column-title text-center">
-                            <div class="row" style="height: 85px">
+                            <div class="row" style="height : 85px">
                                 <div class="col-7 pt-3 ps-2 ms-3 pe-0 column-title-name">
                                     <div class="overflow-x">
                                         <b class="column-title-text"><?= $Column->getName() ?></b>
@@ -111,7 +35,7 @@ require_once "layouts/header.php";
                                 </div>
                                 <ul class="offset-1 col-3 pt-2 ps-0">
                                     <li class="me-2"><button class="btn btn-outline-dark add-task-btn">New</button></li>
-                                    <?php if($Column->getName() != "Open" && $Column->getName() != "Closed"){ ?>
+                                   <?php if($Column->getName() != "Open" && $Column->getName() != "Closed"){ ?>
                                         <li class="mt-2 me-2"><button class="btn btn-outline-danger delete-col-btn">Delete</button></li>
                                     <?php } ?>
                                 </ul>
@@ -128,7 +52,16 @@ require_once "layouts/header.php";
                                 } ?>
                                 <div class="task">
                                     <input class="taskId-input" type="hidden" value="<?= $Task->getRowid() ?>">
-                                    <button class='btn disabled <?= $isAdmin ? 'btn-outline-danger w-75' : 'btn-outline-classic w-50' ?> line-height-40 mt-2 ms-2 px-0 overflow-x'><?= $authors[$columnKey][$taskKey] ?></button>
+                                    <button class='btn disabled btn-outline-<?= $isAdmin ? 'danger' : 'classic' ?> line-height-40 mt-2 ms-2 px-0 w-50 overflow-x'><?= $authors[$columnKey][$taskKey] ?></button>
+                                    <?php foreach($Task->getMembers() as $member) {
+                                        if($member->getRowid() == $User->getRowid()) { ?>
+                                            <button class="btn disabled btn-outline-primary line-height-40 mt-2 p-0" style="float: right;width: 20%; opacity: 100%; margin-right: 0.6rem">
+                                                <i class="bi bi-person-check-fill"></i>
+                                            </button>    
+                                            <?php 
+                                            break;
+                                        }
+                                    } ?>
                                     <div class='task-bubble pt-2 mb-1 mt-1 mx-2'>
                                         <textarea class='task-bubble-input text-center pt-1'><?= $Task->getName() ?></textarea>
                                     </div>
@@ -151,24 +84,16 @@ require_once "layouts/header.php";
     </div>
 
     <div id="details-section" class="col-sm-4 col-md-3 col-lg-2 pt-1 pe-4 text-center border position-relative collapse show" style="height: 100vh">
-        <div class="row justify-content-center">
-            <div class="col-5">
-                <?php if($Team->isActive()) { ?>
-                    <i id="archive-btn" class="bi bi-archive-fill btn btn-outline-danger w-100 mb-2 collapse show" tabindex="0" data-bs-toggle="tooltip" title="Archiver le tableau" data-bs-placement="left"></i>
-                <?php } else { ?>
-                    <a href="<?= CONTROLLERS_URL ?>admin/map.php?action=openTeam&projectId=<?= $Project->getRowid() ?>&teamId=<?= $teamId ?>"><i id="unarchive-btn" class="bi bi-archive-fill btn btn-outline-success w-75 mb-2 collapse show" tabindex="0" data-bs-toggle="tooltip" title="Désarchiver le tableau" data-bs-placement="left"></i></a>
-                <?php } ?>
-            </div>
-            <div class="col-5">
-                <i id="show-archive-tasks-modal" class="bi bi-list-task btn btn-outline-success w-100"></i>
-            </div>
-        </div>
         <div class="row">
+            <div class="col">
+                <i id="archive-btn" class="bi bi-archive-fill btn btn-outline-danger w-75 mb-2 collapse show" tabindex="0" data-bs-toggle="tooltip" title="Archiver le tableau" data-bs-placement="left"></i>
+            </div>
             <div class="col">
                 <button id="add-column-btn" class="btn btn-outline-dark collapse show">Nouvelle colonne</button>
             </div>
         </div>
         <div id="task-details" class="mt-3 collapse">
+            <!-- <textarea id="task-title" class="card px-2 pt-3 text-center" cols="25" rows="2" readonly>Title</textarea> -->
             <div class="mt-3">
                 <i id="up-task-btn" class="w-25 me-2 bi bi-arrow-up btn btn-outline-dark"></i>
                 <i id="down-task-btn" class="w-25 ms-2 bi bi-arrow-down btn btn-outline-dark"></i>
@@ -205,8 +130,8 @@ require_once "layouts/header.php";
                 <button id="attributed-member-button" class="btn btn-outline-classic collapse w-50 mt-2" disabled>Attribué</button>
                 <button id="attribute-member-button" class="collapse btn btn-outline-success w-50 mt-2">Attribuer</button>
                 <button id="desattribute-member-button" class="collapse btn btn-outline-danger mt-2">Désattribuer</button>
-                
-                <button id="finish-task-button" class="btn btn-warning w-100 mt-3 collapse">Terminer la tâche</button>
+
+                <button id="finish-task-button" class="btn btn-warning w-100 mt-3 ">Terminer la tâche</button>
             </div>
         </div>
         <div id="add-column-form" class="sticker text-center pt-1 collapse w-100" style="height:91%">
@@ -232,8 +157,8 @@ require_once "layouts/header.php";
             <i id="column-details-delete-btn" class="bi bi-trash-fill btn btn-outline-danger w-75 mt-4" tabindex="0" data-bs-toggle="tooltip" title="Supprimer la colonne"></i>
         </div>
     </div>
-
-<script type="text/Javascript" src="<?= JS_URL ?>admin/map.js" defer></script>
+</div>
+<script type="text/Javascript" src="<?= JS_URL ?>member/map.min.js" defer></script>
 <?php 
 require_once "layouts/footer.php";
 ?>

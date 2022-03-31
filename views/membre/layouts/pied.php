@@ -40,6 +40,20 @@
 			</div>
 		</div>
 	</div>
+
+	<!-- Loading Modal -->
+	<div class="modal" id="loading-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog position-absolute bottom-0 end-0 me-3" style="width: 200px;">
+            <div class="modal-content">
+                <div class="modal-body position-relative">
+                    <div class="d-flex align-items-center">
+                        <strong>Chargement...</strong>
+                        <div class="spinner-border ms-auto" role="status" aria-hidden="true"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     
     <script>
 		const AJAX_URL = <?php echo json_encode(AJAX_URL); ?>;

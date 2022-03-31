@@ -3,20 +3,6 @@ require_once "layouts/entete.php";
 ?>
 <div class="row position-relative bg-white" style="height: 100%;">
 
-    <!-- Modal -->
-    <div class="modal" id="loading-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog position-absolute bottom-0 end-0 me-3" style="width: 200px;">
-            <div class="modal-content">
-                <div class="modal-body position-relative">
-                    <div class="d-flex align-items-center">
-                        <strong>Chargement...</strong>
-                        <div class="spinner-border ms-auto" role="status" aria-hidden="true"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- Back Page -->
     <a href="<?= CONTROLLERS_URL ?>membre/tableauDeBord.php" ><i class="btn btn-outline-dark bi bi-box-arrow-left position-absolute start-0 top-0 mt-2 me-2 w-auto" style="z-index: 1;"></i></a>
     <!-- Expand right section -->

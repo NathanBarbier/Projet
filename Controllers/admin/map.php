@@ -15,7 +15,6 @@ if($teamId)
 {
     if($projectId)
     {
-        // $Organization = new Organization($idOrganization);
         $Organization = new Organization();
         $Organization->setRowid($idOrganization);
         $Organization->fetchProjects(0);
@@ -116,17 +115,19 @@ if($teamId)
     
                 // for JS
                 $username = $CurrentUser->getLastname() . ' ' . $CurrentUser->getFirstname();
-                if(strlen(trim($username)) == 0) {
+
+                if(strlen(trim($username)) == 0) 
+                {
                     $username = $Organization->getName();
                 }
     
                 $authors = array();
                 $usernames = array();
-    
+
                 // Get tasks authors for JS
-                foreach($Team->getUsers() as $User)
+                foreach($Team->getUsers() as $TeamUser)
                 {
-                    $usernames[$User->getRowid()] = $User->getLastname() . ' ' . $User->getFirstname();
+                    $usernames[$TeamUser->getRowid()] = $TeamUser->getLastname() . ' ' . $TeamUser->getFirstname();
                 }
     
                 foreach($Team->getMapColumns() as $columnKey => $Column)
@@ -139,21 +140,21 @@ if($teamId)
                             $TeamUsers = $Team->getUsers();
                             
                             // get all organization admins
-                            foreach($Organization->getUsers() as $User)
+                            foreach($Organization->getUsers() as $TeamUser)
                             {
-                                if($User->isAdmin())
+                                if($TeamUser->isAdmin())
                                 {
-                                    $usernames[$User->getRowid()] = $User->getLastname() . ' ' . $User->getFirstname();
-                                    $TeamUsers[] = $User;
+                                    $usernames[$TeamUser->getRowid()] = $TeamUser->getLastname() . ' ' . $TeamUser->getFirstname();
+                                    $TeamUsers[] = $TeamUser;
                                 }
                             }
         
                             // verify that fk_author correspond to an admin user
-                            foreach($TeamUsers as $User)
+                            foreach($TeamUsers as $TeamUser)
                             {
-                                if($User->getRowid() == $Task->getFk_user())
+                                if($TeamUser->getRowid() == $Task->getFk_user())
                                 {
-                                    $authors[$columnKey][$taskKey] = $usernames[$Task->getFk_user()] ?? ($User->isAdmin() ? $Organization->getName() : '');
+                                    $authors[$columnKey][$taskKey] = $usernames[$Task->getFk_user()] ?? ($TeamUser->isAdmin() ? $Organization->getName() : '');
                                     break;
                                 }
                             }

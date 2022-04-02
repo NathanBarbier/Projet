@@ -232,6 +232,7 @@ function init()
         $("#check-comment-btn").removeClass('show');
         $("#delete-comment-btn").removeClass('show');
 
+        // empty details
         $("#task-comment-container").children().remove();
         $("#task-members-container").children().remove();
 
@@ -241,9 +242,12 @@ function init()
         $("#desattribute-member-button").removeClass('show');
 
         // show the finish task button if the task is not in the 'closed' column
-        if($(this).parents('.project-column').find('.column-title-text').text() != 'Closed') {
+        if($(this).parents('.project-column').find('.column-title-text').text() != 'Closed') 
+        {
             $("#finish-task-button").addClass('show');
-        } else {
+        } 
+        else 
+        {
             $("#finish-task-button").removeClass('show');
         }
 
@@ -296,16 +300,17 @@ function init()
                 task = JSON.parse(data);
                 if(task)
                 {
-                    comments = task.comments;
-                    l = comments.length;
+                    var comments = task.comments;
+                    var l = comments.length;
+
                     for(i = 0; i < l; i++)
                     {
-                        note        = comments[i].note;
-                        note        = note == null ? '' : note;
-                        admin       = comments[i].admin;
-                        author      = comments[i].author;
-                        authorId    = comments[i].fk_user;
-                        tms         = comments[i].tms;
+                        var note        = comments[i].note;
+                        var note        = note == null ? '' : note;
+                        var admin       = comments[i].admin;
+                        var author      = comments[i].author;
+                        var authorId    = comments[i].fk_user;
+                        var tms         = comments[i].tms;
 
                         var prepend = [
                             "<div class='task-comment-div'>",
@@ -368,9 +373,7 @@ function init()
                 $("#team-members-container").children().remove()
                 $("#task-members-container").children().remove()
 
-                console.log(data)
-
-                data = JSON.parse(data);
+                var data = JSON.parse(data);
 
                 // users that are attributed to the task
                 affectedUsers = data.affectedUsers;
@@ -515,27 +518,37 @@ function init()
             async: true,
             url: AJAX_URL+"admin/map.php?action=addTaskComment&taskId="+taskId+"&teamId="+teamId+"&projectId="+projectId,
             success: function(data) {
-                
-                commentId = data;
-                commentId = commentId.replace("\"", ' ').replace("\"", ' ');
+                var data = JSON.parse(data);
+                if(data)
+                {
+                    var comment     = data;
 
-                var prepend = [
-                    "<div class='task-comment-div'>",
-                        "<input type='hidden' class='comment-task-id' value='"+commentId+"'>",
-                        "<input type='hidden' class='comment-author-id' value='"+idUser+"'>",
-                        "<textarea class='mt-3 card task-comment px-2 pt-3 text-center' name='' cols='30' rows='3'></textarea>",
-                        "<div class='d-flex justify-content-start mt-1'>",
-                            "<button class='btn btn-outline-danger comment-author'>",
-                                username,
-                            "</button>",
-                        "</div>",
-                    "</div>"
-                ].join("");
-
-                $("#task-comment-container").prepend(prepend)
-                $("#loading-modal").modal('hide');
-
-                initComment();
+                    var commentId   = comment.rowid;
+                    var tms         = comment.tms;
+    
+                    var prepend = [
+                        "<div class='task-comment-div'>",
+                            "<input type='hidden' class='comment-task-id' value='"+commentId+"'>",
+                            "<input type='hidden' class='comment-author-id' value='"+idUser+"'>",
+                            "<textarea class='mt-3 card task-comment px-2 pt-3 text-center' name='' cols='30' rows='3'></textarea>",
+                            "<div class='d-flex justify-content-start mt-1'>",
+                                "<button class='btn btn-outline-danger comment-author'>",
+                                    username,
+                                "</button>",
+                                "<div class='col-5 pe-0'>",
+                                    "<span class='w-100' style='color:grey;font-size:small'>",
+                                        tms,
+                                    "</span>",
+                                "</div>",
+                            "</div>",
+                        "</div>"
+                    ].join("");
+    
+                    $("#task-comment-container").prepend(prepend)
+                    $("#loading-modal").modal('hide');
+    
+                    initComment();
+                }
             }
         });
     });
@@ -553,6 +566,9 @@ function init()
                 // prepend html from column a to column b
                 taskDiv.prependTo(newColumn.find(".column-content").first());
                 $("#loading-modal").modal('hide');
+
+                // hide the finish task button
+                $('#finish-task-button').removeClass('show');
             }
         });
     })
@@ -576,35 +592,38 @@ function initTask()
                     async: true,
                     url: AJAX_URL+"admin/map.php?action=getLastTaskId"+"&teamId="+teamId+"&projectId="+projectId,
                     success: function(data) {
-                        data = JSON.parse(data);
+                        var data = JSON.parse(data);
                         
-                        taskId = data.rowid;
+                        if(data)
+                        {
+                            var taskId = data;
 
-                        var prepend = [
-                            "<div class='task'>",
-                                "<input class='taskId-input' type='hidden' value='"+taskId+"'>",
-                                "<button class='btn btn-outline-danger disabled line-height-40 mt-2 ms-2 px-0 w-75 overflow-x'>",
-                                    username,
-                                "</button>",
-                                "<div class='task-bubble pt-2 mb-1 mt-1 mx-2'>",
-                                    "<textarea class='task-bubble-input text-center'></textarea>",
-                                "</div>",
-                                "<div class='d-flex justify-content-between pe-2 ps-2'>",
-                                    "<div class='collapse mx-auto task-buttons-container'>",
-                                        "<i class='bi bi-check-lg btn btn-outline-success task-check'></i>",
-                                        "<i class='bi bi-trash ms-1 btn btn-outline-danger task-delete'></i>",
-                                        "<i class='bi bi-caret-left-fill ms-1 btn btn-outline-dark arrow-img-btn task-to-left'></i>",
-                                        "<i class='bi bi-caret-right-fill ms-1 btn btn-outline-dark arrow-img-btn task-to-right'></i>",
-                                        "<i class='bi bi-archive-fill task-archive ms-1 me-1 btn btn-outline-danger'></i>",
+                            var prepend = [
+                                "<div class='task'>",
+                                    "<input class='taskId-input' type='hidden' value='"+taskId+"'>",
+                                    "<button class='btn btn-outline-danger disabled line-height-40 mt-2 ms-2 px-0 w-75 overflow-x'>",
+                                        username,
+                                    "</button>",
+                                    "<div class='task-bubble pt-2 mb-1 mt-1 mx-2'>",
+                                        "<textarea class='task-bubble-input text-center'></textarea>",
                                     "</div>",
-                                "</div>",
-                            "</div>"
-                        ].join("");
-
-                        addTaskBtn.parents(".column-title").next().prepend(prepend);
-                        $("#loading-modal").modal('hide');
-
-                        init();
+                                    "<div class='d-flex justify-content-between pe-2 ps-2'>",
+                                        "<div class='collapse mx-auto task-buttons-container'>",
+                                            "<i class='bi bi-check-lg btn btn-outline-success task-check'></i>",
+                                            "<i class='bi bi-trash ms-1 btn btn-outline-danger task-delete'></i>",
+                                            "<i class='bi bi-caret-left-fill ms-1 btn btn-outline-dark arrow-img-btn task-to-left'></i>",
+                                            "<i class='bi bi-caret-right-fill ms-1 btn btn-outline-dark arrow-img-btn task-to-right'></i>",
+                                            "<i class='bi bi-archive-fill task-archive ms-1 me-1 btn btn-outline-danger'></i>",
+                                        "</div>",
+                                    "</div>",
+                                "</div>"
+                            ].join("");
+    
+                            addTaskBtn.parents(".column-title").next().prepend(prepend);
+                            $("#loading-modal").modal('hide');
+    
+                            init();   
+                        }
                     }
                 });
             }
@@ -625,7 +644,6 @@ function initTask()
             async: true,
             url: AJAX_URL+"admin/map.php?action=updateTask&taskId="+taskId+"&taskName="+taskName+"&teamId="+teamId+"&projectId="+projectId,
             success: function(data) {
-                
                 $("#loading-modal").modal('hide');
             }
         });
@@ -640,8 +658,7 @@ function initTask()
         $.ajax({
             async: true,
             url: AJAX_URL+"admin/map.php?action=deleteTask&taskId="+taskId+"&teamId="+teamId+"&projectId="+projectId,
-            success: function(data) {
-                
+            success: function() {
                 $("#loading-modal").modal('hide');
             }
         });
@@ -672,10 +689,18 @@ function initTask()
     });
 
     $(".task-archive").off('click').on('click', function() {
+
+        // empty details
+        $("#task-comment-container").children().remove();
+        $("#task-members-container").children().remove();
+
+        // hide details
+        $('#task-details').removeClass('show');
+
         // update task active
         var task        = $(this).parents(".task");
         var taskId      = task.find(".taskId-input").first().val();
-        var taskName = task.find('.task-bubble-input').text();
+        var taskName    = task.find('.task-bubble-input').text();
 
         $("#loading-modal").modal('show');
 
@@ -749,7 +774,7 @@ function initCol()
         $.ajax({
             async: true,
             url: AJAX_URL+"admin/map.php?action=deleteColumn&columnId="+columnId+"&teamId="+teamId+"&projectId="+projectId,
-            success: function(data) {
+            success: function() {
                 $("#column-details").removeClass('show');
                 $("#loading-modal").modal('hide');
             }
@@ -763,7 +788,7 @@ function initCol()
             async: true,
             url: AJAX_URL+"admin/map.php?action=leftColumn&columnId="+columnId+"&teamId="+teamId+"&projectId="+projectId+"&columnName="+columnName,
             success: function(data) {
-                data = JSON.parse(data);
+                var data = JSON.parse(data);
                 if(data) {
                     column = $(".columnId-input[value='"+columnId+"']").parents('.project-column').first()
                     column.insertBefore(column.prevAll('.project-column').first());
@@ -774,13 +799,13 @@ function initCol()
     });
 
     $("#right-column-btn").off('click').on('click', function() {
-        columnName = $("#column-title").val();
         $("#loading-modal").modal('show');
+        columnName = $("#column-title").val();
         $.ajax({
             async: true,
             url: AJAX_URL+"admin/map.php?action=rightColumn&columnId="+columnId+"&teamId="+teamId+"&projectId="+projectId+"&columnName="+columnName,
             success: function(data) {
-                data = JSON.parse(data);
+                var data = JSON.parse(data);
                 if(data) {
                     column = $(".columnId-input[value='"+columnId+"']").parents('.project-column').first();
                     column.insertAfter(column.nextAll(".project-column").first());
@@ -795,7 +820,7 @@ function initCol()
         $.ajax({
             async: true,
             url: AJAX_URL+"admin/map.php?action=deleteColumn&columnId="+columnId+"&teamId="+teamId+"&projectId="+projectId,
-            success: function(data) {
+            success: function() {
                 $(".columnId-input[value='"+columnId+"']").parents('.project-column').first().remove();
                 $("#column-details").removeClass('show');
                 $("#loading-modal").modal('hide');
@@ -811,7 +836,7 @@ function initCol()
             async: true,
             url: AJAX_URL+"admin/map.php?action=updateColumn&columnId="+columnId+"&columnName="+columnName+"&teamId="+teamId+"&projectId="+projectId,
             success: function(data) {
-                data = JSON.parse(data);
+                var data = JSON.parse(data);
                 if(data.success){
                     $("#column-details-check-btn").removeClass('show');
                     $(".columnId-input[value='"+columnId+"']").nextAll('.column-title').first().find('.column-title-text').first().text(columnName);

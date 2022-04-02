@@ -35,26 +35,33 @@ require_once "layouts/header.php";
                                 </div>
                                 <ul class="offset-1 col-3 pt-2 ps-0">
                                     <li class="me-2"><button class="btn btn-outline-dark add-task-btn">New</button></li>
-                                   <?php if($Column->getName() != "Open" && $Column->getName() != "Closed"){ ?>
+                                    <?php if($Column->getName() != "Open" && $Column->getName() != "Closed"){ ?>
                                         <li class="mt-2 me-2"><button class="btn btn-outline-danger delete-col-btn">Delete</button></li>
                                     <?php } ?>
                                 </ul>
                             </div>
                         </div>
                         <div class="column-content">
-                            <?php foreach($Column->getActiveTasks() as $taskKey => $Task) {
+                            <?php 
+                            foreach($Column->getActiveTasks() as $taskKey => $Task) 
+                            {
                                 $isAdmin = false;
-                                foreach($TeamUsers as $TeamUser) {
-                                    if($Task->getFk_user() == $TeamUser->getRowid() && $TeamUser->isAdmin()) {
+                                foreach($TeamUsers as $TeamUser) 
+                                {
+                                    if($Task->getFk_user() == $TeamUser->getRowid() && $TeamUser->isAdmin()) 
+                                    {
                                         $isAdmin = true;
                                         break;
                                     }
                                 } ?>
                                 <div class="task">
                                     <input class="taskId-input" type="hidden" value="<?= $Task->getRowid() ?>">
-                                    <button class='btn disabled btn-outline-<?= $isAdmin ? 'danger' : 'classic' ?> line-height-40 mt-2 ms-2 px-0 w-50 overflow-x'><?= $authors[$columnKey][$taskKey] ?></button>
-                                    <?php foreach($Task->getMembers() as $member) {
-                                        if($member->getRowid() == $User->getRowid()) { ?>
+                                    <button class='btn disabled <?= $isAdmin ? 'btn-outline-danger' : 'btn-outline-classic' ?> line-height-40 mt-2 ms-2 px-0 overflow-x' style='width: 65%'><?= $authors[$columnKey][$taskKey] ?></button>
+                                    <?php 
+                                    foreach($Task->getMembers() as $member) 
+                                    {
+                                        if($member->getRowid() == $CurrentUser->getRowid()) 
+                                        { ?>
                                             <button class="btn disabled btn-outline-primary line-height-40 mt-2 p-0" style="float: right;width: 20%; opacity: 100%; margin-right: 0.6rem">
                                                 <i class="bi bi-person-check-fill"></i>
                                             </button>    
@@ -130,8 +137,8 @@ require_once "layouts/header.php";
                 <button id="attributed-member-button" class="btn btn-outline-classic collapse w-50 mt-2" disabled>Attribué</button>
                 <button id="attribute-member-button" class="collapse btn btn-outline-success w-50 mt-2">Attribuer</button>
                 <button id="desattribute-member-button" class="collapse btn btn-outline-danger mt-2">Désattribuer</button>
-
-                <button id="finish-task-button" class="btn btn-warning w-100 mt-3 ">Terminer la tâche</button>
+                
+                <button id="finish-task-button" class="btn btn-warning w-100 mt-3 collapse">Terminer la tâche</button>
             </div>
         </div>
         <div id="add-column-form" class="sticker text-center pt-1 collapse w-100" style="height:91%">
@@ -158,7 +165,7 @@ require_once "layouts/header.php";
         </div>
     </div>
 </div>
-<script type="text/Javascript" src="<?= JS_URL ?>member/map.min.js" defer></script>
+<script type="text/Javascript" src="<?= JS_URL ?>member/map.js" defer></script>
 <?php 
 require_once "layouts/footer.php";
 ?>

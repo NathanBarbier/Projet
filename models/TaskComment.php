@@ -23,10 +23,6 @@ class TaskComment extends Modele
         $this->rowid = $rowid;
     }
 
-    // public function setTask(Task $Task)
-    // {
-    //     $this->Task = $Task;
-    // }
     public function setFk_task(int $fk_task)
     {
         $this->fk_task = $fk_task;
@@ -37,13 +33,14 @@ class TaskComment extends Modele
         $this->note = $note;
     }
 
-    // public function setUser(User $User)
-    // {
-    //     $this->User = $User;
-    // }
     public function setFk_user(int $fk_user)
     {
         $this->fk_user = $fk_user;
+    }
+
+    public function setTms(int $tms)
+    {
+        $this->tms = $tms;
     }
 
     // GETTER
@@ -53,10 +50,6 @@ class TaskComment extends Modele
         return $this->rowid;
     }
 
-    // public function getTask()
-    // {
-    //     return $this->Task;
-    // }
     public function getFk_task()
     {
         return $this->fk_task;
@@ -67,10 +60,6 @@ class TaskComment extends Modele
         return $this->note;
     }
 
-    // public function getUser()
-    // {
-    //     return $this->User;
-    // }
     public function getFk_user()
     {
         return $this->fk_user;
@@ -122,10 +111,8 @@ class TaskComment extends Modele
 
     // FETCH
 
-    public function fetch($rowid = null)
+    public function fetch(int $rowid)
     {
-        $rowid = $rowid == null ? $this->rowid : $rowid;
-
         $sql = "SELECT t.rowid, t.fk_task, t.note, t.fk_user, t.tms";
         $sql .= " FROM storieshelper_task_comment AS t";
         $sql .= " WHERE rowid = ?";

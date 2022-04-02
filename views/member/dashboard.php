@@ -10,8 +10,10 @@ require_once "layouts/header.php";
                 <h3 class="mx-auto text-center w-50 py-2 underline">Tableaux Actifs</h3>
                 <div class="pb-5" style="height: 90%; overflow: auto">
                     <?php 
-                    if(count($Projects) > 0) {
-                        foreach($Projects as $Project) { 
+                    if(count($Projects) > 0) 
+                    {
+                        foreach($Projects as $Project) 
+                        { 
                         $teamId = 0; ?>
                         <div class="pb-3 mb-5 border-lg" style="height: max-content;">
                             <div class="row text-center justify-content-around">
@@ -23,14 +25,19 @@ require_once "layouts/header.php";
                                 <div class="col-10 sticker mt-4 pt-3">
                                     <p>
                                         <b>Equipe : </b>
-                                        <?php foreach($Project->getTeams() as $Team) {
-                                            foreach($Team->getUsers() as $teamMember) {
-                                                if($teamMember->getRowid() == $idUser) {
+                                        <?php 
+                                        foreach($Project->getTeams() as $Team) 
+                                        {
+                                            foreach($Team->getUsers() as $teamMember) 
+                                            {
+                                                if($teamMember->getRowid() == $idUser) 
+                                                {
+                                                    $teamId = $Team->getRowid();
                                                     echo $Team->getName();
                                                     break 2;
                                                 }
-                                            } ?>
-                                        <?php } ?>
+                                            }
+                                        } ?>
                                     </p>
                                 </div>
                             </div>
@@ -38,12 +45,15 @@ require_once "layouts/header.php";
                                 <div class="sticker col-4 pt-3 text-center">
                                     <b class="border-bottom">Membres</b>
                                     <p class="text-center">
-                                        <?php
-                                        $counter = 0; 
-                                        foreach($Project->getTeams() as $Team) {
-                                            $counter += count($Team->getUsers());
-                                        } 
-                                        echo $counter; ?>
+                                        <?php // count team members
+                                        foreach($Project->getTeams() as $Team) 
+                                        {
+                                            if($Team->getRowid() == $teamId)
+                                            {
+                                                echo count($Team->getUsers());
+                                                break;
+                                            }
+                                        } ?>
                                     </p>
                                     <br>
                                 </div>
@@ -52,26 +62,11 @@ require_once "layouts/header.php";
                                     <b class="border-bottom">Tâches affectées</b>
                                     <br>
                                     <p class="text-center">
-                                    <?php foreach($Project->getTeams() as $Team) {
-                                            foreach($Team->getUsers() as $TeamUser) {
-                                                if($TeamUser->getRowid() == $idUser) {
-                                                    $teamId = $Team->getRowid();
-                                                    $taskCount = 0;
-                                                    foreach($Team->getMapColumns() as $MapColumn) {
-                                                        foreach($MapColumn->getTasks() as $Task) {
-                                                            foreach($Task->getMembers() as $Member) {
-                                                                if($Member->getRowid() == $idUser) {
-                                                                    $taskCount+= count($MapColumn->getTasks());
-                                                                    break;
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                    break 2;
-                                                }
-                                            } ?>
-                                        <?php } ?>
-                                        <?= $taskCount ?>
+                                    <?php 
+                                    $TeamRepository = new TeamRepository();
+                                    $affectedTasksCount = $TeamRepository->fetchAffectedTasksCount($teamId, $idUser);
+                                    echo $affectedTasksCount;
+                                    ?>
                                     </p>
                                 </div>
                             </div>

@@ -54,20 +54,22 @@ require_once "layouts/header.php";
                         <div id="archived-tasks-container" class="overflow-y mt-3" style="height: 60vh;">
                             <?php
                             foreach($Team->getMapColumns() as $Column) {
-                                foreach($Column->getTasks() as $Task) {
-                                    if(!$Task->isActive()) { ?>
-                                        <div class="row radius hover w-100 mx-0 mt-3 align-content-center border task-line" style="height: 100px;">
-                                            <div class="col-8 d-flex align-content-center">
-                                                <div class="w-100 h-100">
-                                                    <?= $Task->getName() ?>
+                                if(!empty($Column->getTasks())) {
+                                    foreach($Column->getTasks() as $Task) {
+                                        if(!$Task->isActive()) { ?>
+                                            <div class="row radius hover w-100 mx-0 mt-3 align-content-center border task-line" style="height: 100px;">
+                                                <div class="col-8 d-flex align-content-center">
+                                                    <div class="w-100 h-100">
+                                                        <?= $Task->getName() ?>
+                                                    </div>
+                                                </div>
+                                                <div class="col-4 align-content-center">        
+                                                    <input type="hidden" name="task-id" value="<?= $Task->getRowid() ?>">
+                                                    <i class="bi bi-archive-fill btn btn-outline-success w-100 mb-2 open-task-btn"></i>
                                                 </div>
                                             </div>
-                                            <div class="col-4 align-content-center">        
-                                                <input type="hidden" name="task-id" value="<?= $Task->getRowid() ?>">
-                                                <i class="bi bi-archive-fill btn btn-outline-success w-100 mb-2 open-task-btn"></i>
-                                            </div>
-                                        </div>
-                                    <?php 
+                                        <?php 
+                                        }
                                     }
                                 }
                             } ?>
@@ -103,7 +105,7 @@ require_once "layouts/header.php";
                     <div class="project-column">
                         <input class="columnId-input" type="hidden" value="<?= $Column->getRowid() ?>">
                         <div class="column-title text-center">
-                            <div class="row" style="height: 85px">
+                            <div class="row" style="height : 85px">
                                 <div class="col-7 pt-3 ps-2 ms-3 pe-0 column-title-name">
                                     <div class="overflow-x">
                                         <b class="column-title-text"><?= $Column->getName() ?></b>

@@ -3,17 +3,17 @@
 require_once "../../services/header.php";
 require "layouts/head.php";
 
-$action = htmlentities(GETPOST('action'));
-$firstname = htmlentities($_POST['firstname'] ?? '');
-$lastname = htmlentities($_POST['lastname'] ?? '');
-$email = htmlentities($_POST['email'] ?? '');
-$success = GETPOST('success');
-$errors = GETPOST("errors");
+$action     = htmlentities(GETPOST('action'));
+$firstname  = htmlentities($_POST['firstname'] ?? '');
+$lastname   = htmlentities($_POST['lastname'] ?? '');
+$email      = htmlentities($_POST['email'] ?? '');
+$success    = GETPOST('success');
+$errors     = GETPOST("errors");
 
 $User = new User($idUser);
-// $Organization = new Organization($idOrganization);
 
 $Projects = array();
+
 // get all related projects to the user
 foreach($User->getBelongsTo() as $BelongsTo)
 {
@@ -42,10 +42,14 @@ if($action == 'userUpdate')
                 $errors[] = "Une error est survenue.";
                 LogHistory::create($idOrganization, $idUser, "ERROR", 'update', 'user', $User->getLastname().' '.$User->getFirstname(), '', 'user id : '.$User->getRowid(), $th);
             }
-        } else {
+        } 
+        else 
+        {
             $errors[] = "L'adresse email n'est pas valide.";
         }
-    } else {
+    } 
+    else 
+    {
         $errors[] = "L'adresse email ne peut être vide.";
     }
 }

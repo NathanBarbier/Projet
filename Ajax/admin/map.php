@@ -16,7 +16,6 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
     
         if($projectId > 0 && $teamId > 0)
         {
-            // $Organization = new Organization($idOrganization);
             $Organization = new Organization();
             $Organization->setRowid($idOrganization);
             $Organization->fetchName();
@@ -44,20 +43,20 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
     
             if(!empty($Project) && !empty($Team))
             {
-                $action = htmlentities(GETPOST('action'));
+                $action     = htmlentities(GETPOST('action'));
                 $columnName = htmlentities(GETPOST('columnName'));
-                $columnId = htmlentities(intval(GETPOST('columnId')));
-                $taskName = htmlentities(GETPOST('taskName'));
-                $taskId = htmlentities(intval(GETPOST('taskId')));
-                $taskNote = htmlentities(GETPOST('taskNote'));
-                $commentId = htmlentities(intval(GETPOST('commentId')));
-                $memberId = htmlentities(intval(GETPOST('memberId')));
+                $columnId   = htmlentities(intval(GETPOST('columnId')));
+                $taskName   = htmlentities(GETPOST('taskName'));
+                $taskId     = htmlentities(intval(GETPOST('taskId')));
+                $taskNote   = htmlentities(GETPOST('taskNote'));
+                $commentId  = htmlentities(intval(GETPOST('commentId')));
+                $memberId   = htmlentities(intval(GETPOST('memberId')));
             
-                $MapColumn = new MapColumn($columnId);
-                $Task = new Task($taskId);
+                $MapColumn   = new MapColumn($columnId);
+                $Task        = new Task($taskId);
                 $TaskComment = new TaskComment($commentId);
-                $TaskMember = new TaskMember($memberId, $taskId);
-                $User = new User();
+                $TaskMember  = new TaskMember($memberId, $taskId);
+                $User        = new User();
             
                 switch($action)
                 {
@@ -71,12 +70,11 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
                                 try {
                                     $TaskComment->setNote($taskNote);
                                     $TaskComment->update();
-                                    LogHistory::create($idOrganization, $idUser, "INFO", 'update', 'task comment', $TaskComment->getNote());
+                                    LogHistory::create($idOrganization, $idUser, "INFO", 'update', 'task comment', $TaskComment->getNote(), '', 'comment id : '.$TaskComment->getRowid());
                                 } catch (\Throwable $th) {
-                                    LogHistory::create($idOrganization, $idUser, "ERROR", 'update', 'task comment', $TaskComment->getNote(), "", "comment id : ".$TaskComment->getRowid(), $th);
+                                    LogHistory::create($idOrganization, $idUser, "ERROR", 'update', 'task comment', $TaskComment->getNote(), '', 'comment id : '.$TaskComment->getRowid(), $th);
                                 }
-
-                            }           
+                            }
                         }               
                         break;
                     case 'addTaskComment':
@@ -84,15 +82,27 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
                         if($taskId && $Team->checkTask($taskId))
                         {
                             try {
+                                // prepare comment
                                 $TaskComment->setFk_task($taskId);
                                 $TaskComment->setFk_user($idUser);
                                 $TaskComment->setNote('');
                 
+                                // insert comment
                                 $commentId = $TaskComment->create();
-                                LogHistory::create($idOrganization, $idUser, "INFO", 'create', 'task comment', $TaskComment->getNote());
-                                echo json_encode($commentId);
+
+                                // update object
+                                $TaskComment->fetch($commentId);
+                                
+                                // convert for JS
+                                $TaskComment = $TaskComment->object_to_array($TaskComment);
+
+                                echo json_encode($TaskComment);
+
+                                LogHistory::create($idOrganization, $idUser, "INFO", 'create', 'task comment', '');
+
                             } catch (\Throwable $th) {
-                                LogHistory::create($idOrganization, $idUser, "ERROR", 'create', 'task comment', $TaskComment->getNote(), "", "comment id : ".$TaskComment->fetch_last_insert_id(), $th);
+                                echo json_encode(false);
+                                LogHistory::create($idOrganization, $idUser, "ERROR", 'create', 'task comment', '', "", "comment id : ".$TaskComment->fetch_last_insert_id(), $th);
                             }
                         }
                         break;
@@ -131,25 +141,39 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
                                 $MapColumn->setFk_team($teamId);
                                 $MapColumn->setName($columnName);
                                 $MapColumn->create();
+
                                 // on échange les ranks des deux colonnes 
-                                $ClosedColumn = new MapColumn($MapColumn->fetchFinishedColumn($teamId)['rowid']);
-                                $CurrentColumn = new MapColumn($MapColumn->fetch_last_insert_id($teamId));
+                                $ClosedColumn   = new MapColumn($MapColumn->fetchFinishedColumn($teamId)['rowid']);
+                                $CurrentColumn  = new MapColumn($MapColumn->fetch_last_insert_id($teamId));
+
                                 $rank = $ClosedColumn->getRank();
+
                                 $ClosedColumn->setRank($CurrentColumn->getRank());
                                 $CurrentColumn->setRank($rank);
                                 $ClosedColumn->update();
                                 $CurrentColumn->update();
 
+                                $response = array(
+                                    'success' => true,
+                                );
+
                                 LogHistory::create($idOrganization, $idUser, "INFO", 'create', 'column', $MapColumn->getName(), '', 'column id : '.$MapColumn->fetch_last_insert_id($teamId));
                             } catch (\Throwable $th) {
+                                $response = array(
+                                    'success' => false,
+                                );
+
                                 LogHistory::create($idOrganization, $idUser, "ERROR", 'create', 'column', $MapColumn->getName(), '', 'column id : '.$MapColumn->fetch_last_insert_id($teamId), $th);
                             }
-                            $return['success'] = true;
-                        } else {
-                            $return['success'] = false;
-                            $return['message'] = "le nom saisis pour la colonne est incorrect";
+                        } 
+                        else 
+                        {
+                            $response = array(
+                                'success' => false,
+                                'message' => 'Le nom de colonne est incorrect.',
+                            );
                         }
-                        print json_encode($return);
+                        echo json_encode($response);
                         break;
                     case 'addTask':
                         // check if the column belong to the team
@@ -161,10 +185,14 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
                                 $Task->setfk_column($columnId);
                                 $Task->create();
                                 $taskId = $Task->fetch_last_insert_id();
-                                LogHistory::create($idOrganization, $idUser, "INFO", 'create', 'task', '', '', 'task id : '.$taskId);
+
                                 echo json_encode($Task);
+                                
+                                LogHistory::create($idOrganization, $idUser, "INFO", 'create', 'task', '', '', 'task id : '.$taskId);
                             } catch (\Throwable $th) {
-                                echo json_encode($th);
+                                // echo json_encode($th);
+                                echo json_encode(false);
+
                                 LogHistory::create($idOrganization, $idUser, "ERROR", 'create', 'task', '', '','task id : '.$taskId, $th);
                             }
                         }
@@ -208,16 +236,24 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
                     case 'finishedTask' :
                         if($taskId && $Team->checkTask($taskId) && $oldColumn !== "Closed")
                         {
-                            $Column = new MapColumn();
                             try {
+                                $Column = new MapColumn();
+
                                 $closedColumn = $Column->fetchFinishedColumn($teamId);
+
                                 $now = new DateTime();
+
                                 $Task->setActive(-1);
                                 $Task->setFinished_at($now->format("Y-m-d H:i:s"));
                                 $Task->setFk_column($closedColumn["rowid"]);
                                 $Task->update();
+
+                                echo json_encode(true);
+
                                 LogHistory::create($idOrganization, $idUser, "INFO", 'move', 'task to column', $Task->getName(), '', 'column id : '.$closedColumn['rowid']);
                             } catch (\Throwable $th) {
+                                echo json_encode(false);
+
                                 LogHistory::create($idOrganization, $idUser, "ERROR", 'move', 'task to column', $Task->getName(), '', 'column id : '.$closedColumn['rowid'], $th);
                             }
                         }
@@ -273,24 +309,36 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
                         echo json_encode($status);
                         break;
                     case 'updateColumn':
-                        $oldName = $MapColumn->getName();
                         // check if the column belong to the team
                         if($columnId && $columnName && $Team->checkColumn($columnId) && $columnName != " " && $columnName != "Open" && $columnName != "Closed" && $oldName != "Open" && $oldName != "Closed")
                         {
                             try {
+                                $oldName = $MapColumn->getName();
                                 $MapColumn->setName($columnName);
                                 $MapColumn->update();
+
+                                $response = array(
+                                    'success' => true,
+                                );
+
                                 LogHistory::create($idOrganization, $idUser, "INFO", 'update name', 'column', $oldName, $MapColumn->getName(), 'column id : '.$MapColumn->getRowid());
                             } catch (\Throwable $th) {
+
+                                $response = array(
+                                    'success' => false,
+                                );
+
                                 LogHistory::create($idOrganization, $idUser, "ERROR", 'update name', 'column', $oldName, $MapColumn->getName(), 'column id : '.$MapColumn->getRowid(), $th);
                             }
-                            $return['success'] = true;
-                        } else {
-                            $return['success'] = false;
-                            $return['message'] = "le nom saisis pour la colonne est incorrect";
+                        } 
+                        else 
+                        {
+                            $response = array(
+                                'success' => false,
+                                'message' => 'Le nom de colonne est incorrect.',
+                            );
                         }
-                        print json_encode($return);
-                        break;
+                        echo json_encode($response);
                         break;
                     case 'deleteTaskNote':
                         if($commentId && $Team->checkTaskComment($commentId))
@@ -338,17 +386,24 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
                         }
                         break;
                     case 'openTask':
-                        if($taskId && $Team->checkTask($taskId)) {
+                        if($taskId && $Team->checkTask($taskId)) 
+                        {
                             try {
-                                foreach($Team->getMapColumns() as $Column) {
-                                    if($Column->getName() == 'Open') {
+                                $Organization->fetchAllUsers();
+
+                                foreach($Team->getMapColumns() as $Column) 
+                                {
+                                    if($Column->getName() == 'Open') 
+                                    {
                                         $Task->setActive(1);
                                         $Task->setFk_column($Column->getRowid());
                                         $Task->update();
 
                                         // not team users because it is possible that the author is no longer in the team
-                                        foreach($Organization->getUsers() as $User) {
-                                            if($User->getRowid() == $Task->getFk_user()) {
+                                        foreach($Organization->getUsers() as $User) 
+                                        {
+                                            if($User->getRowid() == $Task->getFk_user()) 
+                                            {
                                                 $username   = $User->getLastname() . ' ' . $User->getFirstname();
                                                 $admin      = $User->isAdmin();
                                                 break;
@@ -361,8 +416,9 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
                                             'admin'     => $admin,
                                             'taskName'  => $Task->getName(),
                                         );
+
                                         echo json_encode($response);
-                                        break 2;
+                                        break;
                                     }
                                 }
                                 
@@ -370,6 +426,7 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
                             } catch (\Throwable $th) {
                                 LogHistory::create($idOrganization, $idUser, "ERROR", 'open', 'task', $Task->getName(), '', 'task id : '.$Task->getRowid(), $th);
                             }
+                            break;
                         }
                     case 'getLastColumnId':
                         try {
@@ -383,44 +440,36 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
                             echo json_encode($Task->fetch_last_insert_id());
                         } catch (\Throwable $th) {
                             // echo json_encode($th);
+                            echo json_encode(false);
                         }
                         break;
                     case 'getTaskComments':
                         if($taskId && $Team->checkTask($taskId)) 
                         {
-                            try {                    
-                                // $Organization = new Organization($idOrganization);
+                            try {
                                 $Comments = $Task->getComments();
                 
                                 foreach($Comments as $key => $Comment)
                                 {
                                     $User = new User($Comment->getFk_user());
-                                    if($User->isAdmin())
-                                    {
-                                        $Comments[$key]->author = $Organization->getName();
-                                        $Comments[$key]->admin = true;
-                                    }
-                                    else
-                                    {
-                                        $Comments[$key]->author = $User->getLastname() . " " . $User->getFirstname();
-                                        $Comments[$key]->admin = false;
-                                    }
+                                    
+                                    // set the comment username
+                                    $Comments[$key]->author = $User->getLastname() . " " . $User->getFirstname();
+
+                                    // for color
+                                    $Comments[$key]->admin = $User->isAdmin() ? true  : false;
             
-                                    if($Comment->getFk_user() == $idUser)
-                                    {
-                                        $Comments[$key]->isAuthor = true;
-                                    }
-                                    else
-                                    {
-                                        $Comments[$key]->isAuthor = false;
-                                    }
+                                    // for authorizations
+                                    $Comments[$key]->isAuthor = $Comment->getFk_user() == $idUser ? true : false;
                                 }
             
+                                // return the task
                                 $Comments = $Task->object_to_array($Task);
                 
                                 echo json_encode($Comments);
                             } catch (\Throwable $th) {
                                 // echo json_encode($th);
+                                echo json_encode(false);
                             }
                         }
                         else

@@ -22,7 +22,9 @@ require_once 'layouts/header.php';
                     <div class="w-100">
                         <div class="row mx-auto mt-3">
                             <div class="col-5 p-md-1">
-                                <button class="custom-button w-100 d-flex justify-content-center pt-2" type="submit" tabindex="0" data-bs-toggle="tooltip" title="Mettre à jour les informations du projet"><i class="bi bi-arrow-clockwise big-icon"></i></button>
+                                <button class="custom-button w-100 d-flex justify-content-center pt-2" type="submit" tabindex="0" data-bs-toggle="tooltip" title="Mettre à jour les informations du projet">
+                                    <img class="save-img" src="<?= ASSETS_URL ?>images/save.png" alt="save">
+                                </button>
                             </div>
                             <div class="col p-md-1">
                                 <a id="map-btn" href="<?= CONTROLLERS_URL ?>admin/map.php?projectId=<?= $Project->getRowid() ?>" class="custom-button info w-100 pt-2" tabindex="0" data-bs-toggle="tooltip" title="Tableau de l'équipe"><i class="bi bi-layout-three-columns big-icon"></i></a>
@@ -72,7 +74,7 @@ require_once 'layouts/header.php';
                             <div class="row mx-auto pt-2">
                                 <div class="col-7 p-md-1">
                                     <a id="update-team-button" class="w-100 custom-button text-center collapse show pt-2" tabindex="0" data-bs-toggle="tooltip" title="Mettre à jour les informations de l'équipe">
-                                        <i class="bi bi-arrow-clockwise big-icon"></i>
+                                        <img class="save-img" src="<?= ASSETS_URL ?>images/save.png" alt="save">
                                     </a>
                                 </div>
                                 <div class="col-5 p-md-1">

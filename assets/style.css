@@ -460,6 +460,11 @@ input:read-only:hover:not(.form-check-input) {
   background-color: #eeeff09f;
 }
 
+.save-img {
+  height: 70%;
+  filter: invert(1);
+}
+
 /* -------------- 6. ------------- */
 
 .btn-outline-classic {

@@ -129,7 +129,7 @@ Class Project extends Modele
         if($this->open) {
             $sql .= " ,open = :open";
         }
-        if($this->active) {
+        if($this->active !== null) {
             $sql .= " ,active = :active";
         }
 
@@ -142,7 +142,7 @@ Class Project extends Modele
         if($this->open) {
             $requete->bindParam(':open', $this->open, PDO::PARAM_STR);
         }
-        if($this->active) {
+        if($this->active !== null) {
             $requete->bindParam(':active', $this->active, PDO::PARAM_INT);
         }
 

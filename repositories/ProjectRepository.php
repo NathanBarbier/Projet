@@ -51,6 +51,59 @@ class ProjectRepository extends Repository
             return $requete->fetch(PDO::FETCH_OBJ)->counter;
         }
     }
+
+    public function search(int $fk_organization, string $query)
+    {
+        // split query terms
+        $terms = explode(' ', $query);
+
+        $sql = "SELECT rowid, name, type, fk_organization, active";
+        $sql .= " FROM storieshelper_project";
+        $sql .= " WHERE fk_organization = :fk_organization";
+
+        $params = array();
+
+        foreach($terms as $key => $term)
+        {
+            $sql .= ' AND ';
+
+            if(strtolower($term) == 'ouvert')
+            {
+                $sql .= "active = 1";
+            }
+            elseif(mb_strtolower($term, 'UTF-8') == 'archivé')
+            {
+                $sql .= "active = 0";
+            }
+            else
+            {
+                $paramOne = ':name'.$key;
+                $paramTwo = ':type'.$key;
+
+                $sql .= "(name LIKE $paramOne OR type LIKE $paramTwo)";
+                
+                $params[$paramOne] = "%$term%"; 
+                $params[$paramTwo] = "%$term%"; 
+            }
+        }
+
+        $requete = $this->getBdd()->prepare($sql);
+        
+        foreach($params as $name => $param)
+        {
+            $requete->bindParam($name, $param, PDO::PARAM_STR);
+        }
+
+        $requete->bindParam(':fk_organization', $fk_organization, PDO::PARAM_INT);
+
+        $requete->execute();
+
+        if($requete->rowCount() > 0)
+        {
+            return $requete->fetchAll(PDO::FETCH_OBJ);
+        }
+
+    }
 }
 
 ?>

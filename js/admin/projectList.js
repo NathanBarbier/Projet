@@ -18,6 +18,99 @@ $("#cancel-delete-btn").on('click', function() {
     $("#del-project-confirmation").removeClass('show');
 });
 
+// search bar
+$('#search-bar').on({
+    input: function() {
+        $(this).trigger('change');
+    }
+});
+
+var searchIsEnabled = true;
+
+$('#search-bar').on('change', function() {
+    
+    if(searchIsEnabled)
+    {
+        // empty all projects
+        $('#projects-container').empty();
+
+        // the searched string
+        var query = $(this).val().toString();
+
+        if(query.length > 0)
+        {
+            // to avoid server overcharge
+            searchIsEnabled = false;
+
+            // display project that match pattern
+            $.ajax({
+                async: true,
+                url: AJAX_URL+"admin/projectList.php?action=search&query="+query,
+                success: function (data) {
+                    var projects = JSON.parse(data);
+
+                    if(projects)
+                    {
+                        var append = ''
+
+                        projects.forEach(project => {
+
+                            append += [
+                                '<div class="row sticker mx-2 mt-4 pb-2 h-auto d-flex align-items-center">',
+                                    '<div class="col-3 text-center mx-auto"><b>'+ project.name +'</b></div>',
+                                    '<div class="col-2 text-center mx-auto"><b>'+ project.type +'</b></div>',
+                                    '<div class="col-3 text-center mx-auto"><b>',
+                            ].join('');
+
+                            if(project.active == 1)
+                            {
+                                append += '<span style="color:green">Ouvert</span>';
+                            }
+                            else
+                            {
+                                append += '<span style="color:red">Archivé</span>';
+                            }
+                                    
+                            append += [     
+                                    '</b></div>',
+                                    '<div class="col-3 text-center mx-auto">',
+                                        
+                                        '<input type="hidden" class="project-id" value="'+ project.rowid +'">',
+                                        
+                                        '<div class="row">',
+                                            '<div class="col-12 col-lg-6">',
+                                                '<a href="<?= CONTROLLERS_URL ?>admin/projectDashboard.php?idProject='+ project.rowid +'" class="w-100 custom-button info btn-sm mt-1 px-1 pt-2 double-button-responsive">',
+                                                    'Détails',
+                                                '</a>',
+                                            '</div>',
+                                            '<div class="col-12 col-lg-6">',
+                                                '<button class="w-100 del-project-btn custom-button danger btn-sm mt-1 px-1 double-button-responsive">',
+                                                    'Supprimer',
+                                                '</button>',
+                                            '</div>',
+                                        '</div>',
+                                    '</div>',
+                                '</div>',
+                            ].join('');
+                        });
+
+                        $('#projects-container').append(append);
+                    }
+                    // re-enable search
+                    searchIsEnabled = true;
+                }
+            });
+        }
+        else
+        {
+            $('#projects-container').append(loadedProjects);
+            loadMore();
+        }
+    }
+});
+
+var loadedProjects = $('#projects-container').children();
+
 // load more
 loadMore();
 
@@ -98,6 +191,8 @@ function loadMore()
 
                         $('#projects-container').append(append);
                     }
+                    
+                    loadedProjects = $('#projects-container').children();
     
                     loadMore();
                 }

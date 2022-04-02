@@ -40,7 +40,7 @@ require_once "layouts/header.php";
     </div>
 </div>
 
-<script type="text/Javascript" src="<?= JS_URL ?>visitor/login.js" defer></script>
+<script type="text/Javascript" src="<?= JS_URL ?>visitor/login.min.js" defer></script>
 
 <?php
 require_once "layouts/footer.php";

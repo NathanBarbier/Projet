@@ -146,7 +146,7 @@ require_once "layouts/header.php";
     <script defer>
         const idUser = <?php echo json_encode($idUser); ?>;
     </script>
-    <script src="<?= JS_URL ?>admin/associateList.js" defer></script>
+    <script src="<?= JS_URL ?>admin/associateList.min.js" defer></script>
 
 <?php
 require_once "layouts/footer.php";

@@ -165,7 +165,7 @@ require_once "layouts/header.php";
         </div>
     </div>
 </div>
-<script type="text/Javascript" src="<?= JS_URL ?>member/map.js" defer></script>
+<script type="text/Javascript" src="<?= JS_URL ?>member/map.min.js" defer></script>
 <?php 
 require_once "layouts/footer.php";
 ?>

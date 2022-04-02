@@ -82,7 +82,7 @@ require_once "layouts/header.php";
     ?>
     </div>
 
-    <script type="text/Javascript" src="<?= JS_URL ?>admin/projectList.js" defer></script>
+    <script type="text/Javascript" src="<?= JS_URL ?>admin/projectList.min.js" defer></script>
 <?php
 require_once "layouts/footer.php";
 ?>

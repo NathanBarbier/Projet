@@ -1061,12 +1061,12 @@ button.toast-close-button {
   background-color: #999;
 }
 
-.modal-dialog {
+#loading-modal .modal-dialog {
   width: 15% !important;
   font-size: larger;
 }
 
-.modal-dialog .spinner-grow {
+#loading-modal .modal-dialog .spinner-grow {
   animation-duration: 1s;
   height: 1.2rem;
   width: 1.2rem;

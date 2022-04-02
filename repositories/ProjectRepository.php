@@ -67,11 +67,11 @@ class ProjectRepository extends Repository
         {
             $sql .= ' AND ';
 
-            if(strtolower($term) == 'ouvert')
+            if(strpos('ouvert', strtolower($term)) !== false)
             {
                 $sql .= "active = 1";
             }
-            elseif(mb_strtolower($term, 'UTF-8') == 'archivé')
+            elseif(strpos('archivé', mb_strtolower($term, 'UTF-8')) !== false)
             {
                 $sql .= "active = 0";
             }
@@ -102,7 +102,6 @@ class ProjectRepository extends Repository
         {
             return $requete->fetchAll(PDO::FETCH_OBJ);
         }
-
     }
 }
 

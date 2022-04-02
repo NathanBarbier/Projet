@@ -37,8 +37,13 @@ require_once "layouts/header.php";
         </div>
     </div>
 
-    <div class="position-relative overflow-y" style="height: 90vh;">
-        <table class="table table-radius mt-4 position-absolute">
+    <div class="row position-relative">
+        <input id="search-bar" type="text" class="form-control w-25 me-4 position-absolute end-0" style="border-radius: 15px; opacity: 90%">
+        <i class="bi bi-search position-absolute top-0 end-0 me-4" style="width: auto; margin-top: 10px; cursor:pointer; height:5vh"></i>
+    </div>
+
+    <div class="position-relative overflow-y" style="height: 92vh; margin-top: 6vh">
+        <table class="table table-radius position-absolute">
             <thead class="bg-white">
                 <tr>
                     <th colspan="7">
@@ -52,8 +57,6 @@ require_once "layouts/header.php";
                         </div>
                     </th>
                 </tr>
-            </thead>
-            <tbody id="tbody-users" class="bg-white">
                 <tr class="text-center">
                     <th>NOM</th>
                     <th>Prénom</th>
@@ -61,7 +64,8 @@ require_once "layouts/header.php";
                     <th>Droits</th>
                     <th>Options</th>
                 </tr>
-    
+            </thead>
+            <tbody id="tbody-users" class="bg-white">    
                 <?php
                 foreach($Organization->getUsers() as $User) {
                 ?>

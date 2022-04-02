@@ -1,9 +1,4 @@
 jQuery(function () {
-  $(".alert").animate({ opacity: "0" }, 7500);
-  setTimeout(() => {
-    $(".alert").addClass("collapse");
-  }, 7500);
-
   // resize #main responsivily
   var viewportWidth = $(window).width();
 
@@ -43,4 +38,12 @@ jQuery(function () {
       $("#main").removeClass("col-12").addClass("col-10");
     }
   }
+
+  // loading modal writing animation
+  var typed = new Typed(".typing", {
+      strings: ["Veuillez patienter ..."],
+      typeSpeed: 100,
+      backSpeed: 60,
+      loop: true
+  });
 });

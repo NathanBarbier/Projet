@@ -22,6 +22,60 @@ class UserRepository extends Repository
             }
         }
     }
+
+    public function search(int $fk_organization, string $query)
+    {
+        // split query terms
+        $terms = explode(' ', $query);
+
+        $sql = "SELECT rowid, lastname, firstname, email, admin";
+        $sql .= " FROM storieshelper_user";
+        $sql .= " WHERE fk_organization = :fk_organization";
+
+        $params = array();
+
+        foreach($terms as $key => $term)
+        {
+            $sql .= ' AND ';
+
+            if(strpos('administrateur', strtolower($term)) !== false)
+            {
+                $sql .= "admin = 1";
+            }
+            elseif(strpos('utilisateur', strtolower($term)) !== false)
+            {
+                $sql .= "admin = 0";
+            }
+            else
+            {
+                $paramOne   = ':lastname'.$key;
+                $paramTwo   = ':firstname'.$key;
+                $paramThree = ':email'.$key;
+
+                $sql .= "(lastname LIKE $paramOne OR firstname LIKE $paramTwo OR email LIKE $paramThree)";
+                
+                $params[$paramOne]   = "%$term%"; 
+                $params[$paramTwo]   = "%$term%"; 
+                $params[$paramThree] = "%$term%"; 
+            }
+        }
+
+        $requete = $this->getBdd()->prepare($sql);
+        
+        foreach($params as $name => $param)
+        {
+            $requete->bindParam($name, $param, PDO::PARAM_STR);
+        }
+
+        $requete->bindParam(':fk_organization', $fk_organization, PDO::PARAM_INT);
+
+        $requete->execute();
+
+        if($requete->rowCount() > 0)
+        {
+            return $requete->fetchAll(PDO::FETCH_OBJ);
+        }
+    }
 }
 
 ?>

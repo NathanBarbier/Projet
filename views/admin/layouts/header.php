@@ -220,7 +220,7 @@ require_once SERVICES_PATH.'notification.php' ;
                     </nav>
                 </div>
             </div>
-            <div id="main" class="pt-3 px-3 position-relative">
+            <div id="main" class="pt-2 px-3 position-relative">
                 <i id="close-sidebar" class="btn btn-outline-dark bi bi-arrow-bar-left position-absolute start-0 w-auto collapse show before"></i>
                 <i id="open-sidebar" class="btn btn-outline-dark bi bi-arrow-bar-right position-absolute start-0 w-auto collapse before"></i>
             <?php } ?>

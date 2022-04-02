@@ -19,15 +19,9 @@ $("#cancel-delete-btn").on('click', function() {
 });
 
 // search bar
-$('#search-bar').on({
-    input: function() {
-        $(this).trigger('change');
-    }
-});
-
 var searchIsEnabled = true;
 
-$('#search-bar').on('change', function() {
+$('#search-bar').on('input', function() {
     
     if(searchIsEnabled)
     {
@@ -39,6 +33,8 @@ $('#search-bar').on('change', function() {
 
         if(query.length > 0)
         {
+            $('#loading-modal').modal('show');
+
             // to avoid server overcharge
             searchIsEnabled = false;
 
@@ -98,6 +94,11 @@ $('#search-bar').on('change', function() {
                     }
                     // re-enable search
                     searchIsEnabled = true;
+
+                    $('#loading-modal').modal('hide');
+
+                    // because the loading modal force unfocus
+                    $('#search-bar').focus();
                 }
             });
         }

@@ -13,6 +13,7 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
     {
         $action = htmlentities(GETPOST('action'));
         $offset = intval(htmlentities(GETPOST('offset')));
+        $query  = strval(GETPOST('query'));
 
         $UserRepository = new UserRepository();
 
@@ -38,8 +39,24 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
                         // echo json_encode($th);
                         echo json_encode(false);
                     }
-                    break;
                 }
+                break;
+            case 'search':
+                if($query)
+                {
+                    try {
+                        $UserRepository = new UserRepository();
+
+                        // sql search with pattern
+                        $Users = $UserRepository->search($idOrganization, $query);
+
+                        echo json_encode($Users);
+                    } catch (\Throwable $th) {
+                        // echo json_encode($th);
+                        echo json_encode(false);
+                    }
+                }
+                break;
         }
     }
     else

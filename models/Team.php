@@ -242,21 +242,36 @@ class Team extends Modele
         $sql .= " VALUES (?,?,?)";
 
         $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$this->name, $this->fk_project, 1]);
+        $status = $requete->execute([$this->name, $this->fk_project, 1]);
         
-        // get fk_team
-        $sql = "SELECT MAX(rowid) AS rowid FROM storieshelper_team";
-        $requete = $this->getBdd()->prepare($sql);
-        $requete->execute();
-        $fk_team = $requete->fetch(PDO::FETCH_OBJ)->rowid;
-
-        $sql = "INSERT INTO storieshelper_map_column (name, fk_team, rank)";
-        $sql .= " VALUES ('Open', ?, 0),('Ready', ?, 1),('In progress', ?, 2),('Closed', ?, 3)";
-
-        $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$fk_team, $fk_team, $fk_team, $fk_team]);
-
-        return $fk_team;
+        if($status)
+        {
+            // get fk_team
+            $sql = "SELECT MAX(rowid) AS rowid FROM storieshelper_team";
+            $requete = $this->getBdd()->prepare($sql);
+            $status = $requete->execute();
+            
+            if($status)
+            {
+                $fk_team = $requete->fetch(PDO::FETCH_OBJ)->rowid;
+        
+                $sql = "INSERT INTO storieshelper_map_column (name, fk_team, rank)";
+                $sql .= " VALUES ('Open', ?, 0),('Ready', ?, 1),('In progress', ?, 2),('Closed', ?, 3)";
+        
+                $requete = $this->getBdd()->prepare($sql);
+                $requete->execute([$fk_team, $fk_team, $fk_team, $fk_team]);
+        
+                return $fk_team;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else
+        {
+            return false;
+        }
     } 
 
 

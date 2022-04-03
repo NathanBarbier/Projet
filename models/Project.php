@@ -256,15 +256,22 @@ Class Project extends Modele
         $sql .= " VALUES (?,?,NOW(),?,?,1)";
 
         $requete = $this->getBdd()->prepare($sql);
-        $requete->execute([$this->name, $this->type, $this->description, $this->fk_organization]);
+        $status = $requete->execute([$this->name, $this->type, $this->description, $this->fk_organization]);
 
-        $sql = "SELECT MAX(rowid) AS rowid FROM storieshelper_project";
-
-        $requete = $this->getBdd()->prepare($sql);
-        $requete->execute();
-        $obj = $requete->fetch(PDO::FETCH_OBJ);
-
-        return intval($obj->rowid);
+        if($status)
+        {
+            $sql = "SELECT MAX(rowid) AS rowid FROM storieshelper_project";
+    
+            $requete = $this->getBdd()->prepare($sql);
+            $requete->execute();
+    
+            if($requete->rowCount() > 0)
+            {
+                $obj = $requete->fetch(PDO::FETCH_OBJ);
+                $rowid = intval($obj->rowid);
+                return $rowid;
+            }
+        }
     }
 
     // delete

@@ -1,6 +1,9 @@
 <?php
 //import all models
 require_once "../../services/header.php";
+// get the user ip adress
+$ip = $_SERVER['REMOTE_ADDR'];
+
 setcookie(
     'remember_me',
     "",

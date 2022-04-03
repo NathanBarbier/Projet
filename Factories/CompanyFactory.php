@@ -15,24 +15,6 @@ try
 
     $OrganizationId = $Organization->create();
 
-    // create users
-    // for ($i=0; $i < 1000; $i++) { 
-    //     $User = new User();
-
-    //     $User->setLastname($faker->lastName);
-    //     $User->setFirstname($faker->firstName);
-    //     $User->setBirth($faker->date());
-    //     $User->setEmail($faker->unique()->email);
-    //     $User->setFk_organization($OrganizationId);
-    //     $User->setPassword($faker->password(8,100));
-    //     $User->setConsent($faker->numberBetween(0,1));
-    
-    //     $tab = array(0,0,0,0,0,0,0,0,0,0,0,0,1);
-    //     $User->setAdmin($tab[$faker->numberBetween(0,12)]);
-
-    //     $UserId = $User->create();
-    // }
-
     $projectnames = ['linkedin', 'instagram', 'facebook', 'xbox one', 'wii U', 'nintendo ds', 'computer', 'youtube', 'github', 'gitlab', 'trello', 'google translate', 'deepl translate', 'twitch', 'firefox', 'W3school', 'Dolibarr', 'programmez !', 'Développez !', 'zdnet', 'laravel', 'symphony', 'visual studio code', 'miscrosoft teams', 'windows 11', 'ubuntu'];
 
     $projectypes = ['business', 'software', 'hardware', 'website', 'marketing', 'news', 'informations', 'learning', 'cybersecurity', 'cryptocurrency', 'bank', 'trading', 'shopping', 'social', 'systems', 'operating systems', 'application', 'mobile', 'video game', 'board game', 'economy', 'ecology', 'political', 'coding', 'music', 'film', 'videos', 'series', 'voice on ip', 'research', 'tourism', 'hobby', 'tools', 'productivity', 'book', 'medicine'];
@@ -50,7 +32,7 @@ try
         $Project->setRowid($rowid);
 
         // create teams
-        for ($i=0; $i < 20; $i++) { 
+        for ($x=0; $x < 20; $x++) { 
             $Team = new Team();
 
             $Team->setName($faker->jobTitle);
@@ -60,7 +42,7 @@ try
             $TeamId = $Team->create();
             $Team->setRowid($TeamId); 
 
-            for ($i=0; $i < 5 ; $i++) { 
+            for ($y=0; $y < 5 ; $y++) { 
                 // create users
                 $User = new User();
 
@@ -84,7 +66,7 @@ try
                 $BelongsTo->create();
 
                 // create tasks
-                for ($i=0; $i < 2; $i++) { 
+                for ($z=0; $z < 2; $z++) { 
 
                     $randomInt = $faker->numberBetween(0,3);
                     $MapColumnRepository = new MapColumnRepository();

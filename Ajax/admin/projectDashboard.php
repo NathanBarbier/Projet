@@ -7,6 +7,8 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
     $rights = $_SESSION["rights"] ?? false;
     $idOrganization = $_SESSION["idOrganization"] ?? null;
     $idUser = $_SESSION["idUser"] ?? null;
+    // get the user ip adress
+    $ip = $_SERVER['REMOTE_ADDR'];
 
     if($rights == 'admin' && $idUser > 0 && $idOrganization > 0)
     {

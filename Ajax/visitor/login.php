@@ -3,6 +3,9 @@ require_once "../../services/header.php";
 
 if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest' ) )
 {
+    // get the user ip adress
+    $ip = $_SERVER['REMOTE_ADDR'];
+
     $envoi = GETPOST('envoi');
     $email = GETPOST('email');
     $password = GETPOST('password');

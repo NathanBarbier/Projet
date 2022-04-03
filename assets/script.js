@@ -39,11 +39,15 @@ jQuery(function () {
     }
   }
 
-  // loading modal writing animation
-  var typed = new Typed(".typing", {
+  $typeElement = document.getElementsByClassName('typing');
+  if($typeElement.length > 0)
+  {
+    // loading modal writing animation
+    var typed = new Typed(".typing", {
       strings: ["Veuillez patienter ..."],
       typeSpeed: 100,
       backSpeed: 60,
       loop: true
-  });
+    });
+  }
 });

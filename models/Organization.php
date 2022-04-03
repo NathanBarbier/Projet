@@ -332,19 +332,44 @@ class Organization extends Modele
 
     /**
      * Return the matching user in the Organization users property
-     * @param int $idUser 
+     * @param int $fk_user 
      * @return User $User the user matching id user
      */
-    public function fetchUser(int $idUser)
+    public function getUser(int $fk_user)
     {
         foreach($this->users as $User)
         {
-            if($User->getRowid() == $idUser)
+            if($User->getRowid() == $fk_user)
             {
                 return $User;
             }
         }
         return false;
+    }
+
+    /**
+     * Fetch a user relating to the organization and had it to the users property
+     */
+    public function fetchUser(int $fk_user)
+    {
+        $sql = "SELECT * FROM storieshelper_user";
+        $sql .= " WHERE fk_organization = ? AND rowid = ?";
+
+        $requete = $this->getBdd()->prepare($sql);
+        $requete->execute([$this->rowid, $fk_user]);
+
+        if($requete->rowCount() > 0)
+        {
+            $obj = $requete->fetch(PDO::FETCH_OBJ);
+
+            $User = new User();
+            $User->initialize($obj);
+
+            if(!empty($User))
+            {
+                $this->users[] = $User;
+            }
+        }
     }
 
     public function fetchName()

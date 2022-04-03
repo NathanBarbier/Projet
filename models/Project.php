@@ -248,7 +248,7 @@ Class Project extends Modele
     // INSERT
     
     /** Create object in db
-     * 
+     * @return $rowid the inserted project id
      */
     public function create()
     {

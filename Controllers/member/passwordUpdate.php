@@ -44,13 +44,13 @@ if($action == "passwordUpdate")
                             try {
                                 $User->setPassword($newmdp);
                                 $User->update();
-                                LogHistory::create($idOrganization, $idUser, "INFO", 'update password', 'user', $User->getLastname().' '.$User->getFirstname(), '', 'user id : '.$User->getRowid());
+                                LogHistory::create($idOrganization, $idUser, "INFO", 'update password', 'user', $User->getLastname().' '.$User->getFirstname(), null, 'user id : '.$User->getRowid());
                                 $success = "Le mot de passe a bien été modifié.";
                                 header("location:".CONTROLLERS_URL."member/dashboard.php?success=".$success);
                                 exit;
                             } catch (\Throwable $th) {
                                 $errors[] = "Une erreur innatendue est survenue.";
-                                LogHistory::create($idOrganization, $idUser, "ERROR", 'update password', 'user', $User->getLastname().' '.$User->getFirstname(), '', 'user id : '.$User->getRowid(), $th);
+                                LogHistory::create($idOrganization, $idUser, "ERROR", 'update password', 'user', $User->getLastname().' '.$User->getFirstname(), null, 'user id : '.$User->getRowid(), $th->getMessage());
                             }
                         }
                         else

@@ -69,11 +69,11 @@ if($action == "signup")
                                 $User->setFirstname($firstname);
                                 $User->setLastname($lastname);
                                 $User->setBirth($birth);
-                                $User->create();
-                                LogHistory::create($idOrganization, $idUser, "INFO", 'signup', 'user', $User->getLastname().' '.$User->getFirstname());
+                                $lastInsertedId = $User->create();
+                                LogHistory::create($idOrganization, $idUser, "INFO", 'signup', 'user', $User->getLastname().' '.$User->getFirstname(), null, 'user id : '.$lastInsertedId);
                             } catch (\Throwable $th) {
                                 $errors[] = "L'inscription n'a pas pu aboutir.";
-                                LogHistory::create($idOrganization, $idUser, "ERROR", 'signup', 'user', $User->getLastname().' '.$User->getFirstname(), '', '', $th);
+                                LogHistory::create($idOrganization, $idUser, "ERROR", 'signup', 'user', $User->getLastname().' '.$User->getFirstname(), null, null, $th->getMessage());
                             }
                             
                             try {
@@ -108,7 +108,7 @@ if($action == "signup")
                                 $success = "Le collaborateur a bien été inscrit et reçu son mot de passe par email."; 
                             } catch (\Throwable $th) {
                                 $errors[] = "L'email de confirmation d'inscription n'a pas pu être envoyé.";
-                                LogHistory::create($idOrganization, $idUser, "ERROR", 'signup', 'user', $User->getLastname().' '.$User->getFirstname(), '', '', $th);
+                                LogHistory::create($idOrganization, $idUser, "ERROR", 'signup', 'user', $User->getLastname().' '.$User->getFirstname(), null, null, $th->getMessage());
                             }
                         } 
                         else 

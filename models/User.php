@@ -1,18 +1,18 @@
 <?php
 class User extends Modele
 {
-    protected ?int      $rowid           = 0;
-    protected ?string   $firstname       = '';
-    protected ?string   $lastname        = '';
-    protected ?string   $birth           = '';
-    protected ?string   $password        = '';
-    protected ?string   $email           = '';
-    protected ?int      $fk_organization = 0;
+    protected ?int      $rowid           = null;
+    protected ?string   $firstname       = null;
+    protected ?string   $lastname        = null;
+    protected ?string   $birth           = null;
+    protected ?string   $password        = null;
+    protected ?string   $email           = null;
+    protected ?int      $fk_organization = null;
     protected ?array    $BelongsTo       = array();
-    protected ?int      $consent         = 0;
-    protected ?string   $consentDate     = '';
-    protected ?int      $admin           = 0;
-    protected ?string   $token           = '';
+    protected ?int      $consent         = null;
+    protected ?string   $consentDate     = null;
+    protected ?int      $admin           = null;
+    protected ?string   $token           = null;
 
     public function __construct($rowid = null)
     {
@@ -362,19 +362,19 @@ class User extends Modele
         $sql .= " firstname = :firstname";
         $sql .= " , lastname = :lastname";
 
-        if($this->email) {
+        if($this->email != null) {
             $sql .= " , email = :email";
         }
-        if($this->password) {
+        if($this->password != null) {
             $sql .= " , password = :password";
         }
-        if($this->birth) {
+        if($this->birth != null) {
             $sql .= " , birth = :birth";
         }
         if($this->consent !== null) {
             $sql .= " , consent = :consent";
         }
-        if($this->consentDate) {
+        if($this->consentDate !== null) {
             $sql .= " , consent_date = :consentDate";
         }
         if($this->admin !== null) {
@@ -382,24 +382,24 @@ class User extends Modele
         }
         
         $sql .= " WHERE rowid = :rowid";
-
+        
         // prepare
         $requete = $this->getBdd()->prepare($sql);
 
         // Bind optional parameters
-        if($this->email) {
+        if($this->email !== null) {
             $requete->bindParam(':email', $this->email, PDO::PARAM_STR);
         }
-        if($this->password) {
+        if($this->password !== null) {
             $requete->bindParam(':password', $this->password, PDO::PARAM_STR);
         }
-        if($this->birth) {
+        if($this->birth !== null) {
             $requete->bindParam(':birth', $this->birth, PDO::PARAM_STR);
         }
-        if($this->consent) {
+        if($this->consent !== null) {
             $requete->bindParam(':consent', $this->consent, PDO::PARAM_INT);
         }
-        if($this->consentDate) {
+        if($this->consentDate !== null) {
             $requete->bindParam(':consentDate', $this->consentDate, PDO::PARAM_STR);
         }
         if($this->admin !== null) {

@@ -193,7 +193,7 @@ class OrganizationTest extends TestCase
         $User->setRowid($userId);
         $Organization->addUser($User);
         
-        $TestUser = $Organization->fetchUser($userId);
+        $TestUser = $Organization->getUser($userId);
 
         $this->assertNotFalse($TestUser);
         $this->assertSame($User->getFirstname(), $TestUser->getFirstname());

@@ -71,11 +71,11 @@ require_once "layouts/header.php";
                 ?>
                 <tr class="text-center">
                     <!-- Update user form -->
-                    <form id="user-update-form" method="POST" action="<?= CONTROLLERS_URL ?>admin/associateList.php?action=userUpdate">
+                    <form id="user-update-form-<?= $User->getRowid() ?>" method="POST" action="<?= CONTROLLERS_URL ?>admin/associateList.php?action=userUpdate"></form>
                         <td class="align-middle">
                             <div class="row">
                                 <div class="col-12 col-sm-12 col-md-9 mx-auto">
-                                    <input class="form-control mb-1 text-center w-100 mx-auto" value="<?= $User->getLastname() ?>" type="text" name="lastname" placeholder=" " required>
+                                    <input class="form-control mb-1 text-center w-100 mx-auto" form="user-update-form-<?= $User->getRowid() ?>" value="<?= $User->getLastname() ?>" type="text" name="lastname" placeholder=" " required>
                                 </div>
                             </div>
                         </td>
@@ -83,7 +83,7 @@ require_once "layouts/header.php";
                         <td class="align-middle">
                             <div class="row">
                                 <div class="col-12 col-sm-12 col-md-9 mx-auto">
-                                    <input class="form-control mb-1 text-center w-100 mx-auto" value="<?= $User->getFirstname() ?>" type="text" name="firstname" placeholder=" " required>
+                                    <input class="form-control mb-1 text-center w-100 mx-auto" form="user-update-form-<?= $User->getRowid() ?>" value="<?= $User->getFirstname() ?>" type="text" name="firstname" placeholder=" " required>
                                 </div>
                             </div>
                         </td>
@@ -91,7 +91,7 @@ require_once "layouts/header.php";
                         <td class="align-middle">
                             <div class="row">
                                 <div class="col-12 col-sm-12 col-md-9 mx-auto">
-                                    <input class="form-control mb-1 text-center w-100 mx-auto" value="<?= $User->getEmail() ?>" type="text" name="email" placeholder=" " required>
+                                    <input class="form-control mb-1 text-center w-100 mx-auto" form="user-update-form-<?= $User->getRowid() ?>" value="<?= $User->getEmail() ?>" type="text" name="email" placeholder=" " required>
                                 </div>
                             </div>
                         </td>
@@ -120,14 +120,13 @@ require_once "layouts/header.php";
                                 </div>
     
                                 <div class="col-12 col-sm-12 col-md-6">
-                                    <input type="hidden" name="idUser" value="<?= $User->getRowid() ?>">
-                                    <button onclick="document.getElementById('user-update-form').submit()" class="w-100 custom-button double-button-responsive px-1" style="min-width: max-content;">
+                                    <input type="hidden" name="idUser" form="user-update-form-<?= $User->getRowid() ?>" value="<?= $User->getRowid() ?>">
+                                    <button onclick="document.getElementById('user-update-form-<?= $User->getRowid() ?>').submit()" class="w-100 custom-button double-button-responsive px-1" style="min-width: max-content;">
                                         Mettre à jour
                                     </button>
                                 </div>
                             </div>
                         </td>
-                    </form>
                 </tr>
                 <?php
                 }

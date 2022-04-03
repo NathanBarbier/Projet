@@ -33,12 +33,12 @@ if($action == "deleteOrganization")
 {
     try {
         $Organization->delete();
-        LogHistory::create($idOrganization, $idUser, "IMPORTANT", 'delete', 'organization', $Organization->getName(), '', 'organization id : '.$Organization->getRowid());
+        LogHistory::create($idOrganization, $idUser, "IMPORTANT", 'delete', 'organization', $Organization->getName(), null, 'organization id : '.$Organization->getRowid());
         header("location:".ROOT_URL."index.php");
         exit;
     } catch (\Throwable $th) {
         $errors[] = "Une erreur est survenue.";
-        LogHistory::create($idOrganization, $idUser, "ERROR", 'delete', 'organization', $Organization->getName(), '', 'organization id : '.$Organization->getRowid(), $th);
+        LogHistory::create($idOrganization, $idUser, "ERROR", 'delete', 'organization', $Organization->getName(), null, 'organization id : '.$Organization->getRowid(), $th->getMessage());
     }
 }
 
@@ -53,11 +53,11 @@ if($action == 'userUpdate')
                 $User->setLastname($lastname);
                 $User->setEmail($email);
                 $User->update();
-                LogHistory::create($idOrganization, $idUser, "INFO",'update', 'user', $User->getLastname().' '.$User->getFirstname(), '', 'user id : '.$User->getRowid());
+                LogHistory::create($idOrganization, $idUser, "INFO",'update', 'user', $User->getLastname().' '.$User->getFirstname(), null, 'user id : '.$User->getRowid());
                 $success = "Vos informations ont bien été mises à jour.";
             } catch (\Throwable $th) {
                 $errors[] = "Une error est survenue.";
-                LogHistory::create($idOrganization, $idUser, "ERROR",'update', 'user', $User->getLastname().' '.$User->getFirstname(), '', 'user id : '.$User->getRowid(), $th);
+                LogHistory::create($idOrganization, $idUser, "ERROR",'update', 'user', $User->getLastname().' '.$User->getFirstname(), null, 'user id : '.$User->getRowid(), $th->getMessage());
             }
         }
         else
@@ -84,14 +84,14 @@ if($action == "updatePassword")
                             try {
                                 $User->setPassword($newPwd);
                                 $User->update();
-                                LogHistory::create($idOrganization, $idUser, "INFO", 'update password', 'user', $User->getLastname().' '.$User->getFirstname(), '', 'user id : '.$User->getRowid());
+                                LogHistory::create($idOrganization, $idUser, "INFO", 'update password', 'user', $User->getLastname().' '.$User->getFirstname(), null, 'user id : '.$User->getRowid());
                                 $success = "Le mot de passe a bien été modifié.";
                                 $oldPwd = "";
                                 $newPwd = "";
                                 $newPwd2 = "";
                             } catch (\Throwable $th) {
                                 $errors[] = "Une erreur innatendu est survenue. Le mot de passe n'a pas pu être modifié.";
-                                LogHistory::create($idOrganization, $idUser, "ERROR", 'update password', 'user', $User->getLastname().' '.$User->getFirstname(), '', 'user id : '.$User->getRowid(), $th);
+                                LogHistory::create($idOrganization, $idUser, "ERROR", 'update password', 'user', $User->getLastname().' '.$User->getFirstname(), null, 'user id : '.$User->getRowid(), $th->getMessage());
                             }
                         }
                         else
@@ -141,7 +141,7 @@ if($action == "updateEmail")
                 $email = '';
             } catch (\Throwable $th) {
                 $errors[] = "Une erreur innatendue est survenue.";
-                LogHistory::create($idOrganization, $idUser, "ERROR",'update email', 'user', $User->getLastname().' '.$User->getFirstname(), $User->getEmail(), 'user id : '.$User->getRowid(), $th);
+                LogHistory::create($idOrganization, $idUser, "ERROR",'update email', 'user', $User->getLastname().' '.$User->getFirstname(), $User->getEmail(), 'user id : '.$User->getRowid(), $th->getMessage());
             }
         }
         else

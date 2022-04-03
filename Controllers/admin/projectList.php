@@ -44,7 +44,7 @@ if($action == 'deleteProject')
             $success = "Le projet a bien été supprimmé.";
             
             // log entry
-            LogHistory::create($idOrganization, $idUser, "IMPORTANT", 'delete', 'project', $Project->getName() ?? '', '', 'project id : '.$Project->getRowid());
+            LogHistory::create($idOrganization, $idUser, "IMPORTANT", 'delete', 'project', $Project->getName() ?? '', null, 'project id : '.$Project->getRowid());
             
             // remove from Organization -> projects List
             $Organization->removeProject($Project->getRowid());
@@ -54,7 +54,7 @@ if($action == 'deleteProject')
             $errors[] = $th;
             
             // log entry
-            LogHistory::create($idOrganization, $idUser, "ERROR", 'delete', 'project', $Project->getName() ?? '', '', 'project id : '.$Project->getRowid(), $th);
+            LogHistory::create($idOrganization, $idUser, "ERROR", 'delete', 'project', $Project->getName() ?? '', null, 'project id : '.$Project->getRowid(), $th->getMessage());
         }
     }
     else

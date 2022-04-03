@@ -4,7 +4,7 @@ require_once "../../services/header.php";
 require "layouts/head.php";
 
 $action     = htmlentities(GETPOST('action'));
-$idUser     = intval(htmlentities(GETPOST('idUser')));
+$userId     = intval(htmlentities(GETPOST('idUser')));
 
 $firstname  = htmlentities(GETPOST('firstname'));
 $lastname   = htmlentities(GETPOST('lastname'));
@@ -29,10 +29,12 @@ $tpl = "associateList.php";
 
 if($action == "userUpdate")
 {
-    if($idUser)
+    if($userId)
     {
         // check if the user belongs to the Organization
-        $User = $Organization->fetchUser($idUser);
+        $Organization->fetchUser($userId);
+        $User = $Organization->getUser($userId);
+
         if($User)
         {
             if(!empty($firstname)) {
@@ -48,12 +50,12 @@ if($action == "userUpdate")
             try {
                 $User->update();
                 
-                LogHistory::create($idOrganization, $idUser, "INFO", 'update firstname', 'user', '', 'user id : '.$User->getRowid());
+                LogHistory::create($idOrganization, $idUser, "INFO", 'update', 'user', '', null, 'user id : '.$User->getRowid());
                 
                 $success = "L'utilisateur a bien été mis à jour.";
             } catch (exception $e) {
                 $errors[] = "Le prénom n'a pas pu être modifié.";
-                LogHistory::create($idOrganization, $idUser, "ERROR", 'update firstname', 'user', '', 'user id : '.$User->getRowid(), $th);
+                LogHistory::create($idOrganization, $idUser, "ERROR", 'update', 'user', '', null, 'user id : '.$User->getRowid(), null, $e->getMessage());
             }
         }
     } 
@@ -65,20 +67,21 @@ if($action == "userUpdate")
 
 if($action == "userDelete")
 {
-    if($idUser)
+    if($userId)
     {
         // check if the user belongs to the organization
-        $User = $Organization->fetchUser($idUser);
+        $Organization->fetchUser($userId);
+        $User = $Organization->getUser($userId);
         if($User)
         {
             try {
-                $Organization->removeUser($idUser);
+                $Organization->removeUser($userId);
                 $User->delete();
-                LogHistory::create($idOrganization, $idUser, "WARNING", 'delete', 'user', $User->getLastname().' '.$User->getFirstname(), '', 'user id : '.$User->getRowid());
+                LogHistory::create($idOrganization, $idUser, "WARNING", 'delete', 'user', $User->getLastname().' '.$User->getFirstname(), null, 'user id : '.$User->getRowid());
                 $success = "La suppression d'utilisateur a bien été effectuée.";
             } catch (\Throwable $th) {
                 $errors[] = "La suppression d'utilisateur n'a pas pu aboutir.";
-                LogHistory::create($idOrganization, $idUser, "ERROR", 'delete', 'user', $User->getLastname().' '.$User->getFirstname(), '', 'user id : '.$User->getRowid(), $th);
+                LogHistory::create($idOrganization, $idUser, "ERROR", 'delete', 'user', $User->getLastname().' '.$User->getFirstname(), null, 'user id : '.$User->getRowid(), $th->getMessage());
             }
         }
     } 

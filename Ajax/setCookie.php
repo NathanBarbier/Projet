@@ -21,7 +21,7 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
                 echo json_encode($_COOKIE);
             } catch (\Throwable $th) {
                 //throw $th;
-                echo json_encode('YOOOO');
+                echo json_encode(false);
             }
             break;
         case 'checkCookieConsent':

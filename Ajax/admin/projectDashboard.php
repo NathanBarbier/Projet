@@ -23,6 +23,7 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
                         echo json_encode($Team->isActive());
                     } catch (\Throwable $th) {
                         // echo json_encode($th);
+                        LogHistory::create($idOrganization, $idUser, "ERROR", 'get active teams', '', '', null, null, $th->getMessage());
                     }
                     break;
                 }

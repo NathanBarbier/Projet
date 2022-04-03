@@ -56,25 +56,25 @@ if($action == "inscriptionOrg")
                                     $User->setFk_organization($fk_organization);
                                     $User->setAdmin(1);
                                     $User->setConsent(1);
-                                    $User->create();
-                                    LogHistory::create($idOrganization, $idUser, "INFO", 'signup', 'user', $User->getEmail());
+                                    $lastInsertedId = $User->create();
+                                    LogHistory::create($idOrganization, $idUser, "INFO", 'signup', 'user', $User->getEmail(), null, 'user id : '.$lastInsertedId);
                                 } 
                                 catch (exception $e) 
                                 {
                                     $errors[] = "Erreur : l'inscription n'a pas pu aboutir.";
-                                    LogHistory::create($idOrganization, $idUser, "ERROR", 'signup', 'user', $User->getEmail(), '', '', $e);
+                                    LogHistory::create($idOrganization, $idUser, "ERROR", 'signup', 'user', $User->getEmail(), null, null, $e->getMessage());
                                 }
 
                                 try {
                                     $Organization->setName($name);
-                                    $Organization->create();
-                                    LogHistory::create($idOrganization, $idUser, "INFO", 'create', 'Organization', $Organization->getName());
+                                    $lastInstertedId = $Organization->create();
+                                    LogHistory::create($idOrganization, $idUser, "INFO", 'create', 'Organization', $Organization->getName(), null, 'organization id : '.$lastInstertedId);
     
                                     header("location:".CONTROLLERS_URL.'visitor/login.php?msg=inscription&on=1&type=success&title=Succès');
                                     exit;
                                 } catch (\Throwable $th) {
                                     $errors[] = "Erreur : l'inscription n'a pas pu aboutir.";
-                                    LogHistory::create($idOrganization, $idUser, "ERROR", 'create', 'Organization', $Organization->getName(), '', '', $th);
+                                    LogHistory::create($idOrganization, $idUser, "ERROR", 'create', 'Organization', $Organization->getName(), null, null, $th->getMessage());
                                 }
                             }
                             else

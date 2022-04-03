@@ -8,7 +8,7 @@
 /* 6. Buttons */
 /* 7. Link */
 /* 8. Icons */
-/* 9. Gestion Organization */
+/* 9. Organization Dashboard */
 /* 10. sideBar */
 /* 11. Associate List */
 /* 12. Overflow */
@@ -656,15 +656,15 @@ a:before,a:after {
 
 /* -------------- 9. ------------- */
 
-@media only screen and (max-width: 576px) {
+@media only screen and (max-width: 768px) {
   #gestion-organisation-left-section {
-    height: auto;
+    height: fit-content;
   }
 }
 
-@media only screen and (min-width: 577px) {
+@media only screen and (min-width: 768px) {
   #gestion-organisation-left-section {
-    height: 90vh;
+    height: 95vh;
   }
 }
 

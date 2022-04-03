@@ -1,28 +1,16 @@
-// delete project
-$(".del-project-btn").on('click', function() {
-    $("#del-project-confirmation").addClass('show');
-
-    var projectId = $(this).parents(".row").first().prevAll(".project-id").first().val();
-    var url = $("#delete-project-btn-conf").attr('href');
-
-    if(projectId.length > 0 && url.length > 0) 
-    {
-        url = url.split('?')[0];
-        url += "?action=deleteProject&projectId="+projectId
-        $("#delete-project-btn-conf").attr('href', url);
-    }
-});
+// event listeners on :
+initProjectDeleteButton(); // project delete button (on click)
+initLoadMoreLink();        // load more link        (on click)
 
 // cancel delete
 $("#cancel-delete-btn").on('click', function() {
-    $("#del-project-confirmation").removeClass('show');
+    $("#delete-project-modal").modal('hide');
 });
 
 // search bar
 var searchIsEnabled = true;
 
 $('#search-bar').on('input', function() {
-    
     if(searchIsEnabled)
     {
         // empty all projects
@@ -45,6 +33,7 @@ $('#search-bar').on('input', function() {
                 success: function (data) {
                     var projects = JSON.parse(data);
 
+                    // if there are at least one project
                     if(projects)
                     {
                         var append = ''
@@ -75,7 +64,7 @@ $('#search-bar').on('input', function() {
                                         
                                         '<div class="row">',
                                             '<div class="col-12 col-lg-6">',
-                                                '<a href="<?= CONTROLLERS_URL ?>admin/projectDashboard.php?idProject='+ project.rowid +'" class="w-100 custom-button info btn-sm mt-1 px-1 pt-2 double-button-responsive">',
+                                                '<a href="'+CONTROLLERS_URL+'admin/projectDashboard.php?idProject='+ project.rowid +'" class="w-100 custom-button info btn-sm mt-1 px-1 pt-2 double-button-responsive">',
                                                     'Détails',
                                                 '</a>',
                                             '</div>',
@@ -90,11 +79,17 @@ $('#search-bar').on('input', function() {
                             ].join('');
                         });
 
+                        // create projects DOM elements
                         $('#projects-container').append(append);
+
+                        // attach event listeners on new created DOM elements
+                        initProjectDeleteButton();
                     }
+
                     // re-enable search
                     searchIsEnabled = true;
 
+                    // hide the loading modal
                     $('#loading-modal').modal('hide');
 
                     // because the loading modal force unfocus
@@ -104,30 +99,29 @@ $('#search-bar').on('input', function() {
         }
         else
         {
+            // append the projects that are already loaded if the pattern doesn't match any project
             $('#projects-container').append(loadedProjects);
-            loadMore();
+            // event listeners
+            initLoadMoreLink();
         }
     }
 });
 
 var loadedProjects = $('#projects-container').children();
 
-// load more
-loadMore();
-
-function loadMore()
+// event listeners on the load more link
+function initLoadMoreLink()
 {
     $("#load-more").off('click').on('click', function() {
         $("#loading-modal").modal('show');
 
-        // hide the loadmore button
+        // hide the loadmore link
         $('#load-more-line').remove();
     
         $.ajax({
             async: true,
             url: AJAX_URL+"admin/projectList.php?action=loadmore&offset="+offset,
             success: function (data) {
-    
                 var projects = JSON.parse(data);
 
                 // if there are no users
@@ -137,7 +131,6 @@ function loadMore()
                     var append = '';
 
                     projects.forEach((project, index) => {
-                        
                         // display only the 10 or less projects
                         if(index == 10) {
                             return
@@ -146,11 +139,9 @@ function loadMore()
                         if(project.active == 1)
                         {
                             var color = '<span style="color:green">Ouvert</span>';
-
                         }
                         else
                         {
-
                             var color = '<span style="color:red">Archivé</span>';
                         }
 
@@ -180,7 +171,11 @@ function loadMore()
                         ].join('');
                     });
         
+                    // create projects DOM elements
                     $('#projects-container').append(append);
+
+                    // atache event listener
+                    initProjectDeleteButton();
 
                     if(projects.length > 10)
                     {
@@ -190,16 +185,36 @@ function loadMore()
                             '</div>',
                         ].join('');
 
+                        // create 'loadmore' link DOM elements
                         $('#projects-container').append(append);
+                        
+                        // attach event listener
+                        initLoadMoreLink();
                     }
                     
+                    // store in a Js variable the projects that are already loaded
                     loadedProjects = $('#projects-container').children();
-    
-                    loadMore();
                 }
                 // hide the loading modal
                 $("#loading-modal").modal('hide');
             }
         });
+    });
+}
+
+function initProjectDeleteButton()
+{
+    $(".del-project-btn").off('click').on('click', function() {
+        $('#delete-project-modal').modal('show');
+    
+        var projectId = $(this).parents(".row").first().prevAll(".project-id").first().val();
+        var url = $("#delete-project-btn-conf").attr('href');
+    
+        if(projectId.length > 0 && url.length > 0) 
+        {
+            url = url.split('?')[0];
+            url += "?action=deleteProject&projectId="+projectId
+            $("#delete-project-btn-conf").attr('href', url);
+        }
     });
 }

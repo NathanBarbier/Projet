@@ -157,12 +157,6 @@ input:read-only:hover:not(.form-check-input) {
   z-index: 1;
 }
 
-#tbodyEquipeProjet {
-  height: 200px;
-  width: 100%;
-  display: block;
-}
-
 #modifEquipe {
   border-radius: 10px;
   border: 3px solid rgb(216, 214, 214);
@@ -1066,8 +1060,16 @@ button.toast-close-button {
   background-color: #999;
 }
 
+.modal-content {
+  border-radius:15px;
+}
+
+.delete-project-dialog.modal-dialog {
+  max-width: unset;
+}
+
 #loading-modal .modal-dialog {
-  width: 15% !important;
+  width: 350px !important;
   font-size: larger;
 }
 

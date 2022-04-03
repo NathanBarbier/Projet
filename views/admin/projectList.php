@@ -8,18 +8,27 @@ require_once "layouts/header.php";
         <i class="bi bi-search position-absolute top-0 end-0 me-4 " style="width: auto; margin-top: 10px; cursor:pointer"></i>
     </div>
 
-    <div class="row px-4">
-        <div id="del-project-confirmation" class="sticker p-3 mb-3 mx-auto text-center collapse col-12 col-md-6" style="height: max-content;">
-            <h4 class="mx-auto border-bottom w-75 mb-3">Confirmation de suppression de projet.</h4>
-            <b>Êtes-vous sûr de vouloir supprimer le projet ?</b>
-            <br>
-            (Cette action est définitive et supprimera toute donnée étant en lien avec celui-ci)
-            <div class="mt-4 row">
-                <div class="col-6">
-                    <a id="delete-project-btn-conf" class="w-100 pt-2 custom-button danger double-button-responsive" href="<?= CONTROLLERS_URL ?>admin/projectList.php?action=deleteProject">Supprimer</a>
-                </div>
-                <div class="col-6">
-                    <button id="cancel-delete-btn" class="w-100 custom-button warning double-button-responsive">Annuler</button>
+    <!-- Delete project Modal -->
+    <div class="modal" id="delete-project-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog delete-project-dialog position-absolute start-50 translate-middle" style="top:40%; width: 40vw; height: 40vh">
+            <div class="modal-content" style="height: inherit;">
+                <div class="modal-body position-relative pt-0 text-center">
+                    <h4 class="mx-auto border-bottom w-75 mt-3 mb-3">Confirmation de suppression de projet.</h4>
+                    <b class="mt-2">Êtes-vous sûr de vouloir supprimer le projet ?</b>
+                    <br>
+                    <b class="mt-1"><span style="color: red;">(Cette action est définitive et supprimera toute donnée étant en lien avec celui-ci)</span><b>
+                    <div class="row mx-2 mt-5" style="font-size: large;">
+                        <div class="col-6">
+                            <a id="delete-project-btn-conf" class="pt-2 w-100 custom-button danger" href="<?= CONTROLLERS_URL ?>admin/projectList.php?action=deleteProject" style="height: 55px; padding: unset">
+                                Supprimer
+                            </a>
+                        </div>
+                        <div class="col-6">
+                            <a type="button" id="cancel-delete-btn" class="pt-2 w-100 custom-button warning" style="height: 55px; padding: unset">
+                                Annuler
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

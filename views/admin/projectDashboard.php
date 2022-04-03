@@ -111,9 +111,9 @@ require_once 'layouts/header.php';
                         <div class="card-header text-center">
                             <h3>Membres affectés</h3>
                         </div>
-                        <div class="card-body overflow-x overflow-y">
-                            <table class="table">
-                                <tbody class="tbodyEquipeProjet">
+                        <div class="card-body overflow-y p-0">
+                            <table class="table" style="text-overflow: ellipsis; overflow-x: hidden; white-space: nowrap; table-layout: fixed">
+                                <tbody style="border-color: rgba(0,0,0,.125)">
                                     <tr>
                                         <th>Nom</th>
                                         <th>Prénom</th>
@@ -134,8 +134,10 @@ require_once 'layouts/header.php';
                                 }
 
                                 // Membres déjà affectés aux équipes déjà créées
-                                foreach($Project->getTeams() as $Team) {
-                                    foreach($Team->getUsers() as $User) { ?>
+                                foreach($Project->getTeams() as $Team) 
+                                {
+                                    foreach($Team->getUsers() as $User) 
+                                    { ?>
                                         <tr class="team-members-<?= $Team->getRowid() ?> collapse" id="adding-again-user-<?= $User->getRowid() ?>">
                                             <td><?= $User->getLastname() ?></td>
                                             <td><?= $User->getFirstname() ?></td>
@@ -155,8 +157,8 @@ require_once 'layouts/header.php';
                         <div class="card-header text-center">
                             <h3>Membres prêts</h3>
                         </div>
-                        <div class="card-body overflow-x overflow-y">
-                            <table class="table">
+                        <div class="card-body overflow-y p-0">
+                            <table class="table" style="text-overflow: ellipsis; overflow-x: hidden; white-space: nowrap; table-layout: fixed">
                                 <tbody class="text-start">
                                     <tr>
                                         <th>Nom</th>
@@ -169,9 +171,9 @@ require_once 'layouts/header.php';
                                             <td><?= $User->getFirstname() ?></td>
                                             <td><button onclick="toggleUserToTeam(<?= $User->getRowid() ?>)" class="custom-button success px-2">Ajouter</button></td>
                                         </tr>
-                                    <?php } ?>
-                                    <!-- Membres en cours de désaffectation des équipe déjà créées -->
-                                    <?php foreach($Project->getTeams() as $Team) {
+                                    <?php }
+                                    // Membres en cours de désaffectation des équipe déjà créées
+                                    foreach($Project->getTeams() as $Team) {
                                         foreach($Team->getUsers() as $User) { ?>
                                             <tr class="freeing-team-members-<?= $Team->getRowid() ?> collapse" id="freeing-user-<?= $User->getRowid() ?>">
                                                 <td><?= $User->getLastname() ?></td>

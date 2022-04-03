@@ -53,10 +53,14 @@ require_once "layouts/header.php";
                         
                         <div id="archived-tasks-container" class="overflow-y mt-3" style="height: 60vh;">
                             <?php
-                            foreach($Team->getMapColumns() as $Column) {
-                                if(!empty($Column->getTasks())) {
-                                    foreach($Column->getTasks() as $Task) {
-                                        if(!$Task->isActive()) { ?>
+                            foreach($Team->getMapColumns() as $Column) 
+                            {
+                                if(!empty($Column->getTasks())) 
+                                {
+                                    foreach($Column->getTasks() as $Task) 
+                                    {
+                                        if(!$Task->isActive()) 
+                                        { ?>
                                             <div class="row radius hover w-100 mx-0 mt-3 align-content-center border task-line" style="height: 100px;">
                                                 <div class="col-8 d-flex align-content-center">
                                                     <div class="w-100 h-100">
@@ -74,7 +78,6 @@ require_once "layouts/header.php";
                                 }
                             } ?>
                         </div>
-
                     </div>
                 </div>
             </div>

@@ -1,4 +1,5 @@
 <?php
+require_once "../../services/constants.php";
 require_once "layouts/header.php";
 ?>
 
@@ -10,10 +11,22 @@ require_once "layouts/header.php";
         <p><b><span style="color: red;">Pour vous connecter vous devez consentir au traitement de vos données</span></b></p>
 
         <p class="mt-5"><b>J'accepte le traitement de mes données.</b></p>
-        <a href="<?= CONTROLLERS_URL ?>visitor/needConsent.php?action=giveConsent" id="give-consent" class="custom-button success w-25">Accepter</a>
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-12 col-lg-6">
+                <a href="<?= CONTROLLERS_URL ?>visitor/needConsent.php?action=giveConsent" id="give-consent" class="custom-button success pt-2 w-75">
+                    Accepter
+                </a>
+            </div>
+        </div>
 
         <p class="mt-5"><b>Je refuse le traitement de mes données. (Votre compte sera alors supprimé)</b></p>
-        <a href="<?= CONTROLLERS_URL ?>visitor/needConsent.php?action=refuseConsent" id="refuse-consent" class="custom-button danger w-25">Refuser</a>
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-12 col-lg-6">
+                <a href="<?= CONTROLLERS_URL ?>visitor/needConsent.php?action=refuseConsent" id="refuse-consent" class="custom-button danger pt-2 w-75">
+                    Refuser
+                </a>
+            </div>
+        </div>
     </div>
 </div>
 

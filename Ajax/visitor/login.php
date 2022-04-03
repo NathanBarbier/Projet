@@ -84,12 +84,12 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
                                     if($consent == 1)
                                     {
                                         $_SESSION["rights"] = $User->isAdmin() == 1 ? "admin" : "user";
-                                        LogHistory::create($User->getFk_organization(), $User->getRowid(), "INFO", 'connect', 'user', $User->getLastname().' '.$User->getFirstname());
+                                        LogHistory::create($User->getFk_organization(), $User->getRowid(), "INFO", 'connect', 'user', $User->getLastname().' '.$User->getFirstname(), null, null, null, $ip);
                                     }
                                     else
                                     {
                                         $_SESSION["rights"] = "needConsent";
-                                        LogHistory::create($User->getFk_organization(), $User->getRowid(), "INFO", 'connect', 'user', $User->getLastname().' '.$User->getFirstname());
+                                        LogHistory::create($User->getFk_organization(), $User->getRowid(), "INFO", 'connect', 'user', $User->getLastname().' '.$User->getFirstname(), null, null, null, $ip);
                                     }
     
                                     $rights = $_SESSION['rights'] ?? false;

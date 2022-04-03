@@ -50,12 +50,12 @@ if($action == "userUpdate")
             try {
                 $User->update();
                 
-                LogHistory::create($idOrganization, $idUser, "INFO", 'update', 'user', '', null, 'user id : '.$User->getRowid());
+                LogHistory::create($idOrganization, $idUser, "INFO", 'update', 'user', '', null, 'user id : '.$User->getRowid(), null, $ip);
                 
                 $success = "L'utilisateur a bien été mis à jour.";
             } catch (exception $e) {
                 $errors[] = "Le prénom n'a pas pu être modifié.";
-                LogHistory::create($idOrganization, $idUser, "ERROR", 'update', 'user', '', null, 'user id : '.$User->getRowid(), null, $e->getMessage());
+                LogHistory::create($idOrganization, $idUser, "ERROR", 'update', 'user', '', null, 'user id : '.$User->getRowid(), null, $e->getMessage(), $ip);
             }
         }
     } 
@@ -77,11 +77,11 @@ if($action == "userDelete")
             try {
                 $Organization->removeUser($userId);
                 $User->delete();
-                LogHistory::create($idOrganization, $idUser, "WARNING", 'delete', 'user', $User->getLastname().' '.$User->getFirstname(), null, 'user id : '.$User->getRowid());
+                LogHistory::create($idOrganization, $idUser, "WARNING", 'delete', 'user', $User->getLastname().' '.$User->getFirstname(), null, 'user id : '.$User->getRowid(), null, $ip);
                 $success = "La suppression d'utilisateur a bien été effectuée.";
             } catch (\Throwable $th) {
                 $errors[] = "La suppression d'utilisateur n'a pas pu aboutir.";
-                LogHistory::create($idOrganization, $idUser, "ERROR", 'delete', 'user', $User->getLastname().' '.$User->getFirstname(), null, 'user id : '.$User->getRowid(), $th->getMessage());
+                LogHistory::create($idOrganization, $idUser, "ERROR", 'delete', 'user', $User->getLastname().' '.$User->getFirstname(), null, 'user id : '.$User->getRowid(), $th->getMessage(), $ip);
             }
         }
     } 

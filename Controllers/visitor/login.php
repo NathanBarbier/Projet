@@ -4,7 +4,7 @@ require_once "../../services/header.php";
 
 $envoi = GETPOST('envoi');
 
-$email = GETPOST('email');
+$email  = GETPOST('email');
 $password = GETPOST('password');
 $message = GETPOST('message');
 $rememberMe = GETPOST('rememberMe');

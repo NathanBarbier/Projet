@@ -6,7 +6,7 @@ class UserRepository extends Repository
     {
         if(is_int($offset) && is_int($fk_organization))
         {
-            $sql = "SELECT lastname, firstname, email, fk_organization, admin";
+            $sql = "SELECT rowid, lastname, firstname, email, fk_organization, admin";
             $sql .= " FROM storieshelper_user";
             $sql .= " WHERE fk_organization = $fk_organization";
             $sql .= " ORDER BY `lastname`, `firstname`";

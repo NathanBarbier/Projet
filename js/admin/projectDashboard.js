@@ -76,6 +76,177 @@ $("#update-team-button").on('click', function() {
     $("#update-team-form").trigger('submit');
 });
 
+// search bar
+var searchIsEnabled = true;
+
+$('#project-dashboard-search-bar').on('input', function() {
+    if(searchIsEnabled)
+    {
+        // empty all projects
+        $('#free-users-container').empty();
+        $('#adding-users-container').empty();
+
+        // the searched string
+        var query = $(this).val().toString();
+
+        if(query.length > 0)
+        {
+            $('#loading-modal').modal('show');
+
+            // to avoid server overcharge
+            searchIsEnabled = false;
+
+            // display project that match pattern
+            $.ajax({
+                async: true,
+                url: AJAX_URL+"admin/projectDashboard.php?action=search&query="+query,
+                success: function (data) {
+                    var users = JSON.parse(data);
+
+                    if(users)
+                    {
+                        // free users
+                        var append = ''
+
+                        users.forEach(user => {
+                            append += [
+                                '<tr class="collapse show" id="free-user-'+ user.rowid +'">',
+                                    '<td>'+ user.lastname +'</td>',
+                                    '<td>'+ user.firstname +'</td>',
+                                    '<td>',
+                                        '<button onclick="toggleUserToTeam('+ user.rowid +')" class="custom-button success px-2">',
+                                            'Ajouter',
+                                        '</button>',
+                                    '</td>',
+                                '</tr>',
+                            ].join('');                            
+                        });
+
+                        // create users DOM elements
+                        $('#free-users-container').append(append);
+                        
+                        // adding users
+                        append = ''
+
+                        users.forEach(user => {
+                            append += [
+                                '<tr class="collapse" id="adding-user-'+ user.rowid +'">',
+                                    '<td>'+ user.lastname +'</td>',
+                                    '<td>'+ user.firstname +'</td>',
+                                    '<td>',
+                                        '<button onclick="toggleUserToTeam('+ user.rowid +')" class="custom-button danger px-2">',
+                                            'Retirer',
+                                        '</button>',
+                                    '</td>',
+                                '</tr>',
+                            ].join('');                            
+                        });
+
+                        // create users DOM elements
+                        $('#adding-users-container').append(append);
+                    }
+                    // re-enable search
+                    searchIsEnabled = true;
+
+                    $('#loading-modal').modal('hide');
+
+                    // because the loading modal force unfocus
+                    $('#project-dashboard-search-bar').focus();
+                }
+            });
+        }
+        else
+        {
+            $('#free-users-container').append(loadedAssociates);
+            $('#adding-users-container').append(loadedFreeUsers);
+            initLoadMoreLink();
+        }
+    }
+});
+
+var loadedAssociates = $('#free-users-container').children();
+var loadedFreeUsers = $('#adding-users-container').children();
+
+initLoadMoreLink();
+
+function initLoadMoreLink()
+{
+    $("#load-more").off('click').on('click', function() {
+        $("#loading-modal").modal('show');
+    
+        $.ajax({
+            async: true,
+            url: AJAX_URL+"admin/projectDashboard.php?action=loadmore&offset="+offset,
+            success: function (data) {
+                var users = JSON.parse(data);
+
+                // hide the loadmore button
+                $('#load-more-line').remove();
+
+                // if there are no users
+                if(Array.isArray(users) && users.length > 0)
+                {
+                    offset += 30;
+                    var append = '';
+
+                    users.forEach(user => {
+                        append += [
+                            '<tr class="collapse show" id="free-user-'+ user.rowid +'">',
+                                '<td>'+ user.lastname +'</td>',
+                                '<td>'+ user.firstname +'</td>',
+                                '<td>',
+                                    '<button onclick="toggleUserToTeam('+ user.rowid +')" class="custom-button success px-2">',
+                                        'Ajouter',
+                                    '</button>',
+                                '</td>',
+                            '</tr>',
+                        ].join('');
+                    });
+        
+                    $('#free-users-container').append(append);
+
+                    // adding users
+                    append = ''
+
+                    users.forEach(user => {
+                        append += [
+                            '<tr class="collapse" id="adding-user-'+ user.rowid +'">',
+                                '<td>'+ user.lastname +'</td>',
+                                '<td>'+ user.firstname +'</td>',
+                                '<td>',
+                                    '<button onclick="toggleUserToTeam('+ user.rowid +')" class="custom-button danger px-2">',
+                                        'Retirer',
+                                    '</button>',
+                                '</td>',
+                            '</tr>',
+                        ].join('');                            
+                    });
+
+                    // create users DOM elements
+                    $('#adding-users-container').append(append);
+
+                    if(users.length == 30)
+                    {
+                        var append = [
+                            '<tr id="load-more-line">',
+                                '<td class="text-center" colspan="3">',
+                                    '<a id="load-more" type="button" class="custom-link py-0" style="font-size: 2rem;">Load more</a>',
+                                '</td>',
+                            '</tr>'
+                        ].join('');
+
+                        $('#free-users-container').append(append);
+                    }
+                    
+                    $("#loading-modal").modal('hide');
+    
+                    initLoadMoreLink();
+                }
+            }
+        });
+    });
+}
+
 function switchTeamApp()
 {
     // display switching button
@@ -154,10 +325,7 @@ function showTeamMembers(teamRowid, teamName)
         async: true,
         url: AJAX_URL+"admin/projectDashboard.php?action=getTeamActive&teamId="+teamRowid,
         success: function(data) {
-            
-            teamActive = data;
-            teamActive = teamActive.replace("\"", '').replace("\"", '');
-            teamActive = parseInt(teamActive)
+            teamActive = JSON.parse(data);
 
             if(teamActive == 0)
             {

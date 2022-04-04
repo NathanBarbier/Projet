@@ -79,17 +79,17 @@ try
                     $Task->setActive($faker->numberBetween(0,1));
             
                     $rank = $Task->create();
-            
-                    $Task->setname($faker->sentence());
-                    $Task->setdescription($faker->paragraph());
+                    $TaskId = $Task->fetch_last_insert_id();
+
+                    $Task->setRowid($TaskId);
+                    $Task->setName($faker->sentence($faker->numberBetween(6,12)));
+                    $Task->setDescription($faker->sentence($faker->numberBetween(6,12)));
                     $Task->setRank($rank);
-                    $Task->setactive($faker->numberBetween(0,1));
-                    $Task->setfinished_at('');
-                    $Task->setcreated_at($faker->date());
+                    $Task->setActive($faker->numberBetween(0,1));
+                    $Task->setFinished_at(null);
+                    $Task->setCreated_at($faker->dateTime()->format("Y-m-d H:i:s"));
             
                     $Task->update();
-        
-                    $TaskId = $Task->fetch_last_insert_id();
 
                     // create task comment
                     $TaskComment = new TaskComment();

@@ -459,6 +459,15 @@ input:read-only:hover:not(.form-check-input) {
   filter: invert(1);
 }
 
+#project-dashboard-search-bar {
+  border-radius: 15px; 
+  opacity: 90%; 
+  width:90%;
+  margin-top: 10px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 /* -------------- 6. ------------- */
 
 .btn-outline-classic {
@@ -758,6 +767,9 @@ a:before,a:after {
 
 /* -------------- 11. ------------- */
 
+.table>:not(:first-child) {
+  border: unset;
+}
 .table-radius {
   border-collapse: separate;
   

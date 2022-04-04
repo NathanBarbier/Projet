@@ -112,41 +112,55 @@ require_once 'layouts/header.php';
                             <h3>Membres affectés</h3>
                         </div>
                         <div class="card-body overflow-y p-0">
-                            <table class="table" style="text-overflow: ellipsis; overflow-x: hidden; white-space: nowrap; table-layout: fixed">
-                                <tbody style="border-color: rgba(0,0,0,.125)">
+                            <table class="table" style="text-overflow: ellipsis; overflow-x: hidden; white-space: nowrap; table-layout: fixed;">
+                                <thead>
                                     <tr>
                                         <th>Nom</th>
                                         <th>Prénom</th>
                                         <th>Options</th>
                                     </tr>
-                                </tbody>
-
-                                <!-- Membres en cours d'affectation -->
-                                <?php
-                                foreach($freeUsers as $key => $User)
-                                { ?>
-                                    <tr class="collapse" id="adding-user-<?= $User->getRowid() ?>">
-                                        <td><?= $User->getLastname() ?></td>
-                                        <td><?= $User->getFirstname() ?></td>
-                                        <td><button onclick="toggleUserToTeam(<?= $User->getRowid() ?>)" class="custom-button danger px-2">Retirer</button></td>
+                                </thead>
+                                
+                                <tbody style="border-color: rgba(0,0,0,.125)">
+                                    <!-- Membres en cours d'affectation -->
+                                    <tr>
+                                        <td colspan="3" style="border: unset; padding-bottom: 0">
+                                            <table class="table" id="adding-users-container" style="width: 100%; margin-bottom: 0">
+                                                <?php
+                                                foreach($freeUsers as $key => $User)
+                                                { ?>
+                                                    <tr class="collapse" id="adding-user-<?= $User->getRowid() ?>">
+                                                        <td style="width: 33.33%;"><?= $User->getLastname() ?></td>
+                                                        <td style="width: 33.33%;"><?= $User->getFirstname() ?></td>
+                                                        <td style="width: 33.33%;"><button onclick="toggleUserToTeam(<?= $User->getRowid() ?>)" class="custom-button danger px-2">Retirer</button></td>
+                                                    </tr>
+                                                    <?php
+                                                } ?>
+                                            </table>
+                                        </td>
                                     </tr>
-                                    <?php
-                                }
 
-                                // Membres déjà affectés aux équipes déjà créées
-                                foreach($Project->getTeams() as $Team) 
-                                {
-                                    foreach($Team->getUsers() as $User) 
-                                    { ?>
-                                        <tr class="team-members-<?= $Team->getRowid() ?> collapse" id="adding-again-user-<?= $User->getRowid() ?>">
-                                            <td><?= $User->getLastname() ?></td>
-                                            <td><?= $User->getFirstname() ?></td>
-                                            <td><button onclick="toggleUserToExistingTeam(<?= $User->getRowid() ?>)" class="custom-button danger px-2">Retirer</button></td>
-                                        </tr>
-                                        <?php
-                                    }
-                                } ?>
-                                </div>
+                                    <tr>
+                                        <td colspan="3" style="border: unset; padding-top: 0">
+                                            <table class="table" id="team-members-container" style="width: 100%;">
+                                                <?php
+                                                // Membres déjà affectés aux équipes déjà créées
+                                                foreach($Project->getTeams() as $Team) 
+                                                {
+                                                    foreach($Team->getUsers() as $User) 
+                                                    { ?>
+                                                        <tr class="team-members-<?= $Team->getRowid() ?> collapse" id="adding-again-user-<?= $User->getRowid() ?>">
+                                                            <td style="width: 33.33%;"><?= $User->getLastname() ?></td>
+                                                            <td style="width: 33.33%;"><?= $User->getFirstname() ?></td>
+                                                            <td style="width: 33.33%;"><button onclick="toggleUserToExistingTeam(<?= $User->getRowid() ?>)" class="custom-button danger px-2">Retirer</button></td>
+                                                        </tr>
+                                                    <?php
+                                                    }
+                                                } ?>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </div>
                     </div>
@@ -157,31 +171,51 @@ require_once 'layouts/header.php';
                         <div class="card-header text-center">
                             <h3>Membres prêts</h3>
                         </div>
-                        <div class="card-body overflow-y p-0">
-                            <table class="table" style="text-overflow: ellipsis; overflow-x: hidden; white-space: nowrap; table-layout: fixed">
+                        <div class="card-body overflow-y p-0 position-relative">
+                            <input id="project-dashboard-search-bar" type="text" class="form-control">
+                            <i class="bi bi-search position-absolute top-0 end-0" style="width: auto; margin-top: 20px; cursor:pointer; margin-right: 9%"></i>
+                            <table class="table mt-2" style="text-overflow: ellipsis; overflow-x: hidden; white-space: nowrap; table-layout: fixed;">
                                 <tbody class="text-start">
                                     <tr>
                                         <th>Nom</th>
                                         <th>Prénom</th>
                                         <th>Options</th>
                                     </tr>
-                                    <?php foreach($freeUsers as $key => $User) { ?>
-                                        <tr class="collapse show" id="free-user-<?= $User->getRowid() ?>">
-                                            <td><?= $User->getLastname() ?></td>
-                                            <td><?= $User->getFirstname() ?></td>
-                                            <td><button onclick="toggleUserToTeam(<?= $User->getRowid() ?>)" class="custom-button success px-2">Ajouter</button></td>
-                                        </tr>
-                                    <?php }
+
+                                    <td colspan="3">
+                                        <table class="table" id="free-users-container" style="width: 100%;">
+                                            <?php 
+                                            foreach($freeUsers as $key => $User) 
+                                            { ?>
+                                                <tr class="collapse show" id="free-user-<?= $User->getRowid() ?>">
+                                                    <td><?= $User->getLastname() ?></td>
+                                                    <td><?= $User->getFirstname() ?></td>
+                                                    <td><button onclick="toggleUserToTeam(<?= $User->getRowid() ?>)" class="custom-button success px-2">Ajouter</button></td>
+                                                </tr>
+                                            <?php 
+                                            } ?>
+                                        </table>
+                                    </td>
+                                    <?php
                                     // Membres en cours de désaffectation des équipe déjà créées
-                                    foreach($Project->getTeams() as $Team) {
-                                        foreach($Team->getUsers() as $User) { ?>
+                                    foreach($Project->getTeams() as $Team) 
+                                    {
+                                        foreach($Team->getUsers() as $User) 
+                                        { ?>
                                             <tr class="freeing-team-members-<?= $Team->getRowid() ?> collapse" id="freeing-user-<?= $User->getRowid() ?>">
                                                 <td><?= $User->getLastname() ?></td>
                                                 <td><?= $User->getFirstname() ?></td>
                                                 <td><button onclick="toggleUserToExistingTeam(<?= $User->getRowid() ?>)" class="custom-button success px-2">Ajouter</button></td>
                                             </tr>
-                                        <?php }
+                                        <?php 
+                                        }
                                     } ?>
+
+                                    <tr id="load-more-line">
+                                        <td class="text-center" colspan="3">
+                                            <a id="load-more" type="button" class="custom-link py-0" style="font-size: 2rem;">Load more</a>
+                                        </td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -190,7 +224,7 @@ require_once 'layouts/header.php';
             </div>
         </div>
 
-        <script type="text/javascript" src="<?= JS_URL ?>admin/projectDashboard.min.js" defer></script>
+        <script type="text/javascript" src="<?= JS_URL ?>admin/projectDashboard.js" defer></script>
     <?php } ?>
 <?php 
 require_once 'layouts/footer.php';

@@ -5,15 +5,16 @@ require "layouts/head.php";
 
 $tpl = "projectDashboard.php";
 
-$action = htmlentities(GETPOST('action'));
-$idProject = htmlentities(intval(GETPOST('idProject')));
+$action      = htmlentities(GETPOST('action'));
+$idProject   = htmlentities(intval(GETPOST('idProject')));
 $projectName = htmlentities(GETPOST('projectName'));
 $description = htmlentities(GETPOST('description'));
-$type = htmlentities(GETPOST('type'));
-$teamName = htmlentities(GETPOST('teamName'));
+$type        = htmlentities(GETPOST('type'));
+$teamName       = htmlentities(GETPOST('teamName'));
 $teamNameUpdate = htmlentities(GETPOST('teamNameUpdate'));
 $teamId = htmlentities(intval(GETPOST('teamId')));
 $errors = GETPOST('errors');
+$offset = 30;
 
 if($errors) {
     $errors = unserialize($errors);
@@ -432,6 +433,12 @@ else
 {
     $errors[] = "Aucun projet n'a été sélectionné.";
 }
+
+// offset for loadmore ?>
+<script>
+var offset = <?php echo json_encode($offset); ?>;
+</script>
+<?php
 
 require_once VIEWS_PATH."admin/".$tpl;
 ?>

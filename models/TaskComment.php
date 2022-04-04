@@ -1,11 +1,11 @@
 <?php 
 class TaskComment extends Modele 
 {
-    protected int $rowid;
-    protected int $fk_task;
-    protected string $note;
-    protected int $fk_user;
-    protected string $tms;
+    protected ?int    $rowid    = null;
+    protected ?int    $fk_task  = null;
+    protected ?string $note     = null;
+    protected ?int    $fk_user  = null;
+    protected ?string $tms      = null;
 
     public function __construct($rowid = null)
     {
@@ -163,7 +163,7 @@ class TaskComment extends Modele
         $requete = $this->getBdd()->prepare($sql);
         $requete->execute();
 
-        return $requete->fetch(PDO::FETCH_OBJ)->rowid;
+        return intval($requete->fetch(PDO::FETCH_OBJ)->rowid);
     }
 }
 ?>

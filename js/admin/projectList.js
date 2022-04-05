@@ -180,8 +180,8 @@ function initLoadMoreLink()
                     if(projects.length > 10)
                     {
                         var append = [
-                            '<div id="load-more-line" class="radius text-center mx-auto mt-2 border" style="height: 5vh;width:33%;font-size: x-large">',
-                                '<a id="load-more" type="button" class="custom-link py-0">Load more</a>',
+                            '<div id="load-more-line" class="radius text-center mx-auto mt-2 border hover" style="height: 5vh;width:33%;font-size: x-large">',
+                                '<a id="load-more" type="button" class="custom-link py-0" style="width: 100%; height: 100%">Load more</a>',
                             '</div>',
                         ].join('');
 

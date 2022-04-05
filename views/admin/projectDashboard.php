@@ -132,7 +132,7 @@ require_once 'layouts/header.php';
                                                     <tr class="collapse" id="adding-user-<?= $User->getRowid() ?>">
                                                         <td style="width: 33.33%;"><?= $User->getLastname() ?></td>
                                                         <td style="width: 33.33%;"><?= $User->getFirstname() ?></td>
-                                                        <td style="width: 33.33%;"><button onclick="toggleUserToTeam(<?= $User->getRowid() ?>)" class="custom-button danger px-2">Retirer</button></td>
+                                                        <td style="width: 33.33%;"><button onclick="removeUserFromTeam(<?= $User->getRowid() ?>)" class="custom-button danger px-2">Retirer</button></td>
                                                     </tr>
                                                     <?php
                                                 } ?>
@@ -152,7 +152,7 @@ require_once 'layouts/header.php';
                                                         <tr class="team-members-<?= $Team->getRowid() ?> collapse" id="adding-again-user-<?= $User->getRowid() ?>">
                                                             <td style="width: 33.33%;"><?= $User->getLastname() ?></td>
                                                             <td style="width: 33.33%;"><?= $User->getFirstname() ?></td>
-                                                            <td style="width: 33.33%;"><button onclick="toggleUserToExistingTeam(<?= $User->getRowid() ?>)" class="custom-button danger px-2">Retirer</button></td>
+                                                            <td style="width: 33.33%;"><button onclick="removeUserFromTeam(<?= $User->getRowid() ?>)" class="custom-button danger px-2">Retirer</button></td>
                                                         </tr>
                                                     <?php
                                                     }
@@ -190,7 +190,7 @@ require_once 'layouts/header.php';
                                                 <tr class="collapse show" id="free-user-<?= $User->getRowid() ?>">
                                                     <td><?= $User->getLastname() ?></td>
                                                     <td><?= $User->getFirstname() ?></td>
-                                                    <td><button onclick="toggleUserToTeam(<?= $User->getRowid() ?>)" class="custom-button success px-2">Ajouter</button></td>
+                                                    <td><button onclick="addUserToTeam(<?= $User->getRowid() ?>)" class="custom-button success px-2">Ajouter</button></td>
                                                 </tr>
                                             <?php 
                                             } ?>

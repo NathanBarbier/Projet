@@ -23,7 +23,7 @@ class UserRepository extends Repository
         }
     }
 
-    public function search(int $fk_organization, string $query)
+    public function search(int $fk_organization, string $query, $includeAdmin = true)
     {
         // split query terms
         $terms = explode(' ', $query);
@@ -73,7 +73,51 @@ class UserRepository extends Repository
 
         if($requete->rowCount() > 0)
         {
-            return $requete->fetchAll(PDO::FETCH_OBJ);
+            $users = $requete->fetchAll(PDO::FETCH_OBJ);
+
+            $usersToReturn = array();
+
+            // exclude admin accounts
+            if($includeAdmin == false)
+            {
+                foreach($users as $key => $user)
+                {
+                    if(intval($user->admin) == 0)
+                    {
+                        $usersToReturn[] = $user;
+                    }
+                }
+            }
+
+            return $usersToReturn;
+        }
+    }
+
+    /**
+     * @return boolean true if the user belongs to the organization | false otherwise
+     */
+    public function checkIfUserBelongsToOrganization(int $fk_organization, int $fk_user)
+    {
+        if(is_int($fk_organization) && is_int($fk_user))
+        {
+            $sql = "SELECT * FROM storieshelper_user";
+            $sql .= " WHERE fk_organization = ? AND rowid = ?";
+
+            $requete = $this->getBdd()->prepare($sql);
+            $requete->execute([$fk_organization, $fk_user]);
+
+            if($requete->rowCount() > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else
+        {
+            return false;
         }
     }
 }

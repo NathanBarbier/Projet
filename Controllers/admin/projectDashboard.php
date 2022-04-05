@@ -1,5 +1,8 @@
 <?php
 //import all models
+
+use phpDocumentor\Reflection\DocBlock\Tags\Var_;
+
 require_once "../../services/header.php";
 require "layouts/head.php";
 
@@ -12,9 +15,11 @@ $description = htmlentities(GETPOST('description'));
 $type        = htmlentities(GETPOST('type'));
 $teamName       = htmlentities(GETPOST('teamName'));
 $teamNameUpdate = htmlentities(GETPOST('teamNameUpdate'));
-$teamId = htmlentities(intval(GETPOST('teamId')));
-$errors = GETPOST('errors');
+$teamId         = htmlentities(intval(GETPOST('teamId')));
+$errors         = GETPOST('errors');
+
 $offset = 30;
+$success = false;
 
 if($errors) {
     $errors = unserialize($errors);
@@ -32,12 +37,14 @@ if($idProject)
 
     if(!empty($Organization) && $Organization->checkProject($idProject))
     {
-        $User = new User();
-        $Team = new Team($teamId);
-        $BelongsTo = new BelongsTo();
-        $Project = new Project();
+        $User       = new User();
+        $Team       = new Team($teamId);
+        $BelongsTo  = new BelongsTo();
+        $Project    = new Project();
 
-        // get Project
+        $UserRepository = new UserRepository();
+
+        // Get the current Project
         foreach($Organization->getProjects() as $Obj)
         {
             if($idProject == $Obj->getRowid())
@@ -46,50 +53,56 @@ if($idProject)
             }
         }
 
-        $success = false;
 
-        // Retrieve users who can join a new team
-        $freeUsers = $Organization->getUsers();
+        /*************************
+        *       Free users       *
+        **************************/
+
         $freeUsersIds = array();
 
-        // remove admins
-        foreach($freeUsers as $key => $TeamUser)
+        foreach($Organization->getUsers() as $OrganizationUser)
         {
-            if($TeamUser->isAdmin())
+            // if is admin
+            if($OrganizationUser->isAdmin())
             {
-                unset($freeUsers[$key]);
+                continue;
             }
-            else
+
+            // if already to a team
+            foreach($Project->getTeams() as $ProjectTeam)
             {
-                $freeUsersIds[] = $TeamUser->getRowid();
+                foreach($ProjectTeam->getUsers() as $TeamUser)
+                {
+                    if($TeamUser->getRowid() == $OrganizationUser->getRowid())
+                    {
+                        continue 3;
+                    }
+                }
             }
+
+            // all checks passed
+            $freeUsersIds[] = $OrganizationUser->getRowid();
         }
 
-        // Remove users belonging to the team
-        foreach($Project->getTeams() as $TempTeam) {
-            foreach($TempTeam->getUsers() as $TempUser) {
-                $key = array_search($TempUser, $freeUsers);
-                unset($freeUsers[$key]);
-                $key = array_search($TempUser->getRowid(), $freeUsersIds);
-                unset($freeUsersIds[$key]);
-            }
-        }
+
+        /************************
+        *        Actions        *
+        *************************/
 
         if($action == 'addTeam' || $action == "updateTeam")
         {
             $addingUsersIds = array();
-            $i = 0;
-            foreach($freeUsers as $key => $user)
+
+            // Get all $_POST matching the pattern 'addingUser'
+            foreach($_POST as $key => $post)
             {
-                if(GETPOST('addingUser'.$i))
+                if('addingUser' == substr($key, 0, 10))
                 {
-                    $addingUsersIds[] = intval(GETPOST('addingUser'.$i));
+                    $addingUsersIds[] = intval($post);
                 }
-                $i++;
             }
         }
 
-        // actions
         if($action == "archiveTeam")
         {
             if($teamId && $Project->checkTeam($teamId))
@@ -186,33 +199,53 @@ if($idProject)
     
                         $Team->setRowid($teamId);
 
-                        $freeUsersToUnset = array();
-                        // check if the users are free before adding them
-                        foreach($addingUsersIds as $idUser)
+                        // check if the users can be affected to the team
+                        foreach($addingUsersIds as $idUserToAdd)
                         {
-                            foreach($freeUsers as $key => $freeUser)
+                            // check if the user belongs to the organization
+                            $belongs = $UserRepository->checkIfUserBelongsToOrganization($idOrganization, $idUserToAdd);
+                            if(!$belongs)
                             {
-                                if($freeUser->getRowid() == $idUser)
+                                continue;  
+                            }
+
+                            // check if the user already belongs to a team from this project
+                            foreach($Project->getTeams() as $ProjectTeam)
+                            {
+                                foreach($ProjectTeam->getUsers() as $TeamUser)
                                 {
-                                    $UserToAdd = $freeUser;
-                                    $Team->addUser($UserToAdd);
-                                    $freeUsersToUnset[] = $key;
-                                    break;
+                                    if($TeamUser->getRowid() == $idUserToAdd)
+                                    {
+                                        // can't be added
+                                        continue 3;
+                                    }
                                 }
                             }
 
-                            $key = array_search($idUser, $freeUsersIds);
-                            unset($freeUsersIds[$key]);
+                            // check if the user is an admin (can't belong)
+                            $userToAdd = new User($idUserToAdd);
+                            if($userToAdd->isAdmin())
+                            {
+                                continue;
+                            }
 
-                            $BelongsTo->setFk_user($idUser);
+                            // remove user from free users
+                            foreach($freeUsersIds as $key => $freeUserId)
+                            {
+                                if($freeUserId == $idUserToAdd)
+                                {
+                                    unset($freeUsersIds[$key]);
+                                }
+                            }
+
+                            // User is passed through all checks
+                            // affect him to the team
+                            $Team->addUser($userToAdd);
+
+                            $BelongsTo->setFk_user($idUserToAdd);
                             $BelongsTo->setFk_team($teamId);
 
                             $BelongsTo->create();
-                        }
-
-                        foreach($freeUsersToUnset as $key)
-                        {
-                            unset($freeUsers[$key]);
                         }
 
                         $Project->addTeam($Team);
@@ -261,11 +294,16 @@ if($idProject)
                     LogHistory::create($idOrganization, $idUser, "IMPORTANT",'delete', 'team', $Team->getName(), null, 'team id : '.$teamId, null, $ip);
                     $Project->removeTeam($teamId);
 
-                    // get team users to free them
-                    foreach($Team->getUsers() as $TeamUser)
+                    // remove user from free users
+                    foreach($freeUsersIds as $key => $freeUserId)
                     {
-                        $freeUsers[] = $TeamUser;
-                        $freeUsersIds[] = $TeamUser->getRowid();
+                        foreach($Team->getUsers() as $TeamUser)
+                        {
+                            if($freeUserId == $TeamUser->getRowid())
+                            {
+                                unset($freeUsersIds[$key]);
+                            }
+                        }
                     }
 
                     $success = "L'équipe a bien été supprimée.";
@@ -292,56 +330,73 @@ if($idProject)
                         $Team->setName($teamNameUpdate);
                     }
 
-                    $freeUsersToUnset = array();
-                    // check if the users are free before adding them
-                    foreach($addingUsersIds as $idUser)
+                    // check if the users can be affected to the team
+                    foreach($addingUsersIds as $idUserToAdd)
                     {
-                        foreach($freeUsers as $key => $freeUser)
+                        // check if the user belongs to the organization
+                        $belongs = $UserRepository->checkIfUserBelongsToOrganization($idOrganization, $idUserToAdd);
+                        if(!$belongs)
                         {
-                            if($freeUser->getRowid() == $idUser)
+                            continue;  
+                        }
+
+                        // check if the user already belongs to a team from this project
+                        foreach($Project->getTeams() as $ProjectTeam)
+                        {
+                            foreach($ProjectTeam->getUsers() as $TeamUser)
                             {
-                                $BelongsTo->setFk_user($idUser);
-                                $BelongsTo->setFk_team($Team->getRowid());
-                                $BelongsTo->create();
-                                
-                                $Team->addUser($freeUser);
-                                $freeUsersToUnset[] = $key;
-                                break;
+                                if($TeamUser->getRowid() == $idUserToAdd)
+                                {
+                                    // can't be added
+                                    continue 3;
+                                }
                             }
                         }
 
-                        $key = array_search($idUser, $freeUsersIds);
-                        unset($freeUsersIds[$key]);
+                        // check if the user is an admin (can't belong)
+                        $userToAdd = new User($idUserToAdd);
+                        if($userToAdd->isAdmin())
+                        {
+                            continue;
+                        }
 
-                        $BelongsTo->setFk_user($idUser);
+                        // User is passed through all checks
+                        // affect him to the team
+                        $Team->addUser($userToAdd);
+
+                        $BelongsTo->setFk_user($idUserToAdd);
                         $BelongsTo->setFk_team($teamId);
 
                         $BelongsTo->create();
-                    }
 
-                    foreach($freeUsersToUnset as $key)
-                    {
-                        unset($freeUsers[$key]);
+                        // remove user from free users
+                        foreach($freeUsersIds as $key => $freeUserId)
+                        {
+                            if($freeUserId == $idUserToAdd)
+                            {
+                                unset($freeUsersIds[$key]);
+                            }
+                        }
                     }
 
                     // remove team users
-                    foreach($Team->getUsers() as $key => $TeamUser)
+                    foreach($Team->getUsers() as $TeamUser)
                     {
-                        if(GETPOST('removingUser'.$key))
-                        {
-                            $fk_user = intval(GETPOST('removingUser'.$key)); 
+                        $fk_user = intval(GETPOST('removingUser'.$TeamUser->getRowid()));
 
+                        if($fk_user && $TeamUser->getRowid() == $fk_user)
+                        {
                             $BelongsTo = new BelongsTo();
                             
                             $BelongsTo->setFk_user($fk_user);
-                            $BelongsTo->setFk_team($team->getRowid());
+                            $BelongsTo->setFk_team($Team->getRowid());
 
                             $BelongsTo->delete();
 
-                            $freeUsersIds[] = $TeamUser->getRowid();
-                            $freeUsers[] = $TeamUser;
-
                             $Team->removeUser($TeamUser->getRowid());
+
+                            // add user to free users
+                            $freeUsersIds[] = $TeamUser->getRowid();
                         }
                     }
 
@@ -406,7 +461,23 @@ if($idProject)
             }
         }
 
-        // For JS
+        /*********************
+        *      For View      *
+        **********************/
+
+        $freeUsers = array();
+        foreach($Organization->getUsers() as $OrganizationUser)
+        {
+            if(in_array($OrganizationUser->getRowid(), $freeUsersIds))
+            {
+                $freeUsers[] = $OrganizationUser;
+            }
+        }
+
+        /*********************
+        *   For Javascript   *
+        **********************/
+
         $teamIds = array();
 
         foreach($Project->getTeams() as $ProjectTeam)

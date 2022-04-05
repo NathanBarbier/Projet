@@ -10,14 +10,6 @@ $("#update-switch-button").on('click', function() {
 
 $("#create-team-button").on('click', function() {
     $("#teamName-hidden-create").val($("#teamName").val());
-    
-    freeUsersIds.forEach(function(id, key) {
-        if($("#adding-user-"+id).hasClass("show"))
-        {
-            $("#add-team-form").append("<input type='hidden' name='addingUser"+key+"' value='"+id+"'>")
-        }
-    });
-    
 
    $("#add-team-form").trigger('submit');
 });
@@ -29,49 +21,6 @@ $("#close-alert").on('click', function() {
 $("#update-team-button").on('click', function() {
     // update team name
     $("#teamName-hidden-update").val($("#teamName").val());
-    Obj = Project["teams"];
-    ProjectTeams = [];
-    
-    // convert to array
-    Object.keys(Obj).forEach(key => ProjectTeams.push({
-        rowid: Obj[key]["rowid"],
-        users: Obj[key]["users"]
-    }));
-
-    teamId = $("#team-id-update-input").val();
-
-    ProjectTeams.forEach(team => {
-        // get teams members ids
-        Obj = team["users"];
-        users = [];
-        Object.keys(Obj).forEach(key => users.push({
-            rowid: Obj[key]["rowid"],
-        }));
-
-        teamRowid = team["rowid"];
-        if(teamId == teamRowid)
-        {
-            users.forEach(function(user, key) {
-                userRowid = user["rowid"];
-    
-                if($("#freeing-user-"+userRowid).hasClass("show"))
-                {
-                    // delete from belong_to where fk_user = rowid
-                    $("#update-team-form").append("<input type='hidden' name='removingUser"+key+"' value='"+userRowid+"'>");
-    
-                }    
-            });
-
-            // create belong_to where show
-            // for free users
-            freeUsersIds.forEach(function(userId, key) {
-                if(!$("#free-user-"+userId).hasClass("show"))
-                {
-                    $("#update-team-form").append("<input type='hidden' name='addingUser"+key+"' value='"+userId+"'>");
-                }
-            });
-        }
-    });
 
     $("#update-team-form").trigger('submit');
 });
@@ -114,7 +63,7 @@ $('#project-dashboard-search-bar').on('input', function() {
                                     '<td>'+ user.lastname +'</td>',
                                     '<td>'+ user.firstname +'</td>',
                                     '<td>',
-                                        '<button onclick="toggleUserToTeam('+ user.rowid +')" class="custom-button success px-2">',
+                                        '<button onclick="addUserToTeam('+ user.rowid +')" class="custom-button success px-2">',
                                             'Ajouter',
                                         '</button>',
                                     '</td>',
@@ -134,7 +83,7 @@ $('#project-dashboard-search-bar').on('input', function() {
                                     '<td>'+ user.lastname +'</td>',
                                     '<td>'+ user.firstname +'</td>',
                                     '<td>',
-                                        '<button onclick="toggleUserToTeam('+ user.rowid +')" class="custom-button danger px-2">',
+                                        '<button onclick="removeUserFromTeam('+ user.rowid +')" class="custom-button danger px-2">',
                                             'Retirer',
                                         '</button>',
                                     '</td>',
@@ -195,7 +144,7 @@ function initLoadMoreLink()
                                 '<td>'+ user.lastname +'</td>',
                                 '<td>'+ user.firstname +'</td>',
                                 '<td>',
-                                    '<button onclick="toggleUserToTeam('+ user.rowid +')" class="custom-button success px-2">',
+                                    '<button onclick="addUserToTeam('+ user.rowid +')" class="custom-button success px-2">',
                                         'Ajouter',
                                     '</button>',
                                 '</td>',
@@ -214,7 +163,7 @@ function initLoadMoreLink()
                                 '<td>'+ user.lastname +'</td>',
                                 '<td>'+ user.firstname +'</td>',
                                 '<td>',
-                                    '<button onclick="toggleUserToTeam('+ user.rowid +')" class="custom-button danger px-2">',
+                                    '<button onclick="addUserToTeam('+ user.rowid +')" class="custom-button danger px-2">',
                                         'Retirer',
                                     '</button>',
                                 '</td>',
@@ -305,17 +254,37 @@ function switchTeamApp()
 };
 
 
-function toggleUserToTeam(userRowid)
+function addUserToTeam(userRowid)
 {
-    $("#free-user-"+userRowid).toggleClass("show");
-    $("#adding-user-"+userRowid).toggleClass("show");
+    // check a removal input exist
+    $('[name=removingUser'+userRowid+']').remove();  
+    
+    // hide the add line
+    $('#free-user-'+userRowid).hide();
+
+    // display the removal button
+    $('#adding-user-'+userRowid).show();
+    $('#team-member-'+userRowid).show();
+
+    // create an input to post
+    $('#update-team-form').append("<input type='hidden' name='addingUser"+userRowid+"' value='"+userRowid+"'>");
 }
 
 
-function toggleUserToExistingTeam(userRowid)
+function removeUserFromTeam(userRowid)
 {
-    $("#freeing-user-"+userRowid).toggleClass("show");
-    $("#adding-again-user-"+userRowid).toggleClass("show");
+    // check an adding input exist
+    $("[name=addingUser"+userRowid+"]").remove()
+
+    // hide the removal lines
+    $('#adding-user-'+userRowid).hide();
+    $('#adding-again-user-'+userRowid).hide();
+
+    // display the free-user <tr>
+    $('#free-user-'+userRowid).show();
+
+    // create an input to post
+    $('#update-team-form').append("<input type='hidden' name='removingUser"+userRowid+"' value='"+userRowid+"'>");
 }
 
 function showTeamMembers(teamRowid, teamName)

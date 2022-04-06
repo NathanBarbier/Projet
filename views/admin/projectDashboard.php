@@ -57,7 +57,9 @@ require_once 'layouts/header.php';
                     <h5 class="mt-3 border-bottom w-50 mx-auto">Nom équipe</h5>
                     <input id="teamName" class="sticker form-control mt-1 w-100 text-center" type="text">
 
-                    <!-- AFFICHER TOUTES LES EQUIPES EXISTANTES POUR CE PROJET -->
+                    <?php 
+                    // Display all existing project teams
+                    ?>
                     <h5 id="project-teams-title" class="mt-3 border-bottom w-50 mx-auto collapse show">Équipes existantes</h5>
                     <div id="project-teams-div" class="sticker mt-3 overflow-y bg-white pt-2 collapse show" style="height: 220px;">
                         <?php foreach($Project->getTeams() as $Team) { ?>
@@ -122,7 +124,9 @@ require_once 'layouts/header.php';
                                 </thead>
                                 
                                 <tbody class="text-start" style="border-color: rgba(0,0,0,.125)">
-                                    <!-- Membres en cours d'affectation -->
+                                    <?php 
+                                    // Users that will added to the team
+                                    ?>
                                     <tr>
                                         <td colspan="3" style="border: unset; padding-top: 0">
                                             <table class="table" style="width: 100%.; margin-bottom: 0">
@@ -147,7 +151,7 @@ require_once 'layouts/header.php';
                                             <table class="table" style="width: 100%;">
                                                 <tbody id="team-members-container">
                                                     <?php
-                                                    // Membres déjà affectés aux équipes déjà créées
+                                                    // Display Team members
                                                     foreach($Project->getTeams() as $Team) 
                                                     {
                                                         foreach($Team->getUsers() as $User) 
@@ -206,7 +210,7 @@ require_once 'layouts/header.php';
                                         </td>
                                     </tr>
                                     <?php
-                                    // Membres en cours de désaffectation des équipe déjà créées
+                                    // Users that will be unlinked from the team
                                     foreach($Project->getTeams() as $Team) 
                                     {
                                         foreach($Team->getUsers() as $User) 

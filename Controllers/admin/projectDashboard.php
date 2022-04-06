@@ -9,13 +9,13 @@ require "layouts/head.php";
 $tpl = "projectDashboard.php";
 
 $action      = htmlentities(GETPOST('action'));
-$idProject   = htmlentities(intval(GETPOST('idProject')));
+$idProject   = intval(htmlentities(GETPOST('idProject')));
 $projectName = htmlentities(GETPOST('projectName'));
 $description = htmlentities(GETPOST('description'));
 $type        = htmlentities(GETPOST('type'));
 $teamName       = htmlentities(GETPOST('teamName'));
 $teamNameUpdate = htmlentities(GETPOST('teamNameUpdate'));
-$teamId         = htmlentities(intval(GETPOST('teamId')));
+$teamId         = intval(htmlentities(GETPOST('teamId')));
 $errors         = GETPOST('errors');
 
 $offset = 30;
@@ -32,27 +32,20 @@ if($idProject)
     // fetch all organization projects with only teams
     $Organization = new Organization();
     $Organization->setRowid($idOrganization);
-    $Organization->fetchProjects(1);
     $Organization->fetchUsers();
 
-    if(!empty($Organization) && $Organization->checkProject($idProject))
+    $ProjectRepository = new ProjectRepository();
+    $UserRepository = new UserRepository();
+
+    if(!empty($Organization) && $ProjectRepository->checkIfProjectBelongsToOrganization($idProject, $idOrganization))
     {
         $User       = new User();
         $Team       = new Team($teamId);
         $BelongsTo  = new BelongsTo();
+
         $Project    = new Project();
-
-        $UserRepository = new UserRepository();
-
-        // Get the current Project
-        foreach($Organization->getProjects() as $Obj)
-        {
-            if($idProject == $Obj->getRowid())
-            {
-                $Project = $Obj;
-            }
-        }
-
+        $Project->fetch($idProject, 0);
+        $Project->fetchTeams(1);
 
         /*************************
         *       Free users       *

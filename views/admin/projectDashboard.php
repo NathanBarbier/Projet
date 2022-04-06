@@ -129,7 +129,7 @@ require_once 'layouts/header.php';
                                     ?>
                                     <tr>
                                         <td colspan="3" style="border: unset; padding-top: 0">
-                                            <table class="table" style="width: 100%.; margin-bottom: 0">
+                                            <table class="table" style="width: 100%; margin-bottom: 0">
                                                 <tbody id="adding-users-container">
                                                     <?php
                                                     foreach($freeUsers as $key => $User)

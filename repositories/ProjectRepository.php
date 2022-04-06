@@ -103,6 +103,27 @@ class ProjectRepository extends Repository
             return $requete->fetchAll(PDO::FETCH_OBJ);
         }
     }
+
+    public function checkIfProjectBelongsToOrganization(int $fk_project, int $fk_organization)
+    {
+        if(is_int($fk_project) && is_int($fk_organization))
+        {
+            $sql = "SELECT * FROM storieshelper_project";
+            $sql .= " WHERE rowid = ? AND fk_organization = ?";
+
+            $requete = $this->getBdd()->prepare($sql);
+            $requete->execute([$fk_project, $fk_organization]);
+
+            if($requete->rowCount() > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+    }
 }
 
 ?>

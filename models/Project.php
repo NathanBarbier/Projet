@@ -159,7 +159,10 @@ Class Project extends Modele
 
     // FETCH
 
-    public function fetch(int $rowid)
+    /**
+     * @param int $depth 0 = only basic properties | 1 = all properties 
+     */
+    public function fetch(int $rowid, int $depth = 1)
     {
         $sql = "SELECT p.rowid, p.name, p.type, p.open, p.fk_organization, p.description, p.active";
         $sql .= " FROM storieshelper_project AS p";
@@ -180,7 +183,10 @@ Class Project extends Modele
             $this->active           = $obj->active;
             $this->fk_organization  = $obj->fk_organization;
             
-            $this->fetchTeams();
+            if($depth == 1)
+            {
+                $this->fetchTeams();
+            }
         }
     }
 

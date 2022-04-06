@@ -243,7 +243,7 @@ class User extends Modele
         {
             $this->email            = $Obj->email;
         }
-
+        
         $BelongsTo = new BelongsTo();
         $this->BelongsTo = $BelongsTo->fetchAll($Obj->rowid);
     }

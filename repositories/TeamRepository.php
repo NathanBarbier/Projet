@@ -22,6 +22,26 @@ class TeamRepository extends Repository
         }
     }
 
+    public function checkIfTeamBelongsToProject(int $fk_project, int $fk_team)
+    {
+        if(is_int($fk_project) && is_int($fk_team))
+        {
+            $sql = "SELECT * FROM storieshelper_team";
+            $sql .= " WHERE fk_project = ? AND rowid = ?";
+    
+            $requete = $this->getBdd()->prepare($sql);
+            $requete->execute([$fk_project, $fk_team]);
+
+            if($requete->rowCount() > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+    }
 }
 
 ?>

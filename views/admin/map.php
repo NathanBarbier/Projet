@@ -14,6 +14,7 @@ require_once "layouts/header.php";
             </span>
         </div>
     <?php } ?>
+    
     <?php if (!$Team->isActive()) { ?>
         <div class="alert alert-info alert-visible mt-3 w-50 text-center position-absolute top-0 start-50 translate-middle-x collapse show before">
             <i class="bi bi-info-circle-fill"></i>    
@@ -23,21 +24,6 @@ require_once "layouts/header.php";
             <span class="notificationCount position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark">
                 <?= $notificationCount . "+" ?>
             </span>
-        </div>
-    <?php } ?>
-    <?php if ($success) { ?>
-        <div class="alert alert-success mt-3 w-50 text-center position-absolute top-0 start-50 translate-middle-x before">
-            <i class="bi bi-check-circle-fill"></i>
-            <?= $success; ?>
-        </div>
-    <?php } ?>
-
-    <?php if ($errors) { ?>
-        <div class="alert alert-danger w-50 text-center position-absolute top-0 start-50 translate-middle-x before">
-            <?php foreach($errors as $error) { ?>
-                <i class="bi bi-exclamation-triangle-fill"></i>
-                <?php echo $error . "<br>";
-            } ?>
         </div>
     <?php } ?>
 

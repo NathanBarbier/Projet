@@ -164,9 +164,9 @@ Class Project extends Modele
      */
     public function fetch(int $rowid, int $depth = 1)
     {
-        $sql = "SELECT p.rowid, p.name, p.type, p.open, p.fk_organization, p.description, p.active";
-        $sql .= " FROM storieshelper_project AS p";
-        $sql .= " WHERE p.rowid = ?";
+        $sql = "SELECT *";
+        $sql .= " FROM storieshelper_project";
+        $sql .= " WHERE rowid = ?";
 
         $requete = $this->getBdd()->prepare($sql);
         $requete->execute([$rowid]);

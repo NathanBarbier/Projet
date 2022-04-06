@@ -17,99 +17,58 @@ if($teamId)
     {
         $Organization = new Organization();
         $Organization->setRowid($idOrganization);
-        $Organization->fetchProjects(0);
-        $Organization->fetchAllUsers();
 
         $CurrentUser = new User($idUser);
 
-        // fetching project & team
-        foreach($Organization->getProjects() as $Obj)
+        $ProjectRepository  = new ProjectRepository();
+        $TeamRepository     = new TeamRepository();
+
+        if($ProjectRepository->checkIfProjectBelongsToOrganization($projectId, $idOrganization))
         {
-            if($Obj->getRowid() == $projectId)
-            {
-                $Project = $Obj;
-                break;
-            }
-        }
-
-        // check if the Team & Project exists
-        if(!empty($Project))
-        {
-            // fetch The project teams
-            $Project->fetchTeams(0);
-
-            // check if the given team belongs to this project
-            foreach($Project->getTeams() as $Obj)
-            {
-                if($Obj->getRowid() == $teamId)
-                {
-                    $Team = $Obj;
-                    break;
-                }
-            }
-
-            if(!empty($Team))
+            if($TeamRepository->checkIfTeamBelongsToProject($projectId, $teamId))
             {
                 // Entirely load the team
-                $Team->fetch($teamId);
+                $Team = new Team($teamId);
+
+                $Project = new Project();
+                $Project->fetch($projectId, 0);
 
                 if($action == "archiveTeam")
                 {
-                    if($projectId)
-                    {   
-                        try {
-                            $Team->setActive(0);
-                            $Team->update();
-                            LogHistory::create($idOrganization, $idUser, "WARNING", 'archive', 'team', $Team->getName(), null, 'team id : '.$Team->getRowid(), null, $ip);
-                            $success = "Le tableau a bien été archivé.";
-                        } catch (\Throwable $th) {
-                            $errors[] = "Une erreur innatendue est survenue.";
-                            LogHistory::create($idOrganization, $idUser, "ERROR", 'archive', 'team', $Team->getName(), null, 'team id : '.$Team->getRowid(), $th->getMessage(), $ip);
-                        }
-                    }
-                    else
-                    {
-                        $errors[] = "Aucun projet n'a été sélectionné.";
+                    try {
+                        $Team->setActive(0);
+                        $Team->update();
+                        LogHistory::create($idOrganization, $idUser, "WARNING", 'archive', 'team', $Team->getName(), null, 'team id : '.$Team->getRowid(), null, $ip);
+                        $success = "Le tableau a bien été archivé.";
+                    } catch (\Throwable $th) {
+                        $errors[] = "Une erreur innatendue est survenue.";
+                        LogHistory::create($idOrganization, $idUser, "ERROR", 'archive', 'team', $Team->getName(), null, 'team id : '.$Team->getRowid(), $th->getMessage(), $ip);
                     }
                 }
     
                 if($action == "openTeam")
                 {
-                    if($projectId)
-                    {   
-                        try {
-                            $Team->setActive(1);
-                            $Team->update();
-                            LogHistory::create($idOrganization, $idUser, "INFO", 'unarchive', 'team', $Team->getName(), null, 'team id : '.$Team->getRowid(), null, $ip);
-                            $success = "Le tableau a bien été ré-ouvert.";
-                        } catch (\Throwable $th) {
-                            $errors[] = "Une erreur innatendue est survenue.";
-                            LogHistory::create($idOrganization, $idUser, "ERROR", 'unarchive', 'team', $Team->getName(), null, 'team id : '.$Team->getRowid(), $th->getMessage(), $ip);
-                        }
-                    }
-                    else
-                    {
-                        $errors[] = "Aucun projet n'a été sélectionné.";
+                    try {
+                        $Team->setActive(1);
+                        $Team->update();
+                        LogHistory::create($idOrganization, $idUser, "INFO", 'unarchive', 'team', $Team->getName(), null, 'team id : '.$Team->getRowid(), null, $ip);
+                        $success = "Le tableau a bien été ré-ouvert.";
+                    } catch (\Throwable $th) {
+                        $errors[] = "Une erreur innatendue est survenue.";
+                        LogHistory::create($idOrganization, $idUser, "ERROR", 'unarchive', 'team', $Team->getName(), null, 'team id : '.$Team->getRowid(), $th->getMessage(), $ip);
                     }
                 }
             
                 if($action == "openProject")
                 {
-                    if($projectId)
-                    {
-                        try {
-                            $Project->setActive(1);
-                            $Project->update();
-                            LogHistory::create($idOrganization, $idUser, "WARNING", 'unarchive', 'project', $Project->getName(), null, 'project id : '.$Project->getRowid(), null, $ip);
-                            $success = "Le projet à bien été ré-ouvert.";
-                        } catch (\Throwable $th) {
-                            $errors[] = "Une erreur innatendue est survenue.";
-                            LogHistory::create($idOrganization, $idUser, "ERROR", 'unarchive', 'project', $Project->getName(), null, 'project id : '.$Project->getRowid(), $th->getMessage(), $ip);
-                        }
-                    }
-                    else
-                    {
-                        $errors[] = "Aucun projet n'a été sélectionné.";
+                    try {
+                        $Project->setActive(1);
+                        $Project->update();
+                        LogHistory::create($idOrganization, $idUser, "WARNING", 'unarchive', 'project', $Project->getName(), null, 'project id : '.$Project->getRowid(), null, $ip);
+                        $success = "Le projet à bien été ré-ouvert.";
+                    } catch (\Throwable $th) {
+                        $errors[] = "Une erreur innatendue est survenue.";
+                        LogHistory::create($idOrganization, $idUser, "ERROR", 'unarchive', 'project', '', null, 'project id : '.$Project->getRowid(), $th->getMessage(), $ip);
                     }
                 }
     
@@ -186,7 +145,7 @@ if($teamId)
             }
             else
             {
-                header("location:".ROOT_URL."index.php"); 
+                header("location:".ROOT_URL."index.php");
             }
         }
         else

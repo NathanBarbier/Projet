@@ -63,7 +63,7 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
                         $UserRepository = new UserRepository();
 
                         // sql search with pattern
-                        $Users = $UserRepository->search($idOrganization, $query, false);
+                        $Users = $UserRepository->searchNonAdminUsersFromFirstnameAndLastname($idOrganization, $query);
 
                         echo json_encode($Users);
                     } catch (\Throwable $th) {

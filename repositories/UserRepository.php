@@ -23,7 +23,48 @@ class UserRepository extends Repository
         }
     }
 
-    public function search(int $fk_organization, string $query, $includeAdmin = true)
+    public function searchNonAdminUsersFromFirstnameAndLastname(int $fk_organization, string $query)
+    {
+        // split query terms
+        $terms = explode(' ', $query);
+
+        $sql = "SELECT rowid, lastname, firstname";
+        $sql .= " FROM storieshelper_user";
+        $sql .= " WHERE fk_organization = :fk_organization";
+
+        $params = array();
+
+        foreach($terms as $key => $term)
+        {
+            $sql .= ' AND ';
+
+            $paramOne   = ':lastname'.$key;
+            $paramTwo   = ':firstname'.$key;
+
+            $sql .= "(lastname LIKE $paramOne OR firstname LIKE $paramTwo)";
+            
+            $params[$paramOne]   = "%$term%"; 
+            $params[$paramTwo]   = "%$term%";
+        }
+
+        $requete = $this->getBdd()->prepare($sql);
+        
+        foreach($params as $name => $param)
+        {
+            $requete->bindParam($name, $param, PDO::PARAM_STR);
+        }
+
+        $requete->bindParam(':fk_organization', $fk_organization, PDO::PARAM_INT);
+
+        $requete->execute();
+
+        if($requete->rowCount() > 0)
+        {
+            return $requete->fetchAll(PDO::FETCH_OBJ);
+        }
+    }
+
+    public function search(int $fk_organization, string $query)
     {
         // split query terms
         $terms = explode(' ', $query);
@@ -73,23 +114,7 @@ class UserRepository extends Repository
 
         if($requete->rowCount() > 0)
         {
-            $users = $requete->fetchAll(PDO::FETCH_OBJ);
-
-            $usersToReturn = array();
-
-            // exclude admin accounts
-            if($includeAdmin == false)
-            {
-                foreach($users as $key => $user)
-                {
-                    if(intval($user->admin) == 0)
-                    {
-                        $usersToReturn[] = $user;
-                    }
-                }
-            }
-
-            return $usersToReturn;
+            return $requete->fetchAll(PDO::FETCH_OBJ);
         }
     }
 

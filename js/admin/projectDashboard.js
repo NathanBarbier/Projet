@@ -80,9 +80,9 @@ $('#project-dashboard-search-bar').on('input', function() {
                         users.forEach(user => {
                             append += [
                                 '<tr class="collapse" id="adding-user-'+ user.rowid +'">',
-                                    '<td>'+ user.lastname +'</td>',
-                                    '<td>'+ user.firstname +'</td>',
-                                    '<td>',
+                                    '<td style="width: 33.33%">'+ user.lastname +'</td>',
+                                    '<td style="width: 33.33%">'+ user.firstname +'</td>',
+                                    '<td style="width: 33.33%">',
                                         '<button onclick="removeUserFromTeam('+ user.rowid +')" class="custom-button danger px-2">',
                                             'Retirer',
                                         '</button>',

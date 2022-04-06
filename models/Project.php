@@ -284,4 +284,23 @@ Class Project extends Modele
         $requete = $this->getBddSafe()->prepare($sql);
         $requete->execute([$this->rowid]);
     }
+
+    // methods
+
+    /**
+     * Check if the team belongs to this Project
+     * @param int fk_team the team to check
+     * @return bool true OK, false KO
+     */
+    public function checkTeam(int $fk_team)
+    {
+        foreach($this->teams as $Team)
+        {
+            if($Team->getRowid() == $fk_team)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
 }

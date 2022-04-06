@@ -13,7 +13,7 @@ require_once "layouts/header.php";
                     if(count($Projects) > 0) 
                     {
                         foreach($Projects as $Project) 
-                        { 
+                        {
                         $teamId = 0; ?>
                         <div class="pb-3 mb-5 border-lg" style="height: max-content;">
                             <div class="row text-center justify-content-around">
@@ -26,17 +26,11 @@ require_once "layouts/header.php";
                                     <p>
                                         <b>Equipe : </b>
                                         <?php 
-                                        foreach($Project->getTeams() as $Team) 
+                                        // for this project
+                                        // get the linked team to the user
+                                        if(!empty($Teams[$Project->getRowid()]))
                                         {
-                                            foreach($Team->getUsers() as $teamMember) 
-                                            {
-                                                if($teamMember->getRowid() == $idUser) 
-                                                {
-                                                    $teamId = $Team->getRowid();
-                                                    echo $Team->getName();
-                                                    break 2;
-                                                }
-                                            }
+                                            echo $Teams[$Project->getRowid()]->getName();
                                         } ?>
                                     </p>
                                 </div>
@@ -46,14 +40,12 @@ require_once "layouts/header.php";
                                     <b class="border-bottom">Membres</b>
                                     <p class="text-center">
                                         <?php // count team members
-                                        foreach($Project->getTeams() as $Team) 
+                                        if(!empty($Teams[$Project->getRowid()]))
                                         {
-                                            if($Team->getRowid() == $teamId)
-                                            {
-                                                echo count($Team->getUsers());
-                                                break;
-                                            }
-                                        } ?>
+                                            $teamId = $Teams[$Project->getRowid()]->getRowid();
+                                            echo $BelongsToRepository->fetchTeamMembersCount($teamId);
+                                        }
+                                        ?>
                                     </p>
                                     <br>
                                 </div>

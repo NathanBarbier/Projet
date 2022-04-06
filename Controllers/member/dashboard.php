@@ -12,13 +12,27 @@ $errors     = GETPOST("errors");
 
 $User = new User($idUser);
 
+$BelongsToRepository = new BelongsToRepository();
+
 $Projects = array();
+$Teams    = array();
 
 // get all related projects to the user
-foreach($User->getBelongsTo() as $BelongsTo)
+foreach($User->getBelongsTo() as $key => $BelongsTo)
 {
-    $Team = new Team($BelongsTo->getFk_team());
-    $Projects[] = new Project($Team->getFk_project());
+    // $Team = new Team($BelongsTo->getFk_team());
+    $Team = new Team();
+    $Team->fetch($BelongsTo->getFk_team(), 0);
+
+    $Project = new Project();
+    $Project->fetch($Team->getFk_project(), 0);
+
+    if($key == 0)
+    {
+        $Teams[$Project->getRowid()] = $Team;
+    }
+
+    $Projects[] = $Project;
 }
 
 $tpl = "dashboard.php";

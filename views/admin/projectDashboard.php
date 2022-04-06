@@ -237,7 +237,7 @@ require_once 'layouts/header.php';
             </div>
         </div>
 
-        <script type="text/javascript" src="<?= JS_URL ?>admin/projectDashboard.js" defer></script>
+        <script type="text/javascript" src="<?= JS_URL ?>admin/projectDashboard.min.js" defer></script>
     <?php } ?>
 <?php 
 require_once 'layouts/footer.php';

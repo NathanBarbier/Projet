@@ -21,5 +21,6 @@ require_once REPO_PATH.'UserRepository.php';
 require_once REPO_PATH.'ProjectRepository.php';
 require_once REPO_PATH.'TeamRepository.php';
 require_once REPO_PATH.'MapColumnRepository.php';
+require_once REPO_PATH.'BelongsToRepository.php';
 
 ?>

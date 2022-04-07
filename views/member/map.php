@@ -56,7 +56,9 @@ require_once "layouts/header.php";
                                 } ?>
                                 <div class="task">
                                     <input class="taskId-input" type="hidden" value="<?= $Task->getRowid() ?>">
-                                    <button class='btn disabled <?= $isAdmin ? 'btn-outline-danger' : 'btn-outline-classic' ?> line-height-40 mt-2 ms-2 px-0 overflow-x' style='width: 65%'><?= $authors[$columnKey][$taskKey] ?></button>
+                                    <button class='btn disabled <?= $isAdmin ? 'btn-outline-danger' : 'btn-outline-classic' ?> line-height-40 mt-2 ms-2 px-0 overflow-x' style='width: 65%'>
+                                    <?= !empty($authors[$columnKey][$taskKey]) ? $authors[$columnKey][$taskKey] : 'undefined' ?>
+                                    </button>
                                     <?php 
                                     foreach($Task->getMembers() as $member) 
                                     {

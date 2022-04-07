@@ -350,8 +350,13 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
                             if($columnId && $Team->checkColumn($columnId) && $MapColumn->getName() != "Open" && $MapColumn->getName() != "Closed")
                             {
                                 try {
-                                    $MapColumn->delete();
-                                    LogHistory::create($idOrganization, $idUser, "INFO", 'delete', 'column', $MapColumn->getName(), null, 'column id : '.$MapColumn->getRowid(), null, $ip);
+                                    // before deleting column move all task related to it to the 'open' column
+                                    $status = $MapColumn->moveTasksToOpen();
+                                    if($status)
+                                    {
+                                        $MapColumn->delete();
+                                        LogHistory::create($idOrganization, $idUser, "INFO", 'delete', 'column', $MapColumn->getName(), null, 'column id : '.$MapColumn->getRowid(), null, $ip);
+                                    }
                                 } catch (\Throwable $th) {
                                     LogHistory::create($idOrganization, $idUser, "ERROR", 'delete', 'column', $MapColumn->getName(), null, 'column id : '.$MapColumn->getRowid(), $th->getMessage(), $ip);
                                 }

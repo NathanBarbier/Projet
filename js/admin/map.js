@@ -634,7 +634,7 @@ function initTask()
 
         $(this).parent().removeClass('show');
 
-        taskName = $(this).parents('.task').find('.task-bubble').first().find(".task-bubble-input").val();
+        taskName = $(this).parents('.task').find('.task-bubble').find(".task-bubble-input").val();
 
         // taskId = $(this).prevAll(".taskId-input").first().val();
         taskId = $(this).parents(".task").find(".taskId-input").first().val();
@@ -700,7 +700,7 @@ function initTask()
         // update task active
         var task        = $(this).parents(".task");
         var taskId      = task.find(".taskId-input").first().val();
-        var taskName    = task.find('.task-bubble-input').text();
+        var taskName    = task.find('.task-bubble-input').val();
 
         $("#loading-modal").modal('show');
 

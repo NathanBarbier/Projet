@@ -259,6 +259,26 @@ class Organization extends Modele
         }
     }
 
+    public function fetchAllAdmins()
+    {
+        $sql = "SELECT * FROM storieshelper_user WHERE fk_organization = ? AND admin = 1";
+
+        $requete = $this->getBdd()->prepare($sql);
+        $requete->execute([$this->rowid]);
+
+        if($requete->rowCount() > 0)
+        {
+            $lines = $requete->fetchAll(PDO::FETCH_OBJ);
+
+            foreach($lines as $line)
+            {
+                $User = new User();
+                $User->initialize($line, 3);
+                $this->users[] = $User;
+            }
+        }
+    }
+
     public function fetchUsersCount()
     {
         $sql = "SELECT COUNT(*) AS count FROM storieshelper_user";

@@ -26,6 +26,7 @@ $success = false;
 $offset = 30;
 
 $tpl = "associateList.php";
+$page = CONTROLLERS_URL."admin".$tpl;
 
 if($action == "userUpdate")
 {
@@ -49,13 +50,12 @@ if($action == "userUpdate")
 
             try {
                 $User->update();
-                
-                LogHistory::create($idOrganization, $idUser, "INFO", 'update', 'user', '', null, 'user id : '.$User->getRowid(), null, $ip);
+                LogHistory::create($idUser, 'update', 'user', $userId, "organization", $idOrganization, $idOrganization, "INFO", null, $ip, $page);
                 
                 $success = "L'utilisateur a bien été mis à jour.";
             } catch (exception $e) {
                 $errors[] = "Le prénom n'a pas pu être modifié.";
-                LogHistory::create($idOrganization, $idUser, "ERROR", 'update', 'user', '', null, 'user id : '.$User->getRowid(), null, $e->getMessage(), $ip);
+                LogHistory::create($idUser, 'update', 'user', $userId, "organization", $idOrganization, $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
             }
         }
     } 
@@ -77,11 +77,11 @@ if($action == "userDelete")
             try {
                 $Organization->removeUser($userId);
                 $User->delete();
-                LogHistory::create($idOrganization, $idUser, "WARNING", 'delete', 'user', $User->getLastname().' '.$User->getFirstname(), null, 'user id : '.$User->getRowid(), null, $ip);
+                LogHistory::create($idUser, 'delete', 'user', $userId, "organization", $idOrganization, $idOrganization, "WARNING", null, $ip, $page);
                 $success = "La suppression d'utilisateur a bien été effectuée.";
             } catch (\Throwable $th) {
                 $errors[] = "La suppression d'utilisateur n'a pas pu aboutir.";
-                LogHistory::create($idOrganization, $idUser, "ERROR", 'delete', 'user', $User->getLastname().' '.$User->getFirstname(), null, 'user id : '.$User->getRowid(), $th->getMessage(), $ip);
+                LogHistory::create($idUser, 'delete', 'user', $userId, "organization", $idOrganization, $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
             }
         }
     } 

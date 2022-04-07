@@ -5,6 +5,7 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
 {
     // get the user ip adress
     $ip = $_SERVER['REMOTE_ADDR'];
+    $page = AJAX_URL."visitor/login.php";
 
     $envoi = GETPOST('envoi');
     $email = GETPOST('email');
@@ -87,12 +88,12 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
                                     if($consent == 1)
                                     {
                                         $_SESSION["rights"] = $User->isAdmin() == 1 ? "admin" : "user";
-                                        LogHistory::create($User->getFk_organization(), $User->getRowid(), "INFO", 'connect', 'user', $User->getLastname().' '.$User->getFirstname(), null, null, null, $ip);
+                                        LogHistory::create($User->getRowid(), 'connect', 'user', $User->getRowid(), null, $User->getFk_organization(), "INFO", null, $ip, $page);
                                     }
                                     else
                                     {
                                         $_SESSION["rights"] = "needConsent";
-                                        LogHistory::create($User->getFk_organization(), $User->getRowid(), "INFO", 'connect', 'user', $User->getLastname().' '.$User->getFirstname(), null, null, null, $ip);
+                                        LogHistory::create($User->getRowid(), 'connect', 'user', $User->getRowid(), null, $User->getFk_organization(), "INFO", null, $ip, $page);
                                     }
     
                                     $rights = $_SESSION['rights'] ?? false;
@@ -103,6 +104,7 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
                                 {
                                     // $error = $e->getMessage();
                                     // echo json_encode($th);
+                                    LogHistory::create($User->getRowid(), 'connect', 'user', $User->getRowid(), null, $User->getFk_organization(), "ERROR", $e->getMessage(), $ip, $page);
                                     $error = "Une erreur est survenue.";
                                 }
                             }

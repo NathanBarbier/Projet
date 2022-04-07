@@ -1,12 +1,11 @@
 <?php
 //import all models
 
-use phpDocumentor\Reflection\DocBlock\Tags\Var_;
-
 require_once "../../services/header.php";
 require "layouts/head.php";
 
 $tpl = "projectDashboard.php";
+$page = CONTROLLERS_URL."admin".$tpl;
 
 $action      = htmlentities(GETPOST('action'));
 $idProject   = intval(htmlentities(GETPOST('idProject')));
@@ -103,11 +102,11 @@ if($idProject)
                 try {
                     $Team->setActive(0);
                     $Team->update();
-                    LogHistory::create($idOrganization, $idUser, "WARNING", 'archive', 'team board', $Team->getName(), null, 'team id : '.$teamId, null, $ip);
+                    LogHistory::create($idUser, 'archive', 'team', $teamId, 'project', $Project->getRowid(), $idOrganization, "WARNING", null, $ip, $page);
                     $success = "Le tableau de l'équipe à bien été archivé.";
                 } catch (\Throwable $th) {
                     $errors[] = "Une erreur innatendue est survenue.";
-                    LogHistory::create($idOrganization, $idUser, "ERROR", 'archive', 'team board', $Team->getName(), null, 'team id : '.$teamId, $th->getMessage(), $ip);
+                    LogHistory::create($idUser, 'archive', 'team', $teamId, 'project', $Project->getRowid(), $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
                 }
             }
             else
@@ -123,29 +122,16 @@ if($idProject)
                 try {
                     $Team->setActive(1);
                     $Team->update();
-                    LogHistory::create($idOrganization, $idUser, "WARNING", 'unarchive', 'team board', $Team->getName(), null, 'team id : '.$teamId, null, $ip);
+                    LogHistory::create($idUser, 'unarchive', 'team', $teamId, 'project', $Project->getRowid(), $idOrganization, "WARNING", null, $ip, $page);
                     $success = "Le tableau de l'équipe à bien été ré-ouvert.";
                 } catch (\Throwable $th) {
                     $errors[] = "Une erreur innatendue est survenue.";
-                    LogHistory::create($idOrganization, $idUser, "ERROR", 'unarchive', 'team board', $Team->getName(), null, 'team id : '.$teamId, $th->getMessage(), $ip);
+                    LogHistory::create($idUser, 'unarchive', 'team', $teamId, 'project', $Project->getRowid(), $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
                 }
             }
             else
             {
                 $errors[] = "Vous n'avez pas sélectionné d'équipe.";
-            }
-        }
-
-        if($action == "openProject")
-        {
-            try {
-                $Project->setActive(1);
-                $Project->update();
-                LogHistory::create($idOrganization, $idUser, "WARNING", 'unarchive', 'project', $Project->getName(), null, 'project id : '.$Project->getRowid(), null, $ip);
-                $success = "Le projet à bien été ré-ouvert.";
-            } catch (\Throwable $th) {
-                $errors[] = "Une erreur innatendue est survenue.";
-                LogHistory::create($idOrganization, $idUser, "ERROR", 'unarchive', 'project', $Project->getName(), null, 'project id : '.$Project->getRowid(), $th, $ip);
             }
         }
 
@@ -159,13 +145,13 @@ if($idProject)
                     $Project->setDescription($description);
                     $Project->setType($type);
                     $Project->update();
-                    LogHistory::create($idOrganization, $idUser, "INFO",'update', 'project', $Project->getName(), null, 'project id : '.$Project->getRowid(), null, $ip);
+                    LogHistory::create($idUser, 'update', 'project', $Project->getRowid(), "organization", $idOrganization, $idOrganization, "INFO", null, $ip, $page);
                     $success = "Les informations du projet ont bien été mises à jour.";
                 } 
                 catch (\Throwable $th) 
                 {
                     $errors[] = "Une erreur inattendue est survenue.";
-                    LogHistory::create($idOrganization, $idUser, "ERROR",'update', 'project', $Project->getName(), null, 'project id : '.$Project->getRowid(), $th->getMessage(), $ip);
+                    LogHistory::create($idUser, 'update', 'project', $Project->getRowid(), "organization", $idOrganization, $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
                 }
             }
             else
@@ -186,7 +172,7 @@ if($idProject)
                         $Team->setFk_project($idProject);
                         $Team->setActive(1);
                         $lastInsertedId = $Team->create();
-                        LogHistory::create($idOrganization, $idUser, "INFO",'create', 'team', $Team->getName(), null, 'team id : '.$lastInsertedId, null, $ip);
+                        LogHistory::create($idUser, 'create', 'team', $lastInsertedId, "project", $Project->getRowid(), $idOrganization, "INFO", null, $ip, $page);
 
                         $teamId = $Team->fetchMaxId()->rowid;
     
@@ -246,7 +232,7 @@ if($idProject)
                         $success = "L'équipe a bien été créée.";
                     } catch (\Throwable $th) {
                         $errors[] = "Une erreur inattendue est survenue.";
-                        LogHistory::create($idOrganization, $idUser, "ERROR",'create', 'team', $Team->getName(), null, null, $th->getMessage(), $ip);
+                        LogHistory::create($idUser, 'create', 'team', null, "project", $Project->getRowid(), $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
                     }
                 }
                 else
@@ -261,14 +247,14 @@ if($idProject)
 
                         $teamId = $Team->fetchMaxId()->rowid;
                         $Team->setRowid($teamId);
-                        LogHistory::create($idOrganization, $idUser, "INFO",'create', 'team', $Team->getName(), null, $lastInsertedId, null, $ip);
+                        LogHistory::create($idUser, 'create', 'team', $lastInsertedId, "project", $Project->getRowid(), $idOrganization, "INFO", null, $ip, $page);
 
                         $Project->addTeam($Team);
 
                         $success = "L'équipe a bien été créée.";
                     } catch (\Throwable $th) {
                         $errors[] = "Une erreur inattendue est survenue.";
-                        LogHistory::create($idOrganization, $idUser, "ERROR",'create', 'team', $Team->getName(), null, null, $th->getMessage(), $ip);
+                        LogHistory::create($idUser, 'create', 'team', null, "project", $Project->getRowid(), $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
                     }
                 }
             }
@@ -284,7 +270,8 @@ if($idProject)
             {
                 try {
                     $Team->delete($teamId);
-                    LogHistory::create($idOrganization, $idUser, "IMPORTANT",'delete', 'team', $Team->getName(), null, 'team id : '.$teamId, null, $ip);
+                    LogHistory::create($idUser, 'delete', 'team', $teamId, "project", $Project->getRowid(), $idOrganization, "IMPORTANT", null, $ip, $page);
+
                     $Project->removeTeam($teamId);
 
                     // remove user from free users
@@ -302,7 +289,7 @@ if($idProject)
                     $success = "L'équipe a bien été supprimée.";
                 } catch (\Throwable $th) {
                     $errors[] = "Une erreur innatendue est survenue.";
-                    LogHistory::create($idOrganization, $idUser, "ERROR",'delete', 'team', $Team->getName(), null, 'team id : '.$teamId, $th->getMessage(), $ip);
+                    LogHistory::create($idUser, 'delete', 'team', $teamId, "project", $Project->getRowid(), $idOrganization, "IMPORTANT", $th->getMessage(), $ip, $page);
                 }
             }
             else
@@ -398,13 +385,13 @@ if($idProject)
                     $Project->addTeam($Team);
                     
                     $Team->update();
-                    LogHistory::create($idOrganization, $idUser, "INFO",'update', 'team', $Team->getName(), null, 'team id : '.$teamId, null, $ip);
+                    LogHistory::create($idUser, 'update', 'team', $Team->getRowid(), "project", $Project->getRowid(), $idOrganization, "INFO", null, $ip, $page);
                     $success = "L'équipe a bien été modifiée.";
                 } 
                 catch (\Throwable $th) 
                 {
                     $errors[] = "Une erreur est survenue.";
-                    LogHistory::create($idOrganization, $idUser, "ERROR",'update', 'team', $Team->getName(), null, 'team id : '.$teamId, $th->getMessage(), $ip);
+                    LogHistory::create($idUser, 'update', 'team', $Team->getRowid(), "project", $Project->getRowid(), $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
                 }
             }
             else
@@ -421,11 +408,11 @@ if($idProject)
                 try {
                     $Project->setActive(0);
                     $Project->update();
-                    LogHistory::create($idOrganization, $idUser, "WARNING", $action, 'project', $Project->getName(), null, 'project id : '.$idProject, null, $ip);
+                    LogHistory::create($idUser, 'archive', 'project', $idProject, "organization", $Project->getRowid(), $idOrganization, "WARNING", null, $ip, $page);
                     $success = 'Le projet a bien été archivé.';
                 } catch (\Throwable $th) {
                     $errors[] = "Une erreur innatendue est survenue.";
-                    LogHistory::create($idOrganization, $idUser, "ERROR", $action, 'project', $Project->getName(), null, 'project id : '.$idProject, $th->getMessage(), $ip);
+                    LogHistory::create($idUser, 'archive', 'project', $idProject, "organization", $Project->getRowid(), $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
                 }
             }
             else
@@ -441,11 +428,11 @@ if($idProject)
                 try {
                     $Project->setActive(1);
                     $Project->update();
-                    LogHistory::create($idOrganization, $idUser, "WARNING", $action, 'project', $Project->getName(), null, 'project id : '.$idProject, null, $ip);
+                    LogHistory::create($idUser, 'unarchive', 'project', $idProject, "organization", $Project->getRowid(), $idOrganization, "WARNING", null, $ip, $page);
                     $success = "Le projet a bien été désarchivé.";
                 } catch (\Throwable $th) {
                     $errors[] = "Une erreur innatendue est survenue.";
-                    LogHistory::create($idOrganization, $idUser, "ERROR", $action, 'project', $Project->getName(), null, 'project id : '.$idProject, $th->getMessage(), $ip);
+                    LogHistory::create($idUser, 'unarchive', 'project', $idProject, "organization", $Project->getRowid(), $idOrganization, "WARNING", $th->getMessage(), $ip, $page);
                 }
             }
             else

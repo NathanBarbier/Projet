@@ -119,8 +119,13 @@ $("#add-column-form").find('#create-column').on('click', function() {
                                 "</div>",
                             "</div>",
                         ].join("");
-                    
+                        
+                        // encode html to avoid XSS
+                        var ESAPI = require('node-esapi');
+                        append = ESAPI.encoder().encodeForHTML(append);
+                        
                         $("#columns-container").append(append);
+
                         $("#add-column-btn").toggleClass('show'); 
                         initTask();
                         initCol();
@@ -360,7 +365,7 @@ function init()
                 $(".team-member").off('click').on('click', function() {
                     // save the id of the clicked member to attribute him later
                     memberId = $(this).find('.team-member-id').val();
-                    memberId = memberId.replace("\"", ' ').replace("\"", ' ');
+                    memberId = parseInt(memberId);
                     memberName = $(this).find('.sticker').val();
 
                     if($(this).find(".form-control").hasClass("affected-team-member"))
@@ -381,7 +386,7 @@ function init()
                 $(".task-member").off('click').on('click', function() {
                     // save the id of the clicked member to desattribute him later
                     memberId = $(this).find('.task-member-id').val();
-                    memberId = memberId.replace("\"", ' ').replace("\"", ' ');
+                    memberId = parseInt(memberId);
 
                     $("#desattribute-member-button").addClass('show');
                 })
@@ -411,7 +416,7 @@ function init()
 
                                 $(".task-member").off('click').on('click', function() {
                                     memberId = $(this).find('.task-member-id').val();
-                                    memberId = memberId.replace("\"", ' ').replace("\"", ' ');
+                                    memberId = parseInt(memberId);
                         
                                     $("#desattribute-member-button").addClass('show');
                                 })
@@ -759,7 +764,7 @@ function initCol()
                 var data = JSON.parse(data);
                 if(data.success){
                     $("#column-details-check-btn").removeClass('show');
-                    $(".columnId-input[value='"+columnId+"']").nextAll('.column-title').first().find('.column-title-text').first().text(columnName);
+                    $(".columnId-input[value='"+columnId+"']").nextAll('.column-title').find('.column-title-text').text(columnName);
                 }
                 $("#loading-modal").modal('hide');
             }
@@ -779,7 +784,7 @@ function initComment()
     $(".task-comment").off('focus').on('focus', function() {
         
         commentAuthorId = $(this).prevAll('.comment-author-id').first().val();
-        commentAuthorId = commentAuthorId.replace("\"", ' ').replace("\"", ' ');
+        commentAuthorId = parseInt(commentAuthorId);
 
         if(commentAuthorId == idUser)
         {
@@ -795,7 +800,7 @@ function initComment()
         }
 
         commentId = $(this).prevAll(".comment-task-id").first().val();
-        commentId = commentId.replace("\"", ' ').replace("\"", ' ');
+        commentId = parseInt(commentId);
     });
 
     $(".task-comment").off('keyup').keyup(function() {

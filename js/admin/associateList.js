@@ -38,7 +38,12 @@ $('#search-bar').on('input', function() {
                     {
                         var append = ''
 
-                        associates.forEach(associate => {
+                        l = associates.length;
+
+                        // to avoid DOM overloading limit to 100
+                        for(var i = 0; (i < l && i < 100); i++)
+                        {
+                            var associate = associates[i];
 
                             append += [
                                 '<tr class="text-center">',
@@ -107,8 +112,7 @@ $('#search-bar').on('input', function() {
                                     '</td>',
                                 '</tr>',
                             ].join('');
-                            
-                        });
+                        }
 
                         // create users DOM elements
                         $('#tbody-users').append(append);

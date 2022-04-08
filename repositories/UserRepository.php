@@ -101,6 +101,8 @@ class UserRepository extends Repository
             }
         }
 
+        $sql .= " LIMIT 100";
+
         $requete = $this->getBdd()->prepare($sql);
         
         foreach($params as $name => $param)

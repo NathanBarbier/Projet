@@ -3,9 +3,8 @@
 require_once "../../services/header.php";
 require "layouts/head.php";
 
-$action = htmlentities(GETPOST('action'));
-$projectId = intval(GETPOST('projectId'));
-$teamId = intval(GETPOST('teamId'));
+$projectId = intval(htmlentities(GETPOST('projectId')));
+$teamId = intval(htmlentities(GETPOST('teamId')));
 
 $tpl = "map.php";
 $page = CONTROLLERS_URL."member/".$tpl;
@@ -43,24 +42,6 @@ if($teamId)
                     // redirect user if the project is archived
                     if($Project->isActive())
                     {
-                        if($action == "archiveTeam")
-                        {
-                            try {
-                                $Team->setActive(0);
-                                $Team->update();
-                                
-                                LogHistory::create($idUser, 'archive', 'team', $teamId, 'project', $projectId, $idOrganization, "WARNING", null, $ip, $page);
-                                
-                                $message = "Le tableau a bien été archivé.";
-
-                                header("location:".CONTROLLERS_URL."member/dashboard.php?success=".$message);
-                                exit;
-                            } catch (\Throwable $th) {
-                                $errors[] = "Une erreur innatendue est survenue.";
-                                LogHistory::create($idUser, 'archive', 'team', $teamId, 'project', $projectId, $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
-                            }
-                        }
-        
                         // for JS
                         $username = $CurrentUser->getLastname() . ' ' . $CurrentUser->getFirstname();
         

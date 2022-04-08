@@ -6,7 +6,6 @@ initCol();
 
 // NEW COLUMN
 $("#add-column-btn").on('click', function() {
-    $("#archive-btn").removeClass('show');
     $("#add-column-form").toggleClass('show');
     $("#task-details").removeClass('show');
     $("#column-details").removeClass('show');
@@ -16,13 +15,6 @@ $("#add-column-btn").on('click', function() {
 $("#cancel-column").on('click', function() {
     $("#add-column-form").toggleClass('show');
     $("#add-column-btn").toggleClass('show');
-    $("#archive-btn").addClass('show');
-});
-
-$("#archive-btn").on('click', function() {
-    $("#columns-container").parent().removeClass('show');
-    $("#details-section").removeClass('show');
-    $("#archive-confirmation").addClass('show');
 });
 
 $("#cancel-archive").on('click', function() {
@@ -61,7 +53,6 @@ $(".close-alert").on('click', function() {
 });
 
 $("#add-column-form").find('#create-column').on('click', function() {
-    $("#archive-btn").addClass('show');
     $("#add-column-form").removeClass('show');
 
     columnName = $("#columnName-input").val();
@@ -163,7 +154,6 @@ function init()
         // show the right details column and content
         $("#column-details").removeClass('show');
         $("#add-column-btn").addClass('show');
-        $("#archive-btn").addClass('show');
 
         $(".task-buttons-container").removeClass('show');
 
@@ -516,7 +506,7 @@ function initTask()
 {
     $(".add-task-btn").off('click').on('click', function() {
         $("#add-column-btn").addClass('show');
-        $("#archive-btn").addClass('show');
+
         // HTML CREATE NEW TASK
         addTaskBtn = $(this);
         columnId = addTaskBtn.parents(".column-title").prev().val();
@@ -589,7 +579,6 @@ function initTask()
 
     $(".task-delete").off('click').on('click', function() {
         $("#add-column-btn").addClass('show');
-        $("#archive-btn").addClass('show');
 
         taskId = $(this).parents(".task").first().find(".taskId-input").val();
         $("#loading-modal").modal('show');
@@ -664,15 +653,19 @@ function initCol()
         $("#column-details-check-btn").removeClass('visible').addClass('invisible');
         
         $("#add-column-btn").addClass('show');
-        $("#archive-btn").addClass('show');
+
         $("#column-details").addClass('show');
         $("#column-title").val($(this).find(".column-title-text").first().text());
-        if($("#column-title").val() === "Open" || $("#column-title").val() === "Closed" ) {
+
+        if($("#column-title").val() === "Open" || $("#column-title").val() === "Closed" ) 
+        {
             $("#left-column-btn").addClass('collapse');
             $("#right-column-btn").addClass('collapse');
             $("#column-title").prop("disabled" ,true);
             $("#column-details-delete-btn").addClass('collapse');
-        } else {
+        } 
+        else 
+        {
             $("#left-column-btn").removeClass('collapse');
             $("#right-column-btn").removeClass('collapse');
             $("#column-title").prop("disabled" ,false);

@@ -15,14 +15,19 @@ require_once SERVICES_PATH.'notification.php' ;
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous" defer>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css">
         <!-- Main css sheet -->
-        <link rel="stylesheet" href="<?= ASSETS_URL ?>style.css">
-        <!-- jQuery -->
+        <link rel="stylesheet" href="<?= ASSETS_URL ?>style.min.css">
+        <!-- jQuery cdn -->
         <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous" defer></script>
-        <!-- Toaster cdn -->
+        <!-- Toastr cdn -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js" integrity="sha512-lbwH47l/tPXJYG9AcFNoJaTMhGvYWhVM9YI43CT+uteTRRaiLCui8snIgyAN8XWgNjNhCqlAUdzZptso6OCoFQ==" crossorigin="anonymous" referrerpolicy="no-referrer" defer></script>
     </head>
 
     <body class="position-relative">
+
+    <?php
+    // Does not display the top and side bar when on map.php 
+    if($pageName != 'map.php') 
+    { ?>
         <nav id="top-navbar" class="navbar navbar-dark bg-dark w-100 pt-1 before" style="height: 55px;">
 
             <!-- LOGO -->
@@ -115,7 +120,6 @@ require_once SERVICES_PATH.'notification.php' ;
             </div>
         </nav>
 
-        <?php if($pageName != 'map.php') { ?>
         <!-- SIDE BAR -->
         <div class="row w-100" style="height: 100%;">
             <div id="sideBar" class="navbar-expand-lg col-md-0 col-lg-2 p-0 collapse show">
@@ -223,4 +227,5 @@ require_once SERVICES_PATH.'notification.php' ;
             <div id="main" class="pt-2 px-3 position-relative">
                 <i id="close-sidebar" class="btn btn-outline-dark bi bi-arrow-bar-left position-absolute start-0 w-auto collapse show before"></i>
                 <i id="open-sidebar" class="btn btn-outline-dark bi bi-arrow-bar-right position-absolute start-0 w-auto collapse before"></i>
-            <?php } ?>
+    <?php 
+    } ?>

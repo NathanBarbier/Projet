@@ -305,6 +305,10 @@ input:read-only:hover:not(.form-check-input) {
   padding-right: 0;
 }
 
+#details-section {
+  height: 100vh;
+}
+
 #open-right-section {
   z-index: 1;
 }
@@ -360,6 +364,10 @@ input:read-only:hover:not(.form-check-input) {
   line-height: 80%;
 }
 
+#columns-container {
+  height: 98%;
+}
+
 .column-content {
   height: 93%;
   overflow-y: auto;
@@ -390,6 +398,17 @@ input:read-only:hover:not(.form-check-input) {
   background-color: white;
 }
 
+.affected-badge {
+  float: right;
+  width: 20%;
+  opacity: 100%;
+  margin-right: 0.6rem;
+}
+
+#task-comment-container {
+  height: 80%;
+}
+
 .task-comment:focus {
   -webkit-appearance: none;
   outline: none;
@@ -410,16 +429,35 @@ input:read-only:hover:not(.form-check-input) {
   width: 65%;
 }
 
+#add-comment-btn {
+  width: 35%;
+}
+
 .btn-unactive {
   box-shadow: none !important;
 }
 
+#team-members-container {
+  height: 25vh;
+}
+
 #task-members-container {
-  width: 90%;
+  height: 25vh;
+  width:100%;
 }
 
 .affected-team-member {
   opacity: 35% !important;
+}
+
+#members-switch-button {
+  line-height: 70%;
+  float: left; 
+  padding-right: 0;
+}
+
+.members-label {
+  font-size: larger;
 }
 
 #task-title {
@@ -427,6 +465,10 @@ input:read-only:hover:not(.form-check-input) {
   cursor: default;
   font-size: x-large;
   width: 100%;
+}
+
+#add-column-form {
+  height:91%;
 }
 
 #column-title {
@@ -441,6 +483,10 @@ input:read-only:hover:not(.form-check-input) {
 
 .column-title-name:hover {
   cursor: pointer;
+}
+
+#column-details-check-btn {
+  font-size: 1.5rem;
 }
 
 /* -------------- 5. ------------- */

@@ -231,9 +231,9 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
                                     $Task->setFk_column($columnId);
                                     $Task->update();
 
-                                    LogHistory::create($idOrganization, $idUser, "INFO", 'move', 'task to column', $Task->getName(), null, 'column id : '.$columnId, null);
+                                    LogHistory::create($idUser, 'change column', 'task', $taskId, "team", $teamId, $idOrganization, "INFO", null, $ip, $page);
                                 } catch (\Throwable $th) {
-                                    LogHistory::create($idOrganization, $idUser, "ERROR", 'move', 'task to column', $Task->getName(), null, 'column id : '.$columnId, $th->getMessage(), $ip);
+                                    LogHistory::create($idUser, 'change column', 'task', $taskId, "team", $teamId, $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
                                 }
                             }
                             break;

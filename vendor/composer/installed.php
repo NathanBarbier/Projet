@@ -6,7 +6,7 @@
     'aliases' => 
     array (
     ),
-    'reference' => '9d52ccedf13c98f88b1c017a8450cabf352f1d2f',
+    'reference' => '2c411edb841634c16ffb2e84f05ddf2515a61037',
     'name' => '__root__',
   ),
   'versions' => 
@@ -18,7 +18,7 @@
       'aliases' => 
       array (
       ),
-      'reference' => '9d52ccedf13c98f88b1c017a8450cabf352f1d2f',
+      'reference' => '2c411edb841634c16ffb2e84f05ddf2515a61037',
     ),
     'doctrine/instantiator' => 
     array (
@@ -85,12 +85,12 @@
     ),
     'phpdocumentor/type-resolver' => 
     array (
-      'pretty_version' => '1.6.0',
-      'version' => '1.6.0.0',
+      'pretty_version' => '1.6.1',
+      'version' => '1.6.1.0',
       'aliases' => 
       array (
       ),
-      'reference' => '93ebd0014cab80c4ea9f5e297ea48672f1b87706',
+      'reference' => '77a32518733312af16a44300404e945338981de3',
     ),
     'phpmailer/phpmailer' => 
     array (
@@ -202,12 +202,12 @@
     ),
     'sebastian/environment' => 
     array (
-      'pretty_version' => '5.1.3',
-      'version' => '5.1.3.0',
+      'pretty_version' => '5.1.4',
+      'version' => '5.1.4.0',
       'aliases' => 
       array (
       ),
-      'reference' => '388b6ced16caa751030f6a69e588299fa09200ac',
+      'reference' => '1b5dff7bb151a4db11d49d90e5408e4e938270f7',
     ),
     'sebastian/exporter' => 
     array (

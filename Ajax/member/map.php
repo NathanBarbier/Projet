@@ -22,27 +22,85 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
             $Organization = new Organization();
             $Organization->setRowid($idOrganization);
             $Organization->fetchName();
-            $Organization->fetchProjects(0);
+    
+            $CurrentUser = new User($idUser);
+    
+            $ProjectRepository   = new ProjectRepository();
+            $TeamRepository      = new TeamRepository();
+            $BelongsToRepository = new BelongsToRepository(); 
 
-            // check if the project && team belong to the organization && the user belong to the team
-            foreach($Organization->getProjects() as $project)
+            // Security checks
+            if($ProjectRepository->checkIfProjectBelongsToOrganization($projectId, $idOrganization))
             {
-                if($project->getRowid() == $projectId)
+                if($TeamRepository->checkIfTeamBelongsToProject($projectId, $teamId))
                 {
-                    $Project = $project;
-                    $Project->fetchTeams(0);
-                    foreach($Project->getTeams() as $team)
+                    if($BelongsToRepository->checkIfUserBelongsToTeam($idUser, $teamId))
                     {
-                        if($team->getRowid() == $teamId)
-                        {
-                            $Team = new Team($teamId);
+                        $action     = htmlentities(GETPOST('action'));
+                        $teamId     = intval(htmlentities(GETPOST('teamId')));
+                        $columnName = htmlentities(GETPOST('columnName'));
+                        $columnId   = intval(htmlentities(GETPOST('columnId')));
+                        $taskName   = htmlentities(GETPOST('taskName'));
+                        $taskId     = intval(htmlentities(GETPOST('taskId')));
+                        $taskNote   = htmlentities(GETPOST('taskNote'));
+                        $commentId  = intval(htmlentities(GETPOST('commentId')));
+                        $memberId   = intval(htmlentities(GETPOST('memberId')));
+                    
+                        $MapColumn   = new MapColumn($columnId);
+                        $Task        = new Task($taskId);
+                        $TaskComment = new TaskComment($commentId);
+                        $TaskMember  = new TaskMember($memberId, $taskId);
 
-                            foreach($Team->getUsers() as $user)
-                            {
-                                if($user->getRowid() == $idUser)
+                        $Team = new Team($teamId);
+                        $Project = new Project();
+                        $Project->fetch($projectId, 0);
+        
+                        switch($action)
+                        {
+                            case 'updateTaskNote':
+                                // check if the task comment belong to the team
+                                if($commentId && $taskNote && $Team->checkTaskComment($commentId))
                                 {
-                                    $User = $user;
-                                    break 3;
+                                    $authorId = $TaskComment->getFk_user();
+                                    if($authorId == $idUser)
+                                    {
+                                        try {
+                                            $TaskComment->setNote($taskNote);
+                                            $TaskComment->update();
+                                            LogHistory::create($idOrganization, $idUser, "INFO", 'update', 'task comment', $TaskComment->getNote(), '', 'comment id : '.$TaskComment->getRowid(), null, $ip);
+                                        } catch (\Throwable $th) {
+                                            LogHistory::create($idOrganization, $idUser, "ERROR", 'update', 'task comment', $TaskComment->getNote(), '', 'comment id : '.$TaskComment->getRowid(), $th->getMessage(), $ip);
+                                        }
+                                    }
+                                }               
+                                break;
+                            case 'addTaskComment':
+                                // check if the task belong to the team
+                                if($taskId && $Team->checkTask($taskId))
+                                {
+                                    try {
+                                        // prepare comment
+                                        $TaskComment->setFk_task($taskId);
+                                        $TaskComment->setFk_user($idUser);
+                                        $TaskComment->setNote('');
+                        
+                                        // insert comment
+                                        $commentId = $TaskComment->create();
+        
+                                        // update object
+                                        $TaskComment->fetch($commentId);
+                                        
+                                        // convert for JS
+                                        $TaskComment = $TaskComment->object_to_array($TaskComment);
+        
+                                        echo json_encode($TaskComment);
+        
+                                        LogHistory::create($idOrganization, $idUser, "INFO", 'create', 'task comment', '', null, null, null, $ip);
+        
+                                    } catch (\Throwable $th) {
+                                        echo json_encode(false);
+                                        LogHistory::create($idOrganization, $idUser, "ERROR", 'create', 'task comment', '', "", "comment id : ".$TaskComment->fetch_last_insert_id(), $th->getMessage(), $ip);
+                                    }
                                 }
                             }
                         }
@@ -228,11 +286,96 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
                             try {
                                 if($Column->getName() === "Closed")
                                 {
-                                    $now = new DateTime();
-                                    $Task->setActive(-1);
-                                    $Task->setFinished_at($now->format("Y-m-d H:i:s"));
+                                    try {
+                                        $oldName = $Task->getName();
+                                        $Task->setName($taskName);
+                                        $Task->update();
+                                        LogHistory::create($idOrganization, $idUser, "INFO", 'update', 'task', $oldName, $Task->getName(), 'task id : '.$Task->getRowid(), null, $ip);
+                                    } catch (\Throwable $th) {
+                                        LogHistory::create($idOrganization, $idUser, "ERROR", 'update', 'task', $oldName, $Task->getName(), 'task id : '.$Task->getRowid(), $th->getMessage(), $ip);
+                                    }
+                                }
+                                break;
+                            case 'taskColumnUpdate':
+                                // check if the column & task belong to the team
+                                if($columnId && $taskId && $Team->checkTask($taskId) && $Team->checkColumn($columnId))
+                                {
+                                    $Column = new MapColumn($columnId);
+                                    try {
+                                        if($Column->getName() === "Closed")
+                                        {
+                                            $now = new DateTime();
+                                            $Task->setActive(-1);
+                                            $Task->setFinished_at($now->format("Y-m-d H:i:s"));
+                                        } else {
+                                            $Task->setActive(1);
+                                        }
+                                        $Task->setFk_column($columnId);
+                                        $Task->update();
+                                        LogHistory::create($idOrganization, $idUser, "INFO", 'move', 'task to column', $Task->getName(), null, 'column id : '.$columnId, null);
+                                    } catch (\Throwable $th) {
+                                        LogHistory::create($idOrganization, $idUser, "ERROR", 'move', 'task to column', $Task->getName(), null, 'column id : '.$columnId, $th->getMessage(), $ip);
+                                    }
+                                }
+                                break;
+                            case 'finishedTask' :
+                                if($taskId && $Team->checkTask($taskId) && $oldColumn !== "Closed")
+                                {
+                                    try {
+                                        $Column = new MapColumn();
+        
+                                        $closedColumn = $Column->fetchFinishedColumn($teamId);
+        
+                                        $now = new DateTime();
+        
+                                        $Task->setActive(-1);
+                                        $Task->setFinished_at($now->format("Y-m-d H:i:s"));
+                                        $Task->setFk_column($closedColumn["rowid"]);
+                                        $Task->update();
+        
+                                        echo json_encode(true);
+        
+                                        LogHistory::create($idOrganization, $idUser, "INFO", 'move', 'task to column', $Task->getName(), null, 'column id : '.$closedColumn['rowid'], null, $ip);
+                                    } catch (\Throwable $th) {
+                                        echo json_encode(false);
+        
+                                        LogHistory::create($idOrganization, $idUser, "ERROR", 'move', 'task to column', $Task->getName(), null, 'column id : '.$closedColumn['rowid'], $th->getMessage(), $ip);
+                                    }
+                                }
+                                break;
+                            case 'upTask':
+                                if($columnId && $taskId && $Team->checkTask($taskId) && $Team->checkColumn($columnId))
+                                {
+                                    try {
+                                        $Task->switchRank($taskId, $columnId, 'up'); 
+                                        LogHistory::create($idOrganization, $idUser, "INFO", 'up task', 'task', $Task->getName(), null, 'task id : '.$taskId." column id : ".$columnId, null, $ip);
+                                    } catch (\Throwable $th) {
+                                        LogHistory::create($idOrganization, $idUser, "ERROR", 'up task', 'task', $Task->getName(), null, 'task id : '.$taskId." column id : ".$columnId, $th->getMessage(), null, $ip);
+                                    }
+                                }
+                                break;
+                            case 'downTask':
+                                if($columnId && $taskId && $Team->checkTask($taskId) && $Team->checkColumn($columnId))
+                                {
+                                    try {
+                                        $Task->switchRank($taskId, $columnId, 'down');
+                                        LogHistory::create($idOrganization, $idUser, "INFO", 'down task', 'task', $Task->getName(), null, 'task id : '.$taskId." column id : ".$columnId, null, $ip);
+                                    } catch (\Throwable $th) {
+                                        LogHistory::create($idOrganization, $idUser, "ERROR", 'down task', 'task', $Task->getName(), null, 'task id : '.$taskId." column id : ".$columnId, $th->getMessage(), $ip);
+                                    }
+                                }
+                                break;
+                            case 'leftColumn':
+                                if($teamId && $columnId && $Team->checkColumn($columnId) && $columnName != "Open" && $columnName != "Closed")
+                                {
+                                    try {
+                                        $status = $MapColumn->switchRank($columnId, $teamId, 'left');
+                                        LogHistory::create($idOrganization, $idUser, "INFO", 'move to left', 'column', $MapColumn->getName(), null, 'column id : '.$MapColumn->getRowid(), null, $ip);
+                                    } catch (\Throwable $th) {
+                                        LogHistory::create($idOrganization, $idUser, "ERROR", 'move to left', 'column', $MapColumn->getName(), null, 'column id : '.$MapColumn->getRowid(), $th->getMessage(), $ip);
+                                    }
                                 } else {
-                                    $Task->setActive(1);
+                                    $status = false;
                                 }
                                 $Task->setFk_column($columnId);
                                 $Task->update();
@@ -422,81 +565,201 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
                 
                                 foreach($Comments as $key => $Comment)
                                 {
-                                    $User = new User($Comment->getFk_user());
-                                    
-                                    // set the comment username
-                                    $Comments[$key]->author = $User->getLastname() . " " . $User->getFirstname();
-
-                                    // for color
-                                    $Comments[$key]->admin = $User->isAdmin() ? true : false;
-            
-                                    // for authorizations
-                                    $Comments[$key]->isAuthor = $Comment->getFk_user() == $idUser ? true : false;
-                                }
-            
-                                // return the task
-                                $Comments = $Task->object_to_array($Task);
-                
-                                echo json_encode($Comments);
-                            } catch (\Throwable $th) {
-                                // echo json_encode($th);
-                                echo json_encode(false);
-                            }
-                        }
-                        else
-                        {
-                            echo json_encode(false);
-                        }
-                        break;
-                    case 'getTaskMembers':
-                        if($taskId && $Team->checkTask($taskId))
-                        {
-                            try {                    
-                                // get users related to this task
-                                $Task = $Task->object_to_array($Task);
-                                echo json_encode($Task);
-                            } catch (\Throwable $th) {
-                                // echo json_encode($th);
-                            }
-                        }
-                        break;
-                    case 'getTeamMembers':
-                        if($taskId && $Team->checkTask($taskId))
-                        {
-                            $taskMembers    = $Task->getMembers();
-                            $teamMembers    = $Team->getUsers();
-
-                            $affectedUsers  = array();
-                            $freeUsers      = array();
-
-                            foreach($teamMembers as $teamMember)
-                            {
-                                $free = true;
-                                foreach($taskMembers as $taskMember)
+                                    try {
+                                        $oldName = $MapColumn->getName();
+                                        $MapColumn->setName($columnName);
+                                        $MapColumn->update();
+        
+                                        $response = array(
+                                            'success' => true,
+                                        );
+        
+                                        LogHistory::create($idOrganization, $idUser, "INFO", 'update name', 'column', $oldName, $MapColumn->getName(), 'column id : '.$MapColumn->getRowid(), null, $ip);
+                                    } catch (\Throwable $th) {
+        
+                                        $response = array(
+                                            'success' => false,
+                                        );
+        
+                                        LogHistory::create($idOrganization, $idUser, "ERROR", 'update name', 'column', $oldName, $MapColumn->getName(), 'column id : '.$MapColumn->getRowid(), $th->getMessage(), $ip);
+                                    }
+                                } 
+                                else 
                                 {
-                                    if($teamMember->getRowid() == $taskMember->getRowid())
-                                    {
-                                        $free = false;
-                                        $affectedUsers[] = $Team->object_to_array($teamMember);
-                                        break;
+                                    $response = array(
+                                        'success' => false,
+                                        'message' => 'Le nom de colonne est incorrect.',
+                                    );
+                                }
+                                echo json_encode($response);
+                                break;
+                            case 'deleteTaskNote':
+                                if($commentId && $Team->checkTaskComment($commentId))
+                                {
+                                    try {
+                                        // check if is author
+                                        $authorId = $TaskComment->getFk_user();
+                                        if($authorId == $idUser)
+                                        {
+                                            $TaskComment->delete();
+                                        LogHistory::create($idOrganization, $idUser, "INFO", 'delete', 'task comment', $TaskComment->getNote(), null, 'comment id : '.$TaskComment->getRowid(), null, $ip);
+                                        }
+                                    } catch (\Throwable $th) {
+                                        LogHistory::create($idOrganization, $idUser, "ERROR", 'delete', 'task comment', $TaskComment->getNote(), null, 'comment id : '.$TaskComment->getRowid(), $th->getMessage(), $ip);
                                     }
                                 }
-
-                                if($free == true)
+                                break;
+                            case 'deleteColumn':
+                                if($columnId && $Team->checkColumn($columnId) && $MapColumn->getName() != "Open" && $MapColumn->getName() != "Closed")
                                 {
-                                    $freeUsers[] = $Team->object_to_array($teamMember);
+                                    try {
+                                        // before deleting column move all task related to it to the 'open' column
+                                        $status = $MapColumn->moveTasksToOpen();
+                                        if($status)
+                                        {
+                                            $MapColumn->delete();
+                                            LogHistory::create($idOrganization, $idUser, "INFO", 'delete', 'column', $MapColumn->getName(), null, 'column id : '.$MapColumn->getRowid(), null, $ip);
+                                        }
+                                    } catch (\Throwable $th) {
+                                        LogHistory::create($idOrganization, $idUser, "ERROR", 'delete', 'column', $MapColumn->getName(), null, 'column id : '.$MapColumn->getRowid(), $th->getMessage(), $ip);
+                                    }
                                 }
-                            }
-
-                            $data = array(
-                                "affectedUsers"     => $affectedUsers,
-                                "freeUsers"         => $freeUsers
-                            );
-
-                            echo json_encode($data);
+                                break;
+                            case 'deleteTask':
+                                if($taskId && $Team->checkTask($taskId))
+                                {
+                                    try {
+                                        $Task->delete();
+                                        LogHistory::create($idOrganization, $idUser, "INFO", 'delete', 'task', $Task->getName(), null, 'task id : '.$Task->getRowid(), null, $ip);
+                                    } catch (\Throwable $th) {
+                                        LogHistory::create($idOrganization, $idUser, "ERROR", 'delete', 'task', $Task->getName(), null, 'task id : '.$Task->getRowid(), $th->getMessage(), $ip);
+                                    }
+                                }
+                                break;
+                            case 'archiveTask':
+                                if($taskId && $Team->checkTask($taskId))
+                                {
+                                    try {
+                                        $Task->setActive(0);
+                                        $Task->update();
+                                        LogHistory::create($idOrganization, $idUser, "INFO", 'archive', 'task', $Task->getName(), null, 'task id : '.$Task->getRowid(), null, $ip);
+                                    } catch (\Throwable $th) {
+                                        LogHistory::create($idOrganization, $idUser, "ERROR", 'archive', 'task', $Task->getName(), null, 'task id : '.$Task->getRowid(), $th->getMessage(), $ip);
+                                    }
+                                }
+                                break;
+                            case 'getLastColumnId':
+                                try {
+                                    echo json_encode($MapColumn->fetch_last_insert_id($teamId));
+                                } catch (\Throwable $th) {
+                                    // echo json_encode($th);
+                                }
+                                break;
+                            case 'getLastTaskId':
+                                try {
+                                    echo json_encode($Task->fetch_last_insert_id());
+                                } catch (\Throwable $th) {
+                                    // echo json_encode($th);
+                                    echo json_encode(false);
+                                }
+                                break;
+                            case 'getTaskComments':
+                                if($taskId && $Team->checkTask($taskId)) 
+                                {
+                                    try {
+                                        $Comments = $Task->getComments();
+                        
+                                        foreach($Comments as $key => $Comment)
+                                        {
+                                            $User = new User($Comment->getFk_user());
+                                            
+                                            // set the comment username
+                                            $Comments[$key]->author = $User->getLastname() . " " . $User->getFirstname();
+        
+                                            // for color
+                                            $Comments[$key]->admin = $User->isAdmin() ? true : false;
+                    
+                                            // for authorizations
+                                            $Comments[$key]->isAuthor = $Comment->getFk_user() == $idUser ? true : false;
+                                        }
+                    
+                                        // return the task
+                                        $Comments = $Task->object_to_array($Task);
+                        
+                                        echo json_encode($Comments);
+                                    } catch (\Throwable $th) {
+                                        // echo json_encode($th);
+                                        echo json_encode(false);
+                                    }
+                                }
+                                else
+                                {
+                                    echo json_encode(false);
+                                }
+                                break;
+                            case 'getTaskMembers':
+                                if($taskId && $Team->checkTask($taskId))
+                                {
+                                    try {                    
+                                        // get users related to this task
+                                        $Task = $Task->object_to_array($Task);
+                                        echo json_encode($Task);
+                                    } catch (\Throwable $th) {
+                                        // echo json_encode($th);
+                                    }
+                                }
+                                break;
+                            case 'getTeamMembers':
+                                if($taskId && $Team->checkTask($taskId))
+                                {
+                                    $taskMembers    = $Task->getMembers();
+                                    $teamMembers    = $Team->getUsers();
+        
+                                    $affectedUsers  = array();
+                                    $freeUsers      = array();
+        
+                                    foreach($teamMembers as $teamMember)
+                                    {
+                                        $free = true;
+                                        foreach($taskMembers as $taskMember)
+                                        {
+                                            if($teamMember->getRowid() == $taskMember->getRowid())
+                                            {
+                                                $free = false;
+                                                $affectedUsers[] = $Team->object_to_array($teamMember);
+                                                break;
+                                            }
+                                        }
+        
+                                        if($free == true)
+                                        {
+                                            $freeUsers[] = $Team->object_to_array($teamMember);
+                                        }
+                                    }
+        
+                                    $data = array(
+                                        "affectedUsers"     => $affectedUsers,
+                                        "freeUsers"         => $freeUsers
+                                    );
+        
+                                    echo json_encode($data);
+                                }
+                                break;
                         }
-                        break;
+                    }
+                    else
+                    {
+                        header("location:".ROOT_URL."index.php");
+                    }
                 }
+                else
+                {
+                    header("location:".ROOT_URL."index.php");
+                }
+            }
+            else
+            {
+                header("location:".ROOT_URL."index.php");
             }
         }
     }

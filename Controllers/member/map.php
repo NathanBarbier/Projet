@@ -18,6 +18,7 @@ if($teamId)
     {
         $Organization = new Organization();
         $Organization->setRowid($idOrganization);
+        $Organization->fetchAllAdmins();
 
         $CurrentUser = new User($idUser);
 

@@ -244,8 +244,11 @@ class User extends Modele
             $this->email            = $Obj->email;
         }
         
-        $BelongsTo = new BelongsTo();
-        $this->BelongsTo = $BelongsTo->fetchAll($Obj->rowid);
+        if($privacy < 3)
+        {
+            $BelongsTo = new BelongsTo();
+            $this->BelongsTo = $BelongsTo->fetchAll($Obj->rowid);
+        }
     }
 
     public function fetch_last_insert_id() : int

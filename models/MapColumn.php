@@ -327,6 +327,20 @@ Class MapColumn extends Modele
             return false;
         }
     }
+
+    /**
+    * To avoid losing tasks, we move them to the open column before deleting it   
+    */
+    public function moveTasksToOpen()
+    {
+        $sql = "UPDATE storieshelper_task AS t";
+        $sql .= " INNER JOIN storieshelper_map_column AS mp ON mp.rowid = t.fk_column";
+        $sql .= " SET t.fk_column = ( SELECT m.rowid FROM (SELECT * FROM storieshelper_map_column) AS m WHERE m.name = 'Open'  AND m.fk_team = ? )";
+        $sql .= " WHERE mp.rowid = ?";
+
+        $requete = $this->getBdd()->prepare($sql);
+        return $requete->execute([$this->fk_team, $this->rowid]);
+    }
 }
 
 ?>

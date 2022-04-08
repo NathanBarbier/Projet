@@ -26,6 +26,7 @@ $errors = array();
 $success = false;
 
 $tpl = "signup.php";
+$page = CONTROLLERS_URL."visitor/".$tpl;
 
 if($action == "inscriptionOrg")
 {
@@ -57,12 +58,12 @@ if($action == "inscriptionOrg")
                                     $User->setAdmin(1);
                                     $User->setConsent(1);
                                     $lastInsertedId = $User->create();
-                                    LogHistory::create($idOrganization, $idUser, "INFO", 'signup', 'user', $User->getEmail(), null, 'user id : '.$lastInsertedId, null, $ip);
+                                    LogHistory::create($User->getRowid(), 'signup', 'user', $lastInsertedId, null, null, $User->getFk_organization(), "INFO", null, $ip, $page);
                                 } 
                                 catch (exception $e) 
                                 {
                                     $errors[] = "Erreur : l'inscription n'a pas pu aboutir.";
-                                    LogHistory::create($idOrganization, $idUser, "ERROR", 'signup', 'user', $User->getEmail(), null, null, $e->getMessage(), $ip);
+                                    LogHistory::create($User->getRowid(), 'signup', 'user', $lastInsertedId, null, null, $User->getFk_organization(), "ERROR", $th->getMessage(), $ip, $page);
                                 }
 
                                 try {
@@ -74,7 +75,7 @@ if($action == "inscriptionOrg")
                                     exit;
                                 } catch (\Throwable $th) {
                                     $errors[] = "Erreur : l'inscription n'a pas pu aboutir.";
-                                    LogHistory::create($idOrganization, $idUser, "ERROR", 'create', 'Organization', $Organization->getName(), null, null, $th->getMessage(), $ip);
+                                    LogHistory::create($User->getRowid(), 'create', 'organization', null, null, null, null, "ERROR", $th->getMessage(), $ip, $page);
                                 }
                             }
                             else

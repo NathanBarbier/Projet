@@ -36,6 +36,7 @@ foreach($User->getBelongsTo() as $key => $BelongsTo)
 }
 
 $tpl = "dashboard.php";
+$page = CONTROLLERS_URL."member/".$tpl;
 
 $errors = !empty($errors) ? unserialize($errors) : array();
 
@@ -50,11 +51,11 @@ if($action == 'userUpdate')
                 $User->setLastname($lastname);
                 $User->setEmail($email);
                 $User->update();
-                LogHistory::create($idOrganization, $idUser, "INFO", 'update', 'user', $User->getLastname().' '.$User->getFirstname(), null, 'user id : '.$User->getRowid(), null, $ip);
+                LogHistory::create($idUser, 'update', 'user', $idUser, null, null, $idOrganization, "INFO", null, $ip, $page);
                 $success = "Vos informations ont bien été mises à jour.";
             } catch (\Throwable $th) {
                 $errors[] = "Une error est survenue.";
-                LogHistory::create($idOrganization, $idUser, "ERROR", 'update', 'user', $User->getLastname().' '.$User->getFirstname(), null, 'user id : '.$User->getRowid(), $th->getMessage(), $ip);
+                LogHistory::create($idUser, 'update', 'user', $idUser, null, null, $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
             }
         } 
         else 
@@ -72,13 +73,13 @@ if($action == 'accountDelete')
 {
     try {
         $User->delete();
-        LogHistory::create($idOrganization, $idUser, "WARNING", 'delete', 'user', $User->getLastname().' '.$User->getFirstname(), null, 'user id : '.$User->getRowid(), null, $ip);
+        LogHistory::create($idUser, 'delete', 'user', $idUser, null, null, $idOrganization, "WARNING", null, $ip, $page);
         header("location:".CONTROLLERS_URL."visitor/signout.php");
         exit;
     } catch (\Throwable $th) {
         //throw $th;
         $errors[] = "Une erreur innatendue est survenue.";
-        LogHistory::create($idOrganization, $idUser, "ERROR", 'delete', 'user', $User->getLastname().' '.$User->getFirstname(), null, 'user id : '.$User->getRowid(), $th->getMessage(), $ip);
+        LogHistory::create($idUser, 'delete', 'user', $idUser, null, null, $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
     }
 }
 

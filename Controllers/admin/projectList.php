@@ -11,6 +11,7 @@ $Organization->setRowid($idOrganization);
 $Organization->fetchProjects(0);
 
 $tpl = "projectList.php";
+$page = CONTROLLERS_URL."admin/".$tpl;
 
 $errors = array();
 $success = false;
@@ -26,15 +27,6 @@ if($action == 'deleteProject')
         $Project->setRowid($projectId);
         $Project->fetchName();
 
-        foreach($Organization->getProjects() as $Obj)
-        {
-            if($Obj->getRowid() === $projectId)
-            {
-                $Project->setRowid($projectId);
-                break;
-            }
-        }
-
         try 
         {
             // delete in db
@@ -44,7 +36,7 @@ if($action == 'deleteProject')
             $success = "Le projet a bien été supprimmé.";
             
             // log entry
-            LogHistory::create($idOrganization, $idUser, "IMPORTANT", 'delete', 'project', $Project->getName() ?? '', null, 'project id : '.$Project->getRowid(), null, $ip);
+            LogHistory::create($idUser, 'delete', 'project', $projectId, null, null, $idOrganization, "IMPORTANT", null, $ip, $page);
             
             // remove from Organization -> projects List
             $Organization->removeProject($Project->getRowid());
@@ -54,7 +46,7 @@ if($action == 'deleteProject')
             $errors[] = $th;
             
             // log entry
-            LogHistory::create($idOrganization, $idUser, "ERROR", 'delete', 'project', $Project->getName() ?? '', null, 'project id : '.$Project->getRowid(), $th->getMessage(), $ip);
+            LogHistory::create($idUser, 'delete', 'project', $projectId, null, null, $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
         }
     }
     else

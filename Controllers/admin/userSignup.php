@@ -9,7 +9,6 @@ require_once PHP_MAILER_PATH.'SMTP.php';
 
 // Import PHPMailer classes into the global namespace 
 use PHPMailer\PHPMailer\PHPMailer; 
-use PHPMailer\PHPMailer\Exception; 
 
 $mail = new PHPMailer; 
 
@@ -42,6 +41,7 @@ $errors = array();
 $success = false;
 
 $tpl = "userSignup.php";
+$page = CONTROLLERS_URL."admin".$tpl;
 
 if($action == "signup")
 {
@@ -70,10 +70,10 @@ if($action == "signup")
                                 $User->setLastname($lastname);
                                 $User->setBirth($birth);
                                 $lastInsertedId = $User->create();
-                                LogHistory::create($idOrganization, $idUser, "INFO", 'signup', 'user', $User->getLastname().' '.$User->getFirstname(), null, 'user id : '.$lastInsertedId, null, $ip);
+                                LogHistory::create($idUser, 'signup', 'user', $lastInsertedId, null, null, $idOrganization, "INFO", null, $ip, $page);
                             } catch (\Throwable $th) {
                                 $errors[] = "L'inscription n'a pas pu aboutir.";
-                                LogHistory::create($idOrganization, $idUser, "ERROR", 'signup', 'user', $User->getLastname().' '.$User->getFirstname(), null, null, $th->getMessage(), $ip);
+                                LogHistory::create($idUser, 'signup', 'user', $lastInsertedId, null, null, $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
                             }
                             
                             try {
@@ -108,7 +108,6 @@ if($action == "signup")
                                 $success = "Le collaborateur a bien été inscrit et reçu son mot de passe par email."; 
                             } catch (\Throwable $th) {
                                 $errors[] = "L'email de confirmation d'inscription n'a pas pu être envoyé.";
-                                LogHistory::create($idOrganization, $idUser, "ERROR", 'signup', 'user', $User->getLastname().' '.$User->getFirstname(), null, null, $th->getMessage(), $ip);
                             }
                         } 
                         else 

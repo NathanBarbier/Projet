@@ -10,6 +10,8 @@ $Organization = new Organization();
 $Organization->setRowid($idOrganization);
 $Organization->fetchProjects(0);
 
+$ProjectRepository = new ProjectRepository();
+
 $tpl = "projectList.php";
 $page = CONTROLLERS_URL."admin/".$tpl;
 
@@ -21,7 +23,7 @@ $offset = 10;
 
 if($action == 'deleteProject')
 {
-    if(is_int($projectId)) 
+    if($ProjectRepository->checkIfProjectBelongsToOrganization($projectId, $idOrganization)) 
     {
         $Project = new Project();
         $Project->setRowid($projectId);

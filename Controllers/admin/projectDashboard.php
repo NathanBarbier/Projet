@@ -428,8 +428,9 @@ if($idProject)
                 try {
                     $Project->setActive(1);
                     $Project->update();
-                    LogHistory::create($idUser, 'unarchive', 'project', $idProject, "organization", $Project->getRowid(), $idOrganization, "WARNING", null, $ip, $page);
+
                     $success = "Le projet a bien été désarchivé.";
+                    LogHistory::create($idUser, 'unarchive', 'project', $idProject, "organization", $Project->getRowid(), $idOrganization, "WARNING", null, $ip, $page);
                 } catch (\Throwable $th) {
                     $errors[] = "Une erreur innatendue est survenue.";
                     LogHistory::create($idUser, 'unarchive', 'project', $idProject, "organization", $Project->getRowid(), $idOrganization, "WARNING", $th->getMessage(), $ip, $page);

@@ -97,17 +97,14 @@ require_once "layouts/header.php";
                         </td>
     
                         <td class="align-middle">
-                            <b>
-                                <?php if($User->isAdmin() == 1) {
-                                    echo '<span style="color:red">Administrateur</span>';
-                                } else {
-                                    echo '<span style="color:grey">Utilisateur</span>';
-                                } ?>
-    
+                                <select class="form-select role-select text-center" style="<?= $User->isAdmin() ? 'color:red' : 'color:grey' ?>" name="role">
+                                    <option <?= $User->isAdmin() ? 'selected' : '' ?> value="1" style="color: red">Administrateur</option>
+                                    <option <?= !$User->isAdmin() ? 'selected' : '' ?> value="0" style="color: grey">Utilisateur</option>
+                                </select>
+
                                 <?php if($User->getRowid() == $idUser) {
-                                    echo '&nbsp;(You)';
+                                    echo '<p class="mt-2 text-center">(Vous)<p>';
                                 } ?>
-                            </b>
                         </td>
     
                         <!-- Options -->
@@ -145,7 +142,7 @@ require_once "layouts/header.php";
     <script defer>
         const idUser = <?php echo json_encode($idUser); ?>;
     </script>
-    <script src="<?= JS_URL ?>admin/associateList.min.js" defer></script>
+    <script src="<?= JS_URL ?>admin/associateList.js" defer></script>
 
 <?php
 require_once "layouts/footer.php";

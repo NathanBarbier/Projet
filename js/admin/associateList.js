@@ -1,6 +1,19 @@
 // On user delete click
 initUserDeletebutton();
 
+$('.role-select').on('change', function() {
+    var role = $(this).val();
+
+    if(role == '1') 
+    {
+        $(this).css('color', 'red');
+    } 
+    else if(role == '0')
+    {
+        $(this).css('color', 'grey');
+    }
+});
+
 // On user delete cancel
 $("#cancel-user-delete").on('click', function() {
     $("#user-delete-modal").modal('hide');

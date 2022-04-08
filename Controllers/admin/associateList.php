@@ -10,6 +10,7 @@ $firstname  = htmlentities(GETPOST('firstname'));
 $lastname   = htmlentities(GETPOST('lastname'));
 $email      = htmlentities(GETPOST('email'));
 $birth      = htmlentities(GETPOST('birth'));
+$role       = intval(htmlentities(GETPOST('role')));
 
 $oldmdp     = htmlentities(GETPOST('oldmdp'));
 $newmdp     = htmlentities(GETPOST('newmdp'));
@@ -46,6 +47,9 @@ if($action == "userUpdate")
             }
             if(!empty($email)) {
                 $User->setEmail($email);
+            }
+            if($role !== false && in_array($role, [0, 1])) {
+                $User->setAdmin($role);
             }
 
             try {

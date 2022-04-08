@@ -120,10 +120,6 @@ $("#add-column-form").find('#create-column').on('click', function() {
                             "</div>",
                         ].join("");
                         
-                        // encode html to avoid XSS
-                        var ESAPI = require('node-esapi');
-                        append = ESAPI.encoder().encodeForHTML(append);
-                        
                         $("#columns-container").append(append);
 
                         $("#add-column-btn").toggleClass('show'); 

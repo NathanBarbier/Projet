@@ -84,7 +84,8 @@ require_once "layouts/header.php";
                                         </div>
                                     </div>
                                 </div>
-                            <?php } ?>
+                            <?php 
+                            } ?>
                         </div>
                     </div>   
                 <?php } ?>

@@ -5,7 +5,6 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
 {
     // get the user ip adress
     $ip = $_SERVER['REMOTE_ADDR'];
-    $page = AJAX_URL."visitor/login.php";
 
     $envoi = GETPOST('envoi');
     $email = GETPOST('email');
@@ -21,6 +20,7 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
     $rights     = false;
 
     $tpl = "login.php";
+    $page = CONTROLLERS_URL."visitor/".$tpl;
 
     if($envoi)
     {
@@ -88,12 +88,12 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
                                     if($consent == 1)
                                     {
                                         $_SESSION["rights"] = $User->isAdmin() == 1 ? "admin" : "user";
-                                        LogHistory::create($User->getRowid(), 'connect', 'user', $User->getRowid(), null, $User->getFk_organization(), "INFO", null, $ip, $page);
+                                        LogHistory::create($User->getRowid(), 'connect', 'user', $User->getRowid(), null, null, $User->getFk_organization(), "INFO", null, $ip, $page);
                                     }
                                     else
                                     {
                                         $_SESSION["rights"] = "needConsent";
-                                        LogHistory::create($User->getRowid(), 'connect', 'user', $User->getRowid(), null, $User->getFk_organization(), "INFO", null, $ip, $page);
+                                        LogHistory::create($User->getRowid(), 'connect', 'user', $User->getRowid(), null, null, $User->getFk_organization(), "INFO", null, $ip, $page);
                                     }
     
                                     $rights = $_SESSION['rights'] ?? false;

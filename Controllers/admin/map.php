@@ -8,7 +8,7 @@ $projectId = intval(GETPOST('projectId'));
 $teamId = intval(GETPOST('teamId'));
 
 $tpl = "map.php";
-$page = CONTROLLERS_URL."admin".$tpl;
+$page = CONTROLLERS_URL."admin/".$tpl;
 $errors = array();
 $success = false;
 

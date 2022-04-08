@@ -5,7 +5,7 @@ require_once "../../services/header.php";
 require "layouts/head.php";
 
 $tpl = "projectDashboard.php";
-$page = CONTROLLERS_URL."admin".$tpl;
+$page = CONTROLLERS_URL."admin/".$tpl;
 
 $action      = htmlentities(GETPOST('action'));
 $idProject   = intval(htmlentities(GETPOST('idProject')));

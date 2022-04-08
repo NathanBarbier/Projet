@@ -19,6 +19,7 @@ $newmdp2 = htmlentities(GETPOST('newmdp2'));
 $User = new User($idUser);
 
 $tpl = "passwordUpdate.php";
+$page = CONTROLLERS_URL."member/".$tpl;
 
 $errors = array();
 $success = false;
@@ -44,13 +45,13 @@ if($action == "passwordUpdate")
                             try {
                                 $User->setPassword($newmdp);
                                 $User->update();
-                                LogHistory::create($idOrganization, $idUser, "INFO", 'update password', 'user', $User->getLastname().' '.$User->getFirstname(), null, 'user id : '.$User->getRowid(), null, $ip);
+                                LogHistory::create($idUser, 'update', 'user', $idUser, null, null, $idOrganization, "INFO", null, $ip, $page);
                                 $success = "Le mot de passe a bien été modifié.";
                                 header("location:".CONTROLLERS_URL."member/dashboard.php?success=".$success);
                                 exit;
                             } catch (\Throwable $th) {
                                 $errors[] = "Une erreur innatendue est survenue.";
-                                LogHistory::create($idOrganization, $idUser, "ERROR", 'update password', 'user', $User->getLastname().' '.$User->getFirstname(), null, 'user id : '.$User->getRowid(), $th->getMessage(), $ip);
+                                LogHistory::create($idUser, 'update', 'user', $idUser, null, null, $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
                             }
                         }
                         else

@@ -19,7 +19,7 @@ $errors = array();
 $success = false;
 
 $tpl = "projectCreation.php";
-$page = CONTROLLERS_URL."admin".$tpl;
+$page = CONTROLLERS_URL."admin/".$tpl;
 
 if($action == "addProjet")
 {

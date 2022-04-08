@@ -16,6 +16,7 @@ $errors = array();
 $success = false;
 
 $tpl = "login.php";
+$page = CONTROLLERS_URL."visitor/".$tpl;
 
 if(isset($_COOKIE["remember_me"]))
 {
@@ -46,7 +47,7 @@ if(isset($_COOKIE["remember_me"]))
                     $_SESSION["idUser"] = intval($User->getRowid());
                     $_SESSION["idOrganization"] = $idOrganization = intval($User->getFk_organization());
         
-                    LogHistory::create($idOrganization, $User->getRowid(), 'INFO', 'connect', 'user', $User->getLastname().' '.$User->getFirstname(), null, null, null, $userIp);
+                    LogHistory::create($User->getRowid(), 'connect', 'user', $User->getRowid(), null, null, $User->getFk_organization(), "INFO", null, $ip, $page);
                     $success = true;
                     header('location:'.ROOT_URL.'index.php');
                     exit;
@@ -62,7 +63,7 @@ if(isset($_COOKIE["remember_me"]))
                 $_SESSION["idUser"] = intval($User->getRowid());
                 $_SESSION["idOrganization"] = $idOrganization = intval($User->getFk_organization());
     
-                LogHistory::create($idOrganization, $User->getRowid(), 'INFO', 'connect', 'user', $User->getLastname().' '.$User->getFirstname(), null, null, null, $userIp);
+                LogHistory::create($User->getRowid(), 'connect', 'user', $User->getRowid(), null, null, $User->getFk_organization(), "INFO", null, $ip, $page);
                 $success = true;
                 header('location:'.ROOT_URL.'index.php');
                 exit;

@@ -11,7 +11,7 @@ $Organization->setRowid($idOrganization);
 $Organization->fetchProjects(0);
 
 $tpl = "projectList.php";
-$page = CONTROLLERS_URL."admin".$tpl;
+$page = CONTROLLERS_URL."admin/".$tpl;
 
 $errors = array();
 $success = false;

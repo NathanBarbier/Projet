@@ -23,7 +23,7 @@ $firstname = htmlentities(GETPOST('firstname'));
 $lastname = htmlentities(GETPOST('lastname'));
 
 $tpl = "organizationDashboard.php";
-$page = CONTROLLERS_URL."admin".$tpl;
+$page = CONTROLLERS_URL."admin/".$tpl;
 
 $success = GETPOST('success');
 $errors = array();

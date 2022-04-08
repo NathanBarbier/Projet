@@ -8,6 +8,7 @@ $projectId = intval(GETPOST('projectId'));
 $teamId = intval(GETPOST('teamId'));
 
 $tpl = "map.php";
+$page = CONTROLLERS_URL."member/".$tpl;
 $errors = array();
 $success = false;
 
@@ -47,7 +48,7 @@ if($teamId)
                                 $Team->setActive(0);
                                 $Team->update();
                                 
-                                LogHistory::create($idOrganization, $idUser, "WARNING", 'archive', 'team', $Team->getName(), null, 'team id : '.$Team->getRowid(), null, $ip);
+                                LogHistory::create($idUser, 'archive', 'team', $teamId, 'project', $projectId, $idOrganization, "WARNING", null, $ip, $page);
                                 
                                 $message = "Le tableau a bien été archivé.";
 
@@ -55,7 +56,7 @@ if($teamId)
                                 exit;
                             } catch (\Throwable $th) {
                                 $errors[] = "Une erreur innatendue est survenue.";
-                                LogHistory::create($idOrganization, $idUser, "ERROR", 'archive', 'team', $Team->getName(), null, 'team id : '.$Team->getRowid(), $th->getMessage(), $ip);
+                                LogHistory::create($idUser, 'archive', 'team', $teamId, 'project', $projectId, $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
                             }
                         }
         

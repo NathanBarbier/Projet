@@ -26,7 +26,7 @@ $success = false;
 $offset = 30;
 
 $tpl = "associateList.php";
-$page = CONTROLLERS_URL."admin".$tpl;
+$page = CONTROLLERS_URL."admin/".$tpl;
 
 if($action == "userUpdate")
 {

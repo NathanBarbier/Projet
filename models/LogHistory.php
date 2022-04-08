@@ -6,14 +6,14 @@ Class LogHistory extends Modele
     protected $date_creation;
     protected $status;
     protected $action;
-    protected $object_type;
-    protected $object_name;
-    protected $value;
-    protected $identification;
+    protected $object;
+    protected $object_id;
+    protected $object_parent;
+    protected $object_parent_id;
     protected $fk_organization;
     protected $exception;
-    protected $platform;
     protected $ipAddress;
+    protected $page;
 
     public function __construct($rowid = null)
     {
@@ -35,14 +35,14 @@ Class LogHistory extends Modele
                 $this->date_creation    = $obj->date_creation;
                 $this->status           = $obj->status;
                 $this->action           = $obj->action;
-                $this->object_type      = $obj->object_type;
-                $this->object_name      = $obj->object_name;
+                $this->object           = $obj->object;
+                $this->object_id        = intval($obj->object_id);
+                $this->object_parent    = $obj->object_parent;
+                $this->object_parent_id = intval($obj->object_parent_id);
                 $this->fk_organization  = intval($obj->fk_organization);
-                $this->value            = $obj->value;
-                $this->identification   = $obj->identification;
                 $this->exception        = $obj->exception;
-                $this->platform         = $obj->platform;
                 $this->ipAddress        = $obj->ip_address;
+                $this->page             = $obj->page;
             }
         }
     }
@@ -52,16 +52,16 @@ Class LogHistory extends Modele
         $this->rowid            = intval($Obj->rowid);
         $this->fk_author        = intval($Obj->fk_author);
         $this->date_creation    = $Obj->date_creation;
-        $this->action           = $Obj->action;
-        $this->object_type      = $Obj->object_type;
-        $this->object_name      = $Obj->object_name;
-        $this->value            = $Obj->value;
-        $this->identification   = $Obj->identification;
-        $this->fk_organization  = intval($Obj->fk_organization);
         $this->status           = $Obj->status;
+        $this->action           = $Obj->action;
+        $this->object           = $Obj->object;
+        $this->object_id        = intval($Obj->object_id);
+        $this->object_parent    = $Obj->object_parent;
+        $this->object_parent_id = intval($Obj->object_parent_id);
+        $this->fk_organization  = intval($Obj->fk_organization);
         $this->exception        = $Obj->exception;
-        $this->platform         = $Obj->platform;
         $this->ipAddress        = $Obj->ip_address;
+        $this->page             = $Obj->page;
     }
 
     public function setRowid($rowid)
@@ -84,14 +84,24 @@ Class LogHistory extends Modele
         $this->action = $action;
     }
 
-    public function setObject_type($object_type)
+    public function setObject($object)
     {
-        $this->object_type = $object_type;
+        $this->object = $object;
     }
 
-    public function setObject_name($object_name)
+    public function setObject_id($object_id)
     {
-        $this->object_name = $object_name;
+        $this->object_ide = $object_id;
+    }
+
+    public function setObject_parent($object_parent)
+    {
+        $this->object_parent = $object_parent;
+    }
+
+    public function setObject_parent_id($object_parent_id)
+    {
+        $this->object_parent_id = $object_parent_id;
     }
 
     public function setAdmin($admin)
@@ -129,19 +139,24 @@ Class LogHistory extends Modele
         return $this->action;
     }
     
-    public function getObject_type()
+    public function getObject()
     {
-        return $this->object_type;
+        return $this->object;
     }
     
-    public function getObject_name()
+    public function getObject_id()
     {
-        return $this->object_name;
+        return $this->object_id;
     }
 
-    public function getAdmin()
+    public function getObject_parent()
     {
-        return $this->admin;
+        return $this->object_parent;
+    }
+    
+    public function getObject_parent_id()
+    {
+        return $this->object_parent_id;
     }
 
     public function getFk_organization()
@@ -156,7 +171,7 @@ Class LogHistory extends Modele
     {
         $rowid = $rowid == null ? $this->rowid : $rowid;
 
-        $sql = "SELECT rowid, fk_author, date_creation, action, object_type, object_name, admin, fk_organisation";
+        $sql = "SELECT *";
         $sql .= " FROM storieshelper_log_history";
         $sql .= " WHERE rowid = ?";
 
@@ -166,17 +181,20 @@ Class LogHistory extends Modele
         if($requete->rowCount() > 0)
         {
             $obj = $requete->fetch(PDO::FETCH_OBJ);
-    
+                
             $this->rowid            = intval($obj->rowid);
             $this->fk_author        = intval($obj->fk_author);
             $this->date_creation    = $obj->date_creation;
+            $this->status           = $obj->status;
             $this->action           = $obj->action;
-            $this->object_type      = $obj->object_type;
-            $this->object_name      = $obj->object_name;
-            $this->value            = $obj->value;
-            $this->identification   = $obj->identification;
-            $this->platform         = $obj->platform;
+            $this->object           = $obj->object;
+            $this->object_id        = intval($obj->object_id);
+            $this->object_parent    = $obj->object_parent;
+            $this->object_parent_id = intval($obj->object_parent_id);
+            $this->fk_organization  = intval($obj->fk_organization);
+            $this->exception        = $obj->exception;
             $this->ipAddress        = $obj->ip_address;
+            $this->page             = $obj->page;
         }
     }
 

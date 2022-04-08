@@ -10,6 +10,7 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
     $idUser = $_SESSION['idUser'] ?? null;
     // get the user ip adress
     $ip = $_SERVER['REMOTE_ADDR'];
+    $page = "ajax/admin/associateList.php";
 
     if($rights == 'admin' && $idUser > 0 && $idOrganization > 0)
     {
@@ -40,7 +41,9 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
                     } catch (\Throwable $th) {
                         // echo json_encode($th);
                         echo json_encode(false);
-                        LogHistory::create($idOrganization, $idUser, "ERROR", 'loadmore', 'associates', '', '', null, $th->getMessage(), $ip);
+
+                        LogHistory::create($idUser, 'loadmore', 'user', null, null, null, $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
+                        
                     }
                 }
                 break;
@@ -57,7 +60,6 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
                     } catch (\Throwable $th) {
                         // echo json_encode($th);
                         echo json_encode(false);
-                        LogHistory::create($idOrganization, $idUser, "ERROR", 'search', 'associates', '', '', $query, $th->getMessage(), $ip);
                     }
                 }
                 break;

@@ -14,13 +14,15 @@ if($rights === 'needConsent' && $idUser)
     $success = false;
     
     $tpl = "needConsent.php";
+    $page = CONTROLLERS_URL."visitor/".$tpl;
 
     if($action == "refuseConsent")
     {
         // DELETE ACCOUNT
         $status = $User->delete();
+        LogHistory::create($idUser, 'refuse consent', 'user', $idUser, null, null, $User->getFk_organization(), "INFO", null, $ip, $page);
 
-        LogHistory::create($idOrganization, $idUser, 'INFO', 'refuse consent | self delete', '', '', null, 'user id : '.$idUser, null, $ip);
+        LogHistory::create($idUser, 'delete', 'user', $idUser, null, null, $User->getFk_organization(), "INFO", null, $ip, $page);
 
         header('location:'.CONTROLLERS_URL.'visitor/signout.php');
         exit;
@@ -34,7 +36,7 @@ if($rights === 'needConsent' && $idUser)
             $User->update();
 
             $_SESSION["rights"] = $User->isAdmin() ? 'admin' : 'user';
-            LogHistory::create($idOrganization, $idUser, 'INFO', 'give consent', '', '', null, 'user id : '.$idUser, null, $ip);
+            LogHistory::create($idUser, 'consent', 'user', $idUser, null, null, $User->getFk_organization(), "INFO", null, $ip, $page);
 
             header('location:'.ROOT_URL.'index.php');
             exit;

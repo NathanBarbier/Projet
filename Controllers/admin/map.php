@@ -8,6 +8,7 @@ $projectId = intval(GETPOST('projectId'));
 $teamId = intval(GETPOST('teamId'));
 
 $tpl = "map.php";
+$page = CONTROLLERS_URL."admin/".$tpl;
 $errors = array();
 $success = false;
 
@@ -39,11 +40,13 @@ if($teamId)
                     try {
                         $Team->setActive(0);
                         $Team->update();
-                        LogHistory::create($idOrganization, $idUser, "WARNING", 'archive', 'team', $Team->getName(), null, 'team id : '.$Team->getRowid(), null, $ip);
+                        LogHistory::create($idUser, 'archive', 'team', $teamId, 'project', $projectId, $idOrganization, "WARNING", null, $ip, $page);
+                        
                         $success = "Le tableau a bien été archivé.";
                     } catch (\Throwable $th) {
                         $errors[] = "Une erreur innatendue est survenue.";
-                        LogHistory::create($idOrganization, $idUser, "ERROR", 'archive', 'team', $Team->getName(), null, 'team id : '.$Team->getRowid(), $th->getMessage(), $ip);
+
+                        LogHistory::create($idUser, 'archive', 'team', $teamId, 'project', $projectId, $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
                     }
                 }
     
@@ -52,24 +55,13 @@ if($teamId)
                     try {
                         $Team->setActive(1);
                         $Team->update();
-                        LogHistory::create($idOrganization, $idUser, "INFO", 'unarchive', 'team', $Team->getName(), null, 'team id : '.$Team->getRowid(), null, $ip);
+                    
+                        LogHistory::create($idUser, 'unarchive', 'team', $teamId, 'project', $projectId, $idOrganization, "INFO", null, $ip, $page);
                         $success = "Le tableau a bien été ré-ouvert.";
                     } catch (\Throwable $th) {
                         $errors[] = "Une erreur innatendue est survenue.";
-                        LogHistory::create($idOrganization, $idUser, "ERROR", 'unarchive', 'team', $Team->getName(), null, 'team id : '.$Team->getRowid(), $th->getMessage(), $ip);
-                    }
-                }
-            
-                if($action == "openProject")
-                {
-                    try {
-                        $Project->setActive(1);
-                        $Project->update();
-                        LogHistory::create($idOrganization, $idUser, "WARNING", 'unarchive', 'project', $Project->getName(), null, 'project id : '.$Project->getRowid(), null, $ip);
-                        $success = "Le projet à bien été ré-ouvert.";
-                    } catch (\Throwable $th) {
-                        $errors[] = "Une erreur innatendue est survenue.";
-                        LogHistory::create($idOrganization, $idUser, "ERROR", 'unarchive', 'project', '', null, 'project id : '.$Project->getRowid(), $th->getMessage(), $ip);
+
+                        LogHistory::create($idUser, 'unarchive', 'team', $teamId, 'project', $projectId, $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
                     }
                 }
     

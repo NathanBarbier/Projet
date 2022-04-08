@@ -9,6 +9,7 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
     $idUser = $_SESSION["idUser"] ?? null;
     // get the user ip adress
     $ip = $_SERVER['REMOTE_ADDR'];
+    $page = "ajax/admin/projectDashboard.php";
 
     if($rights == 'admin' && $idUser > 0 && $idOrganization > 0)
     {
@@ -29,7 +30,7 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
                         echo json_encode($Team->isActive());
                     } catch (\Throwable $th) {
                         // echo json_encode($th);
-                        LogHistory::create($idOrganization, $idUser, "ERROR", 'get active teams', '', '', null, null, $th->getMessage(), $ip);
+                        LogHistory::create($idUser, 'fetch', 'team', $teamId, 'project', $Team->getFk_project(), $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
                     }
                 }
                 break;
@@ -52,7 +53,7 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
                     } catch (\Throwable $th) {
                         // echo json_encode($th);
                         echo json_encode(false);
-                        LogHistory::create($idOrganization, $idUser, "ERROR", 'loadmore', 'associates', '', '', null, $th->getMessage(), $ip);
+                        LogHistory::create($idUser, 'loadmore', 'user', null, null, null, $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
                     }
                 }
                 break;
@@ -69,7 +70,7 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
                     } catch (\Throwable $th) {
                         // echo json_encode($th);
                         echo json_encode(false);
-                        LogHistory::create($idOrganization, $idUser, "ERROR", 'search', 'associates', '', '', $query, $th->getMessage(), $ip);
+                        LogHistory::create($idUser, 'fetch', 'user', null, null, null, $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
                     }
                 }
                 break;

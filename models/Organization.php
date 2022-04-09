@@ -5,7 +5,7 @@ class Organization extends Modele
     protected string    $name;
     protected array     $users      = array();
     protected array     $projects   = array();
-    protected array     $logs;
+    protected array     $logs       = array();
     protected int       $privacy    = 0;
 
     /**
@@ -439,23 +439,6 @@ class Organization extends Modele
             return false;
         }
 
-    }
-
-    /**
-     * Check if the project belongs to this Organization
-     * @param int fk_project the project to check
-     * @return bool true OK, false KO
-     */
-    public function checkProject(int $fk_project)
-    {
-        foreach($this->projects as $Project)
-        {
-            if($Project->getRowid() == $fk_project)
-            {
-                return true;
-            }
-        }
-        return false;
     }
 }
 ?>

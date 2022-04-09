@@ -239,46 +239,4 @@ class OrganizationTest extends TestCase
         $Organization->delete();
     }
 
-    public function testCheckProjectTrue()
-    {
-        // create an organization
-        $Organization = new Organization();
-        $Organization->setName('org');
-        $lastrowid = $Organization->create();
-        $Organization->setRowid($lastrowid);
-
-        // create a project
-        $Project = new Project();
-        $Project->setName("name");
-        $Project->setType("type");
-        $Project->setDescription("description");
-        $Project->setFk_organization($lastrowid);
-
-        $projectId = $Project->create();
-        $Project->setRowid($projectId);
-
-        $Organization->addProject($Project);
-
-        // test
-        $this->assertTrue($Organization->checkProject($projectId));
-
-        // delete
-        $Organization->delete();
-    }
-
-    public function testCheckProjectFalse()
-    {
-        // create an organization
-        $Organization = new Organization();
-        $Organization->setName('org');
-        $lastrowid = $Organization->create();
-        $Organization->setRowid($lastrowid);
-
-        // test
-        $this->assertFalse($Organization->checkProject(15));
-
-        // delete
-        $Organization->delete();
-    }
-
 }

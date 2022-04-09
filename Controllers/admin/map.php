@@ -3,12 +3,12 @@
 require_once "../../services/header.php";
 require "layouts/head.php";
 
-$action = htmlentities(GETPOST('action'));
+$action = htmlspecialchars(GETPOST('action'), ENT_NOQUOTES|ENT_SUBSTITUTE, "UTF-8");
 $projectId = intval(GETPOST('projectId'));
 $teamId = intval(GETPOST('teamId'));
 
 $tpl = "map.php";
-$page = CONTROLLERS_URL."admin/".$tpl;
+$page = "controllers/admin/".$tpl;
 $errors = array();
 $success = false;
 
@@ -40,13 +40,13 @@ if($teamId)
                     try {
                         $Team->setActive(0);
                         $Team->update();
-                        LogHistory::create($idUser, 'archive', 'team', $teamId, 'project', $projectId, $idOrganization, "WARNING", null, $ip, $page);
+                        LogHistory::create($idUser, 'archive', 'team', $teamId, $Team->getName(), 'project', $projectId, $Project->getName(), $idOrganization, "WARNING", null, $ip, $page);
                         
                         $success = "Le tableau a bien été archivé.";
                     } catch (\Throwable $th) {
                         $errors[] = "Une erreur innatendue est survenue.";
 
-                        LogHistory::create($idUser, 'archive', 'team', $teamId, 'project', $projectId, $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
+                        LogHistory::create($idUser, 'archive', 'team', $teamId, $Team->getName(), 'project', $projectId, $Project->getName(), $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
                     }
                 }
     
@@ -56,12 +56,12 @@ if($teamId)
                         $Team->setActive(1);
                         $Team->update();
                     
-                        LogHistory::create($idUser, 'unarchive', 'team', $teamId, 'project', $projectId, $idOrganization, "INFO", null, $ip, $page);
+                        LogHistory::create($idUser, 'unarchive', 'team', $teamId, $Team->getName(), 'project', $projectId, $Project->getName(), $idOrganization, "INFO", null, $ip, $page);
                         $success = "Le tableau a bien été ré-ouvert.";
                     } catch (\Throwable $th) {
                         $errors[] = "Une erreur innatendue est survenue.";
 
-                        LogHistory::create($idUser, 'unarchive', 'team', $teamId, 'project', $projectId, $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
+                        LogHistory::create($idUser, 'unarchive', 'team', $teamId, $Team->getName(), 'project', $projectId, $Project->getName(), $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
                     }
                 }
     

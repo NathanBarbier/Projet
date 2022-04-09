@@ -29,6 +29,7 @@ try
         $Project->setFk_organization($OrganizationId);
 
         $rowid = $Project->create();
+        $rowid = intval($rowid);
         $Project->setRowid($rowid);
 
         // create teams

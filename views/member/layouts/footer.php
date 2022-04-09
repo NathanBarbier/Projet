@@ -64,8 +64,8 @@
 		<script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12" defer></script>
 		
 		<!-- Application assets -->
-		<script src="<?= ASSETS_URL ?>script.min.js" defer></script>
 		<script src="<?= JS_URL ?>visitor/cookies.min.js" defer></script>
-		<script src="<?= ASSETS_URL; ?>notification.min.js" defer></script>
+		<script src="<?= JS_URL ?>global/script.min.js" defer></script>
+		<script src="<?= JS_URL; ?>global/notification.min.js" defer></script>
 	</body>
 </html>

@@ -44,7 +44,7 @@ define('IMG_URL', $rootUrl.'/assets/images/');
 define('CONTROLLERS_URL', $rootUrl.'controllers/');
 define('VIEWS_URL', $rootUrl.'views/');
 define('SERVICES_URL', $rootUrl.'services/');
-define('JS_URL', $rootUrl.'js/');
+define('JS_URL', $rootUrl.'assets/js/');
 define('AJAX_URL', $rootUrl.'ajax/');
 define('ASSETS_URL', $rootUrl.'assets/');
 define('PHP_MAILER_URL', $rootUrl.'vendor/phpmailer/phpmailer/src/');

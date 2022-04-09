@@ -514,6 +514,17 @@ input:read-only:hover:not(.form-check-input) {
   margin-right: auto;
 }
 
+tr[id^='adding-user-'] > td, tr[class^='team-members-'] > td {
+  width: 33.33%
+}
+
+table.members-table {
+  text-overflow: ellipsis;
+  overflow-x: hidden;
+  white-space: nowrap;
+  table-layout: fixed;
+}
+
 /* -------------- 6. ------------- */
 
 .btn-outline-classic {
@@ -707,6 +718,12 @@ a:before,a:after {
 
 .big-icon {
   font-size: x-large;
+}
+
+#search-minifier {
+  width: auto;
+  margin-top: 10px; 
+  cursor:pointer;
 }
 
 /* -------------- 9. ------------- */

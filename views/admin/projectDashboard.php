@@ -114,7 +114,7 @@ require_once 'layouts/header.php';
                             <h3>Membres affectés</h3>
                         </div>
                         <div class="card-body overflow-y p-0">
-                            <table class="table" style="text-overflow: ellipsis; overflow-x: hidden; white-space: nowrap; table-layout: fixed;">
+                            <table class="table members-table">
                                 <thead>
                                     <tr>
                                         <th>Nom</th>
@@ -135,9 +135,13 @@ require_once 'layouts/header.php';
                                                     foreach($freeUsers as $key => $User)
                                                     { ?>
                                                         <tr class="collapse" id="adding-user-<?= $User->getRowid() ?>">
-                                                            <td style="width: 33.33%;"><?= $User->getLastname() ?></td>
-                                                            <td style="width: 33.33%;"><?= $User->getFirstname() ?></td>
-                                                            <td style="width: 33.33%;"><button onclick="removeUserFromTeam(<?= $User->getRowid() ?>)" class="custom-button danger px-2">Retirer</button></td>
+                                                            <td><?= $User->getLastname() ?></td>
+                                                            <td><?= $User->getFirstname() ?></td>
+                                                            <td>
+                                                                <button onclick="removeUserFromTeam(<?= $User->getRowid() ?>)" class="custom-button danger px-2">
+                                                                    Retirer
+                                                                </button>
+                                                            </td>
                                                         </tr>
                                                         <?php
                                                     } ?>
@@ -157,9 +161,9 @@ require_once 'layouts/header.php';
                                                         foreach($Team->getUsers() as $User) 
                                                         { ?>
                                                             <tr class="team-members-<?= $Team->getRowid() ?> collapse" id="adding-again-user-<?= $User->getRowid() ?>">
-                                                                <td style="width: 33.33%;"><?= $User->getLastname() ?></td>
-                                                                <td style="width: 33.33%;"><?= $User->getFirstname() ?></td>
-                                                                <td style="width: 33.33%;"><button onclick="removeUserFromTeam(<?= $User->getRowid() ?>)" class="custom-button danger px-2">Retirer</button></td>
+                                                                <td><?= $User->getLastname() ?></td>
+                                                                <td><?= $User->getFirstname() ?></td>
+                                                                <td><button onclick="removeUserFromTeam(<?= $User->getRowid() ?>)" class="custom-button danger px-2">Retirer</button></td>
                                                             </tr>
                                                         <?php
                                                         }
@@ -179,10 +183,12 @@ require_once 'layouts/header.php';
                         <div class="card-header text-center">
                             <h3>Membres prêts</h3>
                         </div>
-                        <div class="card-body overflow-y p-0 position-relative">
-                            <input id="project-dashboard-search-bar" type="text" class="form-control">
-                            <i class="bi bi-search position-absolute top-0 end-0" style="width: auto; margin-top: 20px; cursor:pointer; margin-right: 9%"></i>
-                            <table class="table mt-2" style="text-overflow: ellipsis; overflow-x: hidden; white-space: nowrap; table-layout: fixed;">
+                        <div class="card-body overflow-y p-0">
+                            <div class="position-relative">
+                                <input id="project-dashboard-search-bar" type="text" class="form-control">
+                                <i id="search-minifier" class="bi bi-search position-absolute top-0 end-0" style="margin-right: 9%"></i>
+                            </div>
+                            <table class="table mt-2 members-table">
                                 <thead>
                                     <tr>
                                         <th>Nom</th>

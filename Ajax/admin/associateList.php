@@ -42,7 +42,7 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
                         // echo json_encode($th);
                         echo json_encode(false);
 
-                        LogHistory::create($idUser, 'loadmore', 'user', null, null, null, $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
+                        LogHistory::create($idUser, 'loadmore', 'user', null, null, null, null, null, $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
                         
                     }
                 }

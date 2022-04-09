@@ -7,7 +7,7 @@ $projectId = intval(htmlentities(GETPOST('projectId')));
 $teamId = intval(htmlentities(GETPOST('teamId')));
 
 $tpl = "map.php";
-$page = CONTROLLERS_URL."member/".$tpl;
+$page = "controllers/member/".$tpl;
 $errors = array();
 $success = false;
 

@@ -41,7 +41,7 @@ $errors = array();
 $success = false;
 
 $tpl = "userSignup.php";
-$page = CONTROLLERS_URL."admin".$tpl;
+$page = "controllers/admin".$tpl;
 
 if($action == "signup")
 {
@@ -70,10 +70,10 @@ if($action == "signup")
                                 $User->setLastname($lastname);
                                 $User->setBirth($birth);
                                 $lastInsertedId = $User->create();
-                                LogHistory::create($idUser, 'signup', 'user', $lastInsertedId, null, null, $idOrganization, "INFO", null, $ip, $page);
+                                LogHistory::create($idUser, 'signup', 'user', $lastInsertedId, $firstname." ".$lastname, null, null, null, $idOrganization, "INFO", null, $ip, $page);
                             } catch (\Throwable $th) {
                                 $errors[] = "L'inscription n'a pas pu aboutir.";
-                                LogHistory::create($idUser, 'signup', 'user', $lastInsertedId, null, null, $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
+                                LogHistory::create($idUser, 'signup', 'user', $lastInsertedId, $firstname." ".$lastname, null, null, null, $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
                             }
                             
                             try {

@@ -27,7 +27,7 @@ $success = false;
 $offset = 30;
 
 $tpl = "associateList.php";
-$page = CONTROLLERS_URL."admin/".$tpl;
+$page = "controllers/admin/".$tpl;
 
 if($action == "userUpdate")
 {
@@ -54,12 +54,12 @@ if($action == "userUpdate")
 
             try {
                 $User->update();
-                LogHistory::create($idUser, 'update', 'user', $userId, null, null, $idOrganization, "INFO", null, $ip, $page);
+                LogHistory::create($idUser, 'update', 'user', $userId, $firstname." ".$lastname, null, null, null, $idOrganization, "INFO", null, $ip, $page);
                 
                 $success = "L'utilisateur a bien été mis à jour.";
             } catch (exception $e) {
                 $errors[] = "Le prénom n'a pas pu être modifié.";
-                LogHistory::create($idUser, 'update', 'user', $userId, null, null, $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
+                LogHistory::create($idUser, 'update', 'user', $userId, $firstname." ".$lastname, null, null, null, $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
             }
         }
     } 
@@ -81,11 +81,11 @@ if($action == "userDelete")
             try {
                 $Organization->removeUser($userId);
                 $User->delete();
-                LogHistory::create($idUser, 'delete', 'user', $userId, null, null, $idOrganization, "WARNING", null, $ip, $page);
+                LogHistory::create($idUser, 'delete', 'user', $userId, $User->getFirstname()." ".$User->getLastname(), null, null, null, $idOrganization, "WARNING", null, $ip, $page);
                 $success = "La suppression d'utilisateur a bien été effectuée.";
             } catch (\Throwable $th) {
                 $errors[] = "La suppression d'utilisateur n'a pas pu aboutir.";
-                LogHistory::create($idUser, 'delete', 'user', $userId, null, null, $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
+                LogHistory::create($idUser, 'delete', 'user', $userId, $User->getFirstname()." ".$User->getLastname(), null, null, null, $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
             }
         }
     } 

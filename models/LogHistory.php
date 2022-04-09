@@ -30,38 +30,42 @@ Class LogHistory extends Modele
             {
                 $obj = $requete->fetch(PDO::FETCH_OBJ);
                 
-                $this->rowid            = intval($obj->rowid);
-                $this->fk_author        = intval($obj->fk_author);
-                $this->date_creation    = $obj->date_creation;
-                $this->status           = $obj->status;
-                $this->action           = $obj->action;
-                $this->object           = $obj->object;
-                $this->object_id        = intval($obj->object_id);
-                $this->object_parent    = $obj->object_parent;
-                $this->object_parent_id = intval($obj->object_parent_id);
-                $this->fk_organization  = intval($obj->fk_organization);
-                $this->exception        = $obj->exception;
-                $this->ipAddress        = $obj->ip_address;
-                $this->page             = $obj->page;
+                $this->rowid              = intval($obj->rowid);
+                $this->fk_author          = intval($obj->fk_author);
+                $this->date_creation      = $obj->date_creation;
+                $this->status             = $obj->status;
+                $this->action             = $obj->action;
+                $this->object             = $obj->object;
+                $this->object_id          = $obj->object_id;
+                $this->object_name        = $obj->object_name;
+                $this->object_parent      = $obj->object_parent;
+                $this->object_parent_id   = $obj->object_parent_id;
+                $this->object_parent_name = $obj->object_parent_name;
+                $this->fk_organization    = intval($obj->fk_organization);
+                $this->exception          = $obj->exception;
+                $this->ipAddress          = $obj->ip_address;
+                $this->page               = $obj->page;
             }
         }
     }
 
-    public function initialize($Obj)
+    public function initialize($obj)
     {
-        $this->rowid            = intval($Obj->rowid);
-        $this->fk_author        = intval($Obj->fk_author);
-        $this->date_creation    = $Obj->date_creation;
-        $this->status           = $Obj->status;
-        $this->action           = $Obj->action;
-        $this->object           = $Obj->object;
-        $this->object_id        = intval($Obj->object_id);
-        $this->object_parent    = $Obj->object_parent;
-        $this->object_parent_id = intval($Obj->object_parent_id);
-        $this->fk_organization  = intval($Obj->fk_organization);
-        $this->exception        = $Obj->exception;
-        $this->ipAddress        = $Obj->ip_address;
-        $this->page             = $Obj->page;
+        $this->rowid              = intval($obj->rowid);
+        $this->fk_author          = intval($obj->fk_author);
+        $this->date_creation      = $obj->date_creation;
+        $this->status             = $obj->status;
+        $this->action             = $obj->action;
+        $this->object             = $obj->object;
+        $this->object_id          = $obj->object_id;
+        $this->object_name        = $obj->object_name;
+        $this->object_parent      = $obj->object_parent;
+        $this->object_parent_id   = $obj->object_parent_id;
+        $this->object_parent_name = $obj->object_parent_name;
+        $this->fk_organization    = intval($obj->fk_organization);
+        $this->exception          = $obj->exception;
+        $this->ipAddress          = $obj->ip_address;
+        $this->page               = $obj->page;
     }
 
     public function setRowid($rowid)
@@ -91,7 +95,12 @@ Class LogHistory extends Modele
 
     public function setObject_id($object_id)
     {
-        $this->object_ide = $object_id;
+        $this->object_id = $object_id;
+    }
+
+    public function setObject_name($object_name)
+    {
+        $this->object_name = $object_name;
     }
 
     public function setObject_parent($object_parent)
@@ -102,6 +111,11 @@ Class LogHistory extends Modele
     public function setObject_parent_id($object_parent_id)
     {
         $this->object_parent_id = $object_parent_id;
+    }
+
+    public function setObject_parent_name($object_parent_name)
+    {
+        $this->object_parent_name = $object_parent_name;
     }
 
     public function setAdmin($admin)
@@ -148,15 +162,25 @@ Class LogHistory extends Modele
     {
         return $this->object_id;
     }
+    
+    public function getObject_name()
+    {
+        return $this->object_name;
+    }
 
     public function getObject_parent()
     {
         return $this->object_parent;
     }
-    
+
     public function getObject_parent_id()
     {
         return $this->object_parent_id;
+    }
+    
+    public function getObject_parent_name()
+    {
+        return $this->object_parent_name;
     }
 
     public function getFk_organization()
@@ -182,19 +206,21 @@ Class LogHistory extends Modele
         {
             $obj = $requete->fetch(PDO::FETCH_OBJ);
                 
-            $this->rowid            = intval($obj->rowid);
-            $this->fk_author        = intval($obj->fk_author);
-            $this->date_creation    = $obj->date_creation;
-            $this->status           = $obj->status;
-            $this->action           = $obj->action;
-            $this->object           = $obj->object;
-            $this->object_id        = intval($obj->object_id);
-            $this->object_parent    = $obj->object_parent;
-            $this->object_parent_id = intval($obj->object_parent_id);
-            $this->fk_organization  = intval($obj->fk_organization);
-            $this->exception        = $obj->exception;
-            $this->ipAddress        = $obj->ip_address;
-            $this->page             = $obj->page;
+            $this->rowid              = intval($obj->rowid);
+            $this->fk_author          = intval($obj->fk_author);
+            $this->date_creation      = $obj->date_creation;
+            $this->status             = $obj->status;
+            $this->action             = $obj->action;
+            $this->object             = $obj->object;
+            $this->object_id          = $obj->object_id;
+            $this->object_name        = $obj->object_name;
+            $this->object_parent      = $obj->object_parent;
+            $this->object_parent_id   = $obj->object_parent_id;
+            $this->object_parent_name = $obj->object_parent_name;
+            $this->fk_organization    = intval($obj->fk_organization);
+            $this->exception          = $obj->exception;
+            $this->ipAddress          = $obj->ip_address;
+            $this->page               = $obj->page;
         }
     }
 
@@ -213,11 +239,11 @@ Class LogHistory extends Modele
     }
     
 
-    public static function create($fk_author, $action, $object, $object_id, $object_parent, $object_parent_id, $fk_organization, $status, $exception = null, $ip_address = '', $page = '')
+    public static function create($fk_author, $action, $object, $object_id, $object_name, $object_parent, $object_parent_id, $object_parent_name, $fk_organization, $status, $exception = null, $ip_address = '', $page = '')
     {
 
-        $sql = "INSERT INTO storieshelper_log_history (fk_author, date_creation, `action`, `object`, `object_id`, `object_parent`, `object_parent_id`, fk_organization, `status`, exception, ip_address, `page`)";
-        $sql .= " VALUES (?,NOW(),?,?,?,?,?,?,?,?,?,?)";
+        $sql = "INSERT INTO storieshelper_log_history (fk_author, date_creation, `action`, `object`, `object_id`, `object_name`, `object_parent`, `object_parent_id`, `object_parent_name`, fk_organization, `status`, exception, ip_address, `page`)";
+        $sql .= " VALUES (?,NOW(),?,?,?,?,?,?,?,?,?,?,?,?)";
 
         // development environment
         $PDO = new PDO('mysql:host=localhost;dbname=storieshelper;charset=UTF8', 'USER', '3B1433BDD106CA59551C99703DD8D4B083FAF6560E1C68C8FC57F8AC56E57165');
@@ -226,7 +252,7 @@ Class LogHistory extends Modele
         // $PDO = new PDO('mysql:host=ipssisqstorieshe.mysql.db;dbname=ipssisqstorieshe;charset=UTF8', 'ipssisqstorieshe', 'Ipssi2022storieshelper');
 
         $requete = $PDO->prepare($sql);
-        $requete->execute([$fk_author, $action, $object, $object_id, $object_parent, $object_parent_id, $fk_organization, $status, $exception, $ip_address, $page]);
+        $requete->execute([$fk_author, $action, $object, $object_id, $object_name, $object_parent, $object_parent_id, $object_parent_name, $fk_organization, $status, $exception, $ip_address, $page]);
     }
 
     public function delete()

@@ -30,7 +30,7 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
                         echo json_encode($Team->isActive());
                     } catch (\Throwable $th) {
                         // echo json_encode($th);
-                        LogHistory::create($idUser, 'fetch', 'team', $teamId, 'project', $Team->getFk_project(), $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
+                        LogHistory::create($idUser, 'fetch', 'team', $teamId, null, 'project', $Team->getFk_project(), null, $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
                     }
                 }
                 break;
@@ -53,7 +53,7 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
                     } catch (\Throwable $th) {
                         // echo json_encode($th);
                         echo json_encode(false);
-                        LogHistory::create($idUser, 'loadmore', 'user', null, null, null, $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
+                        LogHistory::create($idUser, 'loadmore', 'user', null, null, null, null, null, $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
                     }
                 }
                 break;
@@ -70,7 +70,7 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
                     } catch (\Throwable $th) {
                         // echo json_encode($th);
                         echo json_encode(false);
-                        LogHistory::create($idUser, 'fetch', 'user', null, null, null, $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
+                        LogHistory::create($idUser, 'fetch', 'user', null, null, null, null, null, $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
                     }
                 }
                 break;

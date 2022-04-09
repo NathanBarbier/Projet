@@ -15,8 +15,8 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
     if($rights == 'admin' && $idOrganization > 0 && $idUser > 0)
     {
         // security checks
-        $projectId  = intval(htmlentities(GETPOST('projectId')));
-        $teamId     = intval(htmlentities(GETPOST('teamId')));
+        $projectId  = intval(htmlspecialchars(GETPOST('projectId')));
+        $teamId     = intval(htmlspecialchars(GETPOST('teamId')));
 
         if($projectId > 0 && $teamId > 0)
         {
@@ -34,20 +34,20 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
             {
                 if($TeamRepository->checkIfTeamBelongsToProject($projectId, $teamId))
                 {
-                    $action     = htmlentities(GETPOST('action'));
-                    $columnName = htmlentities(GETPOST('columnName'));
-                    $columnId   = intval(htmlentities(GETPOST('columnId')));
-                    $taskName   = htmlentities(GETPOST('taskName'));
-                    $taskId     = intval(htmlentities(GETPOST('taskId')));
-                    $taskNote   = htmlentities(GETPOST('taskNote'));
-                    $commentId  = intval(htmlentities(GETPOST('commentId')));
-                    $memberId   = intval(htmlentities(GETPOST('memberId')));
+                    $action     = htmlspecialchars(GETPOST('action'), ENT_NOQUOTES|ENT_SUBSTITUTE, "UTF-8");
+                    $columnName = htmlspecialchars(GETPOST('columnName'), ENT_NOQUOTES|ENT_SUBSTITUTE, "UTF-8");
+                    $columnId   = intval(htmlspecialchars(GETPOST('columnId')));
+                    $taskName   = htmlspecialchars(GETPOST('taskName'), ENT_NOQUOTES|ENT_SUBSTITUTE, "UTF-8");
+                    $taskId     = intval(htmlspecialchars(GETPOST('taskId')));
+                    $taskNote   = htmlspecialchars(GETPOST('taskNote'), ENT_NOQUOTES|ENT_SUBSTITUTE, "UTF-8");
+                    $commentId  = intval(htmlspecialchars(GETPOST('commentId')));
+                    $memberId   = intval(htmlspecialchars(GETPOST('memberId')));
                 
                     $MapColumn   = new MapColumn($columnId);
                     $Task        = new Task($taskId);
                     $TaskComment = new TaskComment($commentId);
                     $TaskMember  = new TaskMember($memberId, $taskId);
-                    $User        = new User();
+                    $User        = new User($memberId);
 
                     // Entirely load the team
                     $Team = new Team($teamId);
@@ -67,9 +67,9 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
                                     try {
                                         $TaskComment->setNote($taskNote);
                                         $TaskComment->update();
-                                        LogHistory::create($idOrganization, $idUser, "INFO", 'update', 'task comment', $TaskComment->getNote(), '', 'comment id : '.$TaskComment->getRowid(), null, $ip);
+                                        LogHistory::create($idUser, 'update', 'task_comment', $commentId, null, "task", $TaskComment->getFk_task(), $Task->getName(), $idOrganization, "INFO", null, $ip, $page);
                                     } catch (\Throwable $th) {
-                                        LogHistory::create($idOrganization, $idUser, "ERROR", 'update', 'task comment', $TaskComment->getNote(), '', 'comment id : '.$TaskComment->getRowid(), $th->getMessage(), $ip);
+                                        LogHistory::create($idUser, 'update', 'task_comment', null, null, "task", $TaskComment->getFk_task(), $Task->getName(), $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
                                     }
                                 }
                             }               
@@ -95,11 +95,11 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
     
                                     echo json_encode($TaskComment);
     
-                                	LogHistory::create($idUser, 'create', 'task_comment', $commentId, "task", $TaskComment->getFk_task(), $idOrganization, "INFO", null, $ip, $page);
+                                	LogHistory::create($idUser, 'create', 'task_comment', $commentId, null, "task", $taskId, $Task->getName(), $idOrganization, "INFO", null, $ip, $page);
     
                                 } catch (\Throwable $th) {
                                     echo json_encode(false);
-                                	LogHistory::create($idUser, 'create', 'task_comment', null, "task", $TaskComment->getFk_task(), $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
+                                	LogHistory::create($idUser, 'create', 'task_comment', null, null, "task", $taskId, $Task->getName(), $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
                                 }
                             }
                             break;
@@ -111,9 +111,9 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
                                     $TaskMember->setFk_user($memberId);
                                     $TaskMember->setFk_task($taskId);
                                     $TaskMember->create();
-                                    LogHistory::create($idUser, 'assign', 'user', $memberId, "task", $taskId, $idOrganization, "INFO", null, $ip, $page);
+                                    LogHistory::create($idUser, 'assign', 'user', $memberId, $User->getFirstname()." ".$User->getLastname(), "task", $taskId, $Task->getName(), $idOrganization, "INFO", null, $ip, $page);
                                 } catch (\Throwable $th) {
-                                    LogHistory::create($idUser, 'assign', 'user', $memberId, "task", $taskId, $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
+                                    LogHistory::create($idUser, 'assign', 'user', $memberId, $User->getFirstname()." ".$User->getLastname(), "task", $taskId, $Task->getName(), $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
                                 }
                             }
                             break;
@@ -125,9 +125,9 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
                                     $TaskMember->setFk_user($memberId);
                                     $TaskMember->setFk_task($taskId);
                                     $TaskMember->delete();
-                                    LogHistory::create($idUser, 'unassign', 'user', $memberId, "task", $taskId, $idOrganization, "INFO", null, $ip, $page);
+                                    LogHistory::create($idUser, 'unassign', 'user', $memberId, $User->getFirstname()." ".$User->getLastname(), "task", $taskId, $Task->getName(), $idOrganization, "INFO", null, $ip, $page);
                                 } catch (\Throwable $th) {
-                                    LogHistory::create($idUser, 'unassign', 'user', $memberId, "task", $taskId, $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
+                                    LogHistory::create($idUser, 'unassign', 'user', $memberId, $User->getFirstname()." ".$User->getLastname(), "task", $taskId, $Task->getName(), $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
                                 }
                             }
                             break;
@@ -154,14 +154,14 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
                                         'success' => true,
                                     );
     
-                                    LogHistory::create($idUser, 'create', 'column', $CurrentColumn->getRowid(), "team", $teamId, $idOrganization, "INFO", null, $ip, $page);
+                                    LogHistory::create($idUser, 'create', 'column', $CurrentColumn->getRowid(), $CurrentColumn->getName(), "team", $teamId, $Team->getName(), $idOrganization, "INFO", null, $ip, $page);
                                 } catch (\Throwable $th) {
                                     $response = array(
                                         'success' => false,
                                         'message' => 'Le nom de colonne est incorrect.',
                                     );
     
-                                    LogHistory::create($idUser, 'create', 'column', null, "team", $teamId, $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
+                                    LogHistory::create($idUser, 'create', 'column', null, null, "team", $teamId, $Team->getName(), $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
                                 }
                             } 
                             else 
@@ -186,12 +186,12 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
     
                                     echo json_encode($Task);
                                     
-                                    LogHistory::create($idUser, 'create', 'task', $taskId, "team", $teamId, $idOrganization, "INFO", null, $ip, $page);
+                                    LogHistory::create($idUser, 'create', 'task', $taskId, null, "team", $teamId, $Team->getName(), $idOrganization, "INFO", null, $ip, $page);
                                 } catch (\Throwable $th) {
                                     // echo json_encode($th);
                                     echo json_encode(false);
     
-                                    LogHistory::create($idUser, 'create', 'task', null, "team", $teamId, $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
+                                    LogHistory::create($idUser, 'create', 'task', null, null, "team", $teamId, $Team->getName(), $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
                                 }
                             }
                             break;
@@ -204,9 +204,9 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
                                     $Task->setName($taskName);
                                     $Task->update();
 
-                                    LogHistory::create($idUser, 'update', 'task', $taskId, "team", $teamId, $idOrganization, "INFO", null, $ip, $page);
+                                    LogHistory::create($idUser, 'update', 'task', $taskId, $taskName, "team", $teamId, $Team->getName(), $idOrganization, "INFO", null, $ip, $page);
                                 } catch (\Throwable $th) {
-                                    LogHistory::create($idUser, 'update', 'task', $taskId, "team", $teamId, $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
+                                    LogHistory::create($idUser, 'update', 'task', $taskId, $taskName, "team", $teamId, $Team->getName(), $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
                                 }
                             }
                             break;
@@ -231,9 +231,9 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
                                     $Task->setFk_column($columnId);
                                     $Task->update();
 
-                                    LogHistory::create($idUser, 'change column', 'task', $taskId, "team", $teamId, $idOrganization, "INFO", null, $ip, $page);
+                                    LogHistory::create($idUser, 'move', 'task', $taskId, $Task->getName(), "team", $teamId, $Team->getName(), $idOrganization, "INFO", null, $ip, $page);
                                 } catch (\Throwable $th) {
-                                    LogHistory::create($idUser, 'change column', 'task', $taskId, "team", $teamId, $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
+                                    LogHistory::create($idUser, 'move', 'task', $taskId, $Task->getName(), "team", $teamId, $Team->getName(), $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
                                 }
                             }
                             break;
@@ -254,11 +254,11 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
     
                                     echo json_encode(true);
     
-                                    LogHistory::create($idUser, 'finish', 'task', $taskId, "team", $teamId, $idOrganization, "INFO", null, $ip, $page);
+                                    LogHistory::create($idUser, 'finish', 'task', $taskId, $Task->getName(), "team", $teamId, $Team->getName(), $idOrganization, "INFO", null, $ip, $page);
                                 } catch (\Throwable $th) {
                                     echo json_encode(false);
     
-                                    LogHistory::create($idUser, 'finish', 'task', $taskId, "team", $teamId, $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
+                                    LogHistory::create($idUser, 'finish', 'task', $taskId, $Task->getName(), "team", $teamId, $Team->getName(), $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
                                 }
                             }
                             break;
@@ -268,9 +268,9 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
                                 try {
                                     $Task->switchRank($taskId, $columnId, 'up'); 
 
-                                    LogHistory::create($idUser, 'up', 'task', $taskId, "column", $columnId, $idOrganization, "INFO", null, $ip, $page);
+                                    LogHistory::create($idUser, 'up', 'task', $taskId, $Task->getName(), "column", $columnId, $Column->getName(), $idOrganization, "INFO", null, $ip, $page);
                                 } catch (\Throwable $th) {
-                                    LogHistory::create($idUser, 'up', 'task', $taskId, "column", $columnId, $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
+                                    LogHistory::create($idUser, 'up', 'task', $taskId, $Task->getName(), "column", $columnId, $Column->getName(), $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
                                 }
                             }
                             break;
@@ -280,9 +280,9 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
                                 try {
                                     $Task->switchRank($taskId, $columnId, 'down');
 
-                                    LogHistory::create($idUser, 'down', 'task', $taskId, "column", $columnId, $idOrganization, "INFO", null, $ip, $page);
+                                    LogHistory::create($idUser, 'down', 'task', $taskId, $Task->getName(), "column", $columnId, $Column->getName(), $idOrganization, "INFO", null, $ip, $page);
                                 } catch (\Throwable $th) {
-                                    LogHistory::create($idUser, 'down', 'task', $taskId, "column", $columnId, $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
+                                    LogHistory::create($idUser, 'down', 'task', $taskId, $Task->getName(), "column", $columnId, $Column->getName(), $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
                                 }
                             }
                             break;
@@ -292,11 +292,11 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
                                 try {
                                     $status = $MapColumn->switchRank($columnId, $teamId, 'left');
 
-                                    LogHistory::create($idUser, 'move to left', 'column', $columnId, "team", $teamId, $idOrganization, "INFO", null, $ip, $page);
+                                    LogHistory::create($idUser, 'move to left', 'column', $columnId, $columnName, "team", $teamId, $Team->getName(), $idOrganization, "INFO", null, $ip, $page);
                                 } catch (\Throwable $th) {
-                                    LogHistory::create($idUser, 'move to left', 'column', $columnId, "team", $teamId, $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
+                                    LogHistory::create($idUser, 'move to left', 'column', $columnId, $columnName, "team", $teamId, $Team->getName(), $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
                                 }
-                            } 
+                            }
                             else 
                             {
                                 $status = false;
@@ -309,9 +309,9 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
                                 try {
                                     $status = $MapColumn->switchRank($columnId, $teamId, 'right');
 
-                                    LogHistory::create($idUser, 'move to right', 'column', $columnId, "team", $teamId, $idOrganization, "INFO", null, $ip, $page);
+                                    LogHistory::create($idUser, 'move to right', 'column', $columnId, $columnName, "team", $teamId, $Team->getName(), $idOrganization, "INFO", null, $ip, $page);
                                 } catch (\Throwable $th) {
-                                    LogHistory::create($idUser, 'move to right', 'column', $columnId, "team", $teamId, $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
+                                    LogHistory::create($idUser, 'move to right', 'column', $columnId, $columnName, "team", $teamId, $Team->getName(), $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
                                 }
                             } 
                             else 
@@ -333,7 +333,7 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
                                         'success' => true,
                                     );
     
-                                    LogHistory::create($idUser, 'update', 'column', $columnId, "team", $teamId, $idOrganization, "INFO", null, $ip, $page);
+                                    LogHistory::create($idUser, 'update', 'column', $columnId, $columnName, "team", $teamId, $Team->getName(), $idOrganization, "INFO", null, $ip, $page);
                                 } catch (\Throwable $th) {
     
                                     $response = array(
@@ -341,7 +341,7 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
                                     'message' => 'Le nom de colonne est incorrect.',
                                     );
     
-                                    LogHistory::create($idUser, 'update', 'column', $columnId, "team", $teamId, $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
+                                    LogHistory::create($idUser, 'update', 'column', $columnId, $columnName, "team", $teamId, $Team->getName(), $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
                                 }
                             } 
                             else 
@@ -359,11 +359,12 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
                                 // double id
                                 try {
                                     $taskId = $TaskComment->getFk_task();
+                                    $taskCommentNote = $TaskComment->getNote();
                                     $TaskComment->delete();
 
-                                    LogHistory::create($idUser, 'delete', 'task_comment', $commentId, "task", $taskId, $idOrganization, "INFO", null, $ip, $page);
+                                    LogHistory::create($idUser, 'delete', 'task_comment', $commentId, $taskCommentNote, "task", $taskId, $Task->getName(), $idOrganization, "INFO", null, $ip, $page);
                                 } catch (\Throwable $th) {
-                                    LogHistory::create($idUser, 'delete', 'task_comment', $commentId, "task", $taskId, $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
+                                    LogHistory::create($idUser, 'delete', 'task_comment', $commentId, $taskCommentNote, "task", $taskId, $Task->getName(), $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
                                 }
                             }
                             break;
@@ -376,10 +377,10 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
                                     if($status)
                                     {
                                         $MapColumn->delete();
-                                        LogHistory::create($idUser, 'delete', 'column', $columnId, "team", $teamId, $idOrganization, "INFO", null, $ip, $page);
+                                        LogHistory::create($idUser, 'delete', 'column', $columnId, $MapColumn->getName(), "team", $teamId, $Team->getName(), $idOrganization, "INFO", null, $ip, $page);
                                     }
                                 } catch (\Throwable $th) {
-                                    LogHistory::create($idUser, 'delete', 'column', $columnId, "team", $teamId, $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
+                                    LogHistory::create($idUser, 'delete', 'column', $columnId, $MapColumn->getName(), "team", $teamId, $Team->getName(), $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
                                 }
                             }
                             break;
@@ -387,11 +388,12 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
                             if($taskId && $Team->checkTask($taskId))
                             {
                                 try {
+                                    $taskName = $Task->getName();
                                     $Task->delete();
 
-                                    LogHistory::create($idUser, 'delete', 'task', $taskId, "team", $teamId, $idOrganization, "INFO", null, $ip, $page);
+                                    LogHistory::create($idUser, 'delete', 'task', $taskId, $taskName, "team", $teamId, $Team->getName(), $idOrganization, "INFO", null, $ip, $page);
                                 } catch (\Throwable $th) {
-                                    LogHistory::create($idUser, 'delete', 'task', $taskId, "team", $teamId, $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
+                                    LogHistory::create($idUser, 'delete', 'task', $taskId, $taskName, "team", $teamId, $Team->getName(), $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
                                 }
                             }
                             break;
@@ -402,9 +404,9 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
                                     $Task->setActive(0);
                                     $Task->update();
                                     
-                                    LogHistory::create($idUser, 'archive', 'task', $taskId, "team", $teamId, $idOrganization, "INFO", null, $ip, $page);
+                                    LogHistory::create($idUser, 'archive', 'task', $taskId, $Task->getName(), "team", $teamId, $Team->getName(), $idOrganization, "INFO", null, $ip, $page);
                                 } catch (\Throwable $th) {
-                                    LogHistory::create($idUser, 'archive', 'task', $taskId, "team", $teamId, $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
+                                    LogHistory::create($idUser, 'archive', 'task', $taskId, $Task->getName(), "team", $teamId, $Team->getName(), $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
                                 }
                             }
                             break;
@@ -445,9 +447,9 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
                                         }
                                     }
                                     
-                                    LogHistory::create($idOrganization, $idUser, "INFO", 'open', 'task', $Task->getName(), null, 'task id : '.$Task->getRowid(), null, $ip);
+                                    LogHistory::create($idUser, 'open', 'task', $taskId, $Task->getName(), "team", $teamId, $Team->getName(), $idOrganization, "INFO", null, $ip, $page);
                                 } catch (\Throwable $th) {
-                                    LogHistory::create($idOrganization, $idUser, "ERROR", 'open', 'task', $Task->getName(), null, 'task id : '.$Task->getRowid(), $th->getMessage(), $ip);
+                                    LogHistory::create($idUser, 'open', 'task', $taskId, $Task->getName(), "team", $teamId, $Team->getName(), $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
                                 }
                                 break;
                             }

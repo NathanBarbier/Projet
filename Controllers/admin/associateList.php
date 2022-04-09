@@ -3,18 +3,18 @@
 require_once "../../services/header.php";
 require "layouts/head.php";
 
-$action     = htmlentities(GETPOST('action'));
-$userId     = intval(htmlentities(GETPOST('idUser')));
+$action     = htmlspecialchars(GETPOST('action'), ENT_NOQUOTES|ENT_SUBSTITUTE, "UTF-8");
+$userId     = intval(htmlspecialchars(GETPOST('idUser')));
 
-$firstname  = htmlentities(GETPOST('firstname'));
-$lastname   = htmlentities(GETPOST('lastname'));
-$email      = htmlentities(GETPOST('email'));
-$birth      = htmlentities(GETPOST('birth'));
-$role       = intval(htmlentities(GETPOST('role')));
+$firstname  = htmlspecialchars(GETPOST('firstname'), ENT_NOQUOTES|ENT_SUBSTITUTE, "UTF-8");
+$lastname   = htmlspecialchars(GETPOST('lastname'), ENT_NOQUOTES|ENT_SUBSTITUTE, "UTF-8");
+$email      = htmlspecialchars(GETPOST('email'), ENT_NOQUOTES|ENT_SUBSTITUTE, "UTF-8");
+$birth      = htmlspecialchars(GETPOST('birth'), ENT_NOQUOTES|ENT_SUBSTITUTE, "UTF-8");
+$role       = intval(htmlspecialchars(GETPOST('role')));
 
-$oldmdp     = htmlentities(GETPOST('oldmdp'));
-$newmdp     = htmlentities(GETPOST('newmdp'));
-$newmdp2    = htmlentities(GETPOST('newmdp2'));
+$oldmdp     = htmlspecialchars(GETPOST('oldmdp'), ENT_NOQUOTES|ENT_SUBSTITUTE, "UTF-8");
+$newmdp     = htmlspecialchars(GETPOST('newmdp'), ENT_NOQUOTES|ENT_SUBSTITUTE, "UTF-8");
+$newmdp2    = htmlspecialchars(GETPOST('newmdp2'), ENT_NOQUOTES|ENT_SUBSTITUTE, "UTF-8");
 
 $Organization = new Organization();
 $Organization->setRowid($idOrganization);
@@ -27,7 +27,7 @@ $success = false;
 $offset = 30;
 
 $tpl = "associateList.php";
-$page = CONTROLLERS_URL."admin/".$tpl;
+$page = "controllers/admin/".$tpl;
 
 if($action == "userUpdate")
 {
@@ -54,12 +54,12 @@ if($action == "userUpdate")
 
             try {
                 $User->update();
-                LogHistory::create($idUser, 'update', 'user', $userId, null, null, $idOrganization, "INFO", null, $ip, $page);
+                LogHistory::create($idUser, 'update', 'user', $userId, $firstname." ".$lastname, null, null, null, $idOrganization, "INFO", null, $ip, $page);
                 
                 $success = "L'utilisateur a bien été mis à jour.";
             } catch (exception $e) {
                 $errors[] = "Le prénom n'a pas pu être modifié.";
-                LogHistory::create($idUser, 'update', 'user', $userId, null, null, $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
+                LogHistory::create($idUser, 'update', 'user', $userId, $firstname." ".$lastname, null, null, null, $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
             }
         }
     } 
@@ -81,11 +81,11 @@ if($action == "userDelete")
             try {
                 $Organization->removeUser($userId);
                 $User->delete();
-                LogHistory::create($idUser, 'delete', 'user', $userId, null, null, $idOrganization, "WARNING", null, $ip, $page);
+                LogHistory::create($idUser, 'delete', 'user', $userId, $User->getFirstname()." ".$User->getLastname(), null, null, null, $idOrganization, "WARNING", null, $ip, $page);
                 $success = "La suppression d'utilisateur a bien été effectuée.";
             } catch (\Throwable $th) {
                 $errors[] = "La suppression d'utilisateur n'a pas pu aboutir.";
-                LogHistory::create($idUser, 'delete', 'user', $userId, null, null, $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
+                LogHistory::create($idUser, 'delete', 'user', $userId, $User->getFirstname()." ".$User->getLastname(), null, null, null, $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
             }
         }
     } 

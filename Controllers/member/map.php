@@ -3,11 +3,11 @@
 require_once "../../services/header.php";
 require "layouts/head.php";
 
-$projectId = intval(htmlentities(GETPOST('projectId')));
-$teamId = intval(htmlentities(GETPOST('teamId')));
+$projectId = intval(htmlspecialchars(GETPOST('projectId')));
+$teamId = intval(htmlspecialchars(GETPOST('teamId')));
 
 $tpl = "map.php";
-$page = CONTROLLERS_URL."member/".$tpl;
+$page = "controllers/member/".$tpl;
 $errors = array();
 $success = false;
 

@@ -24,16 +24,16 @@ $mail->Port = 587;                    // TCP port to connect to
 $mail->setFrom('storiesHelperSignUp@gmail.com', 'storiesHelper'); 
 $mail->addReplyTo('storiesHelperSignUp@gmail.com', 'storiesHelper'); 
 
-$action = htmlentities(GETPOST('action'));
+$action = htmlspecialchars(GETPOST('action'), ENT_NOQUOTES|ENT_SUBSTITUTE, "UTF-8");
 $idUser = intval(GETPOST('idUser'));
 $envoi = GETPOST('envoi');
-$firstname = htmlentities(GETPOST('firstname'));
-$lastname = htmlentities(GETPOST('lastname'));
-$email = htmlentities(GETPOST('email'));
-$birth = htmlentities(GETPOST('birth'));
-$oldpwd = htmlentities(GETPOST('oldpassword'));
-$newpwd = htmlentities(GETPOST('newpassword'));
-$newpwd = htmlentities(GETPOST('newpassword2'));
+$firstname = htmlspecialchars(GETPOST('firstname'), ENT_NOQUOTES|ENT_SUBSTITUTE, "UTF-8");
+$lastname = htmlspecialchars(GETPOST('lastname'), ENT_NOQUOTES|ENT_SUBSTITUTE, "UTF-8");
+$email = htmlspecialchars(GETPOST('email'), ENT_NOQUOTES|ENT_SUBSTITUTE, "UTF-8");
+$birth = htmlspecialchars(GETPOST('birth'), ENT_NOQUOTES|ENT_SUBSTITUTE, "UTF-8");
+$oldpwd = htmlspecialchars(GETPOST('oldpassword'), ENT_NOQUOTES|ENT_SUBSTITUTE, "UTF-8");
+$newpwd = htmlspecialchars(GETPOST('newpassword'), ENT_NOQUOTES|ENT_SUBSTITUTE, "UTF-8");
+$newpwd = htmlspecialchars(GETPOST('newpassword2'), ENT_NOQUOTES|ENT_SUBSTITUTE, "UTF-8");
 
 $User = new User();
 
@@ -41,7 +41,7 @@ $errors = array();
 $success = false;
 
 $tpl = "userSignup.php";
-$page = CONTROLLERS_URL."admin".$tpl;
+$page = "controllers/admin".$tpl;
 
 if($action == "signup")
 {
@@ -70,10 +70,10 @@ if($action == "signup")
                                 $User->setLastname($lastname);
                                 $User->setBirth($birth);
                                 $lastInsertedId = $User->create();
-                                LogHistory::create($idUser, 'signup', 'user', $lastInsertedId, null, null, $idOrganization, "INFO", null, $ip, $page);
+                                LogHistory::create($idUser, 'signup', 'user', $lastInsertedId, $firstname." ".$lastname, null, null, null, $idOrganization, "INFO", null, $ip, $page);
                             } catch (\Throwable $th) {
                                 $errors[] = "L'inscription n'a pas pu aboutir.";
-                                LogHistory::create($idUser, 'signup', 'user', $lastInsertedId, null, null, $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
+                                LogHistory::create($idUser, 'signup', 'user', $lastInsertedId, $firstname." ".$lastname, null, null, null, $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
                             }
                             
                             try {

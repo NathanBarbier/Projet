@@ -14,8 +14,8 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
 
     if($rights == 'admin' && $idUser > 0 && $idOrganization > 0)
     {
-        $action = htmlentities(GETPOST('action'));
-        $offset = intval(htmlentities(GETPOST('offset')));
+        $action = htmlspecialchars(GETPOST('action'), ENT_NOQUOTES|ENT_SUBSTITUTE, "UTF-8");
+        $offset = intval(htmlspecialchars(GETPOST('offset')));
         $query  = strval(GETPOST('query'));
 
         $ProjectRepository = new ProjectRepository();
@@ -41,7 +41,7 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
                     } catch (\Throwable $th) {
                         // echo json_encode($th);
                         echo json_encode(false);
-                        LogHistory::create($idUser, 'loadmore', 'project', null, null, null, $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
+                        LogHistory::create($idUser, 'loadmore', 'project', null, null, null, null, null, $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
                     }
                 }
                 break;
@@ -58,7 +58,7 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
                     } catch (\Throwable $th) {
                         // echo json_encode($th);
                         echo json_encode(false);
-                        LogHistory::create($idUser, 'fetch', 'project', null, null, null, $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
+                        LogHistory::create($idUser, 'fetch', 'project', null, null, null, null, null, $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
                     }
                 }
                 break;

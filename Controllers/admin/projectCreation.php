@@ -3,11 +3,11 @@
 require_once "../../services/header.php";
 require "layouts/head.php";
 
-$action = htmlentities(GETPOST('action'));
-$idProject = intval(GETPOST('idProject'));
-$name = htmlentities(GETPOST('name'));
-$type = htmlentities(GETPOST('type'));
-$description = htmlentities(GETPOST('description'));
+$action = htmlspecialchars(GETPOST('action'), ENT_NOQUOTES|ENT_SUBSTITUTE, "UTF-8");
+$idProject = intval(GETPOST('idProject'), ENT_NOQUOTES|ENT_SUBSTITUTE, "UTF-8");
+$name = htmlspecialchars(GETPOST('name'), ENT_NOQUOTES|ENT_SUBSTITUTE, "UTF-8");
+$type = htmlspecialchars(GETPOST('type'), ENT_NOQUOTES|ENT_SUBSTITUTE, "UTF-8");
+$description = htmlspecialchars(GETPOST('description'), ENT_NOQUOTES|ENT_SUBSTITUTE, "UTF-8");
 $envoi = GETPOST('envoi');
 
 $success = false;
@@ -19,7 +19,7 @@ $errors = array();
 $success = false;
 
 $tpl = "projectCreation.php";
-$page = CONTROLLERS_URL."admin/".$tpl;
+$page = "controllers/admin/".$tpl;
 
 if($action == "addProjet")
 {
@@ -33,12 +33,12 @@ if($action == "addProjet")
                 $Project->setDescription($description);
                 $Project->setFk_organization($idOrganization);
                 $lastInsertedId = $Project->create();
-                LogHistory::create($idUser, 'create', 'project', $lastInsertedId, null, $null, $idOrganization, "INFO", null, $ip, $page);
+                LogHistory::create($idUser, 'create', 'project', $lastInsertedId, $name, null, null, null, $idOrganization, "INFO", null, $ip, $page);
                 $success = "Le projet a été créé avec succès.";
             } catch (\Throwable $th) {
                 //throw $th;
                 $errors[] = "Une erreur est survenue.";
-                LogHistory::create($idUser, 'create', 'project', $lastInsertedId, null, null, $idOrganization, "INFO", $th->getMessage(), $ip, $page);
+                LogHistory::create($idUser, 'create', 'project', $lastInsertedId, $name, null, null, null, $idOrganization, "INFO", $th->getMessage(), $ip, $page);
             }
         } 
         else 

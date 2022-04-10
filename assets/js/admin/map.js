@@ -516,7 +516,7 @@ function init()
         // INSERT INTO tasks_comments with empty note
         $.ajax({
             async: true,
-            url: AJAX_URL+"admin/map.php?action=addTaskComment&taskId="+taskId+"&teamId="+teamId+"&projectId="+projectId,
+            url: encodeURI(AJAX_URL+"admin/map.php?action=addTaskComment&taskId="+taskId+"&teamId="+teamId+"&projectId="+projectId),
             success: function(data) {
                 var data = JSON.parse(data);
                 if(data)
@@ -546,9 +546,10 @@ function init()
     
                     $("#task-comment-container").prepend(prepend)
                     $("#loading-modal").modal('hide');
-    
+                    
                     initComment();
                 }
+                
             }
         });
     });

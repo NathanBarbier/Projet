@@ -47,7 +47,7 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
                     $Task        = new Task($taskId);
                     $TaskComment = new TaskComment($commentId);
                     $TaskMember  = new TaskMember($memberId, $taskId);
-                    $User        = new User($memberId);
+                    $User        = new User();
 
                     // Entirely load the team
                     $Team = new Team($teamId);
@@ -79,6 +79,8 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
                             if($taskId && $Team->checkTask($taskId))
                             {
                                 try {
+                                    $TaskComment = new TaskComment();
+
                                     // prepare comment
                                     $TaskComment->setFk_task($taskId);
                                     $TaskComment->setFk_user($idUser);
@@ -95,7 +97,7 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
     
                                     echo json_encode($TaskComment);
     
-                                	LogHistory::create($idUser, 'create', 'task_comment', $commentId, null, "task", $taskId, $Task->getName(), $idOrganization, "INFO", null, $ip, $page);
+                                	LogHistory::create($idUser, 'create', 'task_comment', $commentId, "task", $TaskComment['rowid'], $idOrganization, "INFO", null, $ip, $page);
     
                                 } catch (\Throwable $th) {
                                     echo json_encode(false);

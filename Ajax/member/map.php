@@ -98,7 +98,7 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
         
                                         echo json_encode($TaskComment);
         
-                                        LogHistory::create($idUser, 'create', 'task_comment', $commentId, null, "task", $TaskComment->getFk_task(), $Task->getName(), $idOrganization, "INFO", null, $ip, $page);
+                                	    LogHistory::create($idUser, 'create', 'task_comment', $commentId, "task", $TaskComment['rowid'], $idOrganization, "INFO", null, $ip, $page);
         
                                     } catch (\Throwable $th) {
                                         echo json_encode(false);

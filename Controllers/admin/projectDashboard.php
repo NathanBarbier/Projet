@@ -145,13 +145,13 @@ if($idProject)
                     $Project->setDescription($description);
                     $Project->setType($type);
                     $Project->update();
-                    LogHistory::create($idUser, 'update', 'project', $Project->getRowid(), $Project->getName(), null, null, $idOrganization, "INFO", null, $ip, $page);
+                    LogHistory::create($idUser, 'update', 'project', $Project->getRowid(), $Project->getName(), null, null, null, $idOrganization, "INFO", null, $ip, $page);
                     $success = "Les informations du projet ont bien été mises à jour.";
                 } 
                 catch (\Throwable $th) 
                 {
                     $errors[] = "Une erreur inattendue est survenue.";
-                    LogHistory::create($idUser, 'update', 'project', $Project->getRowid(), $Project->getName(), null, null, $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
+                    LogHistory::create($idUser, 'update', 'project', $Project->getRowid(), $Project->getName(), null, null, null, $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
                 }
             }
             else

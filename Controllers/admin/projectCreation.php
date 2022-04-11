@@ -4,7 +4,7 @@ require_once "../../services/header.php";
 require "layouts/head.php";
 
 $action = htmlspecialchars(GETPOST('action'), ENT_NOQUOTES|ENT_SUBSTITUTE, "UTF-8");
-$idProject = intval(GETPOST('idProject'), ENT_NOQUOTES|ENT_SUBSTITUTE, "UTF-8");
+$idProject = intval(GETPOST('idProject'));
 $name = htmlspecialchars(GETPOST('name'), ENT_NOQUOTES|ENT_SUBSTITUTE, "UTF-8");
 $type = htmlspecialchars(GETPOST('type'), ENT_NOQUOTES|ENT_SUBSTITUTE, "UTF-8");
 $description = htmlspecialchars(GETPOST('description'), ENT_NOQUOTES|ENT_SUBSTITUTE, "UTF-8");

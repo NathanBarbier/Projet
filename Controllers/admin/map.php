@@ -59,7 +59,7 @@ if($teamId)
                         LogHistory::create($idUser, 'unarchive', 'team', $teamId, $Team->getName(), 'project', $projectId, $Project->getName(), $idOrganization, "INFO", null, $ip, $page);
                         $success = "Le tableau a bien été ré-ouvert.";
                     } catch (\Throwable $th) {
-                        $errors[] = "Une erreur innatendue est survenue.";
+                        $errors[] = "Une erreur inattendue est survenue.";
 
                         LogHistory::create($idUser, 'unarchive', 'team', $teamId, $Team->getName(), 'project', $projectId, $Project->getName(), $idOrganization, "ERROR", $th->getMessage(), $ip, $page);
                     }
@@ -70,7 +70,7 @@ if($teamId)
 
                 if(strlen(trim($username)) == 0) 
                 {
-                    $username = $Organization->getName();
+                    $username = "Admin";
                 }
     
                 $authors = array();

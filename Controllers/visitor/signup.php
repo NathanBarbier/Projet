@@ -26,7 +26,7 @@ $errors = array();
 $success = false;
 
 $tpl = "signup.php";
-$page = CONTROLLERS_URL."visitor/".$tpl;
+$page = "controllers/visitor/".$tpl;
 
 if($action == "inscriptionOrg")
 {
@@ -47,36 +47,40 @@ if($action == "inscriptionOrg")
                             $nombres = "/[0-9]/";
                             if(preg_match($nombres, $pwd) && preg_match($speciaux, $pwd) && strlen($pwd) >= 8 && strlen($pwd) <= 100 && strtolower($pwd) !== $pwd && strtoupper($pwd) !== $pwd)
                             {
+                                try {
+                                    $Organization->setName($name);
+                                    $lastInsertedId = $Organization->create();
+                                    print($lastInsertedId);
+                                    
+                                    LogHistory::create(0, 'create', 'organization', $lastInsertedId, $Organization->getName(), null, null, null, $lastInsertedId, "INFO", null, $ip, $page);
+
+                                } catch (\Throwable $th) {
+                                    $errors[] = "Erreur : l'inscription n'a pas pu aboutir.";
+                                    LogHistory::create(0, 'create', 'organization', null, null, null, null, null, $lastInsertedId, "ERROR", $th->getMessage(), $ip, $page);
+                                                                        
+                                    header("location:".ROOT_URL."index.php");
+                                }
                                 try
                                 {
-                                    $fk_organization = intval($Organization->fetch_last_insert_id()) + 1;
-                                    $idUser = intval($User->fetch_last_insert_id()) + 1;
-    
                                     $User->setEmail($email);
                                     $User->setPassword($pwd);
-                                    $User->setFk_organization($fk_organization);
+                                    $User->setFk_organization($lastInsertedId);
                                     $User->setAdmin(1);
                                     $User->setConsent(1);
                                     $lastInsertedId = $User->create();
-                                    LogHistory::create($User->getRowid(), 'signup', 'user', $lastInsertedId, null, null, $User->getFk_organization(), "INFO", null, $ip, $page);
+                                    LogHistory::create($lastInsertedId, 'signup', 'user', $lastInsertedId, $User->getEmail(), null, null, null, $User->getFk_organization(), "INFO", null, $ip, $page);
+                                        
+                                    header("location:".CONTROLLERS_URL.'visitor/login.php?msg=inscription&on=1&type=success&title=Succès');
                                 } 
-                                catch (exception $e) 
+                                catch (\Throwable $th) 
                                 {
                                     $errors[] = "Erreur : l'inscription n'a pas pu aboutir.";
-                                    LogHistory::create($User->getRowid(), 'signup', 'user', $lastInsertedId, null, null, $User->getFk_organization(), "ERROR", $th->getMessage(), $ip, $page);
+                                    LogHistory::create(0, 'signup', 'user', null, null, null, null, null, $User->getFk_organization(), "ERROR", $th->getMessage(), $ip, $page);
+
+                                    exit;
+                                    header("location:".ROOT_URL."index.php");
                                 }
 
-                                try {
-                                    $Organization->setName($name);
-                                    $lastInstertedId = $Organization->create();
-                                    LogHistory::create($idOrganization, $idUser, "INFO", 'create', 'Organization', $Organization->getName(), null, 'organization id : '.$lastInstertedId, null, $ip);
-    
-                                    header("location:".CONTROLLERS_URL.'visitor/login.php?msg=inscription&on=1&type=success&title=Succès');
-                                    exit;
-                                } catch (\Throwable $th) {
-                                    $errors[] = "Erreur : l'inscription n'a pas pu aboutir.";
-                                    LogHistory::create($User->getRowid(), 'create', 'organization', null, null, null, null, "ERROR", $th->getMessage(), $ip, $page);
-                                }
                             }
                             else
                             {

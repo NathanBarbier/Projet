@@ -1,6 +1,3 @@
-<?php 
-require_once SERVICES_PATH.'notification.php' ;
-?>
 <!DOCTYPE html>
 <html lang="fr">
     <head>
@@ -24,7 +21,9 @@ require_once SERVICES_PATH.'notification.php' ;
 
     <body class="position-relative">
 
-    <?php
+    <?php 
+    require_once SERVICES_PATH.'notification.php' ;
+
     // Does not display the top and side bar when on map.php 
     if($pageName != 'map.php') 
     { ?>

@@ -23,7 +23,10 @@ require_once SERVICES_PATH.'notification.php' ;
     </head>
     
     <body>
-    <?php if($pageName != 'map.php') { ?>
+    <?php 
+    require_once SERVICES_PATH.'notification.php' ;
+    
+    if($pageName != 'map.php') { ?>
     <nav class="navbar navbar-dark bg-dark pt-1" style="height: 55px;">
         <a class="navbar-brand mb-1" href="<?= ROOT_URL ?>index.php">
             <img src="<?= IMG_URL ?>logo.png" width="35" height="35" class="d-inline-block align-top ms-3 me-2" alt="">

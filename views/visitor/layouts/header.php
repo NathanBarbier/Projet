@@ -1,6 +1,3 @@
-<?php 
-require_once SERVICES_PATH.'notification.php' ;
-?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -22,6 +19,9 @@ require_once SERVICES_PATH.'notification.php' ;
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js" integrity="sha512-lbwH47l/tPXJYG9AcFNoJaTMhGvYWhVM9YI43CT+uteTRRaiLCui8snIgyAN8XWgNjNhCqlAUdzZptso6OCoFQ==" crossorigin="anonymous" referrerpolicy="no-referrer" defer></script>
 </head>
 <body style="overflow-y: auto;">
+    <?php 
+    require_once SERVICES_PATH.'notification.php' ;
+    ?>
     <nav class="navbar navbar-dark bg-dark w-100 pt-1" style="height: 55px;">
         <a class="navbar-brand mb-1" href="<?= ROOT_URL ?>index.php">
             <img src="<?= IMG_URL ?>logo.png" width="35" height="35" class="d-inline-block align-top ms-3 me-2" alt="">

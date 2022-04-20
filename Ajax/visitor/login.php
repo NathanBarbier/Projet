@@ -46,6 +46,10 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
                         {
                             $allowed = false;
                             // if user is admin then check if his ip address is allowed
+                            
+                            // On production remove the ip check
+                            $allowed = true;
+                            /*
                             if($User->isAdmin())
                             {
                                 $AllowedIp = new AllowedIp($userIp, $User->getRowid());
@@ -57,6 +61,7 @@ if( isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( $_SERVER['HTTP_X_REQUESTED_W
                                 }
                             
                             }
+                            */
 
 
                             if(($User->isAdmin() && $allowed) || !$User->isAdmin())

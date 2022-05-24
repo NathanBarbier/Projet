@@ -32,7 +32,10 @@ foreach($User->getBelongsTo() as $key => $BelongsTo)
         $Teams[$Project->getRowid()] = $Team;
     }
 
-    $Projects[] = $Project;
+    if($Project->isActive())
+    {
+        $Projects[] = $Project;
+    }
 }
 
 $tpl = "dashboard.php";
